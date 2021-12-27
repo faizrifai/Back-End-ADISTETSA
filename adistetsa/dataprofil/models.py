@@ -2,6 +2,8 @@ from typing import DefaultDict
 from django.db import models
 from django.db.models.base import Model
 
+
+# Constant number
 DEFAULT_LENGTH = 225
 
 # Create your models here.
