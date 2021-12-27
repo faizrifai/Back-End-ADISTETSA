@@ -75,3 +75,6 @@ class DataSiswa(models.Model):
 
     class Meta:
         verbose_name_plural = "Data Siswa"
+
+class Tes(models.Model):
+    ID = models.CharField(max_length=DEFAULT_LENGTH)
