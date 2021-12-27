@@ -1,0 +1,17 @@
+Install package pertama kali
+1. aktivasi env
+2. Jalankan perintah "pip install -r requirements.txt"
+
+Aktifasi tiap env
+activate.bat 
+
+Run server
+python manage.py runserver
+
+Migrate
+python manage.py makemigrations
+python manage.py migrate
+
+Akun admin
+username: arzelf
+password: merdeka123 

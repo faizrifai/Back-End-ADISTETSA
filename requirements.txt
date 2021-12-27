@@ -1,0 +1,2 @@
+Django==4.0
+virtualenv==20.10.0
