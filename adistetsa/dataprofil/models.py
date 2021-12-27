@@ -101,4 +101,5 @@ class DataSiswa(models.Model):
     JUMLAH_SAUDARA_KANDUNG = models.IntegerField(max_length=5, blank=True)
     JARAK_RUMAH_KESEKOLAH_KM = models.IntegerField(max_length=DEFAULT_LENGTH, blank=True)
     
-    
+class Tes(models.Model):
+    id = models.CharField(max_length=DEFAULT_LENGTH, primary_key=True)
