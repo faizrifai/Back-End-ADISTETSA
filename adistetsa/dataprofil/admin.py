@@ -3,7 +3,6 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-admin.site.register(DataSiswa)
 admin.site.register(DataAnakPegawai)
 admin.site.register(DataBeasiswaPegawai)
 admin.site.register(DataBukuPegawai)
@@ -22,6 +21,11 @@ admin.site.register(DataRiwayatPendidikanFormalPegawai)
 admin.site.register(DataRiwayatSertifikasiPegawai)
 admin.site.register(DataTugasTambahanPegawai)
 admin.site.register(DataTunjanganPegawai)
+
+class DataSiswaAdmin(admin.ModelAdmin):
+    search_fields = ['NISN', 'NAMA']
+
+admin.site.register(DataSiswa, DataSiswaAdmin)
 
 class DataOrangTuaAdmin(admin.ModelAdmin):
     filter_horizontal = ('DATA_ANAK',)

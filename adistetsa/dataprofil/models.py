@@ -231,7 +231,7 @@ class DataTunjanganPegawai(models.Model):
         return self.JENIS + ' - ' + self.NAMA + ' - ' + self.INSTANSI + ' - ' + self.SUMBER_DANA + ' - ' + self.DARI_TAHUN + ' - ' + self.SAMPAI_TAHUN + ' - ' + self.NOMINAL + ' - ' + self.STATUS
     
     class Meta:
-        verbose_name_plural = "Data Buku Pegawai"
+        verbose_name_plural = "Data Tunjangan Pegawai"
         
 class DataTugasTambahanPegawai(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -372,6 +372,7 @@ class DataRiwayatKarirGuruPegawai(models.Model):
     TEMPAT_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TTD_SK_KERJA = models.ImageField()
     MAPEL_DIAJARKAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+
     def __str__(self):
         return self.JENJANG + ' - ' + self.JENIS_LEMBAGA + ' - ' + self.STS_KEPEGAWAIAN + ' - ' + self.JENIS_PTK + ' - ' + self.LEMBAGA + ' - ' + self.LEMBAGA + ' - ' + self.NO_SK_KERJA + ' - ' + self.TGL_SK_KERJA + ' - ' + self.TMT_KERJA + ' - ' + self.TST_KERJA + ' - ' + self.TEMPAT_KERJA + ' - ' + self.TTD_SK_KERJA + ' - ' + self.MAPEL_DIAJARKAN
     
@@ -475,3 +476,9 @@ class DataPegawai(models.Model):
     DATA_SERTIFIKASI_PEGAWAI = models.ManyToManyField(DataRiwayatSertifikasiPegawai, verbose_name="Riwayat Sertifikasi Pegawai")
     DATA_RIWAYAT_JABATAN_FUNGSIONAL_PEGAWAI = models.ManyToManyField(DataRiwayatJabatanFungsionalPegawai, verbose_name="Riwayat Jabatan Fungsional Pegawai")
     DATA_RIWAYAT_KARIR_GURU_PEGAWAI = models.ManyToManyField(DataRiwayatKarirGuruPegawai, verbose_name="Riwayat Karir Guru")
+
+    def __str__(self):
+        return self.NIK + ' - ' + self.NAMA_LENGKAP
+    
+    class Meta:
+        verbose_name_plural = "Data Pegawai"
