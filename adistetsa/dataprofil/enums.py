@@ -44,7 +44,7 @@ ENUM_JENJANG_PENDIDIKAN = [
     ('SD/Sederajat' , 'SD/Sederajat'),
     ('SMP/Sederajat', 'SMP/Sederajat'),
     ('SMA/Sederajat', 'SMA/Sederajat'),
-    ('D1', 'D4'),
+    ('D1', 'D1'),
     ('D2', 'D2'),
     ('D3', 'D3'),
     ('D4', 'D4'),
