@@ -9,5 +9,7 @@ from dataprofil import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('data_siswa/', views.DataSiswaListView.as_view()),
-    path('data_siswa/<int:pk>/', views.DataSiswaDetailView.as_view()),
+    path('data_siswa/<int:pk>', views.DataSiswaDetailView.as_view()),
+    path('data_orang_tua/', views.DataOrangTuaSiswaListView.as_view()),
+    path('data_orang_tua/<int:pk>', views.DataOrangTuaDetailView.as_view()),
 ]
