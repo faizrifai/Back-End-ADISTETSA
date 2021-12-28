@@ -1,4 +1,5 @@
 from typing import DefaultDict
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.base import Model
 from django.db.models.query_utils import select_related_descend
