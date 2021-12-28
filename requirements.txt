@@ -1,2 +1,5 @@
 Django==4.0
+djangorestframework==3.13.1
+factory-boy==3.2.1
+Faker==10.0.0
 virtualenv==20.10.0
