@@ -9,9 +9,9 @@ DEFAULT_LENGTH = 225
 
 # Create your models here.
 class DataSiswa(models.Model):
-    NISN = models.BigIntegerField(max_length=DEFAULT_LENGTH, primary_key=True)
+    NISN = models.BigIntegerField(primary_key=True)
     NAMA = models.CharField(max_length=DEFAULT_LENGTH)
-    NIPD = models.BigIntegerField(max_length=DEFAULT_LENGTH)
+    NIPD = models.BigIntegerField()
     JENIS_KELAMIN = models.CharField(
         max_length=20,
         choices=ENUM_JENIS_KELAMIN,
