@@ -8,10 +8,44 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated 
+from rest_framework.authentication import TokenAuthentication
 
 # Create your views here.
 
+class ObtainAuthTokenView(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'user_id': user.pk,
+        })
+
+class HomeView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        content = {
+            'user': str(request.user),
+            'auth': str(request.auth),
+        }
+        return Response(content)
+
 class DataSiswaListView(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         data_siswa = DataSiswa.objects.all()
         serializer = DataSiswaSerializer(data_siswa, many=True)
@@ -48,10 +82,6 @@ class DataSiswaDetailView(APIView):
         siswa = self.get_object(pk)
         siswa.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
 
 class DataOrangTuaSiswaListView(APIView):
     def get(self, request, format=None):
