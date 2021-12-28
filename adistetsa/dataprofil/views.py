@@ -59,6 +59,9 @@ class DataSiswaListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DataSiswaDetailView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return DataSiswa.objects.get(pk=pk)
@@ -84,6 +87,9 @@ class DataSiswaDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class DataOrangTuaSiswaListView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, format=None):
         data_orang_tua = DataOrangTua.objects.all()
         serializer = DataOrangTuaSerializer(data_orang_tua, many=True)
@@ -97,6 +103,9 @@ class DataOrangTuaSiswaListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class DataOrangTuaDetailView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return DataOrangTua.objects.get(pk=pk)
