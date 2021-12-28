@@ -38,3 +38,25 @@ ENUM_LAYAK_PIP = [
     ('Iya', 'Iya'),
     ('Tidak', 'Tidak'),
 ]
+
+ENUM_JENJANG_PENDIDIKAN = [
+    ('Tidak Bersekolah', 'Tidak Bersekolah'),
+    ('SD/Sederajat' , 'SD/Sederajat'),
+    ('SMP/Sederajat', 'SMP/Sederajat'),
+    ('SMA/Sederajat', 'SMA/Sederajat'),
+    ('D1', 'D4'),
+    ('D2', 'D2'),
+    ('D3', 'D3'),
+    ('D4', 'D4'),
+    ('S1', 'S1'),
+    ('S2', 'S2'),
+    ('Lainnya', 'Lainnya'),
+]
+
+ENUM_PENGHASILAN = [
+    ('Kurang dari Rp 500.000;', 'Kurang dari Rp 500.000;'),
+    ('Rp 500.000;- RP 1.500.000;', 'Rp 500.000;- RP 1.500.000;'),
+    ('Rp 1.500.000;- Rp 3.500.000;', 'Rp 1.500.000;- Rp 3.500.000;'),
+    ('Rp 3.500.000;- Rp 5.000.000;', 'Rp 3.500.000;- Rp 5.000.000;'),
+    ('Rp 5.000.000; Ke Atas', 'Rp 5.000.000; Ke Atas'),
+]
