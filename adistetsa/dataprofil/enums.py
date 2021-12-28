@@ -60,3 +60,29 @@ ENUM_PENGHASILAN = [
     ('Rp 3.500.000;- Rp 5.000.000;', 'Rp 3.500.000;- Rp 5.000.000;'),
     ('Rp 5.000.000; Ke Atas', 'Rp 5.000.000; Ke Atas'),
 ]
+
+ENUM_STATUS_KAWIN = [
+        ('Kawin', 'Kawin'),
+        ('Belum Kawin', 'Belum Kawin'),
+]
+
+ENUM_PASANGAN_PNS = [
+        ('Iya', 'Iya'),
+        ('Tidak', 'Tidak'),
+]
+
+ENUM_PNS = [
+        ('Iya', 'Iya'),
+        ('Tidak', 'Tidak'),
+]
+
+ENUM_STATUS_AKTIF = [
+        ('Aktif', 'Aktif'),
+        ('Tidak Aktif', 'Tidak Aktif'),
+]
+
+ENUM_KEAHLIAN_KHUSUS = [
+        ('Braille', 'Braille'),
+        ('Bahasa Isyarat', 'Bahasa Isyarat'),
+]
+
