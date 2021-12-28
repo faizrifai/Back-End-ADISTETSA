@@ -5,10 +5,9 @@ from rest_framework import routers
 
 from dataprofil import views
 
-router = routers.DefaultRouter()
-router.register(r'data_siswa', views.DataSiswaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
+    path('data_siswa/', views.DataSiswaListView.as_view()),
+    path('data_siswa/<int:pk>/', views.DataSiswaDetailView.as_view()),
 ]
