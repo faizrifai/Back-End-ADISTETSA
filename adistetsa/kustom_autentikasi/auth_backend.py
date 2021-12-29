@@ -1,6 +1,6 @@
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
-from .models import DataSiswaUser
+from .models import DataSiswaUser, DataGuruUser
 
 class DataSiswaAuthModelBackend(ModelBackend):
     def authenticate(self, request, **kwargs):
@@ -13,7 +13,7 @@ class DataSiswaAuthModelBackend(ModelBackend):
             return None
 
         try:
-            data_siswa = DataSiswaUser.objects.get(NISN=nisn)
+            data_siswa = DataSiswaUser.objects.get(DATA_SISWA=nisn)
             if (data_siswa.USER.check_password(password) is True):
                 return data_siswa.USER
         except DataSiswaUser.DoesNotExist:
@@ -35,6 +35,51 @@ class EmailAuthModelBackend(ModelBackend):
             if (user.check_password(password) is True):
                 return user
         except User.DoesNotExist:
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+
+class DataGuruPNSAuthModelBackend(ModelBackend):
+    def authenticate(self, request, **kwargs):
+        nip = kwargs['username']
+        password = kwargs['password']
+
+        try:
+            nip = int(nip)
+        except:
+            return None
+
+        try:
+            data_guru = DataGuruUser.objects.get(DATA_GURU__NIP=nip)
+            
+            if (data_guru.USER.check_password(password) is True):
+                return data_guru.USER
+        except DataGuruUser.DoesNotExist:
+            print("Tidak ada data gaes")
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+
+class DataGuruNonPNSAuthModelBackend(ModelBackend):
+    def authenticate(self, request, **kwargs):
+        username = kwargs['username']
+        password = kwargs['password']
+
+        try:
+            data_guru = DataGuruUser.objects.get(USERNAME=username)
+            
+            if (data_guru.USER.check_password(password) is True):
+                return data_guru.USER
+        except DataGuruUser.DoesNotExist:
+            print("Tidak ada data gaes")
             return None
 
     def get_user(self, user_id):
