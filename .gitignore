@@ -6,6 +6,7 @@ __pycache__
 db.sqlite3
 media
 adistetsa_env_linux/
+.vscode/
 
 # Backup files # 
 *.bak 
