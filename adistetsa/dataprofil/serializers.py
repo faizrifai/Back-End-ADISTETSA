@@ -10,3 +10,9 @@ class DataOrangTuaSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataOrangTua
         fields = '__all__'
+
+
+class DataPegawaiSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataPegawai
+        fields = '__all__'

@@ -40,9 +40,6 @@ class HomeView(APIView):
         return Response(content)
 
 class DataSiswaListView(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -128,4 +125,50 @@ class DataOrangTuaDetailView(APIView):
     def delete(self, request, pk, format=None):
         orang_tua = self.get_object(pk)
         orang_tua.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class DataPegawaiListView(APIView): 
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        data_pegawai = DataPegawai.objects.all()
+        serializer = DataPegawaiSerializer(data_pegawai, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = DataPegawaiSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DataPegawaiDetailView(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return DataPegawai.objects.get(pk=pk)
+        except DataPegawai.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        pegawai = self.get_object(pk)
+        serializer = DataPegawaiSerializer(pegawai)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        pegawai = self.get_object(pk)
+        serializer = DataPegawaiSerializer(pegawai, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        pegawai = self.get_object(pk)
+        pegawai.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
