@@ -207,7 +207,7 @@ class DataGuru(models.Model):
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
     
     def __str__(self):
-        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
+        return str(self.NIP) + ' - ' + self.NAMA_LENGKAP
     
     class Meta:
         verbose_name_plural = "Data Guru"
@@ -294,7 +294,7 @@ class DataKaryawan(models.Model):
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
    
     def __str__(self):
-        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
+        return str(self.NIP) + ' - ' + self.NAMA_LENGKAP
     
     class Meta:
         verbose_name_plural = "Data Karyawan"

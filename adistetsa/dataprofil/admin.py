@@ -1,17 +1,18 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.safestring import mark_safe
 
 from .models import *
 
 # Register your models here.
 admin.site.register(DataKaryawan)
-admin.site.register(DataGuru)
 admin.site.register(DataAnakGuru)
 admin.site.register(DataBeasiswaGuru)
 admin.site.register(DataBukuGuru)
 admin.site.register(DataDiklatGuru)
 admin.site.register(DataKaryaTulisGuru)
 admin.site.register(DataKesejahteraanGuru)
-admin.site.register(DataKompetensiGuru)
 admin.site.register(DataNilaiTesGuru)
 admin.site.register(DataPenghargaanGuru)
 admin.site.register(DataRiwayatGajiBerkalaGuru)
@@ -51,6 +52,29 @@ class DataOrangTuaAdmin(admin.ModelAdmin):
     filter_horizontal = ('DATA_ANAK',)
 
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
+
+class DataGuruAdmin(admin.ModelAdmin):
+    list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru',)
+
+    def kompetensi_guru(self, obj):
+        daftar = DataKompetensiGuru.objects.filter(OWNER=obj)
+        count = daftar.count()
+
+        base_url = reverse('admin:dataprofil_datakompetensiguru_changelist')
+
+        if (count == 0):
+            return mark_safe('0 Kompetensi')
+        
+        return mark_safe(u'<a href="%s?OWNER__exact=%d">%d Kompetensi</a>' % (base_url, obj.ID, count))
+
+    kompetensi_guru.short_description = "Daftar Kompetensi"
+
+admin.site.register(DataGuru, DataGuruAdmin)
+
+class DataKompetensiGuruAdmin(admin.ModelAdmin):
+    list_display = ('BIDANG_STUDI', 'URUTAN', 'OWNER')
+
+admin.site.register(DataKompetensiGuru, DataKompetensiGuruAdmin)
 
 # class DataGuruAdmin(admin.ModelAdmin):
 #     filter_horizontal = ('DATA_KOMPETENSI_GURU', 'DATA_ANAK_GURU', 'DATA_BEASISWA_GURU', 'DATA_BUKU_GURU', 'DATA_DIKLAT_GURU', 'DATA_KARYA_TULIS_GURU', 'DATA_KESEJAHTERAAN_GURU', 'DATA_TUNJANGAN_GURU', 'DATA_TUGAS_TAMBAHAN_GURU', 'DATA_PENGHARGAAN_GURU', 'DATA_NILAI_TEST_GURU', 'DATA_RIWAYAT_GAJI_GURU', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_GURU', 'DATA_RIWAYAT_KEPANGKATAN_GURU', 'DATA_PENDIDIKAN_NORMAL_GURU', 'DATA_SERTIFIKASI_GURU', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_GURU', 'DATA_RIWAYAT_KARIR_GURU',)
