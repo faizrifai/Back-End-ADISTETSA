@@ -25,7 +25,8 @@ from dataprofil.factories import (
     DataRiwayatSertifikasiPegawaiFactory,
     DataRiwayatJabatanFungsionalPegawaiFactory,
     DataRiwayatKarirGuruPegawaiFactory,
-    DataPegawaiFactory,
+    DataGuruFactory,
+    DataKaryawanFactory,
 )
 
 NUM_SISWA = 50
@@ -126,4 +127,7 @@ class Command(BaseCommand):
             data_riwayat_karir_guru_pegawai = DataRiwayatKarirGuruPegawaiFactory()
             
         for _ in range(NUM_PEGAWAI):
-            data_pegawai = DataPegawaiFactory()
+            data_guru = DataGuruFactory()
+            
+        for _ in range(NUM_PEGAWAI):
+            data_karyawan = DataKaryawanFactory()

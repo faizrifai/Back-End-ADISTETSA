@@ -129,7 +129,7 @@ class DataKompetensiPegawai(models.Model):
     BIDANG_STUDI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     URUTAN= models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     def __str__(self):
-        return str(self.ID) + ' - ' + self.BIDANG_STUDI + ' _ ' + self.URUTAN
+        return self.BIDANG_STUDI + ' _ ' + self.URUTAN
 
     class Meta:
         verbose_name_plural = "Data Kompetensi Pegawai"
@@ -148,8 +148,8 @@ class DataAnakPegawai(models.Model):
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TANGGAL_LAHIR = models.DateField(blank=True)
     TAHUN_MASUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    # def __str__(self):
-    #     return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TANGGAL_LAHIR + ' - ' + self.TAHUN_MASUK
+    def __str__(self):
+         return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TAHUN_MASUK
 
     class Meta:
         verbose_name_plural = "Data Anak Pegawai"
@@ -282,8 +282,8 @@ class DataRiwayatGajiBerkalaPegawai(models.Model):
     TAHUN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BULAN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)     
     GAJI_POKOK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    # def __str__(self):
-    #     return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TANGGAL_SK + ' - ' + self.TMT_KGB + ' - ' + self.TAHUN_MK + ' - ' + self.BULAN_MK + ' - ' + self.GAJI_POKOK
+    def __str__(self):
+        return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TMT_KGB + ' - ' + self.TAHUN_MK + ' - ' + self.BULAN_MK + ' - ' + self.GAJI_POKOK
     
     class Meta:
         verbose_name_plural = "Data Riwayat Gaji Berkala Pegawai"
@@ -308,8 +308,8 @@ class DataRiwayatKepangkatanPegawai(models.Model):
     MK_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_BULAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     
-    # def __str__(self):
-    #     return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TANGGAL_SK + ' - ' + self.PANGKAT_GOLONGAN + ' - ' + self.MK_TAHUN + ' - ' + self.MK_BULAN
+    def __str__(self):
+        return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.PANGKAT_GOLONGAN + ' - ' + self.MK_TAHUN + ' - ' + self.MK_BULAN
     
     class Meta:
         verbose_name_plural = "Data Riwayat Kepangkatan Pegawai"
@@ -375,13 +375,14 @@ class DataRiwayatKarirGuruPegawai(models.Model):
     TTD_SK_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MAPEL_DIAJARKAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
 
-    # def __str__(self):
-    #     return self.JENJANG + ' - ' + self.JENIS_LEMBAGA + ' - ' + self.STS_KEPEGAWAIAN + ' - ' + self.JENIS_PTK + ' - ' + self.LEMBAGA + ' - ' + self.LEMBAGA + ' - ' + self.NO_SK_KERJA + ' - ' + self.TGL_SK_KERJA + ' - ' + self.TMT_KERJA + ' - ' + self.TST_KERJA + ' - ' + self.TEMPAT_KERJA + ' - ' + self.TTD_SK_KERJA + ' - ' + self.MAPEL_DIAJARKAN
+    def __str__(self):
+        return self.JENJANG + ' - ' + self.JENIS_LEMBAGA + ' - ' + self.STS_KEPEGAWAIAN + ' - ' + self.JENIS_PTK + ' - ' + self.LEMBAGA + ' - ' + self.LEMBAGA + ' - ' + self.NO_SK_KERJA + ' - ' + self.TMT_KERJA + ' - ' + self.TST_KERJA + ' - ' + self.TEMPAT_KERJA + ' - ' + self.TTD_SK_KERJA + ' - ' + self.MAPEL_DIAJARKAN
     
     class Meta:
         verbose_name_plural = "Data Riwayat Karir Guru Pegawai"
     
-class DataPegawai(models.Model):
+class DataGuru(models.Model):
+    ID = models.BigAutoField(primary_key=True)
     NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
     NSS = models.BigIntegerField()
     NPSN = models.BigIntegerField()
@@ -483,4 +484,109 @@ class DataPegawai(models.Model):
         return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
     
     class Meta:
-        verbose_name_plural = "Data Pegawai"
+        verbose_name_plural = "Data Guru"
+        
+class DataKaryawan(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
+    NSS = models.BigIntegerField()
+    NPSN = models.BigIntegerField()
+    ALAMAT_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
+    NIK = models.BigIntegerField()
+    JENIS_KELAMIN = models.CharField(
+        max_length=20,
+        choices=ENUM_JENIS_KELAMIN,
+    )
+    TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH)
+    TANGGAL_LAHIR = models.DateField()
+    NAMA_IBU_KANDUNG = models.CharField(max_length=DEFAULT_LENGTH)
+    ALAMAT_TEMPAT_TINGGAL = models.CharField(max_length=DEFAULT_LENGTH)
+    DUSUN = models.CharField(max_length=DEFAULT_LENGTH)
+    KELURAHAN = models.CharField(max_length=DEFAULT_LENGTH)
+    KECAMATAN = models.CharField(max_length=DEFAULT_LENGTH)
+    KOTA = models.CharField(max_length=DEFAULT_LENGTH)
+    PROVINSI = models.CharField(max_length=DEFAULT_LENGTH)
+    LINTANG_1 = models.CharField(max_length=DEFAULT_LENGTH)
+    LINTANG_2 = models.CharField(max_length=DEFAULT_LENGTH)
+    AGAMA = models.CharField(
+        max_length=20,
+        choices=ENUM_AGAMA,
+    )
+    NPWP = models.BigIntegerField()
+    NAMA_WAJIB_PAJAK = models.CharField(max_length=DEFAULT_LENGTH)
+    KEWARGANEGARAAN = models.CharField(max_length=DEFAULT_LENGTH)
+    STATUS_KAWIN = models.CharField(
+        max_length=11,
+        choices=ENUM_STATUS_KAWIN,
+    )
+    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
+    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
+    PASANGAN_PNS = models.CharField(
+        max_length=5,
+        choices=ENUM_PASANGAN_PNS,
+    )
+    NIP_PASANGAN = models.BigIntegerField()
+    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH)
+    PNS = models.CharField(
+        max_length=5,
+        choices=ENUM_PNS,
+    )
+    NIP = models.BigIntegerField()
+    NIY = models.BigIntegerField()
+    NIGB = models.BigIntegerField()
+    NUPTK = models.BigIntegerField()
+    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH)
+    STATUS_AKTIF = models.CharField(
+        max_length=11,
+        choices=ENUM_STATUS_AKTIF,
+    )
+    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
+    TMT_PENGANGKATAN = models.BigIntegerField()
+    LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
+    SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH)
+    TMT_CPNS = models.BigIntegerField()
+    TMT_PNS = models.BigIntegerField()
+    PANGKAT = models.CharField(max_length=DEFAULT_LENGTH)
+    SUMBER_GAJI = models.CharField(max_length=DEFAULT_LENGTH)
+    KARTU_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    KARIS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH)
+    TGL_SURAT = models.DateField()
+    TMT_TUGAS = models.BigIntegerField()
+    SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH)
+    LISENSI_KEPALA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    KODE_PROGRAM_KEAHLIAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    JENIS_KETUNAAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SPESIALIS_MENANGANI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    STATUS_AKTIF = models.CharField(
+        max_length=14,
+        choices=ENUM_KEAHLIAN_KHUSUS,
+        blank=True
+    )
+    NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
+    DATA_KOMPETENSI_KARYAWAN = models.ManyToManyField(DataKompetensiPegawai, verbose_name="Kopetensi Karyawan")
+    DATA_ANAK_KARYAWAN = models.ManyToManyField(DataAnakPegawai, verbose_name="Anak Karyawan")
+    DATA_BEASISWA_KARYAWAN = models.ManyToManyField(DataBeasiswaPegawai, verbose_name="Beasiswa Karyawan")
+    DATA_BUKU_KARYAWAN = models.ManyToManyField(DataBukuPegawai, verbose_name="Buku Karyawan")
+    DATA_DIKLAT_KARYAWAN = models.ManyToManyField(DataDiklatPegawai, verbose_name="Diklat Karyawan")
+    DATA_KARYA_TULIS_KARYAWAN = models.ManyToManyField(DataKaryaTulisPegawai, verbose_name="Karya Tulis Karyawan")
+    DATA_KESEJAHTERAAN_KARYAWAN = models.ManyToManyField(DataKesejahteraanPegawai, verbose_name="Kesejateraan Karyawan")
+    DATA_TUNJANGAN_KARYAWAN = models.ManyToManyField(DataTunjanganPegawai, verbose_name="Tunjangan Karyawan")                            
+    DATA_TUGAS_TAMBAHAN_KARYAWAN = models.ManyToManyField(DataTugasTambahanPegawai, verbose_name="Tugas Tambahan Karyawan")
+    DATA_PENGHARGAAN_KARYAWAN = models.ManyToManyField(DataPenghargaanPegawai, verbose_name="Penghargaan Karyawan")
+    DATA_NILAI_TEST_KARYAWAN = models.ManyToManyField(DataNilaiTesPegawai, verbose_name="Nilai Tes Karyawan")
+    DATA_RIWAYAT_GAJI_KARYAWAN = models.ManyToManyField(DataRiwayatGajiBerkalaPegawai, verbose_name="Riwayat Gaji Berkala Karyawan")
+    DATA_RIWAYAT_JABATAN_STRUKTURAL_KARYAWAN = models.ManyToManyField(DataRiwayatJabatanStrukturalPegawai, verbose_name="Riwayat Jabatan Struktural Karyawan")
+    DATA_RIWAYAT_KEPANGKATAN_KARYAWAN = models.ManyToManyField(DataRiwayatKepangkatanPegawai, verbose_name="Riwayat Kepangkatan Karyawan")
+    DATA_PENDIDIKAN_NORMAL_KARYAWAN = models.ManyToManyField(DataRiwayatPendidikanFormalPegawai, verbose_name="Riwayat Pendidikan Normal Karyawan")
+    DATA_SERTIFIKASI_KARYAWAN = models.ManyToManyField(DataRiwayatSertifikasiPegawai, verbose_name="Riwayat Sertifikasi Karyawan")
+    DATA_RIWAYAT_JABATAN_FUNGSIONAL_KARYAWAN = models.ManyToManyField(DataRiwayatJabatanFungsionalPegawai, verbose_name="Riwayat Jabatan Fungsional Karyawan")
+    DATA_RIWAYAT_KARIR_KARYAWAN = models.ManyToManyField(DataRiwayatKarirGuruPegawai, verbose_name="Riwayat Karir Karyawan")
+
+    def __str__(self):
+        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
+    
+    class Meta:
+        verbose_name_plural = "Data Karyawan"
