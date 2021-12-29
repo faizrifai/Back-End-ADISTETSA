@@ -13,10 +13,10 @@ class DataOrangTuaSerializer(serializers.ModelSerializer):
         
 class DataKompetensiPegawaiSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DataKompetensiPegawai
+        model = DataKompetensiGuru
         fields = '__all__'
 
 class DataAnakPegawaiSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DataAnakPegawai
+        model = DataAnakGuru
         fields = '__all__'
