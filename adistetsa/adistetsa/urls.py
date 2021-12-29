@@ -14,6 +14,4 @@ urlpatterns = [
     path('data_siswa/<int:pk>', views.DataSiswaDetailView.as_view()),
     path('data_orang_tua/', views.DataOrangTuaSiswaListView.as_view()),
     path('data_orang_tua/<int:pk>', views.DataOrangTuaDetailView.as_view()),
-    path('data_pegawai/', views.DataPegawaiListView.as_view()),
-    path('data_pegawai/<int:pk>', views.DataPegawaiDetailView.as_view()),
 ]
