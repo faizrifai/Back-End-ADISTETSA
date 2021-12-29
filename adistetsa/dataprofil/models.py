@@ -129,7 +129,7 @@ class DataKompetensiPegawai(models.Model):
     BIDANG_STUDI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     URUTAN= models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     def __str__(self):
-        return str(self.ID) + ' - ' + self.BIDANG_STUDI + ' _ ' + self.URUTAN
+        return self.BIDANG_STUDI + ' _ ' + self.URUTAN
 
     class Meta:
         verbose_name_plural = "Data Kompetensi Pegawai"
@@ -148,8 +148,8 @@ class DataAnakPegawai(models.Model):
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TANGGAL_LAHIR = models.DateField(blank=True)
     TAHUN_MASUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    # def __str__(self):
-    #     return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TANGGAL_LAHIR + ' - ' + self.TAHUN_MASUK
+    def __str__(self):
+         return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TAHUN_MASUK
 
     class Meta:
         verbose_name_plural = "Data Anak Pegawai"
@@ -282,8 +282,8 @@ class DataRiwayatGajiBerkalaPegawai(models.Model):
     TAHUN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BULAN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)     
     GAJI_POKOK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    # def __str__(self):
-    #     return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TANGGAL_SK + ' - ' + self.TMT_KGB + ' - ' + self.TAHUN_MK + ' - ' + self.BULAN_MK + ' - ' + self.GAJI_POKOK
+    def __str__(self):
+        return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TMT_KGB + ' - ' + self.TAHUN_MK + ' - ' + self.BULAN_MK + ' - ' + self.GAJI_POKOK
     
     class Meta:
         verbose_name_plural = "Data Riwayat Gaji Berkala Pegawai"
@@ -308,8 +308,8 @@ class DataRiwayatKepangkatanPegawai(models.Model):
     MK_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_BULAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     
-    # def __str__(self):
-    #     return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.TANGGAL_SK + ' - ' + self.PANGKAT_GOLONGAN + ' - ' + self.MK_TAHUN + ' - ' + self.MK_BULAN
+    def __str__(self):
+        return self.PANGKAT_GOLONGAN + ' - ' + self.NO_SK + ' - ' + self.PANGKAT_GOLONGAN + ' - ' + self.MK_TAHUN + ' - ' + self.MK_BULAN
     
     class Meta:
         verbose_name_plural = "Data Riwayat Kepangkatan Pegawai"
@@ -375,14 +375,14 @@ class DataRiwayatKarirGuruPegawai(models.Model):
     TTD_SK_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MAPEL_DIAJARKAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
 
-    # def __str__(self):
-    #     return self.JENJANG + ' - ' + self.JENIS_LEMBAGA + ' - ' + self.STS_KEPEGAWAIAN + ' - ' + self.JENIS_PTK + ' - ' + self.LEMBAGA + ' - ' + self.LEMBAGA + ' - ' + self.NO_SK_KERJA + ' - ' + self.TGL_SK_KERJA + ' - ' + self.TMT_KERJA + ' - ' + self.TST_KERJA + ' - ' + self.TEMPAT_KERJA + ' - ' + self.TTD_SK_KERJA + ' - ' + self.MAPEL_DIAJARKAN
+    def __str__(self):
+        return self.JENJANG + ' - ' + self.JENIS_LEMBAGA + ' - ' + self.STS_KEPEGAWAIAN + ' - ' + self.JENIS_PTK + ' - ' + self.LEMBAGA + ' - ' + self.LEMBAGA + ' - ' + self.NO_SK_KERJA + ' - ' + self.TMT_KERJA + ' - ' + self.TST_KERJA + ' - ' + self.TEMPAT_KERJA + ' - ' + self.TTD_SK_KERJA + ' - ' + self.MAPEL_DIAJARKAN
     
     class Meta:
         verbose_name_plural = "Data Riwayat Karir Guru Pegawai"
     
 class DataGuru(models.Model):
-    USERNAME = models.CharField(max_length=DEFAULT_LENGTH, primary_key=True)
+    ID = models.BigAutoField(primary_key=True)
     NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
     NSS = models.BigIntegerField()
     NPSN = models.BigIntegerField()
@@ -487,12 +487,12 @@ class DataGuru(models.Model):
         verbose_name_plural = "Data Guru"
         
 class DataKaryawan(models.Model):
-    USERNAME = models.CharField(max_length=DEFAULT_LENGTH, primary_key=True)
+    ID = models.BigAutoField(primary_key=True)
     NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
     NSS = models.BigIntegerField()
     NPSN = models.BigIntegerField()
     ALAMAT_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NAMA_lENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
     NIK = models.BigIntegerField()
     JENIS_KELAMIN = models.CharField(
         max_length=20,
@@ -586,7 +586,7 @@ class DataKaryawan(models.Model):
     DATA_RIWAYAT_KARIR_KARYAWAN = models.ManyToManyField(DataRiwayatKarirGuruPegawai, verbose_name="Riwayat Karir Karyawan")
 
     def __str__(self):
-        return self.NIK + ' - ' + self.NAMA_LENGKAP
-    #
+        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
+    
     class Meta:
         verbose_name_plural = "Data Karyawan"
