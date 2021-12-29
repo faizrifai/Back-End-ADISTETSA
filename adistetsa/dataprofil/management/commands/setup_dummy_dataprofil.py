@@ -23,6 +23,7 @@ from dataprofil.factories import (
     DataRiwayatKepangkatanPegawaiFactory,
     DataRiwayatPendidikanFormalPegawaiFactory,
     DataRiwayatSertifikasiPegawaiFactory,
+    DataRiwayatJabatanFungsionalPegawaiFactory,
     DataRiwayatKarirGuruPegawaiFactory,
     DataPegawaiFactory,
 )
@@ -45,8 +46,9 @@ NUM_RIWAYAT_JABATAN_STRUKTURAL_PEGAWAI = 50
 NUM_RIWAYAT_KEPANGKATAN_PEGAWAI = 50
 NUM_RIWAYAT_PENDIDIKAN_FORMAL_PEGAWAI = 50
 NUM_RIWAYAT_SERTIFIKASI_PEGAWAI = 50
+NUM_RIWAYAT_JABATAN_FUNGSIONAL_PEGAWAI = 50
 NUM_RIWAYAT_KARIR_GURU_PEGAWAI = 50
-NUM_PEGAWAI = 12
+NUM_PEGAWAI = 50
 
 class Command(BaseCommand):
     help = "Melakukan generate data dummy"
@@ -76,49 +78,52 @@ class Command(BaseCommand):
             data_anak_pegawai = DataAnakPegawaiFactory()
         
         for _ in range(NUM_BEASISWA_PEGAWAI):
-            data_anak_pegawai = DataBeasiswaPegawaiFactory()
+            data_beasiswa_pegawai = DataBeasiswaPegawaiFactory()
         
         for _ in range(NUM_BUKU_PEGAWAI):
-            data_anak_pegawai = DataBukuPegawaiFactory()
+            data_buku_pegawai = DataBukuPegawaiFactory()
         
         for _ in range(NUM_DIKLAT_PEGAWAI):
-            data_anak_pegawai = DataDiklatPegawaiFactory()
+            data_diklat_pegawai = DataDiklatPegawaiFactory()
         
         for _ in range(NUM_KARYA_TULIS_PEGAWAI):
-            data_anak_pegawai = DataKaryaTulisPegawaiFactory()
+            data_karya_tulis_pegawai = DataKaryaTulisPegawaiFactory()
         
         for _ in range(NUM_KESEJAHTERAAN_PEGAWAI):
-            data_anak_pegawai = DataKesejahteraanPegawaiFactory()
+            data_kesejahteraan_pegawai = DataKesejahteraanPegawaiFactory()
             
         for _ in range(NUM_TUNJANGAN_PEGAWAI):
-            data_anak_pegawai = DataTunjanganPegawaiFactory()
+            data_tunjangan_pegawai = DataTunjanganPegawaiFactory()
             
         for _ in range(NUM_TUGAS_TAMBAHAN_PEGAWAI):
-            data_anak_pegawai = DataTugasTambahanPegawaiFactory()
+            data_tugas_tambahan_pegawai = DataTugasTambahanPegawaiFactory()
         
         for _ in range(NUM_PENGHARGAAN_PEGAWAI):
-            data_anak_pegawai = DataPenghargaanPegawaiFactory()
+            data_penghargaan_pegawai = DataPenghargaanPegawaiFactory()
             
         for _ in range(NUM_NILAI_TES_PEGAWAI):
-            data_anak_pegawai = DataNilaiTesPegawaiFactory()
+            data_nilai_tes_pegawai = DataNilaiTesPegawaiFactory()
             
         for _ in range(NUM_RIWAYAT_GAJI_BERKALA_PEGAWAI):
-            data_anak_pegawai = DataRiwayatGajiBerkalaPegawaiFactory()
+            data_riwayat_gaji_berkala_pegawai = DataRiwayatGajiBerkalaPegawaiFactory()
             
         for _ in range(NUM_RIWAYAT_JABATAN_STRUKTURAL_PEGAWAI):
-            data_anak_pegawai = DataRiwayatJabatanStrukturalPegawaiFactory()
+            data_riwayat_jabatan_struktural_pegawai = DataRiwayatJabatanStrukturalPegawaiFactory()
             
         for _ in range(NUM_RIWAYAT_KEPANGKATAN_PEGAWAI):
-            data_anak_pegawai = DataRiwayatKepangkatanPegawaiFactory()
+            data_riwayat_kepangkatan_pegawai = DataRiwayatKepangkatanPegawaiFactory()
             
         for _ in range(NUM_RIWAYAT_PENDIDIKAN_FORMAL_PEGAWAI):
-            data_anak_pegawai = DataRiwayatPendidikanFormalPegawaiFactory()    
+            data_riwayat_pendidikan_formal_pegawai = DataRiwayatPendidikanFormalPegawaiFactory()    
             
         for _ in range(NUM_RIWAYAT_SERTIFIKASI_PEGAWAI):
-            data_anak_pegawai = DataRiwayatSertifikasiPegawaiFactory()
-            
+            data_riwayat_sertifikasi_pegawai = DataRiwayatSertifikasiPegawaiFactory()
+        
+        for _ in range(NUM_RIWAYAT_JABATAN_FUNGSIONAL_PEGAWAI):
+            data_riwayat_jabatan_fungsional_pegawai = DataRiwayatJabatanFungsionalPegawaiFactory()
+    
         for _ in range(NUM_RIWAYAT_KARIR_GURU_PEGAWAI):
-            data_anak_pegawai = DataRiwayatKarirGuruPegawaiFactory()
+            data_riwayat_karir_guru_pegawai = DataRiwayatKarirGuruPegawaiFactory()
             
         for _ in range(NUM_PEGAWAI):
-            data_anak_pegawai = DataPegawaiFactory()
+            data_pegawai = DataPegawaiFactory()
