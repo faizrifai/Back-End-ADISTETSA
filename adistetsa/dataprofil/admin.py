@@ -3,24 +3,44 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-admin.site.register(DataAnakPegawai)
-admin.site.register(DataBeasiswaPegawai)
-admin.site.register(DataBukuPegawai)
-admin.site.register(DataDiklatPegawai)
-admin.site.register(DataKaryaTulisPegawai)
-admin.site.register(DataKesejahteraanPegawai)
-admin.site.register(DataKompetensiPegawai)
-admin.site.register(DataNilaiTesPegawai)
-admin.site.register(DataPenghargaanPegawai)
-admin.site.register(DataRiwayatGajiBerkalaPegawai)
-admin.site.register(DataRiwayatJabatanFungsionalPegawai)
-admin.site.register(DataRiwayatJabatanStrukturalPegawai)
-admin.site.register(DataRiwayatKarirGuruPegawai)
-admin.site.register(DataRiwayatKepangkatanPegawai)
-admin.site.register(DataRiwayatPendidikanFormalPegawai)
-admin.site.register(DataRiwayatSertifikasiPegawai)
-admin.site.register(DataTugasTambahanPegawai)
-admin.site.register(DataTunjanganPegawai)
+admin.site.register(DataKaryawan)
+admin.site.register(DataGuru)
+admin.site.register(DataAnakGuru)
+admin.site.register(DataBeasiswaGuru)
+admin.site.register(DataBukuGuru)
+admin.site.register(DataDiklatGuru)
+admin.site.register(DataKaryaTulisGuru)
+admin.site.register(DataKesejahteraanGuru)
+admin.site.register(DataKompetensiGuru)
+admin.site.register(DataNilaiTesGuru)
+admin.site.register(DataPenghargaanGuru)
+admin.site.register(DataRiwayatGajiBerkalaGuru)
+admin.site.register(DataRiwayatJabatanFungsionalGuru)
+admin.site.register(DataRiwayatJabatanStrukturalGuru)
+admin.site.register(DataRiwayatKarirGuru)
+admin.site.register(DataRiwayatKepangkatanGuru)
+admin.site.register(DataRiwayatPendidikanFormalGuru)
+admin.site.register(DataRiwayatSertifikasiGuru)
+admin.site.register(DataTugasTambahanGuru)
+admin.site.register(DataTunjanganGuru)
+admin.site.register(DataAnakKaryawan)
+admin.site.register(DataBeasiswaKaryawan)
+admin.site.register(DataBukuKaryawan)
+admin.site.register(DataDiklatKaryawan)
+admin.site.register(DataKaryaTulisKaryawan)
+admin.site.register(DataKesejahteraanKaryawan)
+admin.site.register(DataKompetensiKaryawan)
+admin.site.register(DataNilaiTesKaryawan)
+admin.site.register(DataPenghargaanKaryawan)
+admin.site.register(DataRiwayatGajiBerkalaKaryawan)
+admin.site.register(DataRiwayatJabatanFungsionalKaryawan)
+admin.site.register(DataRiwayatJabatanStrukturalKaryawan)
+admin.site.register(DataRiwayatKarirKaryawan)
+admin.site.register(DataRiwayatKepangkatanKaryawan)
+admin.site.register(DataRiwayatPendidikanFormalKaryawan)
+admin.site.register(DataRiwayatSertifikasiKaryawan)
+admin.site.register(DataTugasTambahanKaryawan)
+admin.site.register(DataTunjanganKaryawan)
 
 class DataSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NISN', 'NAMA']
@@ -32,15 +52,15 @@ class DataOrangTuaAdmin(admin.ModelAdmin):
 
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
 
-class DataGuruAdmin(admin.ModelAdmin):
-    filter_horizontal = ('DATA_KOMPETENSI_GURU', 'DATA_ANAK_GURU', 'DATA_BEASISWA_GURU', 'DATA_BUKU_GURU', 'DATA_DIKLAT_GURU', 'DATA_KARYA_TULIS_GURU', 'DATA_KESEJAHTERAAN_GURU', 'DATA_TUNJANGAN_GURU', 'DATA_TUGAS_TAMBAHAN_GURU', 'DATA_PENGHARGAAN_GURU', 'DATA_NILAI_TEST_GURU', 'DATA_RIWAYAT_GAJI_GURU', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_GURU', 'DATA_RIWAYAT_KEPANGKATAN_GURU', 'DATA_PENDIDIKAN_NORMAL_GURU', 'DATA_SERTIFIKASI_GURU', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_GURU', 'DATA_RIWAYAT_KARIR_GURU',)
+# class DataGuruAdmin(admin.ModelAdmin):
+#     filter_horizontal = ('DATA_KOMPETENSI_GURU', 'DATA_ANAK_GURU', 'DATA_BEASISWA_GURU', 'DATA_BUKU_GURU', 'DATA_DIKLAT_GURU', 'DATA_KARYA_TULIS_GURU', 'DATA_KESEJAHTERAAN_GURU', 'DATA_TUNJANGAN_GURU', 'DATA_TUGAS_TAMBAHAN_GURU', 'DATA_PENGHARGAAN_GURU', 'DATA_NILAI_TEST_GURU', 'DATA_RIWAYAT_GAJI_GURU', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_GURU', 'DATA_RIWAYAT_KEPANGKATAN_GURU', 'DATA_PENDIDIKAN_NORMAL_GURU', 'DATA_SERTIFIKASI_GURU', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_GURU', 'DATA_RIWAYAT_KARIR_GURU',)
 
-admin.site.register(DataGuru, DataGuruAdmin)
+# admin.site.register(DataGuru, DataGuruAdmin)
 
-class DataKaryawanAdmin(admin.ModelAdmin):
-    filter_horizontal = ('DATA_KOMPETENSI_KARYAWAN', 'DATA_ANAK_KARYAWAN', 'DATA_BEASISWA_KARYAWAN', 'DATA_BUKU_KARYAWAN', 'DATA_DIKLAT_KARYAWAN', 'DATA_KARYA_TULIS_KARYAWAN', 'DATA_KESEJAHTERAAN_KARYAWAN', 'DATA_TUNJANGAN_KARYAWAN', 'DATA_TUGAS_TAMBAHAN_KARYAWAN', 'DATA_PENGHARGAAN_KARYAWAN', 'DATA_NILAI_TEST_KARYAWAN', 'DATA_RIWAYAT_GAJI_KARYAWAN', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_KARYAWAN', 'DATA_RIWAYAT_KEPANGKATAN_KARYAWAN', 'DATA_PENDIDIKAN_NORMAL_KARYAWAN', 'DATA_SERTIFIKASI_KARYAWAN', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_KARYAWAN', 'DATA_RIWAYAT_KARIR_KARYAWAN',)
+# class DataKaryawanAdmin(admin.ModelAdmin):
+#     filter_horizontal = ('DATA_KOMPETENSI_KARYAWAN', 'DATA_ANAK_KARYAWAN', 'DATA_BEASISWA_KARYAWAN', 'DATA_BUKU_KARYAWAN', 'DATA_DIKLAT_KARYAWAN', 'DATA_KARYA_TULIS_KARYAWAN', 'DATA_KESEJAHTERAAN_KARYAWAN', 'DATA_TUNJANGAN_KARYAWAN', 'DATA_TUGAS_TAMBAHAN_KARYAWAN', 'DATA_PENGHARGAAN_KARYAWAN', 'DATA_NILAI_TEST_KARYAWAN', 'DATA_RIWAYAT_GAJI_KARYAWAN', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_KARYAWAN', 'DATA_RIWAYAT_KEPANGKATAN_KARYAWAN', 'DATA_PENDIDIKAN_NORMAL_KARYAWAN', 'DATA_SERTIFIKASI_KARYAWAN', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_KARYAWAN', 'DATA_RIWAYAT_KARIR_KARYAWAN',)
 
-admin.site.register(DataKaryawan, DataKaryawanAdmin)
+# admin.site.register(DataKaryawan, DataKaryawanAdmin)
 
 
 # class kompetensi_pegawai_inline(admin.TabularInline):
