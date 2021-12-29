@@ -161,6 +161,7 @@ class DataBeasiswaPegawai(models.Model):
     DARI_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     SAMPAI_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MASIH_MENERIMA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    
     def __str__(self):
         return self.JENIS + ' - ' + self.PENYELENGGARA + ' - ' + self.DARI_TAHUN + ' - ' + self.SAMPAI_TAHUN + ' - ' + self.MASIH_MENERIMA
     

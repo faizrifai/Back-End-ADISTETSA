@@ -128,5 +128,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'kustom_autentikasi.auth_backend.EmailAuthModelBackend',
     'kustom_autentikasi.auth_backend.DataSiswaAuthModelBackend',
 )
