@@ -439,6 +439,26 @@ class DataBeasiswaGuruListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class DataBeasiswaGuruView(APIView): 
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, id):
+        data_beasiswa_guru = DataBeasiswaGuru.objects.filter(OWNER=id)
+        serializer = DataBeasiswaGuruSerializer(data_beasiswa_guru, many=True)
+        return Response(serializer.data)
+
+
+class DataBeasiswaGuru2View(APIView): 
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, id, pk):
+        data_beasiswa_guru = DataBeasiswaGuru.objects.filter(OWNER=id, pk=pk)
+        serializer = DataBeasiswaGuruSerializer(data_beasiswa_guru, many=True)
+        return Response(serializer.data)
+    
+
 class DataBeasiswaGuruDetailView(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
@@ -466,6 +486,11 @@ class DataBeasiswaGuruDetailView(APIView):
         beasiswa_guru = self.get_object(pk)
         beasiswa_guru.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
 
 class DataBeasiswaKaryawanListView(APIView): 
     #authentication_classes = [TokenAuthentication]
