@@ -129,3 +129,99 @@ class DataOrangTuaDetailView(APIView):
         orang_tua = self.get_object(pk)
         orang_tua.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+class DataKaryawanListView(APIView): 
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        data_karyawan = DataKaryawan.objects.all()
+        serializer = DataKaryawanSerializer(data_karyawan, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = DataKaryawanSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DataKaryawanDetailView(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return DataKaryawan.objects.get(pk=pk)
+        except DataKaryawan.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        karyawan = self.get_object(pk)
+        serializer = DataKaryawanSerializer(karyawan)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        karyawan = self.get_object(pk)
+        serializer = DataKaryawanSerializer(karyawan, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        karyawan = self.get_object(pk)
+        karyawan.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+class DataGuruListView(APIView): 
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request, format=None):
+        data_guru = DataGuru.objects.all()
+        serializer = DataGuruSerializer(data_guru, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = DataGuruSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DataGuruDetailView(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return DataGuru.objects.get(pk=pk)
+        except DataGuru.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        guru = self.get_object(pk)
+        serializer = DataGuruSerializer(guru)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        guru = self.get_object(pk)
+        serializer = DataGuruSerializer(guru, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        guru = self.get_object(pk)
+        guru.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
