@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
@@ -15,17 +16,39 @@ class DataSiswaUserResource(resources.ModelResource):
         model = DataSiswaUser
 
 class DataGuruUserResource(resources.ModelResource):
-    # username = Field(
-    #     column_name='username',
-    #     attribute='username',
-    #     widget=ForeignKeyWidget(DataGuruUser, 'USER__username')
-    # )
+    username = Field(
+        column_name='username',
+        attribute='USER',
+        widget=ForeignKeyWidget(User, 'username')
+    )
+    password = Field(
+        column_name='password',
+        attribute='USER',
+        widget=ForeignKeyWidget(User, 'password')
+    )
 
     class Meta:
         model = DataGuruUser
-        exclude = ('id', 'USER')
-        fields = ('USER__username', 'DATA_GURU')
-        import_id_fields = ('DATA_GURU')
+        exclude = ('id')
+        fields = ('USER', 'DATA_GURU', 'username', 'password')
+        import_id_fields = ('USER', 'DATA_GURU')
+
+    def before_import_row(self, row, **kwargs):
+        username = row['username']
+        password = row['password']
+        new_user, created = User.objects.get_or_create(username=username)
+
+        if created:
+            new_user.set_password(password)
+            new_user.save()
+
+        row['USER'] = new_user.id
+
+    def save_instance(self, instance, using_transactions=True, dry_run=False):
+        try:
+            instance.save()
+        except:
+            pass
 
 # Register your models here.
 class DataSiswaUserAdmin(ImportExportModelAdmin):
