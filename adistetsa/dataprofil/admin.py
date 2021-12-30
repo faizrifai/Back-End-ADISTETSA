@@ -3,6 +3,9 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.safestring import mark_safe
 
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin, ExportActionMixin
+
 from .models import *
 
 # Register your models here.
@@ -52,9 +55,19 @@ class DataOrangTuaAdmin(admin.ModelAdmin):
 
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
 
-class DataGuruAdmin(admin.ModelAdmin):
+class DataGuruResource(resources.ModelResource):
+
+    class Meta:
+        model = DataGuru
+        exclude = ('ID',)
+        import_id_fields = ('NIK',)
+
+class DataGuruAdmin(ImportExportModelAdmin):
     list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru', 'anak_guru', 'beasiswa_guru','buku_guru','diklat_guru','karya_tulis_guru','kesejahteraan_guru','tunjangan_guru','tugas_tambahan_guru','penghargaan_guru','nilai_tes_guru','riwayat_gaji_berkala_guru','riwayat_jabatan_struktural_guru','riwayat_kepangkatan_guru','riwayat_pendidikan_formal_guru','riwayat_sertifikasi_guru','riwayat_jabatan_fungsional_guru','riwayat_karir_guru')
     search_fields = ['NIP', 'NAMA_LENGKAP']
+    list_per_page = 10
+
+    resource_class = DataGuruResource
 
     def kompetensi_guru(self, obj):
         daftar = DataKompetensiGuru.objects.filter(OWNER=obj)
@@ -279,6 +292,7 @@ admin.site.register(DataGuru, DataGuruAdmin)
 class DataKaryawanAdmin(admin.ModelAdmin):
     list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_karyawan', 'anak_karyawan', 'beasiswa_karyawan','buku_karyawan','diklat_karyawan','karya_tulis_karyawan','kesejahteraan_karyawan','tunjangan_karyawan','tugas_tambahan_karyawan','penghargaan_karyawan','nilai_tes_karyawan','riwayat_gaji_berkala_karyawan','riwayat_jabatan_struktural_karyawan','riwayat_kepangkatan_karyawan','riwayat_pendidikan_formal_karyawan','riwayat_sertifikasi_karyawan','riwayat_jabatan_fungsional_karyawan','riwayat_karir_karyawan')
     search_fields = ['NIP', 'NAMA_LENGKAP']
+    list_per_page = 10
 
     def kompetensi_karyawan(self, obj):
         daftar = DataKompetensiKaryawan.objects.filter(OWNER=obj)
