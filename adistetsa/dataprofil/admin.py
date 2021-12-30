@@ -54,7 +54,7 @@ class DataOrangTuaAdmin(admin.ModelAdmin):
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
 
 class DataGuruAdmin(admin.ModelAdmin):
-    list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru',)
+    list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru', 'anak_guru')
     search_fields = ['NIP', 'NAMA_LENGKAP']
 
     def kompetensi_guru(self, obj):
@@ -68,7 +68,19 @@ class DataGuruAdmin(admin.ModelAdmin):
         
         return mark_safe(u'<a href="%s?OWNER__exact=%d">%d Kompetensi</a>' % (base_url, obj.ID, count))
 
+    def anak_guru(self, obj):
+        daftar_anak = DataAnakGuru.objects.filter(OWNER=obj)
+        count = daftar_anak.count()
+
+        base_url = reverse('admin:dataprofil_dataanakguru_changelist')
+
+        if (count == 0):
+            return mark_safe('0 Anak')
+        
+        return mark_safe(u'<a href="%s?OWNER__exact=%d">%d Anak</a>' % (base_url, obj.ID, count))
+
     kompetensi_guru.short_description = "Daftar Kompetensi"
+    anak_guru.short_description = "Daftar Anak"
 
 admin.site.register(DataGuru, DataGuruAdmin)
 
