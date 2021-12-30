@@ -55,6 +55,7 @@ admin.site.register(DataOrangTua, DataOrangTuaAdmin)
 
 class DataGuruAdmin(admin.ModelAdmin):
     list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru',)
+    search_fields = ['NIP', 'NAMA_LENGKAP']
 
     def kompetensi_guru(self, obj):
         daftar = DataKompetensiGuru.objects.filter(OWNER=obj)

@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'import_export',
     'dataprofil',
     'kustom_autentikasi',
-    'rest_framework',
-    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -120,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static_files/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -131,5 +133,4 @@ AUTHENTICATION_BACKENDS = (
     'kustom_autentikasi.auth_backend.EmailAuthModelBackend',
     'kustom_autentikasi.auth_backend.DataSiswaAuthModelBackend',
     'kustom_autentikasi.auth_backend.DataGuruPNSAuthModelBackend',
-    'kustom_autentikasi.auth_backend.DataGuruNonPNSAuthModelBackend',
 )

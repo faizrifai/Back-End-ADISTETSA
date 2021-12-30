@@ -67,23 +67,3 @@ class DataGuruPNSAuthModelBackend(ModelBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
-
-class DataGuruNonPNSAuthModelBackend(ModelBackend):
-    def authenticate(self, request, **kwargs):
-        username = kwargs['username']
-        password = kwargs['password']
-
-        try:
-            data_guru = DataGuruUser.objects.get(USERNAME=username)
-            
-            if (data_guru.USER.check_password(password) is True):
-                return data_guru.USER
-        except DataGuruUser.DoesNotExist:
-            print("Tidak ada data gaes")
-            return None
-
-    def get_user(self, user_id):
-        try:
-            return User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
