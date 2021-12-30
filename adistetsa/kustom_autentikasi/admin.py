@@ -8,6 +8,7 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
 
 from .models import *
+from .dependencies import *
 
 # Register your import_export resource model here
 class DataSiswaUserResource(resources.ModelResource):
@@ -26,26 +27,46 @@ class DataGuruUserResource(resources.ModelResource):
         attribute='USER',
         widget=ForeignKeyWidget(User, 'password')
     )
+    nik = Field(
+        column_name='nik',
+        attribute='DATA_GURU',
+        widget=ForeignKeyWidget(DataGuru, 'NIK')
+    )
 
     class Meta:
         model = DataGuruUser
         exclude = ('id')
-        fields = ('USER', 'DATA_GURU', 'username', 'password')
+        fields = ('USER', 'DATA_GURU', 'nik')
         import_id_fields = ('USER', 'DATA_GURU')
 
     def before_import_row(self, row, **kwargs):
         username = row['username']
         password = row['password']
+
+        try:
+            user = User.objects.get(username=username)
+            user.delete()
+        except:
+            pass
+
         new_user = User.objects.get_or_create(username=username, password=password)
         row['USER'] = new_user[0].id
 
+        nik = row['nik']
+
+        new_guru = DataGuru.objects.get(
+            NIK=nik,
+        )
+        row['DATA_GURU'] = new_guru.ID
+
     def save_instance(self, instance, using_transactions=True, dry_run=False):
         try:
-            instance.save()
-            
-            if instance.USER.check_password(current_password):
-                instance.USER.set_password(instance.USER.password)
+            new_password = instance.USER.password
+            if not (instance.USER.check_password(new_password)):
+                instance.USER.set_password(new_password)
                 instance.USER.save()
+
+            instance.save()
 
         except:
             pass
