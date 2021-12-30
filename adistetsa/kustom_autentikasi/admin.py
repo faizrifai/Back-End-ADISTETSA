@@ -36,17 +36,17 @@ class DataGuruUserResource(resources.ModelResource):
     def before_import_row(self, row, **kwargs):
         username = row['username']
         password = row['password']
-        new_user, created = User.objects.get_or_create(username=username)
-
-        if created:
-            new_user.set_password(password)
-            new_user.save()
-
-        row['USER'] = new_user.id
+        new_user = User.objects.get_or_create(username=username, password=password)
+        row['USER'] = new_user[0].id
 
     def save_instance(self, instance, using_transactions=True, dry_run=False):
         try:
             instance.save()
+            
+            if instance.USER.check_password(current_password):
+                instance.USER.set_password(instance.USER.password)
+                instance.USER.save()
+
         except:
             pass
 
