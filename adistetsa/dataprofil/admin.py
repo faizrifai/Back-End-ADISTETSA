@@ -45,13 +45,37 @@ admin.site.register(DataRiwayatSertifikasiKaryawan)
 admin.site.register(DataTugasTambahanKaryawan)
 admin.site.register(DataTunjanganKaryawan)
 
-class DataSiswaAdmin(admin.ModelAdmin):
+class DataSiswaResource(resources.ModelResource):
+
+    class Meta:
+        model = DataSiswa
+        import_id_fields = ('NISN',)
+
+class DataSiswaAdmin(ImportExportModelAdmin):
     search_fields = ['NISN', 'NAMA']
+    list_per_page = 10
+    list_display = ('NISN', 'NAMA')
+    resource_class = DataSiswaResource
 
 admin.site.register(DataSiswa, DataSiswaAdmin)
 
-class DataOrangTuaAdmin(admin.ModelAdmin):
+class DataOrangTuaResource(resources.ModelResource):
+
+    class Meta:
+        model = DataOrangTua
+        exclude = ('ID',)
+        import_id_fields = ('NIK_AYAH', 'NIK_IBU')
+
+class DataOrangTuaAdmin(ImportExportModelAdmin):
     filter_horizontal = ('DATA_ANAK',)
+    list_per_page = 10
+    search_fields = ['NAMA_AYAH', 'NAMA_IBU', 'NAMA_WALI']
+    list_display = ('aksi', 'NAMA_AYAH', 'NAMA_IBU', 'NAMA_WALI')
+
+    resource_class = DataOrangTuaResource
+
+    def aksi(self, obj):
+        return 'Detail'
 
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
 
@@ -63,7 +87,7 @@ class DataGuruResource(resources.ModelResource):
         import_id_fields = ('NIK',)
 
 class DataGuruAdmin(ImportExportModelAdmin):
-    list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_guru', 'anak_guru', 'beasiswa_guru','buku_guru','diklat_guru','karya_tulis_guru','kesejahteraan_guru','tunjangan_guru','tugas_tambahan_guru','penghargaan_guru','nilai_tes_guru','riwayat_gaji_berkala_guru','riwayat_jabatan_struktural_guru','riwayat_kepangkatan_guru','riwayat_pendidikan_formal_guru','riwayat_sertifikasi_guru','riwayat_jabatan_fungsional_guru','riwayat_karir_guru')
+    list_display = ('NIK', 'NIP', 'NAMA_LENGKAP', 'kompetensi_guru', 'anak_guru', 'beasiswa_guru','buku_guru','diklat_guru','karya_tulis_guru','kesejahteraan_guru','tunjangan_guru','tugas_tambahan_guru','penghargaan_guru','nilai_tes_guru','riwayat_gaji_berkala_guru','riwayat_jabatan_struktural_guru','riwayat_kepangkatan_guru','riwayat_pendidikan_formal_guru','riwayat_sertifikasi_guru','riwayat_jabatan_fungsional_guru','riwayat_karir_guru')
     search_fields = ['NIP', 'NAMA_LENGKAP']
     list_per_page = 10
 
@@ -289,10 +313,18 @@ class DataGuruAdmin(ImportExportModelAdmin):
 
 admin.site.register(DataGuru, DataGuruAdmin)
 
-class DataKaryawanAdmin(admin.ModelAdmin):
-    list_display = ('NIP', 'NAMA_LENGKAP', 'kompetensi_karyawan', 'anak_karyawan', 'beasiswa_karyawan','buku_karyawan','diklat_karyawan','karya_tulis_karyawan','kesejahteraan_karyawan','tunjangan_karyawan','tugas_tambahan_karyawan','penghargaan_karyawan','nilai_tes_karyawan','riwayat_gaji_berkala_karyawan','riwayat_jabatan_struktural_karyawan','riwayat_kepangkatan_karyawan','riwayat_pendidikan_formal_karyawan','riwayat_sertifikasi_karyawan','riwayat_jabatan_fungsional_karyawan','riwayat_karir_karyawan')
+class DataKaryawanResource(resources.ModelResource):
+    class Meta:
+        model = DataKaryawan
+        exclude = ('ID',)
+        import_id_fields = ('NIK',)
+
+class DataKaryawanAdmin(ImportExportModelAdmin):
+    list_display = ('NIK', 'NIP', 'NAMA_LENGKAP', 'kompetensi_karyawan', 'anak_karyawan', 'beasiswa_karyawan','buku_karyawan','diklat_karyawan','karya_tulis_karyawan','kesejahteraan_karyawan','tunjangan_karyawan','tugas_tambahan_karyawan','penghargaan_karyawan','nilai_tes_karyawan','riwayat_gaji_berkala_karyawan','riwayat_jabatan_struktural_karyawan','riwayat_kepangkatan_karyawan','riwayat_pendidikan_formal_karyawan','riwayat_sertifikasi_karyawan','riwayat_jabatan_fungsional_karyawan','riwayat_karir_karyawan')
     search_fields = ['NIP', 'NAMA_LENGKAP']
     list_per_page = 10
+
+    resource_class = DataKaryawanResource
 
     def kompetensi_karyawan(self, obj):
         daftar = DataKompetensiKaryawan.objects.filter(OWNER=obj)

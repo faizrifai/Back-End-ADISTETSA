@@ -81,6 +81,7 @@ class DataSiswa(models.Model):
 
 class DataOrangTua(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    NIK_AYAH = models.BigIntegerField()
     NAMA_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
     TAHUN_LAHIR_AYAH = models.DateField()
     JENJANG_PENDIDIKAN_AYAH  = models.CharField(
