@@ -40,9 +40,6 @@ class HomeView(APIView):
         return Response(content)
 
 class DataSiswaListView(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
