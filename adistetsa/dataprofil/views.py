@@ -5,14 +5,13 @@ from .serializers import *
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import status, generics
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
 from rest_framework.authentication import TokenAuthentication
+from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
 
@@ -39,21 +38,12 @@ class HomeView(APIView):
         }
         return Response(content)
 
-class DataSiswaListView(APIView):
+class DataSiswaListView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, format=None):
-        data_siswa = DataSiswa.objects.all()
-        serializer = DataSiswaSerializer(data_siswa, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = DataSiswaSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer_class = DataSiswaSerializer
+    queryset = DataSiswa.objects.all()
 
 class DataSiswaDetailView(APIView):
     authentication_classes = [TokenAuthentication]
