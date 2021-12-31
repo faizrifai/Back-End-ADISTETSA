@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_delete, post_save
 
 from dataprofil.models import DataSiswa, DataOrangTua, DataGuru, DataKaryawan
 
@@ -14,24 +15,50 @@ class DataSiswaUser(models.Model):
     class Meta:
         verbose_name_plural = "Data Siswa User"
 
+def post_save_data_siswa(sender, instance, **kwargs):
+    data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA__NISN=instance.NISN)
+    user = data_siswa_user.USER
+    user.email = instance.EMAIL
+    user.save()
+
+post_save.connect(post_save_data_siswa, sender=DataSiswa)
+
+def post_delete_data_siswa_user(sender, instance, **kwargs):
+    user = User.objects.get(username=instance.USER.username)
+    user.delete()
+
+post_delete.connect(post_delete_data_siswa_user, sender=DataSiswaUser)
+
 class DataOrangTuaUser(models.Model):
     USER = models.OneToOneField(User, on_delete=models.CASCADE)
     DATA_ORANG_TUA = models.ForeignKey(DataOrangTua, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.DATA_ORANG_TUA.NAMA_LENGKAP) + " Username: " + str(self.USER.username)
 
     class Meta:
         verbose_name_plural = "Data Orang Tua User"
 
 class DataGuruUser(models.Model):
-    USER = models.OneToOneField(User, on_delete=models.CASCADE)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     DATA_GURU = models.OneToOneField(DataGuru, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.DATA_GURU.NAMA_LENGKAP)
+
     class Meta:
         verbose_name_plural = "Data Guru User"
+
+def post_save_data_guru(sender, instance, **kwargs):
+    data_guru_user = DataGuruUser.objects.get(DATA_GURU__NIK=instance.NIK)
+    user = data_guru_user.USER
+    user.email = instance.EMAIL
+    user.save()
+
+post_save.connect(post_save_data_guru, sender=DataGuru)
+
+def post_delete_data_guru_user(sender, instance, **kwargs):
+    user = User.objects.get(username=instance.USER.username)
+    user.delete()
+
+post_delete.connect(post_delete_data_guru_user, sender=DataGuruUser)
 
 class DataKaryawanUser(models.Model):
     USER = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -42,3 +69,11 @@ class DataKaryawanUser(models.Model):
 
     class Meta:
         verbose_name_plural = "Data Karyawan User"
+
+def post_save_data_karyawan(sender, instance, **kwargs):
+    data_karyawan_user = DataKaryawanUser.objects.get(DATA_KARYAWAN__NIK=instance.NIK)
+    user = data_karyawan_user.USER
+    user.email = instance.EMAIL
+    user.save()
+
+post_save.connect(post_save_data_karyawan, sender=DataKaryawan)

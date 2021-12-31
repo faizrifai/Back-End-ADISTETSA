@@ -40,6 +40,7 @@ class DataOrangTuaFactory(DjangoModelFactory):
     class Meta:
         model = DataOrangTua
         
+    NIK_AYAH = factory.Faker('credit_card_number')
     NAMA_AYAH = factory.Faker('name')
     TAHUN_LAHIR_AYAH = factory.Faker('date')
     JENJANG_PENDIDIKAN_AYAH = factory.Faker('random_element', elements=random_enum(ENUM_JENJANG_PENDIDIKAN))
