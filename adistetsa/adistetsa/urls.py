@@ -11,12 +11,12 @@ from dataprofil import views
 # Swagger documentation setup
 schema_view = get_schema_view(
     openapi.Info(
-        title="Snippets API",
+        title="Adi Stetsa API",
         default_version='v1',
-        description="Test description",
+        description="Website ini adalah dokumentasi API, sebagai referensi untuk integrasi dengan Front End",
         terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="contact@snippets.local"),
-        license=openapi.License(name="MIT License"),
+        contact=openapi.Contact(email="adistetsa@gmail.com"),
+        license=openapi.License(name="None"),
     ),
     public=True,
     permission_classes=[permissions.AllowAny],
