@@ -43,7 +43,17 @@ class DataSiswaListView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     serializer_class = DataSiswaSerializer
-    queryset = DataSiswa.objects.all()
+    
+    def get_queryset(self):
+        """
+        Menampilkan seluruh daftar siswa jika merupakan Super Admin,
+        Menampilkan data siswa terkait jika merupakan User biasa
+        """
+        user = self.request.user
+        if (user.is_superuser):
+            return DataSiswa.objects.all()
+        else:
+            return DataSiswa.objects.filter(NISN=user.username)
 
 class DataSiswaDetailView(APIView):
     authentication_classes = [TokenAuthentication]
