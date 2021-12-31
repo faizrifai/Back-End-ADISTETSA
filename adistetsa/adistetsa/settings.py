@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'coreapi',
+    'drf_yasg',
     'import_export',
     'dataprofil',
     'kustom_autentikasi',
@@ -128,9 +130,15 @@ STATIC_ROOT = 'static_files/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Addons
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'kustom_autentikasi.auth_backend.EmailAuthModelBackend',
     'kustom_autentikasi.auth_backend.DataSiswaAuthModelBackend',
     'kustom_autentikasi.auth_backend.DataGuruPNSAuthModelBackend',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
