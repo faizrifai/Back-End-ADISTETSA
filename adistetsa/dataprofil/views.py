@@ -1,6 +1,6 @@
 from .models import *
 from .serializers import *
-from .doc_filters import *
+from .doc_schema import *
 from kustom_autentikasi.models import DataGuruUser
 
 from rest_framework import status, generics
@@ -195,6 +195,10 @@ class DataKompetensiGuruDetailView(APIView):
 
         return Response(response)
 
+    @swagger_auto_schema(
+        request_body=schema_datakompetensiguru,
+        responses={'200': 'Berhasil mengupdate data kompetensi guru', '400': 'Bad Request',}
+    )
     def put(self, request, pk, format=None):
         queryset = self.get_queryset(pk)
         serializer = self.serializer_class(queryset, data=request.data)
@@ -205,6 +209,10 @@ class DataKompetensiGuruDetailView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        request_body=schema_datakompetensiguru,
+        responses={'200': 'Berhasil mengupdate data kompetensi guru', '400': 'Bad Request',}
+    )
     def patch(self, request, pk):
         queryset = self.get_queryset(pk)
         serializer = self.serializer_class(queryset, data=request.data, partial=True)

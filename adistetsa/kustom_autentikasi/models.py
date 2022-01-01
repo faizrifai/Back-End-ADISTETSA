@@ -6,7 +6,7 @@ from dataprofil.models import DataSiswa, DataOrangTua, DataGuru, DataKaryawan
 
 # Create your models here.
 class DataSiswaUser(models.Model):
-    USER = models.OneToOneField(User, on_delete=models.CASCADE)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -36,7 +36,7 @@ def post_delete_data_siswa_user(sender, instance, **kwargs):
 post_delete.connect(post_delete_data_siswa_user, sender=DataSiswaUser)
 
 class DataOrangTuaUser(models.Model):
-    USER = models.OneToOneField(User, on_delete=models.CASCADE)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     DATA_ORANG_TUA = models.ForeignKey(DataOrangTua, on_delete=models.CASCADE)
 
     class Meta:
@@ -73,7 +73,7 @@ def post_delete_data_guru_user(sender, instance, **kwargs):
 post_delete.connect(post_delete_data_guru_user, sender=DataGuruUser)
 
 class DataKaryawanUser(models.Model):
-    USER = models.OneToOneField(User, on_delete=models.CASCADE)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     DATA_KARYAWAN = models.ForeignKey(DataKaryawan, on_delete=models.CASCADE)
 
     def __str__(self):

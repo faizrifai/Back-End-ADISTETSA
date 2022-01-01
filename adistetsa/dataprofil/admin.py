@@ -7,6 +7,7 @@ from import_export import resources
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 
 from .models import *
+from .importexportresources import *
 
 # Register your models here.
 admin.site.register(DataAnakGuru)
@@ -45,12 +46,6 @@ admin.site.register(DataRiwayatSertifikasiKaryawan)
 admin.site.register(DataTugasTambahanKaryawan)
 admin.site.register(DataTunjanganKaryawan)
 
-class DataSiswaResource(resources.ModelResource):
-
-    class Meta:
-        model = DataSiswa
-        import_id_fields = ('NISN',)
-
 class DataSiswaAdmin(ImportExportModelAdmin):
     search_fields = ['NISN', 'NAMA']
     list_per_page = 10
@@ -58,13 +53,6 @@ class DataSiswaAdmin(ImportExportModelAdmin):
     resource_class = DataSiswaResource
 
 admin.site.register(DataSiswa, DataSiswaAdmin)
-
-class DataOrangTuaResource(resources.ModelResource):
-
-    class Meta:
-        model = DataOrangTua
-        exclude = ('ID',)
-        import_id_fields = ('NIK_AYAH', 'NIK_IBU')
 
 class DataOrangTuaAdmin(ImportExportModelAdmin):
     filter_horizontal = ('DATA_ANAK',)
@@ -78,13 +66,6 @@ class DataOrangTuaAdmin(ImportExportModelAdmin):
         return 'Detail'
 
 admin.site.register(DataOrangTua, DataOrangTuaAdmin)
-
-class DataGuruResource(resources.ModelResource):
-
-    class Meta:
-        model = DataGuru
-        exclude = ('ID',)
-        import_id_fields = ('NIK',)
 
 class DataGuruAdmin(ImportExportModelAdmin):
     list_display = ('NIK', 'NIP', 'NAMA_LENGKAP', 'kompetensi_guru', 'anak_guru', 'beasiswa_guru','buku_guru','diklat_guru','karya_tulis_guru','kesejahteraan_guru','tunjangan_guru','tugas_tambahan_guru','penghargaan_guru','nilai_tes_guru','riwayat_gaji_berkala_guru','riwayat_jabatan_struktural_guru','riwayat_kepangkatan_guru','riwayat_pendidikan_formal_guru','riwayat_sertifikasi_guru','riwayat_jabatan_fungsional_guru','riwayat_karir_guru')
@@ -312,12 +293,6 @@ class DataGuruAdmin(ImportExportModelAdmin):
     riwayat_karir_guru.short_description = "Daftar Riwayat Karir"
 
 admin.site.register(DataGuru, DataGuruAdmin)
-
-class DataKaryawanResource(resources.ModelResource):
-    class Meta:
-        model = DataKaryawan
-        exclude = ('ID',)
-        import_id_fields = ('NIK',)
 
 class DataKaryawanAdmin(ImportExportModelAdmin):
     list_display = ('NIK', 'NIP', 'NAMA_LENGKAP', 'kompetensi_karyawan', 'anak_karyawan', 'beasiswa_karyawan','buku_karyawan','diklat_karyawan','karya_tulis_karyawan','kesejahteraan_karyawan','tunjangan_karyawan','tugas_tambahan_karyawan','penghargaan_karyawan','nilai_tes_karyawan','riwayat_gaji_berkala_karyawan','riwayat_jabatan_struktural_karyawan','riwayat_kepangkatan_karyawan','riwayat_pendidikan_formal_karyawan','riwayat_sertifikasi_karyawan','riwayat_jabatan_fungsional_karyawan','riwayat_karir_karyawan')

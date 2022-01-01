@@ -41,7 +41,6 @@ class DataAnakKaryawanSerializer(serializers.ModelSerializer):
         model = DataAnakKaryawan
         fields = '__all__'
 
-
 class DataBeasiswaGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataBeasiswaGuru
