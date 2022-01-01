@@ -143,7 +143,7 @@ class DataKompetensiGuruListView(generics.ListCreateAPIView):
     get: Menampilkan daftar kompetensi guru (Guru).
     post: Menambahkan data kompetensi guru (Guru).
     """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    permission_classes = [HasGroupPermissionAny]
     required_groups = {
         'GET': ['Guru'],
         'POST': ['Guru'],
@@ -163,6 +163,7 @@ class DataKompetensiGuruListView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.validated_data['OWNER_id'] = self.get_data_guru().ID
+
         return super(DataKompetensiGuruListView, self).perform_create(serializer)
 
 
@@ -173,7 +174,7 @@ class DataKompetensiGuruDetailView(APIView):
     patch: Mengubah beberapa atribut data kompetensi guru (Guru).
     delete: Menghapus data kompetensi guru (Guru).
     """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    permission_classes = [HasGroupPermissionAny]
     required_groups = {
         'GET': ['Guru'],
         'PUT': ['Guru'],
@@ -182,11 +183,11 @@ class DataKompetensiGuruDetailView(APIView):
     }
     serializer_class = DataKompetensiGuruSerializer
 
-    def get_queryset(self, pk):
+    def get_queryset(self):
         user = self.request.user
         data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
 
-        return DataKompetensiGuru.objects.get(pk=pk, OWNER=data_guru.ID)
+        return DataKompetensiGuru.objects.get(pk=self.kwargs['pk'], OWNER=data_guru.ID)
 
     def get(self, request, pk, *args, **kwargs):
         queryset = self.get_queryset(pk)
