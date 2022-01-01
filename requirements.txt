@@ -12,6 +12,7 @@ distlib==0.3.4
 Django==4.0
 django-import-export==2.7.1
 djangorestframework==3.13.1
+djangorestframework-simplejwt==5.0.0
 drf-yasg==1.20.0
 et-xmlfile==1.1.0
 factory-boy==3.2.1
@@ -32,6 +33,7 @@ openpyxl==3.0.9
 packaging==21.3
 Pillow==8.4.0
 platformdirs==2.4.1
+PyJWT==2.3.0
 pylint==2.12.2
 pyparsing==3.0.6
 pyrsistent==0.18.0

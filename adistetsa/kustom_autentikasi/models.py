@@ -16,16 +16,22 @@ class DataSiswaUser(models.Model):
         verbose_name_plural = "Data Siswa User"
 
 def post_save_data_siswa(sender, instance, **kwargs):
-    data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA__NISN=instance.NISN)
-    user = data_siswa_user.USER
-    user.email = instance.EMAIL
-    user.save()
+    try:
+        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA__NISN=instance.NISN)
+        user = data_siswa_user.USER
+        user.email = instance.EMAIL
+        user.save()
+    except:
+        pass
 
 post_save.connect(post_save_data_siswa, sender=DataSiswa)
 
 def post_delete_data_siswa_user(sender, instance, **kwargs):
-    user = User.objects.get(username=instance.USER.username)
-    user.delete()
+    try:
+        user = User.objects.get(username=instance.USER.username)
+        user.delete()
+    except:
+        pass
 
 post_delete.connect(post_delete_data_siswa_user, sender=DataSiswaUser)
 
@@ -47,16 +53,22 @@ class DataGuruUser(models.Model):
         verbose_name_plural = "Data Guru User"
 
 def post_save_data_guru(sender, instance, **kwargs):
-    data_guru_user = DataGuruUser.objects.get(DATA_GURU__NIK=instance.NIK)
-    user = data_guru_user.USER
-    user.email = instance.EMAIL
-    user.save()
+    try:
+        data_guru_user = DataGuruUser.objects.get(DATA_GURU__NIK=instance.NIK)
+        user = data_guru_user.USER
+        user.email = instance.EMAIL
+        user.save()
+    except:
+        pass
 
 post_save.connect(post_save_data_guru, sender=DataGuru)
 
 def post_delete_data_guru_user(sender, instance, **kwargs):
-    user = User.objects.get(username=instance.USER.username)
-    user.delete()
+    try:
+        user = User.objects.get(username=instance.USER.username)
+        user.delete()
+    except:
+        pass
 
 post_delete.connect(post_delete_data_guru_user, sender=DataGuruUser)
 
@@ -71,9 +83,12 @@ class DataKaryawanUser(models.Model):
         verbose_name_plural = "Data Karyawan User"
 
 def post_save_data_karyawan(sender, instance, **kwargs):
-    data_karyawan_user = DataKaryawanUser.objects.get(DATA_KARYAWAN__NIK=instance.NIK)
-    user = data_karyawan_user.USER
-    user.email = instance.EMAIL
-    user.save()
+    try:
+        data_karyawan_user = DataKaryawanUser.objects.get(DATA_KARYAWAN__NIK=instance.NIK)
+        user = data_karyawan_user.USER
+        user.email = instance.EMAIL
+        user.save()
+    except:
+        pass
 
 post_save.connect(post_save_data_karyawan, sender=DataKaryawan)

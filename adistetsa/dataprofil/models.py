@@ -303,8 +303,8 @@ class DataKaryawan(models.Model):
 class DataKompetensiGuru(models.Model):
     OWNER = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     ID = models.BigAutoField(primary_key=True)
-    BIDANG_STUDI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    URUTAN= models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    BIDANG_STUDI = models.CharField(max_length=DEFAULT_LENGTH, help_text=('Bidang studi'))
+    URUTAN = models.CharField(max_length=DEFAULT_LENGTH)
     def __str__(self):
         return self.BIDANG_STUDI + ' _ ' + self.URUTAN
 
