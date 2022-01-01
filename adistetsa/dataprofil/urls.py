@@ -13,5 +13,4 @@ urlpatterns = [
     path('data_karyawan/<int:karyawan_id>', DataKaryawanDetailView.as_view()),
     path('data_guru_kompetensi', DataKompetensiGuruListView.as_view()),
     path('data_guru_kompetensi/<int:pk>', DataKompetensiGuruDetailView.as_view()),
-    # path('data_kompetensi_karyawan', DataKompetensiKaryawanListView.as_view()),
 ]
