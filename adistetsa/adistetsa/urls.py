@@ -22,10 +22,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('', include_docs_urls(title='Adi Stetsa API')),
+    re_path(r'^$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('login/refresh', TokenObtainPairView.as_view(), name='refresh_token'),
     path('', include('kustom_autentikasi.urls')),

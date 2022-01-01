@@ -1,13 +1,22 @@
 from django.contrib.auth.models import Group
 from django.db.models import query
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from tablib import Dataset
+import csv
+
+import tablib
 
 from .models import *
 from .serializers import RoleUserSerializer
+from .doc_schema import *
 
-from adistetsa.permissions import HasGroupPermissionAny, is_in_group
+from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from dataprofil.admin import DataGuruResource
 from dataprofil.models import DataSiswa, DataGuru, DataOrangTua, DataKaryawan
 from dataprofil.serializers import DataSiswaSerializer, DataGuruSerializer, DataOrangTuaSerializer, DataKaryawanSerializer
 
@@ -71,3 +80,36 @@ class RoleUserView(APIView):
         serializer = RoleUserSerializer
         response = serializer(queryset, many=True).data
         return Response(response)
+
+
+class ImportDataGuruView(APIView):
+    """
+    post: Melakukan import data guru (Super Admin/ Staf PPDB).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Staf PPDB'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    @swagger_auto_schema(
+        manual_parameters=[param_importexportfile,],
+        responses={'200': 'Berhasil mengupdate data guru', '400': 'Bad Request',}
+    )
+    def post(self, request, format=None):
+        file = request.FILES['file']
+
+        str_text = ''
+        for line in file:
+            str_text = str_text + line.decode()
+
+        data_guru_resource = DataGuruResource()
+        csv_data = tablib.import_set(str_text, format='csv')
+        result = data_guru_resource.import_data(csv_data, dry_run=True)
+
+        if not result.has_errors():
+            data_guru_resource.import_data(csv_data, dry_run=False)
+
+            return Response({'Result': 'Berhasil mengupdate data guru'}, status=200)    
+
+        return Response({'Result': 'Gagal mengupload data guru'}, status=400)
