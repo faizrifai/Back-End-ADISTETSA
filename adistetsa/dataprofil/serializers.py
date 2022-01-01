@@ -24,14 +24,12 @@ class DataGuruSerializer(serializers.ModelSerializer):
 class DataKompetensiGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataKompetensiGuru
-        fields = '__all__'
+        exclude = ['OWNER']
 
 class DataKompetensiKaryawanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataKompetensiKaryawan
         fields = '__all__'
-
-
 
 class DataAnakGuruSerializer(serializers.ModelSerializer):
     class Meta:
