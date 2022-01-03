@@ -29,24 +29,109 @@ class DataKompetensiGuruSerializer(serializers.ModelSerializer):
 class DataKompetensiKaryawanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataKompetensiKaryawan
-        fields = '__all__'
+        exclude = ['OWNER']
 
 class DataAnakGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataAnakGuru
-        fields = '__all__'
+        exclude = ['OWNER']
 
 class DataAnakKaryawanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataAnakKaryawan
-        fields = '__all__'
+        exclude = ['OWNER']
 
 class DataBeasiswaGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataBeasiswaGuru
-        fields = '__all__'
+        exclude = ['OWNER']
 
 class DataBeasiswaKaryawanSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataBeasiswaKaryawan
-        fields = '__all__'
+        exclude = ['OWNER']
+
+class DataBukuGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataBukuGuru
+        exclude = ['OWNER']
+
+class DataBukuKaryawanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataBukuKaryawan
+        exclude = ['OWNER']
+
+class DataDiklatGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataDiklatGuru
+        exclude = ['OWNER']
+
+class DataKaryaTulisGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataKaryaTulisGuru
+        exclude = ['OWNER']
+
+class DataKesejahteraanGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataKesejahteraanGuru
+        exclude = ['OWNER']
+
+class DataTunjanganGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataTunjanganGuru
+        exclude = ['OWNER']
+
+class DataTugasTambahanGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataTugasTambahanGuru
+        exclude = ['OWNER']
+
+class DataPenghargaanGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataPenghargaanGuru
+        exclude = ['OWNER']
+
+class DataNilaiTesGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataNilaiTesGuru
+        exclude = ['OWNER']
+
+class DataRiwayatGajiBerkalaGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatGajiBerkalaGuru
+        exclude = ['OWNER']
+
+class DataRiwayatJabatanStrukturalGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatJabatanStrukturalGuru
+        exclude = ['OWNER']
+
+class DataRiwayatKepangkatanGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatKepangkatanGuru
+        exclude = ['OWNER']
+
+class DataRiwayatKepangkatanGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatKepangkatanGuru
+        exclude = ['OWNER']
+
+class DataRiwayatPendidikanFormalGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatPendidikanFormalGuru
+        exclude = ['OWNER']
+
+class DataRiwayatSertifikasiGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatSertifikasiGuru
+        exclude = ['OWNER']
+
+class DataRiwayatJabatanFungsionalGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatJabatanFungsionalGuru
+        exclude = ['OWNER']
+
+class DataRiwayatKarirGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataRiwayatKarirGuru
+        exclude = ['OWNER']
