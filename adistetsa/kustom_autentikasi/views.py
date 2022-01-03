@@ -40,7 +40,7 @@ class ProfilDetailView(APIView):
             return DataGuru.objects.get(pk=data_guru_user.DATA_GURU.ID)
         elif (is_in_group(user, 'Karyawan')):
             data_karyawan_user = DataKaryawanUser.objects.get(USER=user)
-            return DataKaryawan.objects.get(pk=data_karyawan_user.DATA_KARYAWAN)
+            return DataKaryawan.objects.get(pk=data_karyawan_user.DATA_KARYAWAN.ID)
         else:
             return None
 
