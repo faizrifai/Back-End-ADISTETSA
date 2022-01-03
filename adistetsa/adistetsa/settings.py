@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'import_export',
     'dataprofil',
     'kustom_autentikasi',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
