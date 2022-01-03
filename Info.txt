@@ -24,114 +24,95 @@ python manage.py setup_dummy_dataprofil
 
 
 
-class DataBeasiswaGuruSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DataBeasiswaGuru
-        fields = '__all__'
-
-class DataBeasiswaKaryawanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DataBeasiswaKaryawan
-        fields = '__all__'
 
 
+class DataTugasTambahanGuruListView(generics.ListCreateAPIView):
+        """
+        get: Menampilkan daftar karya tulis guru (Guru).
+        post: Menambahkan data karya tulis guru (Guru).
+        """
+        permission_classes = [HasGroupPermissionAny]
+        required_groups = {
+            'GET': ['Guru'],
+            'POST': ['Guru'],
+        }
+        serializer_class = DataTugasTambahanGuruSerializer
+
+        def get_data_guru(self):
+            user = self.request.user
+            data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
+
+            return data_guru
+
+        def get_queryset(self):
+            data_guru = self.get_data_guru()
+
+            return DataTugasTambahanGuru.objects.filter(OWNER=data_guru.ID)
+
+        def perform_create(self, serializer):
+            serializer.validated_data['OWNER_id'] = self.get_data_guru().ID
+
+            return super(DataTugasTambahanGuruListView, self).perform_create(serializer)
 
 
+class DataTugasTambahanGuruDetailView(APIView):
+        """
+        get: Menampilkan daftar karya tulis guru (Guru).
+        put: Mengubah atribut keseluruhan data karya tulis guru (Guru).
+        patch: Mengubah beberapa atribut data karya tulis guru (Guru).
+        delete: Menghapus data karya tulis guru (Guru).
+        """
+        permission_classes = [HasGroupPermissionAny]
+        required_groups = {
+            'GET': ['Guru'],
+            'PUT': ['Guru'],
+            'PATCH': ['Guru'],
+            'DELETE': ['Guru'],
+        }
+        serializer_class = DataTugasTambahanGuruSerializer
 
-class DataBeasiswaGuruListView(APIView): 
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+        def get_queryset(self):
+            user = self.request.user
+            data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
 
-    def get(self, request, format=None):
-        data_beasiswa_guru = DataBeasiswaGuru.objects.all()
-        serializer = DataBeasiswaGuruSerializer(data_beasiswa_guru, many=True)
-        return Response(serializer.data)
+            return DataTugasTambahanGuru.objects.get(pk=self.kwargs['pk'], OWNER=data_guru.ID)
 
-    def post(self, request, format=None):
-        serializer = DataBeasiswaGuruSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        def get(self, request, pk, *args, **kwargs):
+            queryset = self.get_queryset(pk)
+            serializer = self.serializer_class
+            response = serializer(queryset).data
 
-class DataBeasiswaGuruDetailView(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+            return Response(response)
 
-    def get_object(self, pk):
-        try:
-            return DataBeasiswaGuru.objects.get(pk=pk)
-        except DataBeasiswaGuru.DoesNotExist:
-            raise Http404
+        @swagger_auto_schema(
+            request_body=schema_datatunjanganguru,
+            responses={'200': 'Berhasil mengupdate data tunjangan guru', '400': 'Bad Request',}
+        )
+        def put(self, request, pk, format=None):
+            queryset = self.get_queryset(pk)
+            serializer = self.serializer_class(queryset, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
 
-    def get(self, request, pk, format=None):
-        beasiswa_guru = self.get_object(pk)
-        serializer = DataBeasiswaGuruSerializer(beasiswa_guru)
-        return Response(serializer.data)
+                return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        beasiswa_guru = self.get_object(pk)
-        serializer = DataBeasiswaGuruSerializer(beasiswa_guru, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        beasiswa_guru = self.get_object(pk)
-        beasiswa_guru.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        @swagger_auto_schema(
+            request_body=schema_datatunjanganguru,
+            responses={'200': 'Berhasil mengupdate data tunjangan guru', '400': 'Bad Request',}
+        )
+        def patch(self, request, pk):
+            queryset = self.get_queryset(pk)
+            serializer = self.serializer_class(queryset, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
 
-class DataBeasiswaKaryawanListView(APIView): 
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+                return Response(serializer.data)
 
-    def get(self, request, format=None):
-        data_beasiswa_karyawan = DataBeasiswaKaryawan.objects.all()
-        serializer = DataBeasiswaKaryawanSerializer(data_beasiswa_karyawan, many=True)
-        return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request, format=None):
-        serializer = DataBeasiswaKaryawanSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class DataBeasiswaKaryawanDetailView(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
-
-    def get_object(self, pk):
-        try:
-            return DataBeasiswaKaryawan.objects.get(pk=pk)
-        except DataBeasiswaKaryawan.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk, format=None):
-        beasiswa_karyawan = self.get_object(pk)
-        serializer = DataBeasiswaKaryawanSerializer(beasiswa_karyawan)
-        return Response(serializer.data)
-
-    def put(self, request, pk, format=None):
-        beasiswa_karyawan = self.get_object(pk)
-        serializer = DataBeasiswaKaryawanSerializer(beasiswa_karyawan, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        beasiswa_karyawan = self.get_object(pk)
-        beasiswa_karyawan.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-    path('data_beasiswa_guru', views.DataBeasiswaGuruListView.as_view()),
-    path('data_beasiswa_guru/<int:pk>', views.DataBeasiswaGuruDetailView.as_view()),
-    path('data_beasiswa_karyawan', views.DataBeasiswaKaryawanListView.as_view()),
-    path('data_beasiswa_karyawan/<int:pk>', views.DataBeasiswaKaryawanDetailView.as_view()),
-
+        def delete(self, request, pk, format=None):
+            queryset = self.get_queryset(pk)
+            queryset.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
