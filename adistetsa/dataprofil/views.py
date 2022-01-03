@@ -328,10 +328,7 @@ class DataKompetensiKaryawanDetailView(APIView):
         queryset = self.get_queryset(pk)
         queryset.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
+        
 
 class DataAnakGuruListView(generics.ListCreateAPIView):
     """
