@@ -25,94 +25,28 @@ python manage.py setup_dummy_dataprofil
 
 
 
+class CreateDataRiwayatGajiBerkalaTestCase(SetupData):
+    def test_create_data_riwayat_gaji_berkala(self):
+        response = self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
 
-class DataTugasTambahanGuruListView(generics.ListCreateAPIView):
-        """
-        get: Menampilkan daftar karya tulis guru (Guru).
-        post: Menambahkan data karya tulis guru (Guru).
-        """
-        permission_classes = [HasGroupPermissionAny]
-        required_groups = {
-            'GET': ['Guru'],
-            'POST': ['Guru'],
-        }
-        serializer_class = DataTugasTambahanGuruSerializer
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        def get_data_guru(self):
-            user = self.request.user
-            data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
+    def test_edit_data_riwayat_gaji_berkala(self):
+        # add data riwayat_gaji_berkala
+        self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
 
-            return data_guru
+        # test edit data
+        patch_response = self.client.patch(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}), self.data_riwayat_gaji_berkala)
+        put_response = self.client.put(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}), self.data_riwayat_gaji_berkala)
 
-        def get_queryset(self):
-            data_guru = self.get_data_guru()
+        self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(put_response.status_code, status.HTTP_200_OK)
 
-            return DataTugasTambahanGuru.objects.filter(OWNER=data_guru.ID)
+    def test_delete_data_riwayat_gaji_berkala(self):
+        # add data riwayat_gaji_berkala
+        self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
 
-        def perform_create(self, serializer):
-            serializer.validated_data['OWNER_id'] = self.get_data_guru().ID
+        # test delete data
+        response = self.client.delete(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}))
 
-            return super(DataTugasTambahanGuruListView, self).perform_create(serializer)
-
-
-class DataTugasTambahanGuruDetailView(APIView):
-        """
-        get: Menampilkan daftar karya tulis guru (Guru).
-        put: Mengubah atribut keseluruhan data karya tulis guru (Guru).
-        patch: Mengubah beberapa atribut data karya tulis guru (Guru).
-        delete: Menghapus data karya tulis guru (Guru).
-        """
-        permission_classes = [HasGroupPermissionAny]
-        required_groups = {
-            'GET': ['Guru'],
-            'PUT': ['Guru'],
-            'PATCH': ['Guru'],
-            'DELETE': ['Guru'],
-        }
-        serializer_class = DataTugasTambahanGuruSerializer
-
-        def get_queryset(self):
-            user = self.request.user
-            data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
-
-            return DataTugasTambahanGuru.objects.get(pk=self.kwargs['pk'], OWNER=data_guru.ID)
-
-        def get(self, request, pk, *args, **kwargs):
-            queryset = self.get_queryset(pk)
-            serializer = self.serializer_class
-            response = serializer(queryset).data
-
-            return Response(response)
-
-        @swagger_auto_schema(
-            request_body=schema_datatunjanganguru,
-            responses={'200': 'Berhasil mengupdate data tunjangan guru', '400': 'Bad Request',}
-        )
-        def put(self, request, pk, format=None):
-            queryset = self.get_queryset(pk)
-            serializer = self.serializer_class(queryset, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-
-                return Response(serializer.data)
-
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        @swagger_auto_schema(
-            request_body=schema_datatunjanganguru,
-            responses={'200': 'Berhasil mengupdate data tunjangan guru', '400': 'Bad Request',}
-        )
-        def patch(self, request, pk):
-            queryset = self.get_queryset(pk)
-            serializer = self.serializer_class(queryset, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-
-                return Response(serializer.data)
-
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        def delete(self, request, pk, format=None):
-            queryset = self.get_queryset(pk)
-            queryset.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
