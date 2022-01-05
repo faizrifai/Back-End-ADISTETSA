@@ -11,7 +11,7 @@ class DataSiswaResource(resources.ModelResource):
 
     class Meta:
         model = DataSiswa
-        import_id_fields = ('NISN',)
+        import_id_fields = ('NIS',)
 
 class DataOrangTuaResource(resources.ModelResource):
 

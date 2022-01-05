@@ -72,7 +72,7 @@ class SetupData(APITestCase):
         self.data_anak = {
         'STATUS': "Hidup",
         'JENJANG': "SMA",
-        'NISN': 12349876,
+        'NIS': 12349876,
         'NAMA': "Leo",
         'JENIS_KELAMIN': "Laki-laki",
         'TEMPAT_LAHIR': "Bumi",

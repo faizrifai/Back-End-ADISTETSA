@@ -31,7 +31,7 @@ class ProfilDetailView(APIView):
     def get_queryset(self):
         user = self.request.user
         if (is_in_group(user, 'Siswa')):
-            return DataSiswa.objects.get(NISN=user.username)
+            return DataSiswa.objects.get(NIS=user.username)
         elif (is_in_group(user, 'Orang Tua')):
             data_orang_tua_user = DataOrangTuaUser.objects.get(USER=user)
             return DataOrangTua.objects.get(pk=data_orang_tua_user.DATA_ORANG_TUA.ID)

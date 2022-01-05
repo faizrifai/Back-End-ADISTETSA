@@ -9,10 +9,10 @@ from .models import *
 
 # Register your import_export resource model here
 class DataSiswaUserResource(resources.ModelResource):
-    nisn = Field(
-        column_name='nisn',
+    nis = Field(
+        column_name='nis',
         attribute='DATA_SISWA',
-        widget=ForeignKeyWidget(DataSiswa, 'NISN')
+        widget=ForeignKeyWidget(DataSiswa, 'NIS')
     )
     password = Field(
         column_name='password',
@@ -23,14 +23,14 @@ class DataSiswaUserResource(resources.ModelResource):
     class Meta:
         model = DataSiswaUser
         exclude = ('id')
-        fields = ('nisn', 'password')
-        import_id_fields = ('nisn', 'password')
+        fields = ('nis', 'password')
+        import_id_fields = ('nis', 'password')
 
     def before_import_row(self, row, **kwargs):
-        nisn = row['nisn']
-        data_siswa = DataSiswa.objects.get(NISN=nisn)
+        nis = row['nis']
+        data_siswa = DataSiswa.objects.get(NIS=nis)
 
-        username = str(data_siswa.NISN)
+        username = str(data_siswa.NIS)
         password = row['password']
 
         try:
@@ -45,7 +45,7 @@ class DataSiswaUserResource(resources.ModelResource):
         grup_siswa = Group.objects.get(name='Siswa')
         grup_siswa.user_set.add(new_user[0])
 
-        row['DATA_SISWA'] = data_siswa.NISN
+        row['DATA_SISWA'] = data_siswa.NIS
 
     def save_instance(self, instance, using_transactions=True, dry_run=False):
         try:
