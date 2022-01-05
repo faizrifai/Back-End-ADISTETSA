@@ -191,7 +191,7 @@ class DataKompetensiGuruDetailView(APIView):
     }
     serializer_class = DataKompetensiGuruSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, pk):
         user = self.request.user
         data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
 
@@ -283,7 +283,7 @@ class DataKompetensiKaryawanDetailView(APIView):
     }
     serializer_class = DataKompetensiKaryawanSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, pk):
         user = self.request.user
         data_karyawan = DataKaryawanUser.objects.get(USER=user).DATA_KARYAWAN
 

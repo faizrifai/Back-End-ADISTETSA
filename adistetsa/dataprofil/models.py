@@ -117,7 +117,7 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
     )
-    DATA_ANAK = models.ManyToManyField(DataSiswa, verbose_name="DAFTAR ANAK")
+    DATA_ANAK = models.ManyToManyField(DataSiswa, verbose_name="DAFTAR ANAK", blank=True)
     
     def __str__(self):
         return self.NAMA_AYAH
@@ -201,7 +201,7 @@ class DataGuru(models.Model):
     SPESIALIS_MENANGANI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     STATUS_AKTIF = models.CharField(
         max_length=14,
-        choices=ENUM_KEAHLIAN_KHUSUS,
+        choices=ENUM_STATUS_AKTIF,
         blank=True
     )
     NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -288,7 +288,7 @@ class DataKaryawan(models.Model):
     SPESIALIS_MENANGANI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     STATUS_AKTIF = models.CharField(
         max_length=14,
-        choices=ENUM_KEAHLIAN_KHUSUS,
+        choices=ENUM_STATUS_AKTIF,
         blank=True
     )
     NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)

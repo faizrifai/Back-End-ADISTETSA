@@ -103,6 +103,7 @@ class ImportDataSiswaView(APIView):
 
         data_siswa_resource = DataSiswaResource()
         csv_data = tablib.import_set(str_text, format='csv')
+        print(csv_data)
         
         try:
             result = data_siswa_resource.import_data(csv_data, dry_run=True, raise_errors=True)
@@ -172,7 +173,7 @@ class ImportDataGuruView(APIView):
 
                 return Response({'Result': 'Berhasil mengupdate data guru'}, status=200)
         except Exception as e:
-            return Response({'Result': 'Gagal mengupdate data guru, ada kesalahan'}, status=400)
+            return Response({'Result': str(e)}, status=400)
 
         return Response({'Result': 'Gagal mengupdate data guru, ada kesalahan'}, status=400)
 
@@ -292,7 +293,7 @@ class ImportDataOrangTuaView(APIView):
 
                 return Response({'Result': 'Berhasil mengupdate data orang tua'}, status=200)
         except Exception as e:
-            return Response({'Result': 'Gagal mengupdate data orang tua, ada kesalahan'}, status=400)
+            return Response({'Result': str(e)}, status=400)
 
         return Response({'Result': 'Gagal mengupdate data orang tua, ada kesalahan'}, status=400)
 
@@ -352,7 +353,7 @@ class ImportDataSiswaUserView(APIView):
 
                 return Response({'Result': 'Berhasil menambahkan/ mengupdate data user siswa'}, status=200)
         except Exception as e:
-            return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
+            return Response({'Result': str(e)}, status=400)
 
         return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
 
@@ -412,7 +413,7 @@ class ImportDataGuruUserView(APIView):
 
                 return Response({'Result': 'Berhasil menambahkan/ mengupdate data user guru'}, status=200)
         except Exception as e:
-            return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
+            return Response({'Result': str(e)}, status=400)
 
         return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
 
@@ -472,7 +473,7 @@ class ImportDataKaryawanUserView(APIView):
 
                 return Response({'Result': 'Berhasil menambahkan/ mengupdate data user karyawan'}, status=200)
         except Exception as e:
-            return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
+            return Response({'Result': str(e)}, status=400)
 
         return Response({'Result': 'Gagal import data, ada kesalahan'}, status=400)
 
