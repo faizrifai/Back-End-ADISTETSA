@@ -4,16 +4,11 @@ from .models import DataSiswaUser, DataGuruUser
 
 class DataSiswaAuthModelBackend(ModelBackend):
     def authenticate(self, request, **kwargs):
-        nisn = kwargs['username']
+        nis = kwargs['username']
         password = kwargs['password']
 
         try:
-            nisn = int(nisn)
-        except:
-            return None
-
-        try:
-            data_siswa = DataSiswaUser.objects.get(DATA_SISWA=nisn)
+            data_siswa = DataSiswaUser.objects.get(DATA_SISWA=nis)
             if (data_siswa.USER.check_password(password) is True):
                 return data_siswa.USER
         except DataSiswaUser.DoesNotExist:
@@ -47,11 +42,6 @@ class DataGuruPNSAuthModelBackend(ModelBackend):
     def authenticate(self, request, **kwargs):
         nip = kwargs['username']
         password = kwargs['password']
-
-        try:
-            nip = int(nip)
-        except:
-            return None
 
         try:
             data_guru = DataGuruUser.objects.get(DATA_GURU__NIP=nip)

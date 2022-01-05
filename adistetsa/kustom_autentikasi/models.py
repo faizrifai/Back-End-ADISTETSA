@@ -17,7 +17,7 @@ class DataSiswaUser(models.Model):
 
 def post_save_data_siswa(sender, instance, **kwargs):
     try:
-        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA__NISN=instance.NISN)
+        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA__NIS=instance.NIS)
         user = data_siswa_user.USER
         user.email = instance.EMAIL
         user.save()

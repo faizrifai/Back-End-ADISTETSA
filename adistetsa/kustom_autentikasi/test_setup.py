@@ -6,7 +6,8 @@ from rest_framework.test import APITestCase
 class SetupData(APITestCase):
     def setUp(self):
         self.data_siswa = {
-            "NISN": 30117680196686,
+            "NIS": 30117680196686,
+            "NISN": 3012342234833,
             "NAMA": "Becky Sanders",
             "NIPD": 213171464447798,
             "JENIS_KELAMIN": "Perempuan",

@@ -11,16 +11,17 @@ DEFAULT_LENGTH = 225
 
 # Create your models here.
 class DataSiswa(models.Model):
-    NISN = models.BigIntegerField(primary_key=True)
+    NIS = models.CharField(max_length=DEFAULT_LENGTH, primary_key=True)
+    NISN = models.CharField(max_length=DEFAULT_LENGTH)
     NAMA = models.CharField(max_length=DEFAULT_LENGTH)
-    NIPD = models.BigIntegerField()
+    NIPD = models.CharField(max_length=DEFAULT_LENGTH)
     JENIS_KELAMIN = models.CharField(
         max_length=20,
         choices=ENUM_JENIS_KELAMIN,
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH)
     TANGGAL_LAHIR = models.DateField()
-    NIK = models.BigIntegerField()
+    NIK = models.CharField(max_length=DEFAULT_LENGTH)
     AGAMA = models.CharField(
         max_length=20,
         choices=ENUM_AGAMA,
@@ -36,15 +37,15 @@ class DataSiswa(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_JENIS_TINGGAL,
     )
-    TELEPON = models.BigIntegerField(blank=True, null=True)
-    HP = models.BigIntegerField(blank=True, null=True)
+    TELEPON = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    HP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
     SKHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PENERIMA_KPS = models.CharField(
         max_length=5,
         choices=ENUM_PENERIMA_KPS,
     )
-    NO_KPS = models.BigIntegerField(blank=True, null=True)
+    NO_KPS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     ROMBEL_SAAT_INI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_PESERTA_UJIAN_NASIONAL = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SERI_IJAZAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -52,7 +53,7 @@ class DataSiswa(models.Model):
         max_length=5,
         choices=ENUM_PENERIMA_KIP,
     )
-    NO_KKS = models.BigIntegerField(blank=True, null=True)
+    NO_KKS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_REGRISTASI_AKTA_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BANK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_REKENING_BANK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -65,7 +66,7 @@ class DataSiswa(models.Model):
     ANAK_KE = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LINTANG = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BUJUR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_KK = models.BigIntegerField(blank=True, null=True)
+    NO_KK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BERAT_BADAN = models.IntegerField(blank=True, null=True)
     TINGGI_BADAN = models.IntegerField(blank=True, null=True)
     LINGKAR_KEPALA = models.IntegerField(blank=True, null=True)
@@ -73,7 +74,7 @@ class DataSiswa(models.Model):
     JARAK_RUMAH_KESEKOLAH_KM = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        return str(self.NISN) + ' - ' + self.NAMA
+        return str(self.NIS) + ' - ' + self.NAMA
 
     class Meta:
         verbose_name_plural = "Data Siswa"
@@ -81,7 +82,7 @@ class DataSiswa(models.Model):
 
 class DataOrangTua(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NIK_AYAH = models.BigIntegerField()
+    NIK_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
     NAMA_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
     TAHUN_LAHIR_AYAH = models.DateField()
     JENJANG_PENDIDIKAN_AYAH  = models.CharField(
@@ -93,7 +94,7 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN,
     )
-    NIK_IBU = models.BigIntegerField()
+    NIK_IBU = models.CharField(max_length=DEFAULT_LENGTH)
     NAMA_IBU = models.CharField(max_length=DEFAULT_LENGTH)
     TAHUN_LAHIR_IBU  = models.DateField()
     JENJANG_PENDIDIKAN_IBU = models.CharField(
@@ -105,7 +106,7 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
     )
-    NIK_WALI = models.BigIntegerField()
+    NIK_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NAMA_WALI = models.CharField(max_length=DEFAULT_LENGTH)
     TAHUN_LAHIR_WALI  = models.DateField()
     JENJANG_PENDIDIKAN_WALI = models.CharField(
@@ -129,11 +130,11 @@ class DataOrangTua(models.Model):
 class DataGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
-    NSS = models.BigIntegerField()
-    NPSN = models.BigIntegerField()
+    NSS = models.CharField(max_length=DEFAULT_LENGTH)
+    NPSN = models.CharField(max_length=DEFAULT_LENGTH)
     ALAMAT_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
-    NIK = models.BigIntegerField()
+    NIK = models.CharField(max_length=DEFAULT_LENGTH)
     JENIS_KELAMIN = models.CharField(
         max_length=20,
         choices=ENUM_JENIS_KELAMIN,
@@ -153,48 +154,51 @@ class DataGuru(models.Model):
         max_length=20,
         choices=ENUM_AGAMA,
     )
-    NPWP = models.BigIntegerField()
+    NPWP = models.CharField(max_length=DEFAULT_LENGTH)
     NAMA_WAJIB_PAJAK = models.CharField(max_length=DEFAULT_LENGTH)
     KEWARGANEGARAAN = models.CharField(max_length=DEFAULT_LENGTH)
     STATUS_KAWIN = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_KAWIN,
     )
-    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
-    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PASANGAN_PNS = models.CharField(
         max_length=5,
         choices=ENUM_PASANGAN_PNS,
+        blank=True,
     )
-    NIP_PASANGAN = models.BigIntegerField()
-    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH)
+    NIP_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PNS = models.CharField(
         max_length=5,
         choices=ENUM_PNS,
+        blank=True
     )
-    NIP = models.BigIntegerField()
-    NIY = models.BigIntegerField()
-    NIGB = models.BigIntegerField()
-    NUPTK = models.BigIntegerField()
-    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH)
+    NIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIY = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NUPTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     STATUS_AKTIF = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_AKTIF,
+        blank=True
     )
-    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
-    TMT_PENGANGKATAN = models.BigIntegerField()
-    LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
-    SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH)
-    TMT_CPNS = models.BigIntegerField()
-    TMT_PNS = models.BigIntegerField()
-    PANGKAT = models.CharField(max_length=DEFAULT_LENGTH)
-    SUMBER_GAJI = models.CharField(max_length=DEFAULT_LENGTH)
+    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_PNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    PANGKAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SUMBER_GAJI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARTU_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARIS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH)
-    TGL_SURAT = models.DateField()
-    TMT_TUGAS = models.BigIntegerField()
-    SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH)
+    NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TGL_SURAT = models.DateField(blank=True, null=True)
+    TMT_TUGAS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LISENSI_KEPALA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KODE_PROGRAM_KEAHLIAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     JENIS_KETUNAAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -208,7 +212,7 @@ class DataGuru(models.Model):
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
     
     def __str__(self):
-        return str(self.NIP) + ' - ' + self.NAMA_LENGKAP
+        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
     
     class Meta:
         verbose_name_plural = "Data Guru"
@@ -216,11 +220,11 @@ class DataGuru(models.Model):
 class DataKaryawan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
-    NSS = models.BigIntegerField()
-    NPSN = models.BigIntegerField()
+    NSS = models.CharField(max_length=DEFAULT_LENGTH)
+    NPSN = models.CharField(max_length=DEFAULT_LENGTH)
     ALAMAT_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
-    NIK = models.BigIntegerField()
+    NIK = models.CharField(max_length=DEFAULT_LENGTH)
     JENIS_KELAMIN = models.CharField(
         max_length=20,
         choices=ENUM_JENIS_KELAMIN,
@@ -240,48 +244,51 @@ class DataKaryawan(models.Model):
         max_length=20,
         choices=ENUM_AGAMA,
     )
-    NPWP = models.BigIntegerField()
+    NPWP = models.CharField(max_length=DEFAULT_LENGTH)
     NAMA_WAJIB_PAJAK = models.CharField(max_length=DEFAULT_LENGTH)
     KEWARGANEGARAAN = models.CharField(max_length=DEFAULT_LENGTH)
     STATUS_KAWIN = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_KAWIN,
     )
-    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
-    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PASANGAN_PNS = models.CharField(
         max_length=5,
         choices=ENUM_PASANGAN_PNS,
+        blank=True,
     )
-    NIP_PASANGAN = models.BigIntegerField()
-    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH)
+    NIP_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PNS = models.CharField(
         max_length=5,
         choices=ENUM_PNS,
+        blank=True
     )
-    NIP = models.BigIntegerField()
-    NIY = models.BigIntegerField()
-    NIGB = models.BigIntegerField()
-    NUPTK = models.BigIntegerField()
-    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH)
+    NIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIY = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NUPTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     STATUS_AKTIF = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_AKTIF,
+        blank=True
     )
-    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
-    TMT_PENGANGKATAN = models.BigIntegerField()
-    LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH)
-    SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH)
-    TMT_CPNS = models.BigIntegerField()
-    TMT_PNS = models.BigIntegerField()
-    PANGKAT = models.CharField(max_length=DEFAULT_LENGTH)
-    SUMBER_GAJI = models.CharField(max_length=DEFAULT_LENGTH)
+    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TMT_PNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    PANGKAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SUMBER_GAJI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARTU_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARIS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH)
-    TGL_SURAT = models.DateField()
-    TMT_TUGAS = models.BigIntegerField()
-    SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH)
+    NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    TGL_SURAT = models.DateField(blank=True, null=True)
+    TMT_TUGAS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LISENSI_KEPALA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KODE_PROGRAM_KEAHLIAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     JENIS_KETUNAAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -293,9 +300,9 @@ class DataKaryawan(models.Model):
     )
     NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
-   
+    
     def __str__(self):
-        return str(self.NIP) + ' - ' + self.NAMA_LENGKAP
+        return str(self.NIK) + ' - ' + self.NAMA_LENGKAP
     
     class Meta:
         verbose_name_plural = "Data Karyawan"

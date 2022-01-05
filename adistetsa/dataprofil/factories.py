@@ -19,7 +19,7 @@ class DataSiswaFactory(DjangoModelFactory):
     class Meta:
         model = DataSiswa
 
-    NISN = factory.Faker('credit_card_number')
+    NIS = factory.Faker('credit_card_number')
     NAMA = factory.Faker('name')
     NIPD = factory.Faker('credit_card_number')
     JENIS_KELAMIN = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_KELAMIN))
@@ -39,7 +39,7 @@ class DataSiswaFactory(DjangoModelFactory):
 class DataOrangTuaFactory(DjangoModelFactory):
     class Meta:
         model = DataOrangTua
-        
+
     NIK_AYAH = factory.Faker('credit_card_number')
     NAMA_AYAH = factory.Faker('name')
     TAHUN_LAHIR_AYAH = factory.Faker('date')

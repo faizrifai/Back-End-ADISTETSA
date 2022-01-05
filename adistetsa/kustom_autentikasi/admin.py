@@ -13,7 +13,7 @@ from .importexportresources import *
 # Register your models here.
 class DataSiswaUserAdmin(ImportExportModelAdmin):
     autocomplete_fields = ['DATA_SISWA', 'USER',]
-    search_fields = ['DATA_SISWA__NISN', 'DATA_SISWA__NAMA', 'USER__username']
+    search_fields = ['DATA_SISWA__NIS', 'DATA_SISWA__NAMA', 'USER__username']
     list_display = ('nama_lengkap', 'username', 'role')
 
     resource_class = DataSiswaUserResource
