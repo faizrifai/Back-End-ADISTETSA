@@ -69,6 +69,162 @@ class SetupData(APITestCase):
             "URUTAN": "Pertama"
         }
 
+        self.data_anak = {
+        'STATUS': "Hidup",
+        'JENJANG': "SMA",
+        'NISN': 12349876,
+        'NAMA': "Leo",
+        'JENIS_KELAMIN': "Laki-laki",
+        'TEMPAT_LAHIR': "Bumi",
+        'TANGGAL_LAHIR': "2000-01-11",
+        'TAHUN_MASUK': "2000",     
+        }
+
+        self.data_beasiswa = {
+        'JENIS': "sada",
+        'PENYELANGGARA': "gdfg",
+        'DARI_TAHUN': "gdgfd",
+        'SAMPAI_TAHUN': "fdgfd",
+        'MASIH_MENERIMA': "dfgfd",
+        }
+
+        self.data_buku = {
+        'JUDUL_BUKU': "eqweq",
+        'TAHUN_BUKU': "qweq",
+        'PENERBIT_BUKU': "eqweqw",
+        }
+
+        self.data_diklat = {
+        'JENIS_DIKLAT': "qweqw",
+        'NAMA': "qweqw",
+        'PENYELENGGARA': "qweqw",
+        'TAHUN': "wqeqw",
+        'PERAN': "wqeqwe",
+        }
+
+        self.data_karya_tulis = {
+        'JUDUL': "wqeqwe",
+        'TAHUN': "qweqwe",
+        'PUBLIKASI': "qweqwe",
+        'KETERANGAN': "dfvfd",
+        }
+
+        self.data_kesejahteraan = {
+        'JENIS': "sdfdsf",
+        'NAMA': "dsfdsf",
+        'PENYELENGGARA': "sdfdsf",
+        'DARI_TAHUN': "dsfdsf",
+        'SAMPAI_TAHUN': "ghfhgf",
+        'STATUS': "jhgjhg",
+        }
+
+        self.data_tunjangan = {
+        'JENIS': "dfbdfb",
+        'NAMA': "dfbfdb",
+        'INSTANSI': "dfbfd",
+        'SUMBER_DANA': "bdfbfdb",
+        'DARI_TAHUN': "dfbfdbfd",
+        'SAMPAI_TAHUN': "dfbfdbf",
+        'NOMINAL': "dfbfdb",
+        'STATUS': "ghgh",
+        }
+
+        self.data_tugas_tambahan = {
+        'JABATAN_PTK': "dsfdsf",
+        'JPM': "dsfds",
+        'NO_SK': "sdfsdf",
+        'TMT_TAMBAHAN': "ghfg",
+        'TST_TAMBAHAN': "fghgfh",
+        }
+
+        self.data_penghargaan = {
+        'TINGKAT_PENGHARGAAN': "hfghgf",
+        'JENIS_PENGHARGAAN': "fdgfdg",
+        'NAMA': "dfgfdg",
+        'TAHUN': "dfgfdg",
+        'INSTANSI': "dfgfdg",
+        }
+
+        self.data_nilai_tes = {
+        'JENIS': "dfsdf",
+        'NAMA': "dsfdsf",
+        'PENYELENGGARA': "dsfdsfs",
+        'TAHUN': "sdfsdfds",
+        'SKOR': "sdfsdfsd",
+        }
+
+        self.data_riwayat_gaji_berkala = {
+        'PANGKAT_GOLONGAN': "fdgfdg",
+        'NO_SK': "fdgfdg",
+        'TANGGAL_SK': "2000-02-20",
+        'TMT_KGB': "dfgfdg",
+        'TAHUN_MK': "fdsfs",
+        'BULAN_MK': "dsfdsf",
+        'GAJI_POKOK': "dsfsdf",
+        }
+
+        self.data_riwayat_jabatan_struktural = {
+        'JABATAN_PTK': "fsdfds",
+        'SK_STRUKTURAL': "sdfdsf",
+        'TMT_JABATAN': "sdfdsf",
+        }
+
+        self.data_riwayat_kepangkatan = {
+        'PANGKAT_GOLONGAN': "dsfsdf",
+        'NO_SK': "dsfdsf",
+        'TANGGAL_SK': "2000-02-20",
+        'PANGKAT_GOLONGAN': "dvdf",
+        'MK_TAHUN': "nbv",
+        'MK_BULAN': "rdfvc",
+        }
+
+        self.data_riwayat_pendidikan_formal = {
+        'BIDANG_STUDI': "fsdfs",
+        'JENJANG': "dsfsdfs",
+        'GELAR': "dsfsdf",
+        'SATUAN': "sdfdsfds",
+        'FAKULTAS': "dsfds",
+        'KEPENDIDIKAN': "dsfds",
+        'KEPENDUDUKAN': "dsfds",
+        'TAHUN_MASUK': "sdfsdf",
+        'TAHUN_LULUS': "dsfsd",
+        'NIM': "dsfds",
+        'MASIH': "dsfsd",
+        'SMT': "sdfs",
+        'IPK': "sdfds",
+        }
+
+        self.data_riwayat_sertifikasi = {
+        'JENIS_SERTIFIKASI': "fsdfds",
+        'NO_SERTIFIKASI': "sdfdsfs",
+        'TAHUN_SERTIFIKASI': "sdfdsf",
+        'BIDANG_STUDI': "dsfdsf",
+        'NO_REGISTRASI': "sdfdsf",
+        'NO_PESERTA': "sdfdsf",
+        }
+
+        self.data_riwayat_jabatan_fungsional = {
+        'JABATAN_FUNGSIONAL': "sdfdsf",
+        'SK_JABATAN_FUNGSIONAL': "sdfds",
+        'TMT_JABATAN': "dsfdsf",
+        }
+
+        self.data_riwayat_karir = {
+        'JENJANG': "sdfdsf",
+        'JENIS_LEMBAGA': "sdfds",
+        'STS_KEPEGAWAIAN': "dsfdsf",
+        'JENIS_PTK': "fsdfsd",
+        'LEMBAGA': "dsfdsf",
+        'NO_SK_KERJA': "fsdfds",
+        'TGL_SK_KERJA': "2000-02-20",
+        'TMT_KERJA': "dfsdsf",
+        'TST_KERJA': "dsfdsf",
+        'TEMPAT_KERJA': "sdfdsf",
+        'TTD_SK_KERJA': "dsfdsf",
+        'MAPEL_DIAJARKAN': "dsfsdf",
+        }
+
+
         self.data_admin = {
             'username': 'admin',
             'password': 'merdeka123'
