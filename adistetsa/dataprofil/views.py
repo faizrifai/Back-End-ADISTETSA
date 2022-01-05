@@ -2018,7 +2018,7 @@ class DataAnakKaryawanDetailView(APIView):
     }
     serializer_class = DataAnakKaryawanSerializer
 
-    def get_queryset(self):
+    def get_queryset(self, pk):
         user = self.request.user
         data_karyawan = DataKaryawanUser.objects.get(USER=user).DATA_KARYAWAN
         return DataAnakKaryawan.objects.get(pk=self.kwargs['pk'], OWNER= data_karyawan.ID)
