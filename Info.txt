@@ -22,6 +22,9 @@ password: merdeka123
 Tambah Dummy Data
 python manage.py setup_dummy_dataprofil
 
+Membuat app 
+python manage.py startapp nameapp
+
 
 
 
