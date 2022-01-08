@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'dataprofil',
     'kustom_autentikasi',
     'kurikulum',
+    'admin_auto_filters',
 ]
 
 MIDDLEWARE = [
