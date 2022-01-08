@@ -40,7 +40,7 @@ admin.site.register(Kelas, KelasAdmin)
 
 class TahunFilter(SimpleListFilter):
     title = "Tahun Ajaran"  
-    parameter_name = "filter"
+    parameter_name = "tahun_ajaran"
 
     def lookups(self, request, model_admin):
         ktsp = TahunAjaran.objects.all()
@@ -52,9 +52,11 @@ class TahunFilter(SimpleListFilter):
         return tahun_ajaran
 
     def queryset(self, request, queryset):
-        if self.value():
+        nama_model = queryset.model.__name__
+        if self.value() and (nama_model == 'KTSP' or nama_model == 'SilabusRPB'):
+            print(queryset.model.__name__)
             tahun_ajaran = self.value().split('/')
-            return queryset.filter(TAHUN_AJARAN_AWAL=tahun_ajaran[0], TAHUN_AJARAN_AKHIR=tahun_ajaran[1])
+            return queryset.filter(TAHUN_AJARAN__TAHUN_AJARAN_AWAL=tahun_ajaran[0], TAHUN_AJARAN__TAHUN_AJARAN_AKHIR=tahun_ajaran[1])
 
 class KTSPAdmin(admin.ModelAdmin):
     list_display = ('TAHUN_AJARAN', 'NAMA_FILE')
@@ -75,15 +77,15 @@ class JadwalPelajaranAdmin(ImportExportModelAdmin):
 admin.site.register(JadwalPelajaran, JadwalPelajaranAdmin)
 
 
-class SilabusMataPelajaranFilter(SimpleListFilter):
+class MataPelajaranFilter(SimpleListFilter):
     title = "Mata Pelajaran"  
-    parameter_name = "filter"
+    parameter_name = "mata_pelajaran"
 
     def lookups(self, request, model_admin):
-        silabus = SilabusRPB.objects.all()
+        objek = MataPelajaran.objects.all()
         mata_pelajaran = []
-        for data in silabus.values():
-            mapel = MataPelajaran.objects.get(KODE=data['MATA_PELAJARAN_id'])
+        for data in objek.values():
+            mapel = MataPelajaran.objects.get(KODE=data['KODE'])
             str_mapel = mapel.NAMA
             
             mata_pelajaran.append((str_mapel, str_mapel))
@@ -93,14 +95,14 @@ class SilabusMataPelajaranFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value():
             mata_pelajaran = self.value()
-            return queryset.filter(MATA_PELAJARAN__NAMA = mata_pelajaran )
+            return queryset.filter(MATA_PELAJARAN__NAMA = mata_pelajaran)
 
 
 class SilabusRPBAdmin(admin.ModelAdmin):
     list_display = ('MATA_PELAJARAN', 'TAHUN_AJARAN', 'NAMA_FILE', 'KELAS')
     list_per_page = 10
     search_fields = ['MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS']
-    list_filter = (TahunFilter, SilabusMataPelajaranFilter,)
+    list_filter = (TahunFilter, MataPelajaranFilter,)
 
 admin.site.register(SilabusRPB, SilabusRPBAdmin)
 

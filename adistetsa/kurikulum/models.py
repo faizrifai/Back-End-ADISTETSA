@@ -6,8 +6,6 @@ from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
 from django.conf import settings
 from .enums import *
-import os
-import coreapi
 
 # def path_file(name):
 #     def wrapper(user, filename):
@@ -29,7 +27,7 @@ import coreapi
 #             import shutil
 #             shutil.rmtree(file_upload_dir)
 #         return os.path.join(file_upload_dir, filename)
-    
+
 class DataSemester(models.Model):
     KE = models.CharField(
         max_length=255, 
