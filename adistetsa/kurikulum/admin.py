@@ -11,7 +11,6 @@ from .importexportresources import *
 
 # Register your models here.
 admin.site.register(BulanMinggu)
-admin.site.register(JadwalPekanEfektifSemester)
 admin.site.register(KegiatanPekanTidakEfektif)
 admin.site.register(JadwalPekanTidakEfektif)
 admin.site.register(JadwalPekanAktif)
@@ -145,27 +144,40 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 class JurnalBelajarAdmin(admin.ModelAdmin):
-    list_display = ('aksi', 'kelas', 'TANGGAL_MENGAJAR', 'pelajaran', deskripsi_materi, 'FILE_DOKUMENTASI')
+    list_display = ('aksi', 'get_mata_pelajaran', 'get_tahun_ajaran', 'get_semester', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
     list_per_page = 10
-    search_fields = ['KELAS__KODE_KELAS', 'TANGGAL_MENGAJAR', 'SEMESTER__KE', 'PELAJARAN__MATA_PELAJARAN__KODE', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    list_filter = (KelasFilter, SemesterFilter, PelajaranFilter,)
+    search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
+    # list_filter = (JadwalMengajarFilter,)
+    autocomplete_fields = ['GURU', 'JADWAL_MENGAJAR']
     
     def aksi(self, obj):
         return "Edit"
     
-    def kelas(self, obj):
-        daftar = KelasSiswa.objects.filter(pk=obj.KELAS.ID)
+    def jadwal_mengajar(self, obj):
+        jadwal_mengajar = JadwalMengajar.objects.get(pk=obj.JADWAL_MENGAJAR.ID)
 
-        base_url = reverse('admin:kurikulum_offeringkelas_changelist')
+        base_url = reverse('admin:kurikulum_jadwalmengajar_changelist')
         
-        return mark_safe(u'<a href="%s?KELAS__pk__exact=%d&OFFERING__pk__exact=%s">%s</a>' % (base_url, obj.KELAS.ID, obj.KELAS.OFFERING.ID, str(obj.KELAS)))
+        return mark_safe(u'<a href="%s?Jpk__exact=%d">%s</a>' % (base_url, jadwal_mengajar.ID, str(obj.JADWAL_MENGAJAR)))
     
-    def pelajaran(self, obj):
-        pelajaran = Pelajaran.objects.get(ID=obj.PELAJARAN.ID)
+    def get_mata_pelajaran(self, obj):
+        return obj.JADWAL_MENGAJAR.MATA_PELAJARAN
+    def get_tahun_ajaran(self, obj):
+        return obj.JADWAL_MENGAJAR.TAHUN_AJARAN
+    def get_semester(self, obj):
+        return obj.JADWAL_MENGAJAR.SEMESTER
+    
+    
+    get_mata_pelajaran.short_description = 'MATA PELAJARAN'
+    get_tahun_ajaran.short_description = 'TAHUN AJARAN'
+    get_semester.short_description = 'SEMESTER'
 
-        base_url = reverse('admin:kurikulum_pelajaran_changelist')
+    # def pelajaran(self, obj):
+    #     pelajaran = Pelajaran.objects.get(ID=obj.PELAJARAN.ID)
+
+    #     base_url = reverse('admin:kurikulum_pelajaran_changelist')
         
-        return mark_safe(u'<a href="%s%d/change">%s</a>' % (base_url, pelajaran.ID, str(pelajaran)))
+    #     return mark_safe(u'<a href="%s%d/change">%s</a>' % (base_url, pelajaran.ID, str(pelajaran)))
 
 admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
 
@@ -174,6 +186,7 @@ class KelasSiswaAdmin(admin.ModelAdmin):
     list_display = ('get_nis','get_nama', 'KELAS')
     list_per_page = 10 
     list_filter = (KelasFilter,)
+    autocomplete_fields = ['NIS', 'KELAS']
     
     def get_nis(self, obj):
         return obj.NIS.NIS
@@ -203,8 +216,8 @@ class TataTertibAdmin(ImportExportModelAdmin):
 admin.site.register(TataTertib, TataTertibAdmin)
 
 class PoinPelanggaranAdmin(ImportExportModelAdmin):
-    search_fields = ['KETERANGAN', 'POIN',]
-    list_display = (deskripsi_tata_tertib, 'POIN',)
+    search_fields = ['KETERANGAN','POIN', ]
+    list_display = (deskripsi_tata_tertib,'POIN',)
     list_per_page = 10
 
     resource_class = PoinPelanggaranResource
@@ -224,12 +237,12 @@ class JadwalHarianAdmin(admin.ModelAdmin):
 admin.site.register(JadwalHarian, JadwalHarianAdmin)
 
 class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
-    # search_fields = ['']
+    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
     list_per_page = 10
     filter_horizontal = ('WAKTU_PELAJARAN',)
     exclude = ('JUMLAH_WAKTU',)
-    list_display = ('GURU', 'TAHUN_AJARAN', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran')
-    list_filter = [TahunFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
+    list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran')
+    list_filter = [TahunFilter ,SemesterFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
 
     resource_class = JadwalMengajarResource
 
@@ -241,3 +254,8 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
         return format_html(daftar)
 
 admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
+
+class JadwalPekanEfektifSemesterAdmin(admin.ModelAdmin):
+    filter_horizontal = ('BANYAK_MINGGU',)
+    
+admin.site.register(JadwalPekanEfektifSemester, JadwalPekanEfektifSemesterAdmin)
