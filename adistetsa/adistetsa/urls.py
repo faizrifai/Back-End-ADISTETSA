@@ -31,5 +31,6 @@ urlpatterns = [
     path('login/refresh', TokenObtainPairView.as_view(), name='refresh_token'),
     path('', include('kustom_autentikasi.urls')),
     path('', include('dataprofil.urls')),
+    path('', include('kurikulum.urls')),
     path('admin/', admin.site.urls, name='admin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
