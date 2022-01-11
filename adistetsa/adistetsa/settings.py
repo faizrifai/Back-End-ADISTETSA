@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'coreapi',
     'drf_yasg',
     'import_export',
-    'django_extensions',
     'dataprofil',
     'kustom_autentikasi',
     'kurikulum',

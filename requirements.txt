@@ -10,7 +10,7 @@ defusedxml==0.7.1
 diff-match-patch==20200713
 distlib==0.3.4
 Django==4.0
-django-extensions==3.1.5
+django-admin-autocomplete-filter==0.7.1
 django-import-export==2.7.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.0.0
