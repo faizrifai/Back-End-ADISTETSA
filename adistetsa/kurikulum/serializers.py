@@ -13,10 +13,6 @@ class SilabusRPBSerializer(serializers.ModelSerializer):
         model = SilabusRPB
         fields = '__all__'
 
-class TataTertibSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TataTertib
-        fields = '__all__'
 
 # class SilabusRPBWithFilterSerializer(serializers.Serializer):
 #     silabus_rpb = SilabusRPBSerializer(many=True)
