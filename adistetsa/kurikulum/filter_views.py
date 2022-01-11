@@ -61,3 +61,31 @@ class MataPelajaranListView(generics.ListAPIView):
 
     queryset = MataPelajaran.objects.all()
     serializer_class = MataPelajaranSerializer
+
+
+
+class PoinPelanggaranListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar mata pelajaran (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    queryset = PoinPelanggaran.objects.all()
+    serializer_class = PoinPelanggaranSerializer
+
+class KategoriTataTertibListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar mata pelajaran (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    queryset = KategoriTataTertib.objects.all()
+    serializer_class = KategoriTataTertibSerializer
