@@ -19,4 +19,8 @@ urlpatterns = [
     path('export_data_guru_user', ExportDataGuruUserView.as_view(), name='export_data_guru_user'),
     path('import_data_karyawan_user', ImportDataKaryawanUserView.as_view(), name='import_data_karyawan_user'),
     path('export_data_karyawan_user', ExportDataKaryawanUserView.as_view(), name='export_data_karyawan_user'),
+    path('import_data_silabus_rpb', ImportDataSilabusRPBView.as_view(), name='import_data_silabus_rpb'),
+    path('export_data_silabus_rpb', ExportDataSilabusRPBView.as_view(), name='export_data_silabus_rpb'),
+     path('import_data_tata_tertib', ImportDataTataTertibView.as_view(), name='import_data_tata_tertib'),
+    path('export_data_tata_tertib', ExportDataTataTertibView.as_view(), name='export_data_tata_tertib'),
 ]

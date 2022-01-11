@@ -499,3 +499,127 @@ class ExportDataKaryawanUserView(APIView):
             return response
         except:
             return Response({'Result': 'Gagal mengexport data user karyawan, ada kesalahan'}, status=400)
+
+
+
+
+class ImportDataSilabusRPBView(APIView):
+    """
+    post: Melakukan import data silabus RPB (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    @swagger_auto_schema(
+        manual_parameters=[param_importexportfile,],
+        responses={'200': 'Berhasil mengupdate data silabus RPB', '400': 'Gagal mengupdate data silabus RPB, ada kesalahan',}
+    )
+    def post(self, request, format=None):
+        file = request.FILES['file']
+
+        str_text = ''
+        for line in file:
+            str_text = str_text + line.decode()
+
+        data_silabus_rpb_resource = DataSilabusRPBResource()
+        csv_data = tablib.import_set(str_text, format='csv')
+        print(csv_data)
+        
+        try:
+            result = data_silabus_rpb_resource.import_data(csv_data, dry_run=True, raise_errors=True)
+
+            if not result.has_errors():
+                data_silabus_rpb_resource.import_data(csv_data, dry_run=False)
+
+                return Response({'Result': 'Berhasil mengupdate data silabus rpb'}, status=200)
+        except Exception as e:
+            return Response({'Result': str(e)}, status=400)
+
+        return Response({'Result': 'Gagal mengupdate data silabus rpb, ada kesalahan'}, status=400)
+
+
+class ExportDataSilabusRPBView(APIView):
+    """
+    get: Melakukan export data silabus rpb (Super Admin/ Staf PPDB).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Kurikulum'],
+    }
+
+    def get(self, request, format=None):
+        data_silabus_rpb_resource = DataSilabusRPBResource()
+        try:
+            dataset = data_silabus_rpb_resource.export()
+            today = datetime.date.today()
+            filename = 'data_silabus_rpb-' + str(today) + '.csv'
+            response = HttpResponse(dataset.csv, content_type='text/csv')
+            response['Content-Disposition'] = u'attachment; filename="%s"' %  (filename)
+
+            return response
+        except Exception as e:
+            return Response({'Result': 'Gagal mengexport data silabus rpb, ada kesalahan'}, status=400)
+
+
+class ImportDataTataTertibView(APIView):
+    """
+    post: Melakukan import data silabus RPB (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    @swagger_auto_schema(
+        manual_parameters=[param_importexportfile,],
+        responses={'200': 'Berhasil mengupdate data silabus RPB', '400': 'Gagal mengupdate data silabus RPB, ada kesalahan',}
+    )
+    def post(self, request, format=None):
+        file = request.FILES['file']
+
+        str_text = ''
+        for line in file:
+            str_text = str_text + line.decode()
+
+        data_tata_tertib_resource = DataTataTertibResource()
+        csv_data = tablib.import_set(str_text, format='csv')
+        print(csv_data)
+        
+        try:
+            result = data_tata_tertib_resource.import_data(csv_data, dry_run=True, raise_errors=True)
+
+            if not result.has_errors():
+                data_tata_tertib_resource.import_data(csv_data, dry_run=False)
+
+                return Response({'Result': 'Berhasil mengupdate data tata tertib'}, status=200)
+        except Exception as e:
+            return Response({'Result': str(e)}, status=400)
+
+        return Response({'Result': 'Gagal mengupdate data tata tertib, ada kesalahan'}, status=400)
+
+
+class ExportDataTataTertibView(APIView):
+    """
+    get: Melakukan export data tata tertib (Super Admin/ Staf PPDB).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Kurikulum'],
+    }
+
+    def get(self, request, format=None):
+        data_tata_tertib_resource = DataTataTertibResource()
+        try:
+            dataset = data_tata_tertib_resource.export()
+            today = datetime.date.today()
+            filename = 'data_tata_tertib-' + str(today) + '.csv'
+            response = HttpResponse(dataset.csv, content_type='text/csv')
+            response['Content-Disposition'] = u'attachment; filename="%s"' %  (filename)
+
+            return response
+        except Exception as e:
+            return Response({'Result': 'Gagal mengexport data tata tertib, ada kesalahan'}, status=400)
