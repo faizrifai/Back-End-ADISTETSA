@@ -12,6 +12,14 @@ schema_silabus_rpb = openapi.Schema(
     }
 )
 
+schema_ktsp = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties= {
+        'TAHUN_AJARAN': openapi.Schema(type=openapi.TYPE_INTEGER),
+        'NAMA_FILE': openapi.Schema(type=openapi.TYPE_FILE),
+    }
+)
+
 param_importexportfile = openapi.Parameter(
     name="NAMA_FILE",
     in_=openapi.IN_FORM,
@@ -26,4 +34,3 @@ param_tahunajaran = openapi.Parameter(
     required=True,
     description="Document"
 )
-
