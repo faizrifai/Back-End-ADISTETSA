@@ -9,7 +9,7 @@ class TataTertibResource(resources.ModelResource):
 
     class Meta:
         model = TataTertib
-        fields = ('KETERANGAN')
+        fields = ('KETERANGAN', 'KATEGORI')
         exclude = ('ID')
         import_id_fields = ('KETERANGAN')
 
