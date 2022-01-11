@@ -15,6 +15,8 @@ urlpatterns = [
     path('kurikulum/silabus_rpb/<int:pk>', SilabusRPBDetailView.as_view(), name='silabus_rpb'),
     path('kurikulum/import_tata_tertib', ImportDataTataTertibView.as_view(), name='import_tata_tertib'),
     path('kurikulum/export_tata_tertib', ExportDataTataTertibView.as_view(), name='export_tata_tertib'),
+    path('kurikulum/tata_tertib', TataTertibListView.as_view(), name='data_tata_tertib'),
+    path('kurikulum/tata_tertib/<int:tata_tertib_id>', TataTertibDetailView.as_view(), name='data_tata_tertib'),
     path('kurikulum/poin_pelanggaran', PoinPelanggaranListView.as_view(), name='poin_pelanggaran'),
     path('kurikulum/kategori_tata_tertib', KategoriTataTertibListView.as_view(), name='kategori_tata_tertib'),
 ]
