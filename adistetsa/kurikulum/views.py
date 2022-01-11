@@ -1,5 +1,3 @@
-from os import name
-from django.shortcuts import render
 from .models import *
 from .serializers import *
 from .doc_schema import *
@@ -7,24 +5,15 @@ from rest_framework.parsers import MultiPartParser
 from .models import KTSP
 from .models import SilabusRPB
 
-from rest_framework import status, generics
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
-from collections import namedtuple
+from rest_framework import generics
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
-
-KTSPWithFilter = namedtuple('KTSPWithFilter', ('ktsp', 'tahun'))
-SilabusRPBWithFilter = namedtuple('SilabusRPBWithFilter', ('silabus_rpb', 'tahun', 'mapel', 'kelas', 'semester'))
+from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 # Create your views here. 
-
-class DataKTSPListView(APIView):
+class KTSPListView(generics.ListCreateAPIView):
     """
-    get: Menampilkan seluruh daftar Riwayat Karir karyawan (Super Admin/ Karyawan).
-    post: Menambahkan data Riwayat Karir karyawan (Super Admin/ Karyawan).
+    get: Menampilkan daftar KTSP.
+    post: Menambahkan data KTSP (Super Admin/ Staf Kurikulum).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
@@ -34,30 +23,16 @@ class DataKTSPListView(APIView):
     parser_classes= (MultiPartParser,)
 
     queryset = KTSP.objects.all()
-    serializer_class = KTSPWithFilterSerializer
+    serializer_class = KTSPSerializer
 
-    def get(self, request, format=None):
-        ktsp = KTSP.objects.all()
-        tahun = TahunAjaran.objects.all()
-        ktsptahun = KTSPWithFilter(ktsp=ktsp, tahun=tahun)
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-        serializer = KTSPWithFilterSerializer(ktsptahun)
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
-        # if serializer.is_valid():
-        return Response(serializer.data)
-        
-    @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,param_tahunajaran],
-        responses={'201': 'Berhasil', '400': 'Gagal',}
-    )
-    def post(self, request, format=None):
-        serializer = KTSPSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class DataKTSPDetailView(APIView):
+
+class KTSPDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     get: Menampilkan data KTSP.
     put: Mengubah atribut keseluruhan data KTSP.
@@ -71,105 +46,40 @@ class DataKTSPDetailView(APIView):
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    serializer_class = KTSPSerializer
     parser_classes= (MultiPartParser,)
-    def get_queryset(self, pk):
-        return KTSP.objects.get(pk=self.kwargs['pk'])
 
-    def get(self, request, pk, *args, **kwargs):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class
-        response = serializer(queryset).data
-
-        return Response(response)
-
-    @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,param_tahunajaran],
-        responses={'201': 'Berhasil', '400': 'Gagal',},
-    )
-    def put(self, request, pk, format=None):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,param_tahunajaran],
-        responses={'201': 'Berhasil', '400': 'Gagal',},
-    )
-    def patch(self, request, pk):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data, partial=True)
-        if serializer.is_valid():
-           
-            queryset.delete()
-            return Response(serializer.data)    
-        return Response(status=status.HTTP_204_NO_CONTENT)   
+    queryset = KTSP.objects.all()
+    serializer_class = KTSPSerializer
 
 
-class DataSilabusRPBListView(generics.ListAPIView):
-
+class SilabusRPBListView(generics.ListCreateAPIView):
     """
-    get: Menampilkan seluruh daftar Riwayat Karir karyawan (Super Admin/ Karyawan).
-    post: Menambahkan data Riwayat Karir karyawan (Super Admin/ Karyawan).
+    get: Menampilkan daftar Silabus RPB.
+    post: Menambahkan data Silabus RPB (Super Admin/ Staf Kurikulum).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Staf Kurikulum'],
         'POST': ['Staf Kurikulum'],
     }
+    parser_classes= (MultiPartParser,)
 
-    queryset = SilabusRPB.objects.all()
-    serializer_class = SilabusRPBWithFilterSerializer
-
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        tahun = TahunAjaran.objects.all()
-        mapel = MataPelajaran.objects.all()
-        kelas = Kelas.objects.all()
-        semester = DataSemester.objects.all()
-        silabus_rpbtahun = SilabusRPBWithFilter(silabus_rpb=queryset, tahun=tahun, mapel=mapel, kelas=kelas, semester=semester)
-
-        serializer = SilabusRPBWithFilterSerializer(silabus_rpbtahun)
-
-        return Response(serializer.data)
-
-      
-class DataSilabusRPBCreateView(generics.CreateAPIView):
-    """
-    get: Menampilkan seluruh daftar Riwayat Karir karyawan (Super Admin/ Karyawan).
-    post: Menambahkan data Riwayat Karir karyawan (Super Admin/ Karyawan).
-    """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'POST': ['Staf Kurikulum'],
-    }
     queryset = SilabusRPB.objects.all()
     serializer_class = SilabusRPBSerializer
-    parser_classes= (MultiPartParser,)
-   
-    
-class DataSilabusRPBDetailView(APIView):
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class SilabusRPBDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
-    get: Menampilkan data SilabusRPB.
-    put: Mengubah atribut keseluruhan data SilabusRPB.
-    patch: Mengubah beberapa atribut data SilabusRPB.
-    delete: Menghapus data SilabusRPB.
+    get: Menampilkan data Silabus RPB.
+    put: Mengubah atribut keseluruhan data Silabus RPB.
+    patch: Mengubah beberapa atribut data Silabus RPB.
+    delete: Menghapus data Silabus RPB.
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
@@ -178,54 +88,7 @@ class DataSilabusRPBDetailView(APIView):
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    serializer_class = SilabusRPBSerializer
     parser_classes= (MultiPartParser,)
-    
-    def get_queryset(self, pk):
-        return SilabusRPB.objects.get(pk=self.kwargs['pk'])
 
-    def get(self, request, pk, *args, **kwargs):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class
-        response = serializer(queryset).data
-
-        return Response(response)
-
-    @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,param_tahunajaran],
-        responses={'201': 'Berhasil', '400': 'Gagal',},
-    )
-    def put(self, request, pk, format=None):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-      
-    @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,param_tahunajaran],
-        responses={'201': 'Berhasil', '400': 'Gagal',},
-    )
-    def patch(self, request, pk):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-
-            return Response(serializer.data)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        queryset = self.get_queryset(pk)
-        serializer = self.serializer_class(queryset, data=request.data, partial=True)
-        if serializer.is_valid():
-           
-            queryset.delete()
-            return Response(serializer.data)
-          
-        return Response(status=status.HTTP_204_NO_CONTENT)   
-
+    queryset = SilabusRPB.objects.all()
+    serializer_class = SilabusRPBSerializer
