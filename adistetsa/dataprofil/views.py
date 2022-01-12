@@ -26,6 +26,8 @@ class DataSiswaListView(generics.ListCreateAPIView):
     }
     queryset = DataSiswa.objects.all()
     serializer_class = DataSiswaSerializer
+    filterset_fields = ('NIS', 'NAMA')
+    search_fields = ('NIS', 'NAMA')
 
 
 class DataSiswaDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -59,6 +61,8 @@ class DataOrangTuaListView(generics.ListCreateAPIView):
     }
     queryset = DataOrangTua.objects.all()
     serializer_class = DataOrangTuaSerializer
+    filterset_fields = ('NIK_AYAH', 'NIK_IBU', 'NIK_WALI', 'NAMA_AYAH', 'NAMA_IBU', 'NAMA_WALI')
+    search_fields = ('NIK_AYAH', 'NIK_IBU', 'NIK_WALI', 'NAMA_AYAH', 'NAMA_IBU', 'NAMA_WALI')
 
 
 class DataOrangTuaDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -92,6 +96,8 @@ class DataGuruListView(generics.ListCreateAPIView):
     }
     queryset = DataGuru.objects.all()
     serializer_class = DataGuruSerializer
+    filterset_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
+    search_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
 
 
 class DataGuruDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -125,6 +131,8 @@ class DataKaryawanListView(generics.ListCreateAPIView):
     }
     queryset = DataKaryawan.objects.all()
     serializer_class = DataKaryawanSerializer
+    filterset_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
+    search_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
 
 
 class DataKaryawanDetailView(generics.RetrieveUpdateDestroyAPIView):

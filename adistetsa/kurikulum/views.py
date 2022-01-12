@@ -24,6 +24,8 @@ class KTSPListView(generics.ListCreateAPIView):
 
     queryset = KTSP.objects.all()
     serializer_class = KTSPSerializer
+    filterset_fields = ('TAHUN_AJARAN',)
+    search_fields = ('TAHUN_AJARAN__ID', 'NAMA_FILE')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -66,6 +68,8 @@ class SilabusRPBListView(generics.ListCreateAPIView):
 
     queryset = SilabusRPB.objects.all()
     serializer_class = SilabusRPBSerializer
+    filterset_fields = ('MATA_PELAJARAN', 'KELAS', 'SEMESTER')
+    search_fields = ('MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -107,6 +111,8 @@ class TataTertibListView(generics.ListCreateAPIView):
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
+    filterset_fields = ('KETERANGAN', 'KATEGORI')
+    search_fields = ('KETERANGAN', 'KATEGORI')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
