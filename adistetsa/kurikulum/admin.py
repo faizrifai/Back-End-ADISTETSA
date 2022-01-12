@@ -30,31 +30,6 @@ def deskripsi_tata_tertib(obj):
     name = "%s" % obj.KETERANGAN
     return Truncator(name).chars(50)
 
-# class TahunFilter(SimpleListFilter):
-#     title = "Tahun Ajaran"  
-#     parameter_name = "tahun_ajaran"
-
-#     def lookups(self, request, model_admin):
-#         ktsp = TahunAjaran.objects.all()
-#         tahun_ajaran = []
-#         for data in ktsp.values():
-#             str_tahun = str(data['TAHUN_AJARAN_AWAL']) + '/' + str(data['TAHUN_AJARAN_AKHIR'])
-#             tahun_ajaran.append((str_tahun, str_tahun))
-            
-#         return tahun_ajaran
-
-#     def queryset(self, request, queryset):
-#         nama_model = queryset.model.__name__
-#         if self.value() and (nama_model == 'KTSP' or nama_model == 'SilabusRPB' or nama_model):
-#             print(queryset.model.__name__)
-#             tahun_ajaran = self.value().split('/')
-#             return queryset.filter(TAHUN_AJARAN__TAHUN_AJARAN_AWAL=tahun_ajaran[0], TAHUN_AJARAN__TAHUN_AJARAN_AKHIR=tahun_ajaran[1])
-#         elif self.value() and (nama_model == 'JurnalBelajar'):
-#             print(queryset.model.__name__)
-#             tahun_ajaran = self.value().split('/')
-#             return queryset.filter(KELAS__TAHUN_AJARAN__TAHUN_AJARAN_AWAL=tahun_ajaran[0], KELAS__TAHUN_AJARAN__TAHUN_AJARAN_AKHIR=tahun_ajaran[1])
-
-
 # custom admin page
 
 class TahunAjaranAdmin(admin.ModelAdmin):
@@ -77,7 +52,7 @@ class PelajaranAdmin(admin.ModelAdmin):
     search_fields = ['MATA_PELAJARAN__NAMA', 'MATA_PELAJARAN__KODE' ]
     list_display = ('MATA_PELAJARAN', 'jam_pelajaran', 'GURU')
     filter_horizontal = ('WAKTU',)
-    
+  
     def jam_pelajaran(self, obj):
         daftar = ""
         for data in obj.WAKTU.all():
@@ -125,7 +100,7 @@ admin.site.register(JadwalPelajaran, JadwalPelajaranAdmin)
 class SilabusRPBAdmin(admin.ModelAdmin):
     list_display = ('MATA_PELAJARAN', 'TAHUN_AJARAN', 'NAMA_FILE', 'KELAS')
     list_per_page = 10
-    search_fields = ['MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER_NAMA']
+    search_fields = ['MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA']
     list_filter = (TahunFilter, MataPelajaranFilter, KelasFilter, SemesterFilter)
 
 admin.site.register(SilabusRPB, SilabusRPBAdmin)
@@ -149,28 +124,6 @@ class JurnalBelajarAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        data_guru_user = DataGuruUser.objects.get(USER=request.user)
-        if db_field.name == "DAFTAR" and not request.user.is_superuser:
-            kwargs["queryset"] = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
-
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
-
-    def get_exclude(self, request, obj=None):
-        excluded = super().get_exclude(request, obj) or []
-
-        if not request.user.is_superuser:
-            return excluded + ['GURU']
-
-        return excluded
-
-    def save_model(self, request, obj, form, change):
-        if not request.user.is_superuser:
-            data_guru_user = DataGuruUser.objects.get(USER=request.user)
-            obj.GURU = data_guru_user.DATA_GURU
-
-        return super().save_model(request, obj, form, change)
 
     def aksi(self, obj):
         return "Edit"
@@ -242,14 +195,6 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
 
     resource_class = JadwalMengajarResource
 
-    def get_queryset(self, request):
-        qs = super(JadwalMengajarAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-
-        data_guru_user = DataGuruUser.objects.get(USER=request.user)
-        return qs.filter(GURU=data_guru_user.DATA_GURU)
-
     def jam_pelajaran(self, obj):
         daftar = ""
         for data in obj.WAKTU_PELAJARAN.all():
@@ -270,14 +215,6 @@ class DaftarJurnalBelajarAdmin(admin.ModelAdmin):
     exclude = ('GURU',)
     list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
-
-    def get_queryset(self, request):
-        qs = super(DaftarJurnalBelajarAdmin, self).get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-
-        data_guru_user = DataGuruUser.objects.get(USER=request.user)
-        return qs.filter(GURU=data_guru_user.DATA_GURU)
 
     def aksi(self, obj):
         base_url = reverse('admin:kurikulum_jurnalbelajar_changelist')
