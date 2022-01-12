@@ -329,6 +329,35 @@ class AbsensiSiswa(models.Model):
     )
     FILE_DOKUMEN = models.FileField(max_length=255,blank=True, upload_to='Dokumen_AbsensiSiswa')
 
+class DaftarJurnalBelajar(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
+    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
+    KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
+
+class JurnalBelajar(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
+    PERTEMUAN = models.CharField(max_length=255)
+    TANGGAL_MENGAJAR = models.DateField()
+    DESKRIPSI_MATERI = models.TextField()
+    FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalBelajar')
+    DAFTAR = models.ForeignKey(DaftarJurnalBelajar, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['PERTEMUAN'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Jurnal Belajar"
+        ordering = ['PERTEMUAN']
+
+    def __str__(self):
+        return "Pertemuan " + self.PERTEMUAN
+
 class JadwalMengajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
@@ -354,6 +383,15 @@ class JadwalMengajar(models.Model):
         return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
 
     def save(self, *args, **kwargs):
+        # tambahkan ke daftar jurnal belajar
+        if not self.ID:
+            daftar_jurnal_belajar = DaftarJurnalBelajar.objects.create(
+                GURU = self.GURU,
+                MATA_PELAJARAN = self.MATA_PELAJARAN,
+                KELAS = self.KELAS,
+                SEMESTER = self.SEMESTER,
+            )
+
         super(JadwalMengajar, self).save(*args, **kwargs)
         waktu = self.WAKTU_PELAJARAN.all()
         jumlah = 0
@@ -363,17 +401,7 @@ class JadwalMengajar(models.Model):
         if (self.JUMLAH_WAKTU != jumlah):
             self.JUMLAH_WAKTU = jumlah
             self.save()
-
-class JurnalBelajar(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    PERTEMUAN = models.CharField(max_length=255)
-    JADWAL_MENGAJAR = models.ForeignKey(JadwalMengajar, on_delete=models.CASCADE)
-    TANGGAL_MENGAJAR = models.DateField()
-    DESKRIPSI_MATERI = models.TextField()
-    FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalBelajar')
     
 
 class JadwalMingguEfektifNonEfektif(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    
