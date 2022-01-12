@@ -7,6 +7,7 @@ from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from .filter_admin import *
 from .models import *
+from kustom_autentikasi.models import DataGuruUser
 from .importexportresources import *
 
 # Register your models here.
@@ -144,40 +145,35 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 class JurnalBelajarAdmin(admin.ModelAdmin):
-    list_display = ('aksi', 'get_mata_pelajaran', 'get_tahun_ajaran', 'get_semester', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
+    list_display = ('aksi', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    # list_filter = (JadwalMengajarFilter,)
-    autocomplete_fields = ['GURU', 'JADWAL_MENGAJAR']
-    
+    autocomplete_fields = ['DAFTAR']
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        data_guru_user = DataGuruUser.objects.get(USER=request.user)
+        if db_field.name == "DAFTAR" and not request.user.is_superuser:
+            kwargs["queryset"] = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_exclude(self, request, obj=None):
+        excluded = super().get_exclude(request, obj) or []
+
+        if not request.user.is_superuser:
+            return excluded + ['GURU']
+
+        return excluded
+
+    def save_model(self, request, obj, form, change):
+        if not request.user.is_superuser:
+            data_guru_user = DataGuruUser.objects.get(USER=request.user)
+            obj.GURU = data_guru_user.DATA_GURU
+
+        return super().save_model(request, obj, form, change)
+
     def aksi(self, obj):
         return "Edit"
-    
-    def jadwal_mengajar(self, obj):
-        jadwal_mengajar = JadwalMengajar.objects.get(pk=obj.JADWAL_MENGAJAR.ID)
-
-        base_url = reverse('admin:kurikulum_jadwalmengajar_changelist')
-        
-        return mark_safe(u'<a href="%s?Jpk__exact=%d">%s</a>' % (base_url, jadwal_mengajar.ID, str(obj.JADWAL_MENGAJAR)))
-    
-    def get_mata_pelajaran(self, obj):
-        return obj.JADWAL_MENGAJAR.MATA_PELAJARAN
-    def get_tahun_ajaran(self, obj):
-        return obj.JADWAL_MENGAJAR.TAHUN_AJARAN
-    def get_semester(self, obj):
-        return obj.JADWAL_MENGAJAR.SEMESTER
-    
-    
-    get_mata_pelajaran.short_description = 'MATA PELAJARAN'
-    get_tahun_ajaran.short_description = 'TAHUN AJARAN'
-    get_semester.short_description = 'SEMESTER'
-
-    # def pelajaran(self, obj):
-    #     pelajaran = Pelajaran.objects.get(ID=obj.PELAJARAN.ID)
-
-    #     base_url = reverse('admin:kurikulum_pelajaran_changelist')
-        
-    #     return mark_safe(u'<a href="%s%d/change">%s</a>' % (base_url, pelajaran.ID, str(pelajaran)))
 
 admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
 
@@ -246,6 +242,14 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
 
     resource_class = JadwalMengajarResource
 
+    def get_queryset(self, request):
+        qs = super(JadwalMengajarAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+
+        data_guru_user = DataGuruUser.objects.get(USER=request.user)
+        return qs.filter(GURU=data_guru_user.DATA_GURU)
+
     def jam_pelajaran(self, obj):
         daftar = ""
         for data in obj.WAKTU_PELAJARAN.all():
@@ -257,5 +261,27 @@ admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
 
 class JadwalPekanEfektifSemesterAdmin(admin.ModelAdmin):
     filter_horizontal = ('BANYAK_MINGGU',)
-    
+
 admin.site.register(JadwalPekanEfektifSemester, JadwalPekanEfektifSemesterAdmin)
+
+class DaftarJurnalBelajarAdmin(admin.ModelAdmin):
+    search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP', 'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
+    list_per_page = 10
+    exclude = ('GURU',)
+    list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi')
+    list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
+
+    def get_queryset(self, request):
+        qs = super(DaftarJurnalBelajarAdmin, self).get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+
+        data_guru_user = DataGuruUser.objects.get(USER=request.user)
+        return qs.filter(GURU=data_guru_user.DATA_GURU)
+
+    def aksi(self, obj):
+        base_url = reverse('admin:kurikulum_jurnalbelajar_changelist')
+        
+        return mark_safe(u'<a href="%s?DAFTAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+
+admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
