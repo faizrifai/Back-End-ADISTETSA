@@ -32,11 +32,6 @@ class KelasSerializer(serializers.ModelSerializer):
         fields = ('ID', 'KODE_KELAS')
 
 
-class PoinPelanggaranSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PoinPelanggaran
-        fields = ('KETERANGAN', 'POIN')
-
 
 class KategoriTataTertibSerializer(serializers.ModelSerializer):
     class Meta:
