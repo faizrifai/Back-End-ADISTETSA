@@ -1,6 +1,5 @@
-from ast import mod
-from os import truncate
 from django.db import models
+from django.db.models.signals import post_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
@@ -309,18 +308,45 @@ class AbsensiSiswa(models.Model):
     )
     FILE_DOKUMEN = models.FileField(max_length=255,blank=True, upload_to='Dokumen_AbsensiSiswa')
 
+class JadwalMengajar(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
+    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
+    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
+    HARI = models.CharField(
+        max_length=255,
+        choices=ENUM_HARI,
+    )
+    WAKTU_PELAJARAN = models.ManyToManyField(WaktuPelajaran)
+    JUMLAH_WAKTU = models.IntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['KELAS', 'MATA_PELAJARAN', 'HARI'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Jadwal Mengajar"
+        ordering = ['TAHUN_AJARAN', 'KELAS', 'HARI', 'JUMLAH_WAKTU']
+    
+
+    def __str__(self):
+        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
+
 class DaftarJurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
     KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
-    
+    JADWAL_MENGAJAR = models.ForeignKey(JadwalMengajar, on_delete=models.CASCADE)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['JADWAL_MENGAJAR'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Daftar Jurnal Belajar"
+        ordering = ['KELAS']
 
     def __str__(self):
         return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
@@ -344,58 +370,27 @@ class JurnalBelajar(models.Model):
     def __str__(self):
         return "Pertemuan " + self.PERTEMUAN
 
-class JadwalMengajar(models.Model):
+class JadwalMingguEfektifNonEfektif(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
-    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
-    KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
-    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
-    HARI = models.CharField(
-        max_length=255,
-        choices=ENUM_HARI,
-    )
-    WAKTU_PELAJARAN = models.ManyToManyField(WaktuPelajaran)
-    JUMLAH_WAKTU = models.IntegerField(default=0)
+    ID = models.BigAutoField(primary_key=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['KELAS', 'MATA_PELAJARAN', 'HARI'], name='%(app_label)s_%(class)s_unique')
-        ]
-        verbose_name_plural = "Jadwal Mengajar"
-        ordering = ['TAHUN_AJARAN', 'KELAS', 'HARI', 'JUMLAH_WAKTU']
-    
-    def __str__(self):
-        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
+def post_save_jadwal_mengajar(sender, instance, **kwargs):
+    try:
+        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.create(
+            GURU = instance.GURU,
+            MATA_PELAJARAN = instance.MATA_PELAJARAN,
+            KELAS = instance.KELAS,
+            SEMESTER = instance.SEMESTER,
+            JADWAL_MENGAJAR = instance,
+        )
+        daftar_jurnal_belajar.save()
+    except Exception as e:
+        print(str(e))
 
-    def save(self, *args, **kwargs):
-        # tambahkan ke daftar jurnal belajar
-        if not self.ID:
-            daftar_jurnal_belajar = DaftarJurnalBelajar.objects.create(
-                GURU = self.GURU,
-                MATA_PELAJARAN = self.MATA_PELAJARAN,
-                KELAS = self.KELAS,
-                SEMESTER = self.SEMESTER,
-            )
-
-        super(JadwalMengajar, self).save(*args, **kwargs)
-        waktu = self.WAKTU_PELAJARAN.all()
-        jumlah = 0
-        for data in waktu:
-            jumlah += data.JAM_KE
-
-        if (self.JUMLAH_WAKTU != jumlah):
-            self.JUMLAH_WAKTU = jumlah
-            self.save()
-    
+post_save.connect(post_save_jadwal_mengajar, sender=JadwalMengajar)
 
 class JadwalPekanEfektifSemester(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
-    KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
-    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
-    JADWAL_MENGAJAR = models.ForeignKey(JadwalMengajar, on_delete=models.CASCADE)
     BULAN = models.CharField(
         max_length=255, 
         choices= ENUM_BULAN,
@@ -404,7 +399,7 @@ class JadwalPekanEfektifSemester(models.Model):
     JUMLAH_MINGGU_EFEKTIF = models.IntegerField()
     JUMLAH_MINGGU_TIDAK_EFEKTIF = models.IntegerField()
     KETERANGAN = models.TextField()
-   
+    
     def __str__(self):
         return self.BULAN + ' - Jumlah Minggu = ' + str(self.JUMLAH_MINGGU) + ' || Jumlah Minggu Efektif = ' + str(self.JUMLAH_MINGGU_EFEKTIF)
     
