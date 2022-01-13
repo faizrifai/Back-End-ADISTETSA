@@ -1,3 +1,4 @@
+from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
 from .doc_schema import *
@@ -107,7 +108,6 @@ class TataTertibListView(generics.ListCreateAPIView):
         'GET': ['Staf Kurikulum'],
         'POST': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
@@ -135,7 +135,6 @@ class TataTertibDetailView(generics.RetrieveUpdateDestroyAPIView):
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
@@ -151,7 +150,6 @@ class PoinPelanggaranListView(generics.ListCreateAPIView):
         'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
         'POST': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = PoinPelanggaran.objects.all()
     serializer_class = PoinPelanggaranSerializer
@@ -172,13 +170,65 @@ class PoinPelanggaranDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
-        
         'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
         'PUT': ['Staf Kurikulum'],
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = PoinPelanggaran.objects.all()
     serializer_class = PoinPelanggaranSerializer
+
+class JadwalPekanAktifListView(generics.ListAPIView):
+    """
+    get: Menampilkan Jadwal Pekan Aktif
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
+    }
+
+    queryset = JadwalPekanAktif.objects.all()
+    serializer_class = JadwalPekanAktifSerializer
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+class JadwalMengajarGuruListView(generics.ListAPIView):
+    """
+    get: Menampilkan Jadwal Pekan Aktif (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+    }
+
+    serializer_class = JadwalMengajarSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class TambahKelasSiswaView(generics.CreateAPIView):
+    """
+    post: Mendaftarkan siswa ke dalam kelas yang dipilih (Staf Kurikulum).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Staf Kurikulum'],
+    }
+
+    serializer_class = TambahKelasSiswaSerializer
+    queryset = KelasSiswa.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
