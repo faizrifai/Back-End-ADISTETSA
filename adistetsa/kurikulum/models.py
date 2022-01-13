@@ -378,7 +378,6 @@ class DaftarJurnalBelajar(models.Model):
             models.UniqueConstraint(fields=['JADWAL_MENGAJAR'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Daftar Jurnal Belajar"
-        ordering = ['KELAS']
 
     def __str__(self):
         return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
