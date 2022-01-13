@@ -107,7 +107,6 @@ class TataTertibListView(generics.ListCreateAPIView):
         'GET': ['Staf Kurikulum'],
         'POST': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
@@ -135,7 +134,6 @@ class TataTertibDetailView(generics.RetrieveUpdateDestroyAPIView):
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
@@ -151,7 +149,6 @@ class PoinPelanggaranListView(generics.ListCreateAPIView):
         'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
         'POST': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = PoinPelanggaran.objects.all()
     serializer_class = PoinPelanggaranSerializer
@@ -172,13 +169,31 @@ class PoinPelanggaranDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
-        
         'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
         'PUT': ['Staf Kurikulum'],
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
 
     queryset = PoinPelanggaran.objects.all()
     serializer_class = PoinPelanggaranSerializer
+
+class JadwalPekanAktifListView(generics.ListCreateAPIView):
+    """
+    get: Menampilkan Jadwal Pekan Aktif
+    post: Menambahkan Jadwal Pekan Aktif (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
+        'POST': ['Staf Kurikulum'],
+    }
+
+    queryset = JadwalPekanAktif.objects.all()
+    serializer_class = JadwalPekanAktifSerializer
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
