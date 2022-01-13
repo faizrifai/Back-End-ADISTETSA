@@ -7,7 +7,6 @@ from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from .filter_admin import *
 from .models import *
-from kustom_autentikasi.models import DataGuruUser
 from .importexportresources import *
 
 # Register your models here.

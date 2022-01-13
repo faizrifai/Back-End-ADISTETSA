@@ -8,3 +8,11 @@ param_importexportfile = openapi.Parameter(
     required=True,
     description="Document"
 )
+
+schema_profile = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties= {
+        'EMAIL': openapi.Schema(type=openapi.TYPE_STRING),
+        'HP': openapi.Schema(type=openapi.TYPE_STRING),
+    }
+)

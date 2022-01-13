@@ -39,10 +39,10 @@ class DataSiswaDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf PPDB', 'Staf Kurikulum', 'Guru'],
-        'PUT': ['Staf PPDB', 'Staf Kurikulum', 'Guru'],
-        'PATCH': ['Staf PPDB', 'Staf Kurikulum', 'Guru'],
-        'DELETE': ['Staf PPDB', 'Staf Kurikulum', 'Guru'],
+        'GET': ['Staf PPDB', 'Staf Kurikulum', 'Siswa'],
+        'PUT': ['Staf PPDB', 'Staf Kurikulum', 'Siswa'],
+        'PATCH': ['Staf PPDB', 'Staf Kurikulum', 'Siswa'],
+        'DELETE': ['Staf PPDB', 'Staf Kurikulum', 'Siswa'],
     }
     queryset = DataSiswa.objects.all()
     serializer_class = DataSiswaSerializer
@@ -109,10 +109,10 @@ class DataGuruDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf PPDB'],
-        'PUT': ['Staf PPDB'],
-        'PATCH': ['Staf PPDB'],
-        'DELETE': ['Staf PPDB'],
+        'GET': ['Staf PPDB', 'GURU'],
+        'PUT': ['Staf PPDB', 'GURU'],
+        'PATCH': ['Staf PPDB', 'GURU'],
+        'DELETE': ['Staf PPDB', 'GURU'],
     }
     queryset = DataGuru.objects.all()
     serializer_class = DataGuruSerializer

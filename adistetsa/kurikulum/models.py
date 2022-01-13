@@ -315,6 +315,12 @@ class DaftarJurnalBelajar(models.Model):
     MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
     KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['JADWAL_MENGAJAR'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Daftar Jurnal Belajar"
 
     def __str__(self):
         return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
@@ -385,6 +391,11 @@ class JadwalMengajar(models.Model):
 
 class JadwalPekanEfektifSemester(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
+    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
+    KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    JADWAL_MENGAJAR = models.ForeignKey(JadwalMengajar, on_delete=models.CASCADE)
     BULAN = models.CharField(
         max_length=255, 
         choices= ENUM_BULAN,
@@ -393,7 +404,7 @@ class JadwalPekanEfektifSemester(models.Model):
     JUMLAH_MINGGU_EFEKTIF = models.IntegerField()
     JUMLAH_MINGGU_TIDAK_EFEKTIF = models.IntegerField()
     KETERANGAN = models.TextField()
-    
+   
     def __str__(self):
         return self.BULAN + ' - Jumlah Minggu = ' + str(self.JUMLAH_MINGGU) + ' || Jumlah Minggu Efektif = ' + str(self.JUMLAH_MINGGU_EFEKTIF)
     

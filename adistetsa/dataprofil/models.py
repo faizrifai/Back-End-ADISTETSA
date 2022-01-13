@@ -204,7 +204,7 @@ class DataGuru(models.Model):
         choices=ENUM_STATUS_AKTIF,
         blank=True
     )
-    NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    HP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
     
     def __str__(self):
@@ -294,7 +294,7 @@ class DataKaryawan(models.Model):
         choices=ENUM_STATUS_AKTIF,
         blank=True
     )
-    NO_TELP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    HP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     EMAIL = models.EmailField(max_length=DEFAULT_LENGTH, blank=True)
     
     def __str__(self):

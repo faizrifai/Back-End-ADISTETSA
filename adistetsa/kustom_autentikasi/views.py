@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
+from rest_framework import status
 import tablib
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
@@ -26,6 +27,7 @@ class ProfilDetailView(APIView):
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
         'GET': ['Siswa', 'Orang Tua', 'Guru', 'Karyawan'],
+        'PATCH': ['Siswa', 'Orang Tua', 'Guru', 'Karyawan'],
     }
 
     def get_queryset(self):
@@ -62,6 +64,21 @@ class ProfilDetailView(APIView):
         serializer = self.get_serializer()
         response = serializer(queryset).data
         return Response(response)
+
+    @swagger_auto_schema(
+        request_body=schema_profile,
+        responses={'201': 'Berhasil mengupdate profil', '400': 'Bad Request',}
+    )
+    def patch(self, request, format=None):
+        queryset = self.get_queryset()
+        roleSerializer = self.get_serializer()
+        serializer = roleSerializer(queryset, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RoleUserView(APIView):
     """
