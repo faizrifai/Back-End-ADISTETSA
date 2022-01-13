@@ -277,10 +277,20 @@ class JadwalHarian(models.Model):
 class JadwalPelajaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
-    JADWAL_HARIAN = models.ManyToManyField(JadwalHarian)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['TAHUN_AJARAN'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Jadwal Pelajaran"
     
     def __str__(self):
         return str(self.TAHUN_AJARAN)
+
+    def save(self, *args, **kwargs):
+        # generate pdf jadwal pelajaran -- ongoing
+
+        super(JadwalPelajaran, self).save(*args, **kwargs)
     
 class KelasSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)

@@ -48,3 +48,14 @@ class JadwalPekanTidakEfektifSerializer(serializers.ModelSerializer):
     class Meta:
         model = JadwalPekanTidakEfektif
         fields = '__all__'
+
+
+class KelasSiswaSerializer(serializers.ModelSerializer):
+    KELAS = serializers.SerializerMethodField('get_kelas')
+
+    class Meta:
+        model = KelasSiswa
+        fields = '__all__'
+
+    def get_kelas(self, obj):
+        return str(obj.KELAS)

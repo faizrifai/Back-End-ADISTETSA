@@ -137,3 +137,18 @@ class JadwalPekanTidakEfektifDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = JadwalPekanTidakEfektif.objects.all()
     serializer_class = JadwalPekanTidakEfektifSerializer
+
+
+class KelasSiswaListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar kelas siswa (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Kurikulum'],
+    }
+
+    queryset = KelasSiswa.objects.all()
+    serializer_class = KelasSiswaSerializer
+    filterset_fields = ('NIS', 'KELAS')
+    search_fields = ('NIS__NIS', 'NIS__NAMA', 'KELAS__KELAS__KODE_KELAS')

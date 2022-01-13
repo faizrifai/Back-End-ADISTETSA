@@ -1,3 +1,4 @@
+from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
 from .doc_schema import *
@@ -178,15 +179,13 @@ class PoinPelanggaranDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PoinPelanggaran.objects.all()
     serializer_class = PoinPelanggaranSerializer
 
-class JadwalPekanAktifListView(generics.ListCreateAPIView):
+class JadwalPekanAktifListView(generics.ListAPIView):
     """
     get: Menampilkan Jadwal Pekan Aktif
-    post: Menambahkan Jadwal Pekan Aktif (Super Admin/ Staf Kurikulum).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
-        'POST': ['Staf Kurikulum'],
     }
 
     queryset = JadwalPekanAktif.objects.all()
@@ -194,6 +193,42 @@ class JadwalPekanAktifListView(generics.ListCreateAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+class JadwalMengajarGuruListView(generics.ListAPIView):
+    """
+    get: Menampilkan Jadwal Pekan Aktif (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+    }
+
+    serializer_class = JadwalMengajarSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class TambahKelasSiswaView(generics.CreateAPIView):
+    """
+    post: Mendaftarkan siswa ke dalam kelas yang dipilih (Staf Kurikulum).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Staf Kurikulum'],
+    }
+
+    serializer_class = TambahKelasSiswaSerializer
+    queryset = KelasSiswa.objects.all()
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)

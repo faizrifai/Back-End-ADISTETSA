@@ -56,3 +56,42 @@ class JadwalPekanAktifSerializer(serializers.ModelSerializer):
             )
 
         return minggu_tidak_efektif
+
+class JadwalMengajarSerializer(serializers.ModelSerializer):
+    GURU = serializers.SerializerMethodField('get_guru')
+    TAHUN_AJARAN = serializers.SerializerMethodField('get_tahun_ajaran')
+    KELAS = serializers.SerializerMethodField('get_kelas')
+    MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
+    WAKTU_PELAJARAN = serializers.SerializerMethodField('get_waktu_pelajaran')
+    SEMESTER = serializers.SerializerMethodField('get_semester')
+
+    class Meta:
+        model = JadwalMengajar
+        exclude = ('JUMLAH_WAKTU',)
+
+    def get_guru(self, obj):
+        return obj.GURU.NAMA_LENGKAP
+
+    def get_tahun_ajaran(self, obj):
+        return str(obj.TAHUN_AJARAN)
+
+    def get_kelas(self, obj):
+        return str(obj.KELAS)
+
+    def get_mata_pelajaran(self, obj):
+        return str(obj.MATA_PELAJARAN)
+
+    def get_waktu_pelajaran(self, obj):
+        waktu_pelajaran = []
+        for data in obj.WAKTU_PELAJARAN.all():
+            waktu_pelajaran.append(str(data))
+
+        return waktu_pelajaran
+
+    def get_semester(self, obj):
+        return str(obj.SEMESTER)
+
+class TambahKelasSiswaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KelasSiswa
+        fields = '__all__'

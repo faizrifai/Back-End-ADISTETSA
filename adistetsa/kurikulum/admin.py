@@ -81,10 +81,8 @@ class WaktuPelajaranAdmin(admin.ModelAdmin):
 
 admin.site.register(WaktuPelajaran, WaktuPelajaranAdmin)
     
-class JadwalPelajaranAdmin(ImportExportModelAdmin):
-    filter_horizontal = ('JADWAL_HARIAN',)
+class JadwalPelajaranAdmin(admin.ModelAdmin):
     list_per_page = 10
-    search_fields = ['JADWAL_HARIAN__PELAJARAN__MATA_PELAJARAN__NAMA']
     list_display = ('TAHUN_AJARAN',)
     list_filter = (TahunFilter,)
 
