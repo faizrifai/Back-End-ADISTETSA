@@ -12,9 +12,6 @@ from .importexportresources import *
 
 # Register your models here.
 admin.site.register(BulanMinggu)
-admin.site.register(KegiatanPekanTidakEfektif)
-admin.site.register(JadwalPekanTidakEfektif)
-admin.site.register(JadwalPekanAktif)
 admin.site.register(Mengajar)
 admin.site.register(AbsensiSiswa)
 admin.site.register(Jurusan)
@@ -204,10 +201,6 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
 
 admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
 
-class JadwalPekanEfektifSemesterAdmin(admin.ModelAdmin):
-    filter_horizontal = ('BANYAK_MINGGU',)
-
-admin.site.register(JadwalPekanEfektifSemester, JadwalPekanEfektifSemesterAdmin)
 
 class DaftarJurnalBelajarAdmin(admin.ModelAdmin):
     search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP', 'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
@@ -222,3 +215,55 @@ class DaftarJurnalBelajarAdmin(admin.ModelAdmin):
         return mark_safe(u'<a href="%s?DAFTAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
 
 admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
+
+class JadwalPekanAktifAdmin(admin.ModelAdmin):
+    filter_horizontal = ['MINGGU_TIDAK_EFEKTIF', 'MINGGU_EFEKTIF',] 
+    list_display = ('aksi', 'bulan_efektif', 'jumlah_minggu', 'jumlah_minggu_efektif', 'jumlah_minggu_tidak_efektif','uraian_kegiatan',  'MATA_PELAJARAN', 'KELAS', 'SEMESTER')
+    list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter]
+    def uraian_kegiatan(self, obj):
+        daftar = ""
+        for data in obj.MINGGU_TIDAK_EFEKTIF.all():
+            kegiatan = str(data.URAIAN_KEGIATAN)
+            daftar += Truncator(kegiatan).chars(10) + "<br>"
+            
+        return format_html(daftar)
+
+     
+    def bulan_efektif(self, obj):
+        daftar = ""
+        for data in obj.MINGGU_EFEKTIF.all():
+            daftar += str(data.BULAN) + "<br>"
+        return format_html(daftar)
+    
+    def jumlah_minggu(self, obj):
+        daftar = ""
+        for data in obj.MINGGU_EFEKTIF.all():
+            daftar += str(data.JUMLAH_MINGGU) + "<br>"
+        return format_html(daftar)
+    
+    def jumlah_minggu_efektif(self, obj):
+        daftar = ""
+        for data in obj.MINGGU_EFEKTIF.all():
+            daftar += str(data.JUMLAH_MINGGU_EFEKTIF) + "<br>"
+        return format_html(daftar)
+    
+    def jumlah_minggu_tidak_efektif(self, obj):
+        daftar = ""
+        for data in obj.MINGGU_EFEKTIF.all():
+            daftar += str(data.JUMLAH_MINGGU_TIDAK_EFEKTIF) + "<br>"
+        return format_html(daftar)
+    
+    def aksi(self, obj):
+        return "Detail"
+
+admin.site.register(JadwalPekanAktif, JadwalPekanAktifAdmin)
+
+class JadwalPekanEfektifSemesterAdmin(admin.ModelAdmin):
+    list_display = ('BULAN', 'JUMLAH_MINGGU', 'JUMLAH_MINGGU_EFEKTIF', 'JUMLAH_MINGGU_TIDAK_EFEKTIF', 'KETERANGAN')
+    
+admin.site.register(JadwalPekanEfektifSemester, JadwalPekanEfektifSemesterAdmin)
+
+class JadwalPekanTidakEfektifAdmin(admin.ModelAdmin):
+    list_display = ('URAIAN_KEGIATAN', 'JUMLAH_MINGGU', 'KETERANGAN',)
+
+admin.site.register(JadwalPekanTidakEfektif, JadwalPekanTidakEfektifAdmin)
