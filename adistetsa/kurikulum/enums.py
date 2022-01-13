@@ -24,3 +24,17 @@ ENUM_KETERANGAN_ABSEN = [
     ('Sakit', 'Sakit'),
     ('Tanpa Keterangan', 'Tanpa Keterangan')
 ]
+
+ENUM_BULAN = [
+    ('Januari', 'Januari'),
+    ('Februari', 'Februari'),
+    ('Maret', 'Maret'),
+    ('April', 'April'),
+    ('Juni', 'Juni'),
+    ('Juli', 'Juli'),
+    ('Agustus', 'Agustus'),
+    ('Semester', 'Semester'),
+    ('Oktober', 'Oktober'),
+    ('November', 'November'),
+    ('Desember', 'Desember')
+]

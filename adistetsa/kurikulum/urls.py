@@ -16,6 +16,7 @@ urlpatterns = [
     path('kurikulum/tata_tertib', TataTertibListView.as_view(), name='tata_tertib'),
     path('kurikulum/tata_tertib/<int:pk>', TataTertibDetailView.as_view(), name='tata_tertib'),
     path('kurikulum/poin_pelanggaran', PoinPelanggaranListView.as_view(), name='poin_pelanggaran'),
+    path('kurikulum/poin_pelanggaran/<int:pk>', PoinPelanggaranDetailView.as_view(), name='poin_pelanggaran'),
     path('kurikulum/kategori_tata_tertib', KategoriTataTertibListView.as_view(), name='kategori_tata_tertib'),
     #path('data_tata_tertib', TataTertibListView.as_view(), name='data_tata_tertib'),
     #path('data_tata_tertib/<int:tata_tertib_id>', TataTertibDetailView.as_view(), name='data_tata_tertib'),

@@ -139,3 +139,46 @@ class TataTertibDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = TataTertib.objects.all()
     serializer_class = TataTertibSerializer
+
+class PoinPelanggaranListView(generics.ListCreateAPIView):
+    """
+    get: Menampilkan Poin Pelanggaran
+    post: Menambahkan Poin Pelanggaran (Super Admin/ Staf Kurikulum).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
+        'POST': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    queryset = PoinPelanggaran.objects.all()
+    serializer_class = PoinPelanggaranSerializer
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class PoinPelanggaranDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    get: Menampilkan data Tata Tertib.
+    put: Mengubah atribut keseluruhan data Tata Tertib.
+    patch: Mengubah beberapa atribut data Tata Tertib.
+    delete: Menghapus data Tata Tertib.
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
+        'PUT': ['Staf Kurikulum'],
+        'PATCH': ['Staf Kurikulum'],
+        'DELETE': ['Staf Kurikulum'],
+    }
+    parser_classes= (MultiPartParser,)
+
+    queryset = PoinPelanggaran.objects.all()
+    serializer_class = PoinPelanggaranSerializer
