@@ -84,7 +84,7 @@ class MataPelajaran(models.Model):
     
     def __str__(self):
         return self.KODE + ' - ' + self.NAMA
-    
+
 class Jurusan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA = models.CharField(max_length=255)
