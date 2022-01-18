@@ -117,7 +117,6 @@ class DataGuruFactory(DjangoModelFactory):
     JENIS_KETUNAAN = factory.Faker('words')
     SPESIALIS_MENANGANI = factory.Faker('words')
     STATUS_AKTIF = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
-    NO_TELP = factory.Faker('phone_number')
     EMAIL = factory.Faker('email')
     
 class DataKaryawanFactory(DjangoModelFactory):
@@ -178,5 +177,4 @@ class DataKaryawanFactory(DjangoModelFactory):
     JENIS_KETUNAAN = factory.Faker('words')
     SPESIALIS_MENANGANI = factory.Faker('words')
     STATUS_AKTIF = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
-    NO_TELP = factory.Faker('phone_number')
     EMAIL = factory.Faker('email')

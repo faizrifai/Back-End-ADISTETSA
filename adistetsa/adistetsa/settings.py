@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'dataprofil',
     'kustom_autentikasi',
     'kurikulum',
+    'perpustakaan',
     'admin_auto_filters',
 ]
 
