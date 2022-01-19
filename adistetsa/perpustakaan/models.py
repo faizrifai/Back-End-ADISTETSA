@@ -3,9 +3,10 @@ from pyexpat import model
 from tkinter import CASCADE
 from typing import DefaultDict
 from typing_extensions import Required
+from unittest.mock import DEFAULT
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.base import Model
+from django.db.models.signals import post_save
 from django.db.models.query_utils import select_related_descend
 from dataprofil.models import DataGuru, DataSiswa
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -181,31 +182,117 @@ class KatalogBuku(models.Model):
     OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)    
     
     def __str__(self):
-        return str(self.REGISTER) + ' - ' + self.ISBN
+        return self.JUDUL
+
     
     class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['REGISTER'], name='%(app_label)s_%(class)s_unique')
-        ]
         verbose_name_plural = "Data Book Main"
-            
-class LoanSiswaPendek (models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    REGISTER = models.ManyToManyField(KatalogBuku)
-    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    OUT_DATE = models.DateField()
-    DUE_DATE = models.DateField()
-    LOAN_STATUS = models.CharField(
-        max_length = 255,
-        choices=ENUM_LOAN_STATUS
+
+class KatalogBukuCopy(models.Model):
+    DATA_BUKU = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE)
+    REGISTER_COPY = models.CharField(max_length=255)
+    STATUS = models.CharField(
+        max_length=255,
+        choices=ENUM_STATUS_PEMINJAMAN,
+        default='Sudah Dikembalikan',
     )
-    IS_PRINTED = models.CharField(
+    def __str__(self):
+        return '"' + self.DATA_BUKU.JUDUL + '"' + ' - ' + self.REGISTER_COPY
+    
+def post_save_katalog_buku(sender, instance, **kwargs):
+    try:
+        # hapus duplikat
+        KatalogBukuCopy.objects.filter(DATA_BUKU = instance.REGISTER).delete()
+        
+        jumlah_duplikat = instance.DUPLIKAT
+        for i in range(jumlah_duplikat):
+            buku_copy = KatalogBukuCopy.objects.create(
+                DATA_BUKU_id = instance.REGISTER,
+                REGISTER_COPY = instance.REGISTER + str(i + 1)
+            )
+            buku_copy.save()
+    except Exception as e:
+        print(str(e))
+
+post_save.connect(post_save_katalog_buku, sender=KatalogBuku)
+            
+class PeminjamanSiswaPendek (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    BUKU = models.ManyToManyField(KatalogBukuCopy)
+    TANGGAL_PEMINJAMAN = models.DateField()
+    TANGGAL_KEMBALI = models.DateField()
+    STATUS_PENGAJUAN = models.CharField(
+        max_length = 255,
+        choices=ENUM_PENGAJUAN
+    )
+    STATUS_PEMINJAMAN = models.CharField(
+        max_length=255,
+        blank=True,
+        choices=ENUM_STATUS_PEMINJAMAN
+    )
+    STATUS_CETAKAN = models.CharField(
         max_length = 255,
         choices=ENUM_IS_PRINTED
     )
-    OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)
+    OPERATOR = models.ForeignKey(Operator, on_delete=models.CASCADE)
+    
+    
+def post_save_peminjaman_siswa_pendek(sender, instance, **kwargs):
+    # ubah status peminjaman setelah disetujui
+    if instance.STATUS_PENGAJUAN == 'Disetujui':
+        try:
+            for data in instance.BUKU.values():
+                obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
+                obj.STATUS = 'Sedang Dipinjam'
+                obj.save()
+                    
+        except Exception as e:
+            print(str(e))
+            
+    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Pengajuan' or instance.STATUS_PENGAJUAN == 'Ditolak':
+        try:
+            for data in instance.BUKU.values():
+                obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
+                obj.STATUS = 'Sudah Dikembalikan'
+                obj.save()
+                    
+        except Exception as e:
+            print(str(e))
 
-class LoanSiswaPanjang (models.Model):
+post_save.connect(post_save_peminjaman_siswa_pendek, sender=PeminjamanSiswaPendek)
+
+
+class PengajuanPeminjamanSiswa(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    BUKU = models.ManyToManyField(KatalogBukuCopy)
+    TANGGAL_PENGAJUAN = models.DateField()
+    STATUS_PENGAJUAN = models.CharField(
+        max_length=255, 
+        choices=ENUM_PENGAJUAN,
+        blank=True,
+    )
+    JANGKA_PEMINJAMAN = models.CharField(
+        max_length=255,
+        choices=ENUM_JANGKA_PEMINJAMAN,
+        blank=True, 
+    )
+
+class RiwayatPeminjamanSiswa(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    BUKU = models.ManyToManyField(KatalogBukuCopy)
+    TANGGAL_PEMINJAMAN = models.DateField()
+    TANGGAL_PENGEMBALIAN = models.DateField()
+    JANGKA_PEMINJAMAN = models.CharField(
+        max_length=255,
+        choices=ENUM_JANGKA_PEMINJAMAN,
+        blank=True, 
+    )
+
+
+class LoanSiswaPanjang(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     KELAS = models.CharField(max_length = 255, default='')
