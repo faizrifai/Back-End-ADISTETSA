@@ -98,7 +98,7 @@ class SetupData(APITestCase):
         }
         self.client.post(reverse('import_data_guru_user'), data, format='multipart')
 
-        # login sebagai staf kurikulum
+        # data login staf kurikulum
         self.data_staf_kurikulum = {
             'username': '4341623682038467',
             'password': 'merdeka123'
@@ -114,15 +114,24 @@ class SetupData(APITestCase):
         DataSemester.objects.create(KE='I', NAMA='Semester 1')
         MataPelajaran.objects.create(KODE='BI', NAMA='Bahasa Indonesia')
         Jurusan.objects.create(NAMA='IPA')
-        Kelas.objects.create(TAHUN_AJARAN__in=1, TINGKATAN='X', JURUSAN=1)
+        Kelas.objects.create(TAHUN_AJARAN_id=1, TINGKATAN='X', JURUSAN_id=1)
         NamaOfferingKelas.objects.create(NAMA='A')
-        OfferingKelas.objects.create(KELAS=1, OFFERING=1)
+        OfferingKelas.objects.create(KELAS_id=1, OFFERING_id=1)
         KategoriTataTertib.objects.create(NAMA='Pakaian')
 
         login_response = self.client.post(reverse('login'), self.data_staf_kurikulum)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
 
-        super().setUp()
+        # create ktsp
+        open_file = open('kustom_autentikasi/data/data_karyawan_user.csv', 'rb')
+        uploaded_file = SimpleUploadedFile('data_karyawan_user.csv', open_file.read())
+
+        self.data_ktsp = {
+            'TAHUN_AJARAN': 1,
+            'NAMA_FILE': uploaded_file,
+        }
+
+        response = self.client.post(reverse('ktsp'), self.data_ktsp, format='multipart')
 
         def tearDown(self):
             super().tearDown()
