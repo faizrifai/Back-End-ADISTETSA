@@ -97,8 +97,16 @@ from .importexportresources import *
 # admin.site.register(TestStopnCirculationDtsource)
 # admin.site.register(DeskripsiFisik)
 class KatalogBukuCopyAdmin(admin.ModelAdmin):
+    search_fields = ('DATA_BUKU',)
     list_display = ('DATA_BUKU', 'REGISTER_COPY', 'STATUS')
     list_per_page = 10
+    list_filter = ('STATUS',)
+    actions = ('acc_pengembalian',)
+    
+    def acc_pengembalian(self, request, queryset):
+        queryset.update(STATUS = 'Sudah Dikembalikan')
+    
+    acc_pengembalian.short_description = "Konfirmasi Pengembalian Buku"
 
 admin.site.register(KatalogBukuCopy, KatalogBukuCopyAdmin)
 
@@ -235,9 +243,54 @@ class PeminjamanSiswaPendekAdmin(ImportExportModelAdmin):
 admin.site.register(PeminjamanSiswaPendek, PeminjamanSiswaPendekAdmin)
 
 class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
-    search_fields = ('NIS', 'BUKU')
-    list_display = ('NIS', 'buku', 'TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN', 'JANGKA_PEMINJAMAN')
+    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    list_display = ('NIS', 'buku', 'TANGGAL_PENGAJUAN', 'status_pengajuan', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN')
     list_per_page = 10 
+    filter_horizontal = ('BUKU',)
+    autocomplete_fields = ['NIS', ]
+    list_filter = ('STATUS_PENGAJUAN', )
+    actions = ('accept_action', 'decline_action',)
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "BUKU":
+            kwargs["queryset"] = KatalogBukuCopy.objects.filter(STATUS='Sudah Dikembalikan')
+        return super(PengajuanPeminjamanSiswaAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
+    def buku(self, obj):
+        daftar = ""
+        for data in obj.BUKU.all():
+            daftar += str(data) + "<br>"
+            
+        return format_html(daftar)
+    
+    def accept_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Disetujui')
+        data = list(queryset.values())[0]
+        obj = PengajuanPeminjamanSiswa.objects.get(ID=data['ID'])
+        obj.save()
+        
+    
+    accept_action.short_description = "Setujui pengajuan peminjaman"
+    
+    def decline_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Ditolak')
+        data = list(queryset.values())[0]
+        obj = PengajuanPeminjamanSiswa.objects.get(ID=data['ID'])
+        obj.save()
+    
+    decline_action.short_description = "Tolak pengajuan peminjaman"
+    
+    def status_pengajuan(self, obj):
+        return (obj.STATUS_PENGAJUAN == 'Disetujui')       
+        
+    status_pengajuan.boolean = True
+    
+    def setuju(self, obj):
+        data = PengajuanPeminjamanSiswa.objects.get(ID=obj.ID)
+        data.STATUS_PENGAJUAN = 'Disetujui'
+        data.save()
+    
+    setuju.short_description = 'Setujui'
     
     def buku(self, obj):
         daftar = ""
@@ -249,9 +302,35 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanPeminjamanSiswa, PengajuanPeminjamanSiswaAdmin)
 
 class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
-    search_fields = ('NIS', 'BUKU')
-    list_display = ('NIS','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN')
+    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    list_display = ('NIS','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
     list_per_page = 10
+    filter_horizontal = ('BUKU',)
+    list_filter = ('STATUS_PEMINJAMAN',)
+    autocomplete_fields = ['NIS', ]
+    actions = ('acc_pengembalian',)
+    
+    def status_peminjaman(self, obj):
+        if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
+            date_now = datetime.date.today()
+            if date_now > obj.TANGGAL_PENGEMBALIAN :
+                return 'Tenggat'
+            elif date_now < obj.TANGGAL_PENGEMBALIAN : 
+                return 'Sedang Dipinjam'
+        elif obj.STATUS_PEMINJAMAN == 'Sudah Dikembalikan' :
+            return 'Selesai'
+    
+    def acc_pengembalian(self, request, queryset):
+        queryset.update(STATUS_PEMINJAMAN = 'Sudah Dikembalikan')
+        data = list(queryset.values())[0]
+        
+        riwayat = RiwayatPeminjamanSiswa.objects.get(ID=data['ID'])
+        for data in riwayat.BUKU.all():
+            data.STATUS = 'Sudah Dikembalikan'
+            data.save()
+    
+    acc_pengembalian.short_description = "Konfirmasi Pengembalian Buku"
+    
     
     def buku(self, obj):
         daftar = ""
@@ -261,6 +340,106 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
         return format_html(daftar)
 
 admin.site.register(RiwayatPeminjamanSiswa, RiwayatPeminjamanSiswaAdmin)
+
+class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
+    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    list_display = ('DATA_GURU', 'buku', 'TANGGAL_PENGAJUAN', 'status_pengajuan', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN')
+    list_per_page = 10 
+    filter_horizontal = ('BUKU',)
+    autocomplete_fields = ['DATA_GURU', ]
+    list_filter = ('STATUS_PENGAJUAN', )
+    actions = ('accept_action', 'decline_action',)
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == "BUKU":
+            kwargs["queryset"] = KatalogBukuCopy.objects.filter(STATUS='Sudah Dikembalikan')
+        return super(PengajuanPeminjamanGuruAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+
+    def buku(self, obj):
+        daftar = ""
+        for data in obj.BUKU.all():
+            daftar += str(data) + "<br>"
+            
+        return format_html(daftar)
+    
+    def accept_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Disetujui')
+        data = list(queryset.values())[0]
+        obj = PengajuanPeminjamanGuru.objects.get(ID=data['ID'])
+        obj.save()
+        
+    
+    accept_action.short_description = "Setujui pengajuan peminjaman"
+    
+    def decline_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Ditolak')
+        data = list(queryset.values())[0]
+        obj = PengajuanPeminjamanGuru.objects.get(ID=data['ID'])
+        obj.save()
+    
+    decline_action.short_description = "Tolak pengajuan peminjaman"
+    
+    def status_pengajuan(self, obj):
+        return (obj.STATUS_PENGAJUAN == 'Disetujui')       
+        
+    status_pengajuan.boolean = True
+    
+    def setuju(self, obj):
+        data = PengajuanPeminjamanGuru.objects.get(ID=obj.ID)
+        data.STATUS_PENGAJUAN = 'Disetujui'
+        data.save()
+    
+    setuju.short_description = 'Setujui'
+    
+    def buku(self, obj):
+        daftar = ""
+        for data in obj.BUKU.all():
+            daftar += str(data) + "<br>"
+            
+        return format_html(daftar)
+
+admin.site.register(PengajuanPeminjamanGuru, PengajuanPeminjamanGuruAdmin)
+
+class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
+    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    list_display = ('DATA_GURU','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
+    list_per_page = 10
+    filter_horizontal = ('BUKU',)
+    list_filter = ('STATUS_PEMINJAMAN',)
+    autocomplete_fields = ['DATA_GURU', ]
+    actions = ('acc_pengembalian',)
+    
+    def status_peminjaman(self, obj):
+        if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
+            date_now = datetime.date.today()
+            if date_now > obj.TANGGAL_PENGEMBALIAN :
+                return 'Tenggat'
+            elif date_now < obj.TANGGAL_PENGEMBALIAN : 
+                return 'Sedang Dipinjam'
+        elif obj.STATUS_PEMINJAMAN == 'Sudah Dikembalikan' :
+            return 'Selesai'
+    
+    def acc_pengembalian(self, request, queryset):
+        queryset.update(STATUS_PEMINJAMAN = 'Sudah Dikembalikan')
+        data = list(queryset.values())[0]
+        
+        riwayat = RiwayatPeminjamanGuru.objects.get(ID=data['ID'])
+        for data in riwayat.BUKU.all():
+            data.STATUS = 'Sudah Dikembalikan'
+            data.save()
+    
+    acc_pengembalian.short_description = "Konfirmasi Pengembalian Buku"
+    
+    
+    def buku(self, obj):
+        daftar = ""
+        for data in obj.BUKU.all():
+            daftar += str(data) + "<br>"
+            
+        return format_html(daftar)
+
+admin.site.register(RiwayatPeminjamanGuru, RiwayatPeminjamanGuruAdmin)
+
 
 class LoanSiswaPanjangAdmin(ImportExportModelAdmin):
     search_fields = ['NIS', 'KELAS', 'ALAMAT', 'TANGGAL_PINJAM', 'REGISTER', 'NO_BARCODE', 'JUMLAH', 'TANDA_TANGAN', 'KETERANGAN', 'LOAN_STATUS']
