@@ -36,7 +36,7 @@ admin.site.register(TahunAjaran, TahunAjaranAdmin)
 class KTSPAdmin(admin.ModelAdmin):
     list_display = ('TAHUN_AJARAN', 'NAMA_FILE')
     list_per_page = 10
-    search_fields = ['TAHUN_AJARAN']
+    search_fields = ['TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR']
     list_filter = (TahunFilter,)
 
 admin.site.register(KTSP, KTSPAdmin)

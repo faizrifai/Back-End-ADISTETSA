@@ -190,57 +190,6 @@ class OperatorAdmin(ImportExportModelAdmin):
     
 admin.site.register(Operator, OperatorAdmin)
 
-class PeminjamanSiswaPendekAdmin(ImportExportModelAdmin):
-    search_fields = ('NIS', 'BUKU', 'TANGGAL_PEMINJAMAN', 'TANGGAL_KEMBALI','STATUS_PENGAJUAN', 'STATUS_PEMINJAMAN', 'STATUS_CETAKAN', 'OPERATOR')
-    list_per_page = 10
-    list_display = ('NIS', 'buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_KEMBALI', 'status_pengajuan', 'STATUS_PEMINJAMAN', 'STATUS_CETAKAN', 'OPERATOR')
-    filter_horizontal = ('BUKU',)
-    autocomplete_fields = ['NIS', 'OPERATOR',]
-    list_filter = ('STATUS_PENGAJUAN', 'STATUS_PEMINJAMAN')
-    actions = ('accept_action', 'decline_action',)
-    
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        if db_field.name == "BUKU":
-            kwargs["queryset"] = KatalogBukuCopy.objects.filter(STATUS='Sudah Dikembalikan')
-        return super(PeminjamanSiswaPendekAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
-
-    def buku(self, obj):
-        daftar = ""
-        for data in obj.BUKU.all():
-            daftar += str(data) + "<br>"
-            
-        return format_html(daftar)
-    
-    def accept_action(self, request, queryset):
-        queryset.update(STATUS_PENGAJUAN = 'Disetujui')
-        data = list(queryset.values())[0]
-        obj = PeminjamanSiswaPendek.objects.get(ID=data['ID'])
-        obj.save()
-        
-    
-    accept_action.short_description = "Setujui pengajuan peminjaman"
-    
-    def decline_action(self, request, queryset):
-        queryset.update(STATUS_PENGAJUAN = 'Ditolak')
-        data = list(queryset.values())[0]
-        obj = PeminjamanSiswaPendek.objects.get(ID=data['ID'])
-        obj.save()
-    
-    decline_action.short_description = "Tolak pengajuan peminjaman"
-    
-    def status_pengajuan(self, obj):
-        return (obj.STATUS_PENGAJUAN == 'Disetujui')       
-        
-    status_pengajuan.boolean = True
-    
-    def setuju(self, obj):
-        data = PeminjamanSiswaPendek.objects.get(ID=obj.ID)
-        data.STATUS_PENGAJUAN = 'Disetujui'
-        data.save()
-    
-    setuju.short_description = 'Setujui'
-    
-admin.site.register(PeminjamanSiswaPendek, PeminjamanSiswaPendekAdmin)
 
 class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
     search_fields = ('BUKU__DATA_BUKU__JUDUL',)
@@ -265,18 +214,18 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
     
     def accept_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Disetujui')
-        data = list(queryset.values())[0]
-        obj = PengajuanPeminjamanSiswa.objects.get(ID=data['ID'])
-        obj.save()
+        for d in queryset.values():
+            obj = PengajuanPeminjamanSiswa.objects.get(ID=d['ID'])
+            obj.save()
         
     
     accept_action.short_description = "Setujui pengajuan peminjaman"
     
     def decline_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Ditolak')
-        data = list(queryset.values())[0]
-        obj = PengajuanPeminjamanSiswa.objects.get(ID=data['ID'])
-        obj.save()
+        for d in queryset.values():
+            obj = PengajuanPeminjamanSiswa.objects.get(ID=d['ID'])
+            obj.save()
     
     decline_action.short_description = "Tolak pengajuan peminjaman"
     
@@ -322,12 +271,12 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS_PEMINJAMAN = 'Sudah Dikembalikan')
-        data = list(queryset.values())[0]
-        
-        riwayat = RiwayatPeminjamanSiswa.objects.get(ID=data['ID'])
-        for data in riwayat.BUKU.all():
-            data.STATUS = 'Sudah Dikembalikan'
-            data.save()
+        for d in queryset.values():
+            riwayat = RiwayatPeminjamanSiswa.objects.get(ID=d['ID'])
+            for data in riwayat.BUKU.all():
+                obj = KatalogBukuCopy.objects.get(id=data.id)
+                obj.STATUS = 'Sudah Dikembalikan'
+                obj.save()
     
     acc_pengembalian.short_description = "Konfirmasi Pengembalian Buku"
     
@@ -364,18 +313,18 @@ class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
     
     def accept_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Disetujui')
-        data = list(queryset.values())[0]
-        obj = PengajuanPeminjamanGuru.objects.get(ID=data['ID'])
-        obj.save()
+        for d in queryset.values():
+            obj = PengajuanPeminjamanGuru.objects.get(ID=d['ID'])
+            obj.save()
         
     
     accept_action.short_description = "Setujui pengajuan peminjaman"
     
     def decline_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Ditolak')
-        data = list(queryset.values())[0]
-        obj = PengajuanPeminjamanGuru.objects.get(ID=data['ID'])
-        obj.save()
+        for d in queryset.values():
+            obj = PengajuanPeminjamanGuru.objects.get(ID=d['ID'])
+            obj.save()
     
     decline_action.short_description = "Tolak pengajuan peminjaman"
     
@@ -421,12 +370,13 @@ class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS_PEMINJAMAN = 'Sudah Dikembalikan')
-        data = list(queryset.values())[0]
-        
-        riwayat = RiwayatPeminjamanGuru.objects.get(ID=data['ID'])
-        for data in riwayat.BUKU.all():
-            data.STATUS = 'Sudah Dikembalikan'
-            data.save()
+        for d in queryset.values():
+            riwayat = RiwayatPeminjamanGuru.objects.get(ID=d['ID'])
+            for data in riwayat.BUKU.all():
+                obj = KatalogBukuCopy.objects.get(id=data.id)
+                obj.STATUS = 'Sudah Dikembalikan'
+                obj.save()
+    
     
     acc_pengembalian.short_description = "Konfirmasi Pengembalian Buku"
     
@@ -441,29 +391,6 @@ class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
 admin.site.register(RiwayatPeminjamanGuru, RiwayatPeminjamanGuruAdmin)
 
 
-class LoanSiswaPanjangAdmin(ImportExportModelAdmin):
-    search_fields = ['NIS', 'KELAS', 'ALAMAT', 'TANGGAL_PINJAM', 'REGISTER', 'NO_BARCODE', 'JUMLAH', 'TANDA_TANGAN', 'KETERANGAN', 'LOAN_STATUS']
-    list_per_page = 10
-    list_display = ('NIS', 'KELAS', 'ALAMAT', 'TANGGAL_PINJAM', 'REGISTER', 'NO_BARCODE', 'JUMLAH', 'TANDA_TANGAN', 'KETERANGAN', 'LOAN_STATUS')
-    # resource_class = LoanSiswaPanjangResource
-    
-admin.site.register(LoanSiswaPanjang, LoanSiswaPanjangAdmin)
-
-class LoanGuruPendekAdmin(ImportExportModelAdmin):
-    search_fields = ['NIP', 'OUT_DATE', 'DUE_DATE', 'LOAN_STATUS', 'IS_PRINTED', 'OPERATOR_CODE']
-    list_per_page = 10
-    list_display = ('NIP', 'OUT_DATE', 'DUE_DATE', 'LOAN_STATUS', 'IS_PRINTED', 'OPERATOR_CODE')
-    # resource_class = LoanGuruPendekResource
-    
-admin.site.register(LoanGuruPendek, LoanGuruPendekAdmin)
-
-class LoanGuruPanjangAdmin(ImportExportModelAdmin):
-    search_fields = ['NIP', 'KELAS', 'ALAMAT', 'TANGGAL_PINJAM', 'REGISTER', 'NO_BARCODE', 'JUMLAH', 'TANDA_TANGAN', 'KETERANGAN', 'LOAN_STATUS']
-    list_per_page = 10
-    list_display = ('NIP', 'KELAS', 'ALAMAT', 'TANGGAL_PINJAM', 'REGISTER', 'NO_BARCODE', 'JUMLAH', 'TANDA_TANGAN', 'KETERANGAN', 'LOAN_STATUS')
-    # resource_class = LoanGuruPanjangResource
-    
-admin.site.register(LoanGuruPanjang, LoanGuruPanjangAdmin)
 
 # class AbstrakAdmin(ImportExportModelAdmin):
 #     search_fields = ['REGISTER', 'ABSTRAK']
