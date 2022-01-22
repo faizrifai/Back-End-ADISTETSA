@@ -48,6 +48,16 @@ class KatalogBukuListSerializer(serializers.ModelSerializer):
     def get_operator_code(self, obj):
         return str(obj.OPERATOR_CODE) 
 
+class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PengajuanPeminjamanSiswa
+        fields = '__all__'
+
+class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PengajuanPeminjamanSiswa
+        fields = '__all__'
+
 class KatalogBukuCopyListSerializer(serializers.ModelSerializer):
     
     DATA_BUKU = serializers.SerializerMethodField('get_data_buku')
