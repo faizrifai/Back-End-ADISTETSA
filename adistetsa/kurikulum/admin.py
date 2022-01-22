@@ -10,11 +10,7 @@ from .models import *
 from .importexportresources import *
 
 # Register your models here.
-admin.site.register(BulanMinggu)
-admin.site.register(Mengajar)
-admin.site.register(AbsensiSiswa)
 admin.site.register(Jurusan)
-admin.site.register(TipeKelas)
 
 # utility function
 
@@ -36,6 +32,7 @@ class TahunAjaranAdmin(admin.ModelAdmin):
 
 admin.site.register(TahunAjaran, TahunAjaranAdmin)
 
+
 class KTSPAdmin(admin.ModelAdmin):
     list_display = ('TAHUN_AJARAN', 'NAMA_FILE')
     list_per_page = 10
@@ -44,19 +41,6 @@ class KTSPAdmin(admin.ModelAdmin):
 
 admin.site.register(KTSP, KTSPAdmin)
 
-class PelajaranAdmin(admin.ModelAdmin):
-    search_fields = ['MATA_PELAJARAN__NAMA', 'MATA_PELAJARAN__KODE' ]
-    list_display = ('MATA_PELAJARAN', 'jam_pelajaran', 'GURU')
-    filter_horizontal = ('WAKTU',)
-  
-    def jam_pelajaran(self, obj):
-        daftar = ""
-        for data in obj.WAKTU.all():
-            daftar += str(data) + "<br>"
-            
-        return format_html(daftar)
-    
-admin.site.register(Pelajaran, PelajaranAdmin)
 
 class KelasAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_KELAS']
@@ -65,31 +49,25 @@ class KelasAdmin(ImportExportModelAdmin):
     
 admin.site.register(Kelas, KelasAdmin)
 
+
 class DataSemesterAdmin(admin.ModelAdmin):
     search_fields = ['KE', 'NAMA']
     exclude = ['NAMA']
     
 admin.site.register(DataSemester, DataSemesterAdmin)
 
+
 class MataPelajaranAdmin(admin.ModelAdmin):
     search_fields = ['KODE', 'NAMA']
     
 admin.site.register(MataPelajaran, MataPelajaranAdmin)
 
+
 class WaktuPelajaranAdmin(admin.ModelAdmin):
     search_fields = ['WAKTU_MULAI', 'WAKTU_BERAKHIR', 'JAM_KE']
 
 admin.site.register(WaktuPelajaran, WaktuPelajaranAdmin)
-    
-class JadwalPelajaranAdmin(admin.ModelAdmin):
-    list_per_page = 10
-    list_display = ('TAHUN_AJARAN',)
-    list_filter = (TahunFilter,)
 
-    def aksi(self, obj):
-        return 'Detail'
-    
-admin.site.register(JadwalPelajaran, JadwalPelajaranAdmin)
 
 class SilabusRPBAdmin(admin.ModelAdmin):
     list_display = ('MATA_PELAJARAN', 'TAHUN_AJARAN', 'NAMA_FILE', 'KELAS')
@@ -99,11 +77,13 @@ class SilabusRPBAdmin(admin.ModelAdmin):
 
 admin.site.register(SilabusRPB, SilabusRPBAdmin)
 
+
 class NamaOfferingKelasAdmin(admin.ModelAdmin):
     search_fields = ['NAMA']
     list_per_page = 10
 
 admin.site.register(NamaOfferingKelas, NamaOfferingKelasAdmin)
+
 
 class OfferingKelasAdmin(admin.ModelAdmin):
     search_fields = ['KELAS__KODE_KELAS']
@@ -112,6 +92,7 @@ class OfferingKelasAdmin(admin.ModelAdmin):
     list_display = ('KELAS', 'OFFERING',)
 
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
+
 
 class JurnalBelajarAdmin(admin.ModelAdmin):
     list_display = ('aksi', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
@@ -123,6 +104,7 @@ class JurnalBelajarAdmin(admin.ModelAdmin):
         return "Edit"
 
 admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
+
 
 class KelasSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NIS__NIS', 'NIS__NAMA']
@@ -142,11 +124,13 @@ class KelasSiswaAdmin(admin.ModelAdmin):
     
 admin.site.register(KelasSiswa, KelasSiswaAdmin)
 
+
 class KategoriTataTertibAdmin(admin.ModelAdmin):
     search_fields = ['NAMA']
     list_per_page = 10
 
 admin.site.register(KategoriTataTertib, KategoriTataTertibAdmin)
+
 
 class TataTertibAdmin(ImportExportModelAdmin):
     search_fields = ['KETERANGAN', 'KATEGORI']
@@ -158,6 +142,7 @@ class TataTertibAdmin(ImportExportModelAdmin):
 
 admin.site.register(TataTertib, TataTertibAdmin)
 
+
 class PoinPelanggaranAdmin(ImportExportModelAdmin):
     search_fields = ['KETERANGAN','POIN', ]
     list_display = (deskripsi_tata_tertib,'POIN',)
@@ -167,17 +152,6 @@ class PoinPelanggaranAdmin(ImportExportModelAdmin):
 
 admin.site.register(PoinPelanggaran, PoinPelanggaranAdmin)
 
-class JadwalHarianAdmin(admin.ModelAdmin):
-    search_fields = ['HARI']
-    list_per_page = 10
-    filter_horizontal = ('PELAJARAN',)
-    list_display = ('HARI', 'KELAS')
-    list_filter = ['HARI', KelasFilter,]
-    
-    def aksi(self, obj):
-        return "Detail"
-
-admin.site.register(JadwalHarian, JadwalHarianAdmin)
 
 class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
@@ -217,6 +191,7 @@ class JadwalPekanAktifAdmin(admin.ModelAdmin):
     filter_horizontal = ['MINGGU_TIDAK_EFEKTIF', 'MINGGU_EFEKTIF',] 
     list_display = ('aksi', 'bulan_efektif', 'jumlah_minggu', 'jumlah_minggu_efektif', 'jumlah_minggu_tidak_efektif','uraian_kegiatan',  'MATA_PELAJARAN', 'KELAS', 'SEMESTER')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter]
+
     def uraian_kegiatan(self, obj):
         daftar = ""
         for data in obj.MINGGU_TIDAK_EFEKTIF.all():
@@ -225,7 +200,6 @@ class JadwalPekanAktifAdmin(admin.ModelAdmin):
             
         return format_html(daftar)
 
-     
     def bulan_efektif(self, obj):
         daftar = ""
         for data in obj.MINGGU_EFEKTIF.all():

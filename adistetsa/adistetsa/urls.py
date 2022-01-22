@@ -32,5 +32,6 @@ urlpatterns = [
     path('', include('kustom_autentikasi.urls')),
     path('', include('dataprofil.urls')),
     path('', include('kurikulum.urls')),
+    path('', include('perpustakaan.urls')),
     path('admin/', admin.site.urls, name='admin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

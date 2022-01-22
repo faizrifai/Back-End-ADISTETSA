@@ -1,20 +1,13 @@
-from ast import mod
-from pyexpat import model
-from tkinter import CASCADE
-from typing import DefaultDict
-from typing_extensions import Required
-from unittest.mock import DEFAULT
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.db.models.query_utils import select_related_descend
+from django.db.models.signals import post_save
+
 from dataprofil.models import DataGuru, DataSiswa
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 import datetime
 
 from .enums import *
-
 
 
 # Create your models here.

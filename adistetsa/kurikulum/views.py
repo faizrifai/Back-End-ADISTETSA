@@ -2,11 +2,12 @@ from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
 from .doc_schema import *
+from rest_framework.views import Response
 from rest_framework.parsers import MultiPartParser
 from .models import KTSP
 from .models import SilabusRPB
 
-from rest_framework import generics
+from rest_framework import generics, status
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
 
@@ -27,6 +28,13 @@ class KTSPListView(generics.ListCreateAPIView):
     serializer_class = KTSPSerializer
     filterset_fields = ('TAHUN_AJARAN',)
     search_fields = ('TAHUN_AJARAN__ID', 'NAMA_FILE')
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return KTSPListSerializer
+
+        elif self.request.method == "POST":
+            return KTSPSerializer
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -54,6 +62,16 @@ class KTSPDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = KTSP.objects.all()
     serializer_class = KTSPSerializer
 
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except Exception as e:
+            if ('UNIQUE' in str(e)):
+                return Response(data={'error': 'Data dengan tahun ajaran yang dipilih sudah ada'}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(data={'error': str(e)})
+
+
 
 class SilabusRPBListView(generics.ListCreateAPIView):
     """
@@ -71,6 +89,13 @@ class SilabusRPBListView(generics.ListCreateAPIView):
     serializer_class = SilabusRPBSerializer
     filterset_fields = ('MATA_PELAJARAN', 'KELAS', 'SEMESTER')
     search_fields = ('MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA')
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return SilabusRPBListSerializer
+
+        elif self.request.method == "POST":
+            return SilabusRPBSerializer
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
