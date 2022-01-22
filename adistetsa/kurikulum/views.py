@@ -2,11 +2,12 @@ from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
 from .doc_schema import *
+from rest_framework.views import Response
 from rest_framework.parsers import MultiPartParser
 from .models import KTSP
 from .models import SilabusRPB
 
-from rest_framework import generics
+from rest_framework import generics, status
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
 
@@ -60,6 +61,16 @@ class KTSPDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = KTSP.objects.all()
     serializer_class = KTSPSerializer
+
+    def update(self, request, *args, **kwargs):
+        try:
+            return super().update(request, *args, **kwargs)
+        except Exception as e:
+            if ('UNIQUE' in str(e)):
+                return Response(data={'error': 'Data dengan tahun ajaran yang dipilih sudah ada'}, status=status.HTTP_400_BAD_REQUEST)
+
+            return Response(data={'error': str(e)})
+
 
 
 class SilabusRPBListView(generics.ListCreateAPIView):
