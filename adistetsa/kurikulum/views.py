@@ -87,8 +87,8 @@ class SilabusRPBListView(generics.ListCreateAPIView):
 
     queryset = SilabusRPB.objects.all()
     serializer_class = SilabusRPBSerializer
-    filterset_fields = ('MATA_PELAJARAN', 'KELAS', 'SEMESTER')
-    search_fields = ('MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA')
+    filterset_fields = ('MATA_PELAJARAN', 'KELAS', 'SEMESTER', 'TAHUN_AJARAN')
+    search_fields = ('MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR')
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -118,7 +118,7 @@ class SilabusRPBDetailView(generics.RetrieveUpdateDestroyAPIView):
         'PATCH': ['Staf Kurikulum'],
         'DELETE': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
+    parser_classes = (MultiPartParser,)
 
     queryset = SilabusRPB.objects.all()
     serializer_class = SilabusRPBSerializer
@@ -214,13 +214,11 @@ class JadwalPekanAktifListView(generics.ListAPIView):
     }
 
     queryset = JadwalPekanAktif.objects.all()
-    serializer_class = JadwalPekanAktifSerializer
+    serializer_class = JadwalPekanAktifListSerializer
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
 
 class JadwalMengajarGuruListView(generics.ListAPIView):
     """
