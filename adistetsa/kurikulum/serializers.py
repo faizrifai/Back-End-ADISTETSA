@@ -58,13 +58,25 @@ class PoinPelanggaranSerializer(serializers.ModelSerializer):
         model = PoinPelanggaran
         fields = '__all__'
 
-class JadwalPekanAktifSerializer(serializers.ModelSerializer):
+class JadwalPekanAktifListSerializer(serializers.ModelSerializer):
     MINGGU_EFEKTIF = serializers.SerializerMethodField('get_minggu_efektif')
     MINGGU_TIDAK_EFEKTIF = serializers.SerializerMethodField('get_minggu_tidak_efektif')
+    MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
+    KELAS = serializers.SerializerMethodField('get_kelas')
+    SEMESTER = serializers.SerializerMethodField('get_semester')
 
     class Meta:
         model = JadwalPekanAktif
         fields = '__all__'
+
+    def get_mata_pelajaran(self, obj):
+        return str(obj.MATA_PELAJARAN.NAMA)
+
+    def get_kelas(self, obj):
+        return str(obj.KELAS)
+
+    def get_semester(self, obj):
+        return str(obj.SEMESTER)
 
     def get_minggu_efektif(self, obj):
         minggu_efektif = []
