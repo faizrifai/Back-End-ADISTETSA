@@ -95,16 +95,37 @@ admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
 class JurnalBelajarAdmin(admin.ModelAdmin):
-    list_display = ('aksi', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
+    list_display = ('aksi', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
 
     def aksi(self, obj):
         return "Edit"
+    
+    def absensi(self, obj):
+        base_url = reverse('admin:kurikulum_absensisiswa_changelist')
+        
+        return mark_safe(u'<a href="%s?JURNAL_BELAJAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Absensi'))
+
 
 admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
 
+class AbsensiSiswaAdmin(admin.ModelAdmin):
+    list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN','mata_pelajaran', 'kelas', 'pertemuan')
+    list_per_page = 10
+    list_filter = (JurnalBelajarFilter,)
+    
+    def mata_pelajaran(self, obj):
+        return obj.JURNAL_BELAJAR.DAFTAR.MATA_PELAJARAN
+    
+    def kelas(self, obj):
+        return obj.JURNAL_BELAJAR.DAFTAR.KELAS
+    
+    def pertemuan(self, obj):
+        return obj.JURNAL_BELAJAR.PERTEMUAN
+
+admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
 
 class KelasSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NIS__NIS', 'NIS__NAMA']
