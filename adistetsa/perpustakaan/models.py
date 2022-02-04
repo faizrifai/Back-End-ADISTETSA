@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save, m2m_changed
+from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
+
 from dataprofil.models import DataGuru, DataSiswa
 import datetime
 
@@ -207,29 +210,6 @@ def post_save_katalog_buku(sender, instance, **kwargs):
 
 post_save.connect(post_save_katalog_buku, sender=KatalogBuku)
             
-class PeminjamanSiswaPendek (models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    BUKU = models.ManyToManyField(KatalogBukuCopy)
-    TANGGAL_PEMINJAMAN = models.DateField()
-    TANGGAL_KEMBALI = models.DateField()
-    STATUS_PENGAJUAN = models.CharField(
-        max_length = 255,
-        choices=ENUM_PENGAJUAN
-    )
-    STATUS_PEMINJAMAN = models.CharField(
-        max_length=255,
-        blank=True,
-        choices=ENUM_STATUS_PEMINJAMAN
-    )
-    STATUS_CETAKAN = models.CharField(
-        max_length = 255,
-        choices=ENUM_IS_PRINTED
-    )
-    OPERATOR = models.ForeignKey(Operator, on_delete=models.CASCADE)
-    
-    
-
 
 class PengajuanPeminjamanSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -239,7 +219,7 @@ class PengajuanPeminjamanSiswa(models.Model):
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN,
-        default='Diajukan',
+        default='Pengajuan',
     )
     JANGKA_PEMINJAMAN = models.CharField(
         max_length=255,
@@ -270,8 +250,9 @@ class RiwayatPeminjamanSiswa(models.Model):
     )
     
 
-def post_save_pengajuan_peminjaman_siswa(sender, instance, **kwargs):
+def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
+    
     if instance.STATUS_PENGAJUAN == 'Disetujui':
         try:
             for data in instance.BUKU.values():
@@ -304,7 +285,7 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, **kwargs):
         except Exception as e:
             print(str(e))
             
-    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Pengajuan' or instance.STATUS_PENGAJUAN == 'Ditolak':
+    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Ditolak':
         try:
             for data in instance.BUKU.values():
                 obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
@@ -314,10 +295,26 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, **kwargs):
                     
         except Exception as e:
             print(str(e))
-    
-    
 
 post_save.connect(post_save_pengajuan_peminjaman_siswa, sender=PengajuanPeminjamanSiswa)
+
+def buku_changed(sender, instance, action, pk_set=None, **kwargs):
+    if action == 'post_add':
+        for pk in pk_set:
+            print ('Penthouse Mas')
+            obj = KatalogBukuCopy.objects.get(pk=pk)
+            print('add: ' + str(obj))
+            obj.STATUS = 'Pengajuan' 
+            obj.save()           
+            
+    elif action == 'post_remove':
+        for pk in pk_set:
+            obj = KatalogBukuCopy.objects.get(pk=pk)
+            print('delete: ' + str(obj))
+            obj.STATUS = 'Sudah Dikembalikan'
+            obj.save()
+    
+m2m_changed.connect(buku_changed, sender=PengajuanPeminjamanSiswa.BUKU.through)
 
 class PengajuanPeminjamanGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -392,7 +389,7 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
         except Exception as e:
             print(str(e))
             
-    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Pengajuan' or instance.STATUS_PENGAJUAN == 'Ditolak':
+    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Ditolak':
         try:
             for data in instance.BUKU.values():
                 obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
@@ -403,67 +400,27 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
         except Exception as e:
             print(str(e))
 
+
 post_save.connect(post_save_pengajuan_peminjaman_guru, sender=PengajuanPeminjamanGuru)
 
-
-
-class LoanSiswaPanjang(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    KELAS = models.CharField(max_length = 255, default='')
-    ALAMAT = models.CharField(max_length = 255, default='')
-    TANGGAL_PINJAM = models.CharField(max_length = 255, default='')
-    REGISTER = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE, default='')
-    NO_BARCODE = models.CharField(max_length = 255, default='')
-    JUMLAH = models.CharField(max_length = 255, default='')
-    TANDA_TANGAN = models.CharField(max_length = 255, default='')
-    KETERANGAN = models.CharField(max_length = 255, default='')
-    LOAN_STATUS = models.CharField(
-        max_length = 255,
-        choices=ENUM_LOAN_STATUS
-    )
-    IS_PRINTED = models.CharField(
-        max_length = 255,
-        choices=ENUM_IS_PRINTED
-    )
-    OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)
+def buku_changed_guru(sender, instance, action, pk_set=None, **kwargs):
+    if action == 'post_add':
+        for pk in pk_set:
+            obj = KatalogBukuCopy.objects.get(pk=pk)
+            print('add: ' + str(obj))
+            obj.STATUS = 'Pengajuan' 
+            obj.save()           
+            
+    elif action == 'post_remove':
+        for pk in pk_set:
+            obj = KatalogBukuCopy.objects.get(pk=pk)
+            print('delete: ' + str(obj))
+            obj.STATUS = 'Sudah Dikembalikan'
+            obj.save
     
-class LoanGuruPendek (models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    REGISTER = models.ManyToManyField(KatalogBuku)
-    NIP = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    OUT_DATE = models.DateField()
-    DUE_DATE = models.DateField()
-    LOAN_STATUS = models.CharField(
-        max_length = 255,
-        choices=ENUM_LOAN_STATUS
-    )
-    IS_PRINTED = models.CharField(
-        max_length = 255,
-        choices=ENUM_IS_PRINTED
-    )
-    OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)
+m2m_changed.connect(buku_changed, sender=PengajuanPeminjamanGuru.BUKU.through)
 
-class LoanGuruPanjang (models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    NIP = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    KELAS = models.CharField(max_length = 255, default='')
-    ALAMAT = models.CharField(max_length = 255, default='')
-    TANGGAL_PINJAM = models.CharField(max_length = 255, default='')
-    REGISTER = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE, default='')
-    NO_BARCODE = models.CharField(max_length = 255, default='')
-    JUMLAH = models.CharField(max_length = 255, default='')
-    TANDA_TANGAN = models.CharField(max_length = 255, default='')
-    KETERANGAN = models.CharField(max_length = 255, default='')
-    LOAN_STATUS = models.CharField(
-        max_length = 255,
-        choices=ENUM_LOAN_STATUS
-    )
-    IS_PRINTED = models.CharField(
-        max_length = 255,
-        choices=ENUM_IS_PRINTED
-    )
-    OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)
+
     
 class Abstrak (models.Model):
     REGISTER = models.ForeignKey(KatalogBuku,on_delete=models.CASCADE)

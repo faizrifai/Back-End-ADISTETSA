@@ -1,3 +1,4 @@
+from operator import mod
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -269,6 +270,7 @@ class DaftarJurnalBelajar(models.Model):
     def __str__(self):
         return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
 
+      
 class JurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
@@ -286,7 +288,8 @@ class JurnalBelajar(models.Model):
         ordering = ['PERTEMUAN']
 
     def __str__(self):
-        return "Pertemuan " + self.PERTEMUAN
+        return str(self.DAFTAR.MATA_PELAJARAN) + ' - ' + str(self.DAFTAR.KELAS) + ' - ' + str(self.DAFTAR.SEMESTER) + ' - Pertemuan : ' + self.PERTEMUAN
+
 
 def pre_save_jurnal_belajar(sender, instance, **kwargs):
     try:
@@ -297,7 +300,28 @@ def pre_save_jurnal_belajar(sender, instance, **kwargs):
         print(str(e))
 
 pre_save.connect(pre_save_jurnal_belajar, sender=JurnalBelajar)
-
+        
+    
+def post_save_jurnal_belajar(sender, instance, created, **kwargs):
+    try:
+        kelas_siswa = KelasSiswa.objects.filter(KELAS = instance.DAFTAR.KELAS)
+        for siswa in kelas_siswa:
+            AbsensiSiswa.objects.update_or_create(NIS=siswa.NIS, JURNAL_BELAJAR=instance)
+    except Exception as e:
+        print(str(e))
+        
+post_save.connect(post_save_jurnal_belajar, sender=JurnalBelajar)
+    
+class AbsensiSiswa(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    KETERANGAN = models.CharField(
+        max_length=255, 
+        choices= ENUM_KETERANGAN_ABSEN,
+    )
+    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa')
+    JURNAL_BELAJAR = models.ForeignKey(JurnalBelajar, on_delete=models.CASCADE)
+    
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
     try:
         daftar_jurnal_belajar = DaftarJurnalBelajar.objects.update_or_create(

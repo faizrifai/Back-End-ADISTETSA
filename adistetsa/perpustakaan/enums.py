@@ -13,7 +13,8 @@ ENUM_JANGKA_PEMINJAMAN = [
 ENUM_STATUS_PEMINJAMAN = {
     ('Sedang Dipinjam', 'Sedang Dipinjam'),
     ('Sudah Dikembalikan', 'Sudah Dikembalikan'),
-    ('Tenggat', 'Tenggat')
+    ('Tenggat', 'Tenggat'),
+    ('Pengajuan', 'Pengajuan')
 }
 
 ENUM_ISRESPONSED= [
