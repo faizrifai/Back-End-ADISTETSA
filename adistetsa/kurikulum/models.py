@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
@@ -7,6 +7,7 @@ from django.utils.html import format_html
 from django.utils.text import Truncator
 from django.conf import settings
 from .enums import *
+from subadmin import SubAdmin, RootSubAdmin
 
 # Master Model
 class DataSemester(models.Model):
@@ -286,6 +287,16 @@ class JurnalBelajar(models.Model):
 
     def __str__(self):
         return "Pertemuan " + self.PERTEMUAN
+
+def pre_save_jurnal_belajar(sender, instance, **kwargs):
+    try:
+        daftar = DaftarJurnalBelajar.objects.get(ID=instance.DAFTAR.ID)
+        print(daftar)
+        instance.GURU = daftar.GURU
+    except Exception as e:
+        print(str(e))
+
+pre_save.connect(pre_save_jurnal_belajar, sender=JurnalBelajar)
 
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
     try:

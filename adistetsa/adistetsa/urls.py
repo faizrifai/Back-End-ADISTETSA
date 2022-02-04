@@ -8,6 +8,7 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from filebrowser.sites import site
 
 # Swagger documentation setup
 schema_view = get_schema_view(
@@ -33,6 +34,7 @@ urlpatterns = [
     path('', include('dataprofil.urls')),
     path('', include('kurikulum.urls')),
     path('', include('perpustakaan.urls')),
+    path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

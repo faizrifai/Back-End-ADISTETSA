@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import datetime, os
 
+from filebrowser.sites import site
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -32,8 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'grappelli.dashboard',
-    'grappelli',
+    'filebrowser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     'kurikulum',
     'perpustakaan',
     'admin_auto_filters',
+    'django_extensions',
+    'subadmin',
 ]
 
 MIDDLEWARE = [
@@ -175,5 +178,5 @@ SWAGGER_SETTINGS = {
     }
 }
 
-GRAPPELLI_ADMIN_TITLE = 'Adi Stetsa'
-GRAPPELLI_INDEX_DASHBOARD = 'adistetsa.dashboard.CustomIndexDashboard'
+site.storage.location = BASE_DIR
+site.directory = 'saved_files/'
