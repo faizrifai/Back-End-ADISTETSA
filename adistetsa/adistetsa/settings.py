@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'import_export',
     'dataprofil',
+    'kesiswaan',
     'kustom_autentikasi',
     'kurikulum',
     'perpustakaan',
