@@ -1,7 +1,6 @@
 from .models import *
 from rest_framework import serializers
 
-
 class KTSPSerializer(serializers.ModelSerializer):
     class Meta:
         model = KTSP
@@ -59,11 +58,30 @@ class PoinPelanggaranSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class JadwalPekanAktifListSerializer(serializers.ModelSerializer):
-    MINGGU_EFEKTIF = serializers.SerializerMethodField('get_minggu_efektif')
-    MINGGU_TIDAK_EFEKTIF = serializers.SerializerMethodField('get_minggu_tidak_efektif')
     MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
     KELAS = serializers.SerializerMethodField('get_kelas')
     SEMESTER = serializers.SerializerMethodField('get_semester')
+
+    class Meta:
+        model = JadwalPekanAktif
+        exclude = ('MINGGU_EFEKTIF', 'MINGGU_TIDAK_EFEKTIF')
+
+    def get_mata_pelajaran(self, obj):
+        return str(obj.MATA_PELAJARAN.NAMA)
+
+    def get_kelas(self, obj):
+        return str(obj.KELAS)
+
+    def get_semester(self, obj):
+        return str(obj.SEMESTER)
+
+
+class JadwalPekanAktifDetailSerializer(serializers.ModelSerializer):
+    MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
+    KELAS = serializers.SerializerMethodField('get_kelas')
+    SEMESTER = serializers.SerializerMethodField('get_semester')
+    MINGGU_EFEKTIF = serializers.SerializerMethodField('get_minggu_efektif')
+    MINGGU_TIDAK_EFEKTIF = serializers.SerializerMethodField('get_minggu_tidak_efektif')
 
     class Meta:
         model = JadwalPekanAktif

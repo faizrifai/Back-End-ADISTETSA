@@ -289,7 +289,7 @@ class JurnalBelajar(models.Model):
 
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
     try:
-        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.create(
+        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.update_or_create(
             GURU = instance.GURU,
             MATA_PELAJARAN = instance.MATA_PELAJARAN,
             KELAS = instance.KELAS,

@@ -1,0 +1,8 @@
+Katalog Buku Get
+Katalog Buku Copy
+Pengajuan Siswa CRUD
+Pengajuan Guru CRUD
+Acc Pengajuan Siswa, Admin klik tombol setujui atau tolak
+Acc Pengajuan Guru, Admin klik tombol setujui atau tolak
+Riwayat Pengajuan Siswa, Admin klik tombol acc pengembalian
+Riwayat Pengajuan Guru, Admin klik tombol acc pengembalian

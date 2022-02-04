@@ -220,6 +220,21 @@ class JadwalPekanAktifListView(generics.ListAPIView):
         return super().list(request, *args, **kwargs)
 
 
+class JadwalPekanAktifDetailView(generics.RetrieveAPIView):
+    """
+    get: Menampilkan detail Jadwal Pekan Aktif
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua', 'Staf Kurikulum'],
+    }
+
+    queryset = JadwalPekanAktif.objects.all()
+    serializer_class = JadwalPekanAktifDetailSerializer
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 class JadwalMengajarGuruListView(generics.ListAPIView):
     """
     get: Menampilkan Jadwal Pekan Aktif (Guru).
