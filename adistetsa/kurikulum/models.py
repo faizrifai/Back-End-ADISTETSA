@@ -1,6 +1,6 @@
 from operator import mod
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator
 from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
@@ -8,6 +8,7 @@ from django.utils.html import format_html
 from django.utils.text import Truncator
 from django.conf import settings
 from .enums import *
+from subadmin import SubAdmin, RootSubAdmin
 
 # Master Model
 class DataSemester(models.Model):
@@ -269,6 +270,7 @@ class DaftarJurnalBelajar(models.Model):
     def __str__(self):
         return self.MATA_PELAJARAN.NAMA + ' ' + str(self.KELAS) + ' ' + self.SEMESTER.NAMA
 
+      
 class JurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
@@ -287,6 +289,18 @@ class JurnalBelajar(models.Model):
 
     def __str__(self):
         return str(self.DAFTAR.MATA_PELAJARAN) + ' - ' + str(self.DAFTAR.KELAS) + ' - ' + str(self.DAFTAR.SEMESTER) + ' - Pertemuan : ' + self.PERTEMUAN
+
+
+def pre_save_jurnal_belajar(sender, instance, **kwargs):
+    try:
+        daftar = DaftarJurnalBelajar.objects.get(ID=instance.DAFTAR.ID)
+        print(daftar)
+        instance.GURU = daftar.GURU
+    except Exception as e:
+        print(str(e))
+
+pre_save.connect(pre_save_jurnal_belajar, sender=JurnalBelajar)
+        
     
 def post_save_jurnal_belajar(sender, instance, created, **kwargs):
     try:
@@ -310,7 +324,7 @@ class AbsensiSiswa(models.Model):
     
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
     try:
-        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.create(
+        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.update_or_create(
             GURU = instance.GURU,
             MATA_PELAJARAN = instance.MATA_PELAJARAN,
             KELAS = instance.KELAS,

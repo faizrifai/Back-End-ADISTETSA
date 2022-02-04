@@ -19,6 +19,7 @@ urlpatterns = [
     path('kurikulum/poin_pelanggaran/<int:pk>', PoinPelanggaranDetailView.as_view(), name='poin_pelanggaran'),
     path('kurikulum/kategori_tata_tertib', KategoriTataTertibListView.as_view(), name='kategori_tata_tertib'),
     path('kurikulum/jadwal_pekan_aktif', JadwalPekanAktifListView.as_view(), name='jadwal_pekan_aktif'),
+    path('kurikulum/jadwal_pekan_aktif/<int:pk>', JadwalPekanAktifDetailView.as_view(), name='jadwal_pekan_aktif'),
     path('kurikulum/jadwal_pekan_efektif_semester', JadwalPekanEfektifSemesterListView.as_view(), name='jadwal_pekan_efektif_semester'),
     path('kurikulum/jadwal_pekan_efektif_semester/<int:pk>', JadwalPekanEfektifSemesterDetailView.as_view(), name='jadwal_pekan_tidak_efektif_semester'),
     path('kurikulum/jadwal_pekan_tidak_efektif', JadwalPekanTidakEfektifListView.as_view(), name='jadwal_pekan_tidak_efektif'),

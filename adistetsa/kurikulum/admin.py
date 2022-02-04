@@ -94,11 +94,13 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
-class JurnalBelajarAdmin(admin.ModelAdmin):
-    list_display = ('aksi', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
+class JurnalBelajarAdmin(SubAdmin):
+    model = JurnalBelajar
+    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
+    exclude = ('GURU',)
 
     def aksi(self, obj):
         return "Edit"
@@ -109,7 +111,7 @@ class JurnalBelajarAdmin(admin.ModelAdmin):
         return mark_safe(u'<a href="%s?JURNAL_BELAJAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Absensi'))
 
 
-admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
+# admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
 
 class AbsensiSiswaAdmin(admin.ModelAdmin):
     list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN','mata_pelajaran', 'kelas', 'pertemuan')
@@ -194,17 +196,18 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
 admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
 
 
-class DaftarJurnalBelajarAdmin(admin.ModelAdmin):
+class DaftarJurnalBelajarAdmin(RootSubAdmin):
     search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP', 'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
     list_per_page = 10
-    exclude = ('GURU',)
-    list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi')
+    list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
 
-    def aksi(self, obj):
-        base_url = reverse('admin:kurikulum_jurnalbelajar_changelist')
+    subadmins = [JurnalBelajarAdmin]
+
+    # def aksi(self, obj):
+    #     base_url = reverse('admin:kurikulum_jurnalbelajar_changelist')
         
-        return mark_safe(u'<a href="%s?DAFTAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+    #     return mark_safe(u'<a href="%s?DAFTAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
 
 admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
 
