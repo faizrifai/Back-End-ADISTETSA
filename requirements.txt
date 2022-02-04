@@ -12,6 +12,7 @@ distlib==0.3.4
 Django==4.0
 django-admin-autocomplete-filter==0.7.1
 django-filter==21.1
+django-grappelli==3.0.2
 django-import-export==2.7.1
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.0.0

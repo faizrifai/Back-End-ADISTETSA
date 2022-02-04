@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'grappelli.dashboard',
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -172,3 +174,6 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+GRAPPELLI_ADMIN_TITLE = 'Adi Stetsa'
+GRAPPELLI_INDEX_DASHBOARD = 'adistetsa.dashboard.CustomIndexDashboard'

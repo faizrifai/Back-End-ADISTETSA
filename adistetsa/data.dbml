@@ -1,0 +1,1110 @@
+Table LogEntry {
+  id auto [note:"", pk, unique]
+  action_time date_time [note:""]
+  user foreign_key [note:""]
+  content_type foreign_key [note:"", null]
+  object_id text [note:"", null]
+  object_repr char [note:""]
+  action_flag positive_small_integer [note:""]
+  change_message text [note:""]
+  Note: '''LogEntry(id, action_time, user, content_type, object_id, object_repr, action_flag, change_message)'''
+}
+ref: LogEntry.user > User.id
+ref: LogEntry.content_type > ContentType.id
+
+
+Table Permission {
+  id auto [note:"", pk, unique]
+  name char [note:""]
+  content_type foreign_key [note:""]
+  codename char [note:""]
+  Note: '''
+    The permissions system provides a way to assign permissions to specific
+    users and groups of users.
+
+    The permission system is used by the Django admin site, but may also be
+    useful in your own code. The Django admin site uses permissions as follows:
+
+        - The "add" permission limits the user's ability to view the "add" form
+          and add an object.
+        - The "change" permission limits a user's ability to view the change
+          list, view the "change" form and change an object.
+        - The "delete" permission limits the ability to delete an object.
+        - The "view" permission limits the ability to view an object.
+
+    Permissions are set globally per type of object, not per specific object
+    instance. It is possible to say "Mary may change news stories," but it's
+    not currently possible to say "Mary may change news stories, but only the
+    ones she created herself" or "Mary may only change news stories that have a
+    certain status or publication date."
+
+    The permissions listed above are automatically created for each model.
+    '''
+}
+ref: Permission.content_type > ContentType.id
+
+
+Table Group {
+  id auto [note:"", pk, unique]
+  name char [note:"", unique]
+  Note: '''
+    Groups are a generic way of categorizing users to apply permissions, or
+    some other label, to those users. A user can belong to any number of
+    groups.
+
+    A user in a group automatically has all the permissions granted to that
+    group. For example, if the group 'Site editors' has the permission
+    can_edit_home_page, any user in that group will have that permission.
+
+    Beyond permissions, groups are a convenient way to categorize users to
+    apply some label, or extended functionality, to them. For example, you
+    could create a group 'Special users', and you could write code that would
+    do special things to those users -- such as giving them access to a
+    members-only portion of your site, or sending them members-only email
+    messages.
+    '''
+}
+
+
+Table auth_group_permissions {
+  permission_id auto [pk]
+  group_id auto [pk]
+}
+ref: Group.id > auth_group_permissions.group_id
+ref: Permission.id > auth_group_permissions.permission_id
+
+
+Table User {
+  id auto [note:"", pk, unique]
+  password char [note:""]
+  last_login date_time [note:"", null]
+  is_superuser boolean [note:"Designates that this user has all permissions without explicitly assigning them."]
+  username char [note:"Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.", unique]
+  first_name char [note:""]
+  last_name char [note:""]
+  email email [note:""]
+  is_staff boolean [note:"Designates whether the user can log into this admin site."]
+  is_active boolean [note:"Designates whether this user should be treated as active. Unselect this instead of deleting accounts."]
+  date_joined date_time [note:""]
+  Note: '''
+    Users within the Django authentication system are represented by this
+    model.
+
+    Username and password are required. Other fields are optional.
+    '''
+}
+
+
+Table auth_user_groups {
+  group_id auto [pk]
+  user_id auto [pk]
+}
+ref: User.id > auth_user_groups.user_id
+ref: Group.id > auth_user_groups.group_id
+
+
+Table auth_user_user_permissions {
+  permission_id auto [pk]
+  user_id auto [pk]
+}
+ref: User.id > auth_user_user_permissions.user_id
+ref: Permission.id > auth_user_user_permissions.permission_id
+
+
+Table ContentType {
+  id auto [note:"", pk, unique]
+  app_label char [note:""]
+  model char [note:""]
+  Note: '''ContentType(id, app_label, model)'''
+}
+
+
+Table Session {
+  session_key char [note:"", pk, unique]
+  session_data text [note:""]
+  expire_date date_time [note:""]
+  Note: '''
+    Django provides full support for anonymous sessions. The session
+    framework lets you store and retrieve arbitrary data on a
+    per-site-visitor basis. It stores data on the server side and
+    abstracts the sending and receiving of cookies. Cookies contain a
+    session ID -- not the data itself.
+
+    The Django sessions framework is entirely cookie-based. It does
+    not fall back to putting session IDs in URLs. This is an intentional
+    design decision. Not only does that behavior make URLs ugly, it makes
+    your site vulnerable to session-ID theft via the "Referer" header.
+
+    For complete documentation on using Sessions in your code, consult
+    the sessions documentation that is shipped with Django (also available
+    on the Django web site).
+    '''
+}
+
+
+Table DataSiswa {
+  NIS char [note:"", pk, unique]
+  NISN char [note:""]
+  NAMA char [note:""]
+  NIPD char [note:""]
+  JENIS_KELAMIN char [note:""]
+  TEMPAT_LAHIR char [note:""]
+  TANGGAL_LAHIR date [note:""]
+  NIK char [note:""]
+  AGAMA char [note:""]
+  ALAMAT char [note:""]
+  RT big_integer [note:""]
+  RW big_integer [note:""]
+  DUSUN char [note:""]
+  KELURAHAN char [note:""]
+  KECAMATAN char [note:""]
+  KODE_POS big_integer [note:""]
+  JENIS_TINGGAL char [note:""]
+  TELEPON char [note:""]
+  HP char [note:""]
+  EMAIL email [note:""]
+  SKHUN char [note:""]
+  PENERIMA_KPS char [note:""]
+  NO_KPS char [note:""]
+  ROMBEL_SAAT_INI char [note:""]
+  NO_PESERTA_UJIAN_NASIONAL char [note:""]
+  NO_SERI_IJAZAH char [note:""]
+  PENERIMA_KIP char [note:""]
+  NO_KKS char [note:""]
+  NO_REGRISTASI_AKTA_LAHIR char [note:""]
+  BANK char [note:""]
+  NO_REKENING_BANK char [note:""]
+  REKENING_ATAS_NAMA char [note:""]
+  LAYAK_PIP char [note:""]
+  KEBUTUHAN_KHUSUS char [note:""]
+  ANAK_KE char [note:""]
+  LINTANG char [note:""]
+  BUJUR char [note:""]
+  NO_KK char [note:""]
+  BERAT_BADAN integer [note:"", null]
+  TINGGI_BADAN integer [note:"", null]
+  LINGKAR_KEPALA integer [note:"", null]
+  JUMLAH_SAUDARA_KANDUNG integer [note:"", null]
+  JARAK_RUMAH_KESEKOLAH_KM integer [note:"", null]
+  Note: '''DataSiswa(NIS, NISN, NAMA, NIPD, JENIS_KELAMIN, TEMPAT_LAHIR, TANGGAL_LAHIR, NIK, AGAMA, ALAMAT, RT, RW, DUSUN, KELURAHAN, KECAMATAN, KODE_POS, JENIS_TINGGAL, TELEPON, HP, EMAIL, SKHUN, PENERIMA_KPS, NO_KPS, ROMBEL_SAAT_INI, NO_PESERTA_UJIAN_NASIONAL, NO_SERI_IJAZAH, PENERIMA_KIP, NO_KKS, NO_REGRISTASI_AKTA_LAHIR, BANK, NO_REKENING_BANK, REKENING_ATAS_NAMA, LAYAK_PIP, KEBUTUHAN_KHUSUS, ANAK_KE, LINTANG, BUJUR, NO_KK, BERAT_BADAN, TINGGI_BADAN, LINGKAR_KEPALA, JUMLAH_SAUDARA_KANDUNG, JARAK_RUMAH_KESEKOLAH_KM)'''
+}
+
+
+Table DataOrangTua {
+  ID big_auto [note:"", pk, unique]
+  NIK_AYAH char [note:""]
+  NAMA_AYAH char [note:""]
+  TAHUN_LAHIR_AYAH date [note:""]
+  JENJANG_PENDIDIKAN_AYAH char [note:""]
+  PEKERJAAN_AYAH char [note:""]
+  PENGHASILAN_AYAH char [note:""]
+  NIK_IBU char [note:""]
+  NAMA_IBU char [note:""]
+  TAHUN_LAHIR_IBU date [note:""]
+  JENJANG_PENDIDIKAN_IBU char [note:""]
+  PEKERJAAN_IBU char [note:""]
+  PENGHASILAN_IBU char [note:""]
+  NIK_WALI char [note:""]
+  NAMA_WALI char [note:""]
+  TAHUN_LAHIR_WALI date [note:""]
+  JENJANG_PENDIDIKAN_WALI char [note:""]
+  PEKERJAAN_WALI char [note:""]
+  PENGHASILAN_WALI char [note:""]
+  Note: '''DataOrangTua(ID, NIK_AYAH, NAMA_AYAH, TAHUN_LAHIR_AYAH, JENJANG_PENDIDIKAN_AYAH, PEKERJAAN_AYAH, PENGHASILAN_AYAH, NIK_IBU, NAMA_IBU, TAHUN_LAHIR_IBU, JENJANG_PENDIDIKAN_IBU, PEKERJAAN_IBU, PENGHASILAN_IBU, NIK_WALI, NAMA_WALI, TAHUN_LAHIR_WALI, JENJANG_PENDIDIKAN_WALI, PEKERJAAN_WALI, PENGHASILAN_WALI)'''
+}
+
+
+Table dataprofil_dataorangtua_DATA_ANAK {
+  datasiswa_nis auto [pk]
+  dataorangtua_id auto [pk]
+}
+ref: DataOrangTua.ID > dataprofil_dataorangtua_DATA_ANAK.dataorangtua_id
+ref: DataSiswa.NIS > dataprofil_dataorangtua_DATA_ANAK.datasiswa_nis
+
+
+Table DataGuru {
+  ID big_auto [note:"", pk, unique]
+  NAMA_SEKOLAH char [note:""]
+  NSS char [note:""]
+  NPSN char [note:""]
+  ALAMAT_SEKOLAH char [note:""]
+  NAMA_LENGKAP char [note:""]
+  NIK char [note:""]
+  JENIS_KELAMIN char [note:""]
+  TEMPAT_LAHIR char [note:""]
+  TANGGAL_LAHIR date [note:""]
+  NAMA_IBU_KANDUNG char [note:""]
+  ALAMAT_TEMPAT_TINGGAL char [note:""]
+  DUSUN char [note:""]
+  KELURAHAN char [note:""]
+  KECAMATAN char [note:""]
+  KOTA char [note:""]
+  PROVINSI char [note:""]
+  LINTANG_1 char [note:""]
+  LINTANG_2 char [note:""]
+  AGAMA char [note:""]
+  NPWP char [note:""]
+  NAMA_WAJIB_PAJAK char [note:""]
+  KEWARGANEGARAAN char [note:""]
+  STATUS_KAWIN char [note:""]
+  NAMA_PASANGAN char [note:""]
+  PEKERJAAN_PASANGAN char [note:""]
+  PASANGAN_PNS char [note:""]
+  NIP_PASANGAN char [note:""]
+  STATUS_PEGAWAI char [note:""]
+  PNS char [note:""]
+  NIP char [note:""]
+  NIY char [note:""]
+  NIGB char [note:""]
+  NUPTK char [note:""]
+  JENIS_PTK char [note:""]
+  SK_PENGANGKATAN char [note:""]
+  TMT_PENGANGKATAN char [note:""]
+  LEMBAGA_PENGANGKATAN char [note:""]
+  SK_CPNS char [note:""]
+  TMT_CPNS char [note:""]
+  TMT_PNS char [note:""]
+  PANGKAT char [note:""]
+  SUMBER_GAJI char [note:""]
+  KARTU_PEGAWAI char [note:""]
+  KARIS char [note:""]
+  NO_SURAT char [note:""]
+  TGL_SURAT date [note:"", null]
+  TMT_TUGAS char [note:""]
+  SEKOLAH_INDUK char [note:""]
+  LISENSI_KEPALA_SEKOLAH char [note:""]
+  KODE_PROGRAM_KEAHLIAN char [note:""]
+  JENIS_KETUNAAN char [note:""]
+  SPESIALIS_MENANGANI char [note:""]
+  STATUS_AKTIF char [note:""]
+  HP char [note:""]
+  EMAIL email [note:""]
+  Note: '''DataGuru(ID, NAMA_SEKOLAH, NSS, NPSN, ALAMAT_SEKOLAH, NAMA_LENGKAP, NIK, JENIS_KELAMIN, TEMPAT_LAHIR, TANGGAL_LAHIR, NAMA_IBU_KANDUNG, ALAMAT_TEMPAT_TINGGAL, DUSUN, KELURAHAN, KECAMATAN, KOTA, PROVINSI, LINTANG_1, LINTANG_2, AGAMA, NPWP, NAMA_WAJIB_PAJAK, KEWARGANEGARAAN, STATUS_KAWIN, NAMA_PASANGAN, PEKERJAAN_PASANGAN, PASANGAN_PNS, NIP_PASANGAN, STATUS_PEGAWAI, PNS, NIP, NIY, NIGB, NUPTK, JENIS_PTK, SK_PENGANGKATAN, TMT_PENGANGKATAN, LEMBAGA_PENGANGKATAN, SK_CPNS, TMT_CPNS, TMT_PNS, PANGKAT, SUMBER_GAJI, KARTU_PEGAWAI, KARIS, NO_SURAT, TGL_SURAT, TMT_TUGAS, SEKOLAH_INDUK, LISENSI_KEPALA_SEKOLAH, KODE_PROGRAM_KEAHLIAN, JENIS_KETUNAAN, SPESIALIS_MENANGANI, STATUS_AKTIF, HP, EMAIL)'''
+}
+
+
+Table DataKaryawan {
+  ID big_auto [note:"", pk, unique]
+  NAMA_SEKOLAH char [note:""]
+  NSS char [note:""]
+  NPSN char [note:""]
+  ALAMAT_SEKOLAH char [note:""]
+  NAMA_LENGKAP char [note:""]
+  NIK char [note:""]
+  JENIS_KELAMIN char [note:""]
+  TEMPAT_LAHIR char [note:""]
+  TANGGAL_LAHIR date [note:""]
+  NAMA_IBU_KANDUNG char [note:""]
+  ALAMAT_TEMPAT_TINGGAL char [note:""]
+  DUSUN char [note:""]
+  KELURAHAN char [note:""]
+  KECAMATAN char [note:""]
+  KOTA char [note:""]
+  PROVINSI char [note:""]
+  LINTANG_1 char [note:""]
+  LINTANG_2 char [note:""]
+  AGAMA char [note:""]
+  NPWP char [note:""]
+  NAMA_WAJIB_PAJAK char [note:""]
+  KEWARGANEGARAAN char [note:""]
+  STATUS_KAWIN char [note:""]
+  NAMA_PASANGAN char [note:""]
+  PEKERJAAN_PASANGAN char [note:""]
+  PASANGAN_PNS char [note:""]
+  NIP_PASANGAN char [note:""]
+  STATUS_PEGAWAI char [note:""]
+  PNS char [note:""]
+  NIP char [note:""]
+  NIY char [note:""]
+  NIGB char [note:""]
+  NUPTK char [note:""]
+  JENIS_PTK char [note:""]
+  SK_PENGANGKATAN char [note:""]
+  TMT_PENGANGKATAN char [note:""]
+  LEMBAGA_PENGANGKATAN char [note:""]
+  SK_CPNS char [note:""]
+  TMT_CPNS char [note:""]
+  TMT_PNS char [note:""]
+  PANGKAT char [note:""]
+  SUMBER_GAJI char [note:""]
+  KARTU_PEGAWAI char [note:""]
+  KARIS char [note:""]
+  NO_SURAT char [note:""]
+  TGL_SURAT date [note:"", null]
+  TMT_TUGAS char [note:""]
+  SEKOLAH_INDUK char [note:""]
+  LISENSI_KEPALA_SEKOLAH char [note:""]
+  KODE_PROGRAM_KEAHLIAN char [note:""]
+  JENIS_KETUNAAN char [note:""]
+  SPESIALIS_MENANGANI char [note:""]
+  STATUS_AKTIF char [note:""]
+  HP char [note:""]
+  EMAIL email [note:""]
+  Note: '''DataKaryawan(ID, NAMA_SEKOLAH, NSS, NPSN, ALAMAT_SEKOLAH, NAMA_LENGKAP, NIK, JENIS_KELAMIN, TEMPAT_LAHIR, TANGGAL_LAHIR, NAMA_IBU_KANDUNG, ALAMAT_TEMPAT_TINGGAL, DUSUN, KELURAHAN, KECAMATAN, KOTA, PROVINSI, LINTANG_1, LINTANG_2, AGAMA, NPWP, NAMA_WAJIB_PAJAK, KEWARGANEGARAAN, STATUS_KAWIN, NAMA_PASANGAN, PEKERJAAN_PASANGAN, PASANGAN_PNS, NIP_PASANGAN, STATUS_PEGAWAI, PNS, NIP, NIY, NIGB, NUPTK, JENIS_PTK, SK_PENGANGKATAN, TMT_PENGANGKATAN, LEMBAGA_PENGANGKATAN, SK_CPNS, TMT_CPNS, TMT_PNS, PANGKAT, SUMBER_GAJI, KARTU_PEGAWAI, KARIS, NO_SURAT, TGL_SURAT, TMT_TUGAS, SEKOLAH_INDUK, LISENSI_KEPALA_SEKOLAH, KODE_PROGRAM_KEAHLIAN, JENIS_KETUNAAN, SPESIALIS_MENANGANI, STATUS_AKTIF, HP, EMAIL)'''
+}
+
+
+Table DataKompetensiGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  BIDANG_STUDI char [note:"Bidang studi"]
+  URUTAN char [note:""]
+  Note: '''DataKompetensiGuru(OWNER, ID, BIDANG_STUDI, URUTAN)'''
+}
+ref: DataKompetensiGuru.OWNER > DataGuru.ID
+
+
+Table DataKompetensiKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  BIDANG_STUDI char [note:""]
+  URUTAN char [note:""]
+  Note: '''DataKompetensiKaryawan(OWNER, ID, BIDANG_STUDI, URUTAN)'''
+}
+ref: DataKompetensiKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataAnakGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  STATUS char [note:""]
+  JENJANG char [note:""]
+  NISN char [note:""]
+  NAMA char [note:""]
+  JENIS_KELAMIN char [note:""]
+  TEMPAT_LAHIR char [note:""]
+  TANGGAL_LAHIR date [note:""]
+  TAHUN_MASUK char [note:""]
+  Note: '''DataAnakGuru(OWNER, ID, STATUS, JENJANG, NISN, NAMA, JENIS_KELAMIN, TEMPAT_LAHIR, TANGGAL_LAHIR, TAHUN_MASUK)'''
+}
+ref: DataAnakGuru.OWNER > DataGuru.ID
+
+
+Table DataAnakKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  STATUS char [note:""]
+  JENJANG char [note:""]
+  NISN char [note:""]
+  NAMA char [note:""]
+  JENIS_KELAMIN char [note:""]
+  TEMPAT_LAHIR char [note:""]
+  TANGGAL_LAHIR date [note:""]
+  TAHUN_MASUK char [note:""]
+  Note: '''DataAnakKaryawan(OWNER, ID, STATUS, JENJANG, NISN, NAMA, JENIS_KELAMIN, TEMPAT_LAHIR, TANGGAL_LAHIR, TAHUN_MASUK)'''
+}
+ref: DataAnakKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataBeasiswaGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  PENYELENGGARA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  MASIH_MENERIMA char [note:""]
+  Note: '''DataBeasiswaGuru(OWNER, ID, JENIS, PENYELENGGARA, DARI_TAHUN, SAMPAI_TAHUN, MASIH_MENERIMA)'''
+}
+ref: DataBeasiswaGuru.OWNER > DataGuru.ID
+
+
+Table DataBeasiswaKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  PENYELENGGARA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  MASIH_MENERIMA char [note:""]
+  Note: '''DataBeasiswaKaryawan(OWNER, ID, JENIS, PENYELENGGARA, DARI_TAHUN, SAMPAI_TAHUN, MASIH_MENERIMA)'''
+}
+ref: DataBeasiswaKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataBukuGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JUDUL_BUKU char [note:""]
+  TAHUN_BUKU char [note:""]
+  PENERBIT_BUKU char [note:""]
+  Note: '''DataBukuGuru(OWNER, ID, JUDUL_BUKU, TAHUN_BUKU, PENERBIT_BUKU)'''
+}
+ref: DataBukuGuru.OWNER > DataGuru.ID
+
+
+Table DataBukuKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JUDUL_BUKU char [note:""]
+  TAHUN_BUKU char [note:""]
+  PENERBIT_BUKU char [note:""]
+  Note: '''DataBukuKaryawan(OWNER, ID, JUDUL_BUKU, TAHUN_BUKU, PENERBIT_BUKU)'''
+}
+ref: DataBukuKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataDiklatGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS_DIKLAT char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  TAHUN char [note:""]
+  PERAN char [note:""]
+  Note: '''DataDiklatGuru(OWNER, ID, JENIS_DIKLAT, NAMA, PENYELENGGARA, TAHUN, PERAN)'''
+}
+ref: DataDiklatGuru.OWNER > DataGuru.ID
+
+
+Table DataDiklatKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS_DIKLAT char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  TAHUN char [note:""]
+  PERAN char [note:""]
+  Note: '''DataDiklatKaryawan(OWNER, ID, JENIS_DIKLAT, NAMA, PENYELENGGARA, TAHUN, PERAN)'''
+}
+ref: DataDiklatKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataKaryaTulisGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JUDUL char [note:""]
+  TAHUN char [note:""]
+  PUBLIKASI char [note:""]
+  KETERANGAN char [note:""]
+  Note: '''DataKaryaTulisGuru(OWNER, ID, JUDUL, TAHUN, PUBLIKASI, KETERANGAN)'''
+}
+ref: DataKaryaTulisGuru.OWNER > DataGuru.ID
+
+
+Table DataKaryaTulisKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JUDUL char [note:""]
+  TAHUN char [note:""]
+  PUBLIKASI char [note:""]
+  KETERANGAN char [note:""]
+  Note: '''DataKaryaTulisKaryawan(OWNER, ID, JUDUL, TAHUN, PUBLIKASI, KETERANGAN)'''
+}
+ref: DataKaryaTulisKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataKesejahteraanGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  STATUS char [note:""]
+  Note: '''DataKesejahteraanGuru(OWNER, ID, JENIS, NAMA, PENYELENGGARA, DARI_TAHUN, SAMPAI_TAHUN, STATUS)'''
+}
+ref: DataKesejahteraanGuru.OWNER > DataGuru.ID
+
+
+Table DataKesejahteraanKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  STATUS char [note:""]
+  Note: '''DataKesejahteraanKaryawan(OWNER, ID, JENIS, NAMA, PENYELENGGARA, DARI_TAHUN, SAMPAI_TAHUN, STATUS)'''
+}
+ref: DataKesejahteraanKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataTunjanganGuru {
+  OWNER foreign_key [note:""]
+  ID auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  INSTANSI char [note:""]
+  SUMBER_DANA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  NOMINAL char [note:""]
+  STATUS char [note:""]
+  Note: '''DataTunjanganGuru(OWNER, ID, JENIS, NAMA, INSTANSI, SUMBER_DANA, DARI_TAHUN, SAMPAI_TAHUN, NOMINAL, STATUS)'''
+}
+ref: DataTunjanganGuru.OWNER > DataGuru.ID
+
+
+Table DataTunjanganKaryawan {
+  OWNER foreign_key [note:""]
+  ID auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  INSTANSI char [note:""]
+  SUMBER_DANA char [note:""]
+  DARI_TAHUN char [note:""]
+  SAMPAI_TAHUN char [note:""]
+  NOMINAL char [note:""]
+  STATUS char [note:""]
+  Note: '''DataTunjanganKaryawan(OWNER, ID, JENIS, NAMA, INSTANSI, SUMBER_DANA, DARI_TAHUN, SAMPAI_TAHUN, NOMINAL, STATUS)'''
+}
+ref: DataTunjanganKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataTugasTambahanGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_PTK char [note:""]
+  JPM char [note:""]
+  NO_SK char [note:""]
+  TMT_TAMBAHAN char [note:""]
+  TST_TAMBAHAN char [note:""]
+  Note: '''DataTugasTambahanGuru(OWNER, ID, JABATAN_PTK, JPM, NO_SK, TMT_TAMBAHAN, TST_TAMBAHAN)'''
+}
+ref: DataTugasTambahanGuru.OWNER > DataGuru.ID
+
+
+Table DataTugasTambahanKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_PTK char [note:""]
+  JPM char [note:""]
+  NO_SK char [note:""]
+  TMT_TAMBAHAN char [note:""]
+  TST_TAMBAHAN char [note:""]
+  Note: '''DataTugasTambahanKaryawan(OWNER, ID, JABATAN_PTK, JPM, NO_SK, TMT_TAMBAHAN, TST_TAMBAHAN)'''
+}
+ref: DataTugasTambahanKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataPenghargaanGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  TINGKAT_PERNGHARGAAN char [note:""]
+  JENIS_PENGHARGAAN char [note:""]
+  NAMA char [note:""]
+  TAHUN char [note:""]
+  INSTANSI char [note:""]
+  Note: '''DataPenghargaanGuru(OWNER, ID, TINGKAT_PERNGHARGAAN, JENIS_PENGHARGAAN, NAMA, TAHUN, INSTANSI)'''
+}
+ref: DataPenghargaanGuru.OWNER > DataGuru.ID
+
+
+Table DataPenghargaanKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  TINGKAT_PERNGHARGAAN char [note:""]
+  JENIS_PENGHARGAAN char [note:""]
+  NAMA char [note:""]
+  TAHUN char [note:""]
+  INSTANSI char [note:""]
+  Note: '''DataPenghargaanKaryawan(OWNER, ID, TINGKAT_PERNGHARGAAN, JENIS_PENGHARGAAN, NAMA, TAHUN, INSTANSI)'''
+}
+ref: DataPenghargaanKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataNilaiTesGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  TAHUN char [note:""]
+  SKOR char [note:""]
+  Note: '''DataNilaiTesGuru(OWNER, ID, JENIS, NAMA, PENYELENGGARA, TAHUN, SKOR)'''
+}
+ref: DataNilaiTesGuru.OWNER > DataGuru.ID
+
+
+Table DataNilaiTesKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS char [note:""]
+  NAMA char [note:""]
+  PENYELENGGARA char [note:""]
+  TAHUN char [note:""]
+  SKOR char [note:""]
+  Note: '''DataNilaiTesKaryawan(OWNER, ID, JENIS, NAMA, PENYELENGGARA, TAHUN, SKOR)'''
+}
+ref: DataNilaiTesKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatGajiBerkalaGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  PANGKAT_GOLONGAN char [note:""]
+  NO_SK char [note:""]
+  TANGGAL_SK date [note:""]
+  TMT_KGB char [note:""]
+  TAHUN_MK char [note:""]
+  BULAN_MK char [note:""]
+  GAJI_POKOK char [note:""]
+  Note: '''DataRiwayatGajiBerkalaGuru(OWNER, ID, PANGKAT_GOLONGAN, NO_SK, TANGGAL_SK, TMT_KGB, TAHUN_MK, BULAN_MK, GAJI_POKOK)'''
+}
+ref: DataRiwayatGajiBerkalaGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatGajiBerkalaKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  PANGKAT_GOLONGAN char [note:""]
+  NO_SK char [note:""]
+  TANGGAL_SK date [note:""]
+  TMT_KGB char [note:""]
+  TAHUN_MK char [note:""]
+  BULAN_MK char [note:""]
+  GAJI_POKOK char [note:""]
+  Note: '''DataRiwayatGajiBerkalaKaryawan(OWNER, ID, PANGKAT_GOLONGAN, NO_SK, TANGGAL_SK, TMT_KGB, TAHUN_MK, BULAN_MK, GAJI_POKOK)'''
+}
+ref: DataRiwayatGajiBerkalaKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatJabatanStrukturalGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_PTK char [note:""]
+  SK_STRUKTURAL char [note:""]
+  TMT_JABATAN char [note:""]
+  Note: '''DataRiwayatJabatanStrukturalGuru(OWNER, ID, JABATAN_PTK, SK_STRUKTURAL, TMT_JABATAN)'''
+}
+ref: DataRiwayatJabatanStrukturalGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatJabatanStrukturalKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_PTK char [note:""]
+  SK_STRUKTURAL char [note:""]
+  TMT_JABATAN char [note:""]
+  Note: '''DataRiwayatJabatanStrukturalKaryawan(OWNER, ID, JABATAN_PTK, SK_STRUKTURAL, TMT_JABATAN)'''
+}
+ref: DataRiwayatJabatanStrukturalKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatKepangkatanGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  NO_SK char [note:""]
+  TANGGAL_SK date [note:""]
+  PANGKAT_GOLONGAN char [note:""]
+  MK_TAHUN char [note:""]
+  MK_BULAN char [note:""]
+  Note: '''DataRiwayatKepangkatanGuru(OWNER, ID, NO_SK, TANGGAL_SK, PANGKAT_GOLONGAN, MK_TAHUN, MK_BULAN)'''
+}
+ref: DataRiwayatKepangkatanGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatKepangkatanKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  NO_SK char [note:""]
+  TANGGAL_SK date [note:""]
+  PANGKAT_GOLONGAN char [note:""]
+  MK_TAHUN char [note:""]
+  MK_BULAN char [note:""]
+  Note: '''DataRiwayatKepangkatanKaryawan(OWNER, ID, NO_SK, TANGGAL_SK, PANGKAT_GOLONGAN, MK_TAHUN, MK_BULAN)'''
+}
+ref: DataRiwayatKepangkatanKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatPendidikanFormalGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  BIDANG_STUDI char [note:""]
+  JENJANG char [note:""]
+  GELAR char [note:""]
+  SATUAN char [note:""]
+  FAKULTAS char [note:""]
+  KEPENDIDIKAN char [note:""]
+  TAHUN_MASUK char [note:""]
+  TAHUN_LULUS char [note:""]
+  NIM char [note:""]
+  MASIH char [note:""]
+  SMT char [note:""]
+  IPK char [note:""]
+  Note: '''DataRiwayatPendidikanFormalGuru(OWNER, ID, BIDANG_STUDI, JENJANG, GELAR, SATUAN, FAKULTAS, KEPENDIDIKAN, TAHUN_MASUK, TAHUN_LULUS, NIM, MASIH, SMT, IPK)'''
+}
+ref: DataRiwayatPendidikanFormalGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatPendidikanFormalKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  BIDANG_STUDI char [note:""]
+  JENJANG char [note:""]
+  GELAR char [note:""]
+  SATUAN char [note:""]
+  FAKULTAS char [note:""]
+  KEPENDIDIKAN char [note:""]
+  TAHUN_MASUK char [note:""]
+  TAHUN_LULUS char [note:""]
+  NIM char [note:""]
+  MASIH char [note:""]
+  SMT char [note:""]
+  IPK char [note:""]
+  Note: '''DataRiwayatPendidikanFormalKaryawan(OWNER, ID, BIDANG_STUDI, JENJANG, GELAR, SATUAN, FAKULTAS, KEPENDIDIKAN, TAHUN_MASUK, TAHUN_LULUS, NIM, MASIH, SMT, IPK)'''
+}
+ref: DataRiwayatPendidikanFormalKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatSertifikasiGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS_SERTIFIKASI char [note:""]
+  NO_SERTIFIKASI char [note:""]
+  TAHUN_SERTIFIKASI char [note:""]
+  BIDANG_STUDI char [note:""]
+  NO_REGISTRASI char [note:""]
+  NO_PESERTA char [note:""]
+  Note: '''DataRiwayatSertifikasiGuru(OWNER, ID, JENIS_SERTIFIKASI, NO_SERTIFIKASI, TAHUN_SERTIFIKASI, BIDANG_STUDI, NO_REGISTRASI, NO_PESERTA)'''
+}
+ref: DataRiwayatSertifikasiGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatSertifikasiKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENIS_SERTIFIKASI char [note:""]
+  NO_SERTIFIKASI char [note:""]
+  TAHUN_SERTIFIKASI char [note:""]
+  BIDANG_STUDI char [note:""]
+  NO_REGISTRASI char [note:""]
+  NO_PESERTA char [note:""]
+  Note: '''DataRiwayatSertifikasiKaryawan(OWNER, ID, JENIS_SERTIFIKASI, NO_SERTIFIKASI, TAHUN_SERTIFIKASI, BIDANG_STUDI, NO_REGISTRASI, NO_PESERTA)'''
+}
+ref: DataRiwayatSertifikasiKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatJabatanFungsionalGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_FUNGSIONAL char [note:""]
+  SK_JABATAN_FUNGSIONAL char [note:""]
+  TMT_JABATAN char [note:""]
+  Note: '''DataRiwayatJabatanFungsionalGuru(OWNER, ID, JABATAN_FUNGSIONAL, SK_JABATAN_FUNGSIONAL, TMT_JABATAN)'''
+}
+ref: DataRiwayatJabatanFungsionalGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatJabatanFungsionalKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JABATAN_FUNGSIONAL char [note:""]
+  SK_JABATAN_FUNGSIONAL char [note:""]
+  TMT_JABATAN char [note:""]
+  Note: '''DataRiwayatJabatanFungsionalKaryawan(OWNER, ID, JABATAN_FUNGSIONAL, SK_JABATAN_FUNGSIONAL, TMT_JABATAN)'''
+}
+ref: DataRiwayatJabatanFungsionalKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataRiwayatKarirGuru {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENJANG char [note:""]
+  JENIS_LEMBAGA char [note:""]
+  STS_KEPEGAWAIAN char [note:""]
+  JENIS_PTK char [note:""]
+  LEMBAGA char [note:""]
+  NO_SK_KERJA char [note:""]
+  TGL_SK_KERJA date [note:""]
+  TMT_KERJA char [note:""]
+  TST_KERJA char [note:""]
+  TEMPAT_KERJA char [note:""]
+  TTD_SK_KERJA char [note:""]
+  MAPEL_DIAJARKAN char [note:""]
+  Note: '''DataRiwayatKarirGuru(OWNER, ID, JENJANG, JENIS_LEMBAGA, STS_KEPEGAWAIAN, JENIS_PTK, LEMBAGA, NO_SK_KERJA, TGL_SK_KERJA, TMT_KERJA, TST_KERJA, TEMPAT_KERJA, TTD_SK_KERJA, MAPEL_DIAJARKAN)'''
+}
+ref: DataRiwayatKarirGuru.OWNER > DataGuru.ID
+
+
+Table DataRiwayatKarirKaryawan {
+  OWNER foreign_key [note:""]
+  ID big_auto [note:"", pk, unique]
+  JENJANG char [note:""]
+  JENIS_LEMBAGA char [note:""]
+  STS_KEPEGAWAIAN char [note:""]
+  JENIS_PTK char [note:""]
+  LEMBAGA char [note:""]
+  NO_SK_KERJA char [note:""]
+  TGL_SK_KERJA date [note:""]
+  TMT_KERJA char [note:""]
+  TST_KERJA char [note:""]
+  TEMPAT_KERJA char [note:""]
+  TTD_SK_KERJA char [note:""]
+  MAPEL_DIAJARKAN char [note:""]
+  Note: '''DataRiwayatKarirKaryawan(OWNER, ID, JENJANG, JENIS_LEMBAGA, STS_KEPEGAWAIAN, JENIS_PTK, LEMBAGA, NO_SK_KERJA, TGL_SK_KERJA, TMT_KERJA, TST_KERJA, TEMPAT_KERJA, TTD_SK_KERJA, MAPEL_DIAJARKAN)'''
+}
+ref: DataRiwayatKarirKaryawan.OWNER > DataKaryawan.ID
+
+
+Table DataSiswaUser {
+  id big_auto [note:"", pk, unique]
+  USER foreign_key [note:""]
+  DATA_SISWA foreign_key [note:""]
+  Note: '''DataSiswaUser(id, USER, DATA_SISWA)'''
+}
+ref: DataSiswaUser.USER > User.id
+ref: DataSiswaUser.DATA_SISWA > DataSiswa.NIS
+
+
+Table DataOrangTuaUser {
+  id big_auto [note:"", pk, unique]
+  USER foreign_key [note:""]
+  DATA_ORANG_TUA foreign_key [note:""]
+  Note: '''DataOrangTuaUser(id, USER, DATA_ORANG_TUA)'''
+}
+ref: DataOrangTuaUser.USER > User.id
+ref: DataOrangTuaUser.DATA_ORANG_TUA > DataOrangTua.ID
+
+
+Table DataGuruUser {
+  id big_auto [note:"", pk, unique]
+  USER foreign_key [note:""]
+  DATA_GURU one_to_one [note:"", unique]
+  Note: '''DataGuruUser(id, USER, DATA_GURU)'''
+}
+ref: DataGuruUser.USER > User.id
+ref: DataGuruUser.DATA_GURU - DataGuru.ID
+
+
+Table DataKaryawanUser {
+  id big_auto [note:"", pk, unique]
+  USER foreign_key [note:""]
+  DATA_KARYAWAN foreign_key [note:""]
+  Note: '''DataKaryawanUser(id, USER, DATA_KARYAWAN)'''
+}
+ref: DataKaryawanUser.USER > User.id
+ref: DataKaryawanUser.DATA_KARYAWAN > DataKaryawan.ID
+
+
+Table DataSemester {
+  id big_auto [note:"", pk, unique]
+  KE char [note:""]
+  NAMA char [note:""]
+  Note: '''DataSemester(id, KE, NAMA)'''
+}
+
+
+Table TahunAjaran {
+  ID big_auto [note:"", pk, unique]
+  TAHUN_AJARAN_AWAL positive_integer [note:""]
+  TAHUN_AJARAN_AKHIR positive_integer [note:""]
+  Note: '''TahunAjaran(ID, TAHUN_AJARAN_AWAL, TAHUN_AJARAN_AKHIR)'''
+}
+
+
+Table MataPelajaran {
+  KODE char [note:"", pk, unique]
+  NAMA char [note:""]
+  Note: '''MataPelajaran(KODE, NAMA)'''
+}
+
+
+Table Jurusan {
+  ID big_auto [note:"", pk, unique]
+  NAMA char [note:""]
+  Note: '''Jurusan(ID, NAMA)'''
+}
+
+
+Table Kelas {
+  ID big_auto [note:"", pk, unique]
+  TAHUN_AJARAN foreign_key [note:""]
+  TINGKATAN char [note:""]
+  JURUSAN foreign_key [note:""]
+  KODE_KELAS char [note:"", unique]
+  Note: '''Kelas(ID, TAHUN_AJARAN, TINGKATAN, JURUSAN, KODE_KELAS)'''
+}
+ref: Kelas.TAHUN_AJARAN > TahunAjaran.ID
+ref: Kelas.JURUSAN > Jurusan.ID
+
+
+Table NamaOfferingKelas {
+  ID big_auto [note:"", pk, unique]
+  NAMA char [note:""]
+  Note: '''NamaOfferingKelas(ID, NAMA)'''
+}
+
+
+Table OfferingKelas {
+  ID big_auto [note:"", pk, unique]
+  KELAS foreign_key [note:""]
+  OFFERING foreign_key [note:""]
+  Note: '''OfferingKelas(ID, KELAS, OFFERING)'''
+}
+ref: OfferingKelas.KELAS > Kelas.ID
+ref: OfferingKelas.OFFERING > NamaOfferingKelas.ID
+
+
+Table KategoriTataTertib {
+  ID big_auto [note:"", pk, unique]
+  NAMA char [note:""]
+  Note: '''KategoriTataTertib(ID, NAMA)'''
+}
+
+
+Table KTSP {
+  ID big_auto [note:"", pk, unique]
+  TAHUN_AJARAN foreign_key [note:""]
+  NAMA_FILE file [note:""]
+  Note: '''KTSP(ID, TAHUN_AJARAN, NAMA_FILE)'''
+}
+ref: KTSP.TAHUN_AJARAN > TahunAjaran.ID
+
+
+Table SilabusRPB {
+  ID big_auto [note:"", pk, unique]
+  MATA_PELAJARAN foreign_key [note:""]
+  TAHUN_AJARAN foreign_key [note:""]
+  NAMA_FILE file [note:""]
+  KELAS foreign_key [note:""]
+  SEMESTER foreign_key [note:""]
+  Note: '''SilabusRPB(ID, MATA_PELAJARAN, TAHUN_AJARAN, NAMA_FILE, KELAS, SEMESTER)'''
+}
+ref: SilabusRPB.MATA_PELAJARAN > MataPelajaran.KODE
+ref: SilabusRPB.TAHUN_AJARAN > TahunAjaran.ID
+ref: SilabusRPB.KELAS > Kelas.ID
+ref: SilabusRPB.SEMESTER > DataSemester.id
+
+
+Table TataTertib {
+  ID big_auto [note:"", pk, unique]
+  KETERANGAN char [note:""]
+  KATEGORI foreign_key [note:""]
+  Note: '''TataTertib(ID, KETERANGAN, KATEGORI)'''
+}
+ref: TataTertib.KATEGORI > KategoriTataTertib.ID
+
+
+Table PoinPelanggaran {
+  ID big_auto [note:"", pk, unique]
+  KETERANGAN char [note:""]
+  POIN positive_integer [note:""]
+  Note: '''PoinPelanggaran(ID, KETERANGAN, POIN)'''
+}
+
+
+Table WaktuPelajaran {
+  ID big_auto [note:"", pk, unique]
+  WAKTU_MULAI time [note:""]
+  WAKTU_BERAKHIR time [note:""]
+  JAM_KE integer [note:""]
+  Note: '''WaktuPelajaran(ID, WAKTU_MULAI, WAKTU_BERAKHIR, JAM_KE)'''
+}
+
+
+Table KelasSiswa {
+  ID big_auto [note:"", pk, unique]
+  NIS foreign_key [note:""]
+  KELAS foreign_key [note:""]
+  Note: '''KelasSiswa(ID, NIS, KELAS)'''
+}
+ref: KelasSiswa.NIS > DataSiswa.NIS
+ref: KelasSiswa.KELAS > OfferingKelas.ID
+
+
+Table JadwalMengajar {
+  ID big_auto [note:"", pk, unique]
+  GURU foreign_key [note:""]
+  TAHUN_AJARAN foreign_key [note:""]
+  SEMESTER foreign_key [note:""]
+  KELAS foreign_key [note:""]
+  MATA_PELAJARAN foreign_key [note:""]
+  HARI char [note:""]
+  JUMLAH_WAKTU integer [note:""]
+  Note: '''JadwalMengajar(ID, GURU, TAHUN_AJARAN, SEMESTER, KELAS, MATA_PELAJARAN, HARI, JUMLAH_WAKTU)'''
+}
+ref: JadwalMengajar.GURU > DataGuru.ID
+ref: JadwalMengajar.TAHUN_AJARAN > TahunAjaran.ID
+ref: JadwalMengajar.SEMESTER > DataSemester.id
+ref: JadwalMengajar.KELAS > OfferingKelas.ID
+ref: JadwalMengajar.MATA_PELAJARAN > MataPelajaran.KODE
+
+
+Table kurikulum_jadwalmengajar_WAKTU_PELAJARAN {
+  waktupelajaran_id auto [pk]
+  jadwalmengajar_id auto [pk]
+}
+ref: JadwalMengajar.ID > kurikulum_jadwalmengajar_WAKTU_PELAJARAN.jadwalmengajar_id
+ref: WaktuPelajaran.ID > kurikulum_jadwalmengajar_WAKTU_PELAJARAN.waktupelajaran_id
+
+
+Table DaftarJurnalBelajar {
+  ID big_auto [note:"", pk, unique]
+  GURU foreign_key [note:""]
+  MATA_PELAJARAN foreign_key [note:""]
+  KELAS foreign_key [note:""]
+  SEMESTER foreign_key [note:""]
+  JADWAL_MENGAJAR foreign_key [note:""]
+  Note: '''DaftarJurnalBelajar(ID, GURU, MATA_PELAJARAN, KELAS, SEMESTER, JADWAL_MENGAJAR)'''
+}
+ref: DaftarJurnalBelajar.GURU > DataGuru.ID
+ref: DaftarJurnalBelajar.MATA_PELAJARAN > MataPelajaran.KODE
+ref: DaftarJurnalBelajar.KELAS > OfferingKelas.ID
+ref: DaftarJurnalBelajar.SEMESTER > DataSemester.id
+ref: DaftarJurnalBelajar.JADWAL_MENGAJAR > JadwalMengajar.ID
+
+
+Table JurnalBelajar {
+  ID big_auto [note:"", pk, unique]
+  GURU foreign_key [note:""]
+  PERTEMUAN char [note:""]
+  TANGGAL_MENGAJAR date [note:""]
+  DESKRIPSI_MATERI text [note:""]
+  FILE_DOKUMENTASI file [note:""]
+  DAFTAR foreign_key [note:""]
+  Note: '''JurnalBelajar(ID, GURU, PERTEMUAN, TANGGAL_MENGAJAR, DESKRIPSI_MATERI, FILE_DOKUMENTASI, DAFTAR)'''
+}
+ref: JurnalBelajar.GURU > DataGuru.ID
+ref: JurnalBelajar.DAFTAR > DaftarJurnalBelajar.ID
+
+
+Table JadwalPekanEfektifSemester {
+  ID big_auto [note:"", pk, unique]
+  BULAN char [note:""]
+  JUMLAH_MINGGU integer [note:""]
+  JUMLAH_MINGGU_EFEKTIF integer [note:""]
+  JUMLAH_MINGGU_TIDAK_EFEKTIF integer [note:""]
+  KETERANGAN text [note:""]
+  Note: '''JadwalPekanEfektifSemester(ID, BULAN, JUMLAH_MINGGU, JUMLAH_MINGGU_EFEKTIF, JUMLAH_MINGGU_TIDAK_EFEKTIF, KETERANGAN)'''
+}
+
+
+Table JadwalPekanTidakEfektif {
+  ID big_auto [note:"", pk, unique]
+  URAIAN_KEGIATAN text [note:""]
+  JUMLAH_MINGGU integer [note:""]
+  KETERANGAN text [note:""]
+  Note: '''JadwalPekanTidakEfektif(ID, URAIAN_KEGIATAN, JUMLAH_MINGGU, KETERANGAN)'''
+}
+
+
+Table JadwalPekanAktif {
+  ID big_auto [note:"", pk, unique]
+  MATA_PELAJARAN foreign_key [note:""]
+  KELAS foreign_key [note:""]
+  SEMESTER foreign_key [note:""]
+  Note: '''JadwalPekanAktif(ID, MATA_PELAJARAN, KELAS, SEMESTER)'''
+}
+ref: JadwalPekanAktif.MATA_PELAJARAN > MataPelajaran.KODE
+ref: JadwalPekanAktif.KELAS > Kelas.ID
+ref: JadwalPekanAktif.SEMESTER > DataSemester.id
+
+
+Table kurikulum_jadwalpekanaktif_MINGGU_TIDAK_EFEKTIF {
+  jadwalpekantidakefektif_id auto [pk]
+  jadwalpekanaktif_id auto [pk]
+}
+ref: JadwalPekanAktif.ID > kurikulum_jadwalpekanaktif_MINGGU_TIDAK_EFEKTIF.jadwalpekanaktif_id
+ref: JadwalPekanTidakEfektif.ID > kurikulum_jadwalpekanaktif_MINGGU_TIDAK_EFEKTIF.jadwalpekantidakefektif_id
+
+
+Table kurikulum_jadwalpekanaktif_MINGGU_EFEKTIF {
+  jadwalpekanefektifsemester_id auto [pk]
+  jadwalpekanaktif_id auto [pk]
+}
+ref: JadwalPekanAktif.ID > kurikulum_jadwalpekanaktif_MINGGU_EFEKTIF.jadwalpekanaktif_id
+ref: JadwalPekanEfektifSemester.ID > kurikulum_jadwalpekanaktif_MINGGU_EFEKTIF.jadwalpekanefektifsemester_id

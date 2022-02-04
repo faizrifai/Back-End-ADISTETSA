@@ -33,5 +33,6 @@ urlpatterns = [
     path('', include('dataprofil.urls')),
     path('', include('kurikulum.urls')),
     path('', include('perpustakaan.urls')),
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
