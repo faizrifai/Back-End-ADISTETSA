@@ -169,7 +169,7 @@ class KatalogBuku(models.Model):
     KODE_LOKASI = models.ForeignKey(Lokasi, on_delete=models.CASCADE)
     LOKASI_SPESIFIK = models.ForeignKey(LokasiSpesifik, on_delete=models.CASCADE)
     HARGA = models.CharField(max_length = 255)
-    KODE_DONASI = models.ForeignKey(Pendanaan, on_delete=models.CASCADE)
+    KODE_DONASI = models.ManyToManyField(Pendanaan)
     CATATAN_DONASI = models.CharField(max_length = 255)
     TANGGAL_PENERIMAAN = models.DateField(max_length = 255)
     DATA_ENTRY = models.DateField(max_length = 255)
