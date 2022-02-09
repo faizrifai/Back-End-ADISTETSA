@@ -14,7 +14,7 @@ class MediaFilter(AutocompleteFilter):
     
 class TipeBukuFilter(AutocompleteFilter):
     title = 'TIPE BUKU'
-    field_name = 'TIPE_KODE'
+    field_name = 'KODE_TIPE'
 
 class TahunTerbitFilter(AutocompleteFilter):
     title = 'TAHUN TERBIT'

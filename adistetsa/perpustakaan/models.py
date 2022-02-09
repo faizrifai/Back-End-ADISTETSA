@@ -13,26 +13,23 @@ from .enums import *
 # Create your models here.
 
 class TipeBahasa(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_BAHASA = models.CharField(max_length=255)
+    KODE_BAHASA = models.CharField(primary_key=True, max_length=255)
     BAHASA = models.CharField(max_length=255)
     
     def __str__(self):
         return self.KODE_BAHASA + ' - ' + self.BAHASA
         
 class TipeBuku(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_TIPE = models.CharField(max_length = 255,)
+    KODE_TIPE = models.CharField(primary_key=True, max_length = 255,)
     NAMA_TIPE = models.CharField(max_length = 255,)
-    LAMA_PINJAM = models.BigIntegerField()
-    DENDA = models.CharField(max_length = 255, blank=True)
+    LAMA_PINJAM = models.CharField(null=True, blank=True, max_length=255)
+    DENDA = models.CharField(max_length = 255, blank=True, null=True)
     
     def __str__(self):
         return self.KODE_TIPE + ' - '  + self.NAMA_TIPE  
     
 class Pendanaan(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_PENDANAAN = models.CharField(max_length = 255)
+    KODE_PENDANAAN = models.CharField(primary_key=True, max_length = 255)
     NAMA_PENDANAAN = models.CharField(max_length = 255)
     
     def __str__(self):
@@ -41,15 +38,13 @@ class Pendanaan(models.Model):
     
     
 class Lokasi(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_LOKASI = models.CharField(max_length = 255)
+    KODE_LOKASI = models.CharField(primary_key=True, max_length = 255)
     NAMA_LOKASI = models.CharField(max_length = 255)
     def __str__(self):
         return self.KODE_LOKASI + ' - ' + self.NAMA_LOKASI
     
 class LokasiSpesifik(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    LOKASI_SPESIFIK = models.CharField(max_length = 255)
+    LOKASI_SPESIFIK = models.CharField(primary_key=True, max_length = 255)
     NAMA = models.CharField(max_length = 255)
     
     def __str__(self):
@@ -64,8 +59,7 @@ class KunjunganGuru(models.Model):
     TANGGAL_KUNJUNGAN = models.DateField()
     
 class TipeMedia(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_MEDIA = models.CharField(max_length = 255)
+    KODE_MEDIA = models.CharField(primary_key=True, max_length = 255)
     NAMA_MEDIA = models.CharField(max_length = 255)
     
     def __str__(self):
@@ -125,16 +119,14 @@ class Operator(models.Model):
 
 
 class Author(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KODE_AUTHOR = models.CharField(max_length=255)
+    KODE_AUTHOR = models.CharField(primary_key=True, max_length=255)
     NAMA_AUTHOR = models.CharField(max_length=255)
     
     def __str__(self):
         return self.KODE_AUTHOR + ' - ' + self.NAMA_AUTHOR
 
 class TahunTerbit(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    TAHUN_TERBIT = models.PositiveBigIntegerField()
+    TAHUN_TERBIT = models.PositiveBigIntegerField(primary_key=True)
     
     def __str__(self):
         return str(self.TAHUN_TERBIT)
@@ -146,6 +138,8 @@ class TahunTerbit(models.Model):
     
 #     def __str__(self):
 #         return str(self.JUMLAH_HALAMAN) + ' Hlm, Tebal ' + str(self.TEBAL_BUKU) + ' CM'
+
+
     
 class KatalogBuku(models.Model):
     REGISTER = models.CharField(primary_key=True, max_length = 255)
@@ -154,9 +148,8 @@ class KatalogBuku(models.Model):
     VOLUME = models.CharField(max_length = 255, blank=True)
     EDISI = models.CharField(max_length = 255, blank=True)
     BAHASA = models.ForeignKey(TipeBahasa, on_delete=models.CASCADE)
-    DUPLIKAT = models.BigIntegerField()
     KODE_MEDIA = models.ForeignKey(TipeMedia, on_delete=models.CASCADE)
-    TIPE_KODE = models.ForeignKey(TipeBuku, on_delete=models.CASCADE)
+    KODE_TIPE = models.ForeignKey(TipeBuku, on_delete=models.CASCADE)
     NOMER_DEWEY = models.CharField(max_length = 255)
     KODE_AUTHOR = models.ForeignKey(Author, on_delete=models.CASCADE)
     KODE_JUDUL = models.CharField(max_length = 255, blank=True)
@@ -169,9 +162,6 @@ class KatalogBuku(models.Model):
     KODE_LOKASI = models.ForeignKey(Lokasi, on_delete=models.CASCADE)
     LOKASI_SPESIFIK = models.ForeignKey(LokasiSpesifik, on_delete=models.CASCADE)
     HARGA = models.CharField(max_length = 255)
-    KODE_DONASI = models.ForeignKey(Pendanaan, on_delete=models.CASCADE)
-    CATATAN_DONASI = models.CharField(max_length = 255)
-    TANGGAL_PENERIMAAN = models.DateField(max_length = 255)
     DATA_ENTRY = models.DateField(max_length = 255)
     OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)    
     
@@ -182,8 +172,19 @@ class KatalogBuku(models.Model):
     class Meta:
         verbose_name_plural = "Data Book Main"
 
+class DonasiBuku (models.Model):
+    REGISTER_DONASI = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE)
+    DUPLIKAT = models.BigIntegerField()
+    KODE_DONASI = models.ForeignKey(Pendanaan, on_delete=models.CASCADE)
+    TANGGAL_PENERIMAAN = models.DateField(max_length = 255)
+    CATATAN_DONASI = models.CharField(max_length = 255)
+    
+    def __str__(self):
+        return str(self.REGISTER_DONASI.JUDUL)
+    
+
 class KatalogBukuCopy(models.Model):
-    DATA_BUKU = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE)
+    DATA_DONASI = models.ForeignKey(DonasiBuku, on_delete=models.CASCADE)
     REGISTER_COPY = models.CharField(max_length=255)
     STATUS = models.CharField(
         max_length=255,
@@ -191,24 +192,20 @@ class KatalogBukuCopy(models.Model):
         default='Sudah Dikembalikan',
     )
     def __str__(self):
-        return '"' + self.DATA_BUKU.JUDUL + '"' + ' - ' + self.REGISTER_COPY
+        return '"' + str(self.DATA_DONASI.REGISTER_DONASI.JUDUL) + '"' + ' - ' + str(self.REGISTER_COPY)
     
-def post_save_katalog_buku(sender, instance, **kwargs):
+def post_save_donasi_buku(sender, instance, **kwargs):
     try:
-        # hapus duplikat
-        KatalogBukuCopy.objects.filter(DATA_BUKU = instance.REGISTER).delete()
-        
         jumlah_duplikat = instance.DUPLIKAT
         for i in range(jumlah_duplikat):
-            buku_copy = KatalogBukuCopy.objects.create(
-                DATA_BUKU_id = instance.REGISTER,
-                REGISTER_COPY = instance.REGISTER + str(i + 1)
+            buku_copy = KatalogBukuCopy.objects.update_or_create(
+                DATA_DONASI_id = instance.id,
+                REGISTER_COPY = str(instance.REGISTER_DONASI_id) + str(i + 1)
             )
-            buku_copy.save()
     except Exception as e:
         print(str(e))
 
-post_save.connect(post_save_katalog_buku, sender=KatalogBuku)
+post_save.connect(post_save_donasi_buku, sender=DonasiBuku)
             
 
 class PengajuanPeminjamanSiswa(models.Model):

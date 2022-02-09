@@ -96,9 +96,9 @@ from .importexportresources import *
 # admin.site.register(TransDataProgram)
 # admin.site.register(TestStopnCirculationDtsource)
 # admin.site.register(DeskripsiFisik)
-class KatalogBukuCopyAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_BUKU',)
-    list_display = ('DATA_BUKU', 'REGISTER_COPY', 'STATUS')
+class KatalogBukuCopyAdmin(ImportExportModelAdmin):
+    search_fields = ('DATA_DONASI',)
+    list_display = ('DATA_DONASI', 'REGISTER_COPY', 'STATUS')
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('acc_pengembalian',)
@@ -110,6 +110,14 @@ class KatalogBukuCopyAdmin(admin.ModelAdmin):
 
 admin.site.register(KatalogBukuCopy, KatalogBukuCopyAdmin)
 
+class DonasiBukuAdmin (ImportExportModelAdmin):
+    search_fields = ('REGISTER_DONASI',)
+    list_display = ('REGISTER_DONASI', 'DUPLIKAT', 'KODE_DONASI','TANGGAL_PENERIMAAN','CATATAN_DONASI')
+    list_per_page = 10
+    resource_class = DonasiBukuResource
+
+admin.site.register(DonasiBuku, DonasiBukuAdmin)
+
 def judul(obj):
     name = "%s" % obj.JUDUL
     return Truncator(name).chars(7)
@@ -119,26 +127,29 @@ def isbn(obj):
     return Truncator(name).chars(7)
 
 class KatalogBukuAdmin(ImportExportModelAdmin):
-    search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA', 'DUPLIKAT', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
+    search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
     list_per_page = 10
-    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'DUPLIKAT', 'KODE_MEDIA','TIPE_KODE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'TANGGAL_PENERIMAAN')
+    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA','KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY')
     list_filter = (TahunTerbitFilter, BahasaFilter, AuthorFilter, MediaFilter, TipeBukuFilter,)
-    # resource_class = BookMainResource
+    resource_class = BookMainResource
     
-class TahunTerbitAdmin(admin.ModelAdmin):
+class TahunTerbitAdmin(ImportExportModelAdmin):
     search_fields = ['TAHUN_TERBIT']
+    resource_class = TahunTerbitResource
 
 admin.site.register(TahunTerbit, TahunTerbitAdmin)
 
 admin.site.register(KatalogBuku, KatalogBukuAdmin)
 
-class TipeBahasaAdmin(admin.ModelAdmin):
+class TipeBahasaAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_TIPE', 'KODE_BAHASA']
+    resource_class = TipeBahasaResource
        
 admin.site.register(TipeBahasa,TipeBahasaAdmin)
 
-class AuthorAdmin(admin.ModelAdmin):
+class AuthorAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_AUTHOR', 'NAMA_AUTHOR'] 
+    resource_class = AuthorResource
 
 admin.site.register(Author, AuthorAdmin)
 
@@ -146,7 +157,7 @@ class TipeMediaAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_MEDIA', 'NAMA_MEDIA']
     list_per_page = 10
     list_display = ('KODE_MEDIA', 'NAMA_MEDIA')
-    # resource_class = MediaTypeResource
+    resource_class = MediaTypeResource
 
 admin.site.register(TipeMedia, TipeMediaAdmin)
 
@@ -154,7 +165,7 @@ class TipeBukuAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_TIPE', 'NAMA_TIPE', 'LAMA_PINJAM', 'DENDA']
     list_per_page = 10
     list_display = ('KODE_TIPE', 'NAMA_TIPE', 'LAMA_PINJAM', 'DENDA')
-    # resource_class = BookTypeResource
+    resource_class = BookTypeResource
     
 admin.site.register(TipeBuku, TipeBukuAdmin)
 
@@ -162,7 +173,7 @@ class PendanaanAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_PENDANAAN', 'NAMA_PENDANAAN']
     list_per_page = 10
     list_display = ('KODE_PENDANAAN', 'NAMA_PENDANAAN')
-    # resource_class = FundingResource
+    resource_class = FundingResource
 
 admin.site.register(Pendanaan, PendanaanAdmin)
 
@@ -170,7 +181,7 @@ class LokasiAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_LOKASI', 'NAMA_LOKASI']
     list_per_page = 10
     list_display = ('KODE_LOKASI', 'NAMA_LOKASI')
-    # resource_class = LocationResource
+    resource_class = LocationResource
 
 admin.site.register(Lokasi, LokasiAdmin)
 
@@ -178,7 +189,7 @@ class LokasiSpesifikAdmin(ImportExportModelAdmin):
     search_fields = ['LOKASI_SPESIFIK', 'NAMA']
     list_per_page = 10
     list_display = ('LOKASI_SPESIFIK', 'NAMA')
-    # resource_class = LocationSpecificationResource
+    resource_class = LocationSpecificationResource
 
 admin.site.register(LokasiSpesifik, LokasiSpesifikAdmin)
 
