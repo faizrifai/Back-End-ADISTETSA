@@ -196,12 +196,21 @@ class KatalogBukuCopy(models.Model):
     
 def post_save_donasi_buku(sender, instance, **kwargs):
     try:
-        jumlah_duplikat = instance.DUPLIKAT
-        for i in range(jumlah_duplikat):
-            buku_copy = KatalogBukuCopy.objects.update_or_create(
-                DATA_DONASI_id = instance.id,
-                REGISTER_COPY = str(instance.REGISTER_DONASI_id) + str(i + 1)
-            )
+        donasi_buku = DonasiBuku.objects.filter(REGISTER_DONASI=instance.REGISTER_DONASI)
+        jumlah_buku = []
+        for data in donasi_buku:
+            print('Ini adalah ' + data.REGISTER_DONASI.JUDUL)
+            jumlah_buku.append({'data_donasi': data.id, 'jumlah': data.DUPLIKAT})
+            
+        last_index = 1
+        for data in jumlah_buku:
+            for i in range(data['jumlah']):
+                if data['data_donasi'] == instance.id:
+                    buku_copy = KatalogBukuCopy.objects.update_or_create(
+                        DATA_DONASI_id = data['data_donasi'],
+                        REGISTER_COPY = str(instance.REGISTER_DONASI_id) + str(last_index)
+                    )
+                last_index += 1
     except Exception as e:
         print(str(e))
 
@@ -256,7 +265,6 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                 obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
                 obj.STATUS = 'Sedang Dipinjam'
                 obj.save()
-                
                 # add riwayat peminjaman
                 if (instance.JANGKA_PEMINJAMAN == 'Jangka Pendek'):
                     tanggal_pengembalian = datetime.timedelta(weeks=1)
@@ -287,6 +295,26 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
             for data in instance.BUKU.values():
                 obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
                 obj.STATUS = 'Sudah Dikembalikan'
+                obj.save()
+                if (instance.JANGKA_PEMINJAMAN == 'Jangka Pendek'):
+                    tanggal_pengembalian = datetime.timedelta(weeks=1)
+                elif (instance.JANGKA_PEMINJAMAN == 'Jangka Panjang'):
+                    tanggal_pengembalian = datetime.timedelta(weeks=52)
+                    
+                    
+                buku_m2m = []
+                for data in instance.BUKU.all():
+                    buku_m2m.append(data.id)
+                
+                obj = RiwayatPeminjamanSiswa.objects.create(
+                    NIS = instance.NIS,
+                    TANGGAL_PEMINJAMAN = datetime.date.today(),
+                    TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
+                    JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
+                    STATUS_PEMINJAMAN = 'Sudah Dikembalikan',
+                    FILE_TTD_PENGAJUAN = instance.FILE_TTD_PENGAJUAN
+                )
+                obj.BUKU.set(buku_m2m)
                 obj.save()
                 instance.delete()
                     
@@ -391,6 +419,26 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
             for data in instance.BUKU.values():
                 obj = KatalogBukuCopy.objects.get(REGISTER_COPY=data['REGISTER_COPY'])
                 obj.STATUS = 'Sudah Dikembalikan'
+                obj.save()
+                if (instance.JANGKA_PEMINJAMAN == 'Jangka Pendek'):
+                    tanggal_pengembalian = datetime.timedelta(weeks=1)
+                elif (instance.JANGKA_PEMINJAMAN == 'Jangka Panjang'):
+                    tanggal_pengembalian = datetime.timedelta(weeks=52)
+                    
+                    
+                buku_m2m = []
+                for data in instance.BUKU.all():
+                    buku_m2m.append(data.id)
+                
+                obj = RiwayatPeminjamanGuru.objects.create(
+                    DATA_GURU = instance.DATA_GURU,
+                    TANGGAL_PEMINJAMAN = datetime.date.today(),
+                    TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
+                    JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
+                    STATUS_PEMINJAMAN = 'Sudah Dikembalikan',
+                    FILE_TTD_PENGAJUAN = instance.FILE_TTD_PENGAJUAN
+                )
+                obj.BUKU.set(buku_m2m)
                 obj.save()
                 instance.delete()
                     
