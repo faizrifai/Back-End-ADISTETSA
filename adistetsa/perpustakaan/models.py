@@ -233,8 +233,6 @@ class PengajuanPeminjamanSiswa(models.Model):
         blank=True, 
     )
     FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Siswa', blank=True)
-    
-    
 
 
 class RiwayatPeminjamanSiswa(models.Model):

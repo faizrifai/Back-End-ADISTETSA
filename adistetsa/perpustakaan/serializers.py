@@ -93,6 +93,7 @@ class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
 
         return data_pengajuan
 
+
 class PengajuanPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
     BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
 
@@ -134,34 +135,23 @@ class PengajuanPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
 
 class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PengajuanPeminjamanSiswa
-        fields = '__all__'
+        model = RiwayatPeminjamanSiswa
+        exclude = ('NIS',)
 
-class KatalogBukuCopyListSerializer(serializers.ModelSerializer):
-    
-    DATA_BUKU = serializers.SerializerMethodField('get_data_buku')
-    
+
+class RiwayatPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
     class Meta:
-        model = KatalogBukuCopy
+        model = RiwayatPeminjamanSiswa
         fields = '__all__'
 
-    def get_data_buku(self, obj):
-        return str(obj.DATA_BUKU)
 
 class RiwayatPeminjamanGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = RiwayatPeminjamanGuru
-        fields = '__all__'
+        exclude = ('DATA_GURU',)
 
-class RiwayatPeminjamanGuruListSerializer(serializers.ModelSerializer):
-    DATA_GURU = serializers.SerializerMethodField('get_data_guru')
-    BUKU = serializers.SerializerMethodField('get_buku')
+
+class RiwayatPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = RiwayatPeminjamanGuru
         fields = '__all__'
-    
-    def get_data_guru(self, obj):
-        return str(obj.DATA_GURU)
-
-    def get_buku(self, obj):
-        return str(obj.BUKU)
