@@ -225,6 +225,7 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
     autocomplete_fields = ['NIS', ]
     list_filter = ('STATUS_PENGAJUAN', )
     actions = ('accept_action', 'decline_action',)
+    exclude = ('STATUS_PENGAJUAN',)
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "BUKU":
@@ -285,6 +286,7 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
     autocomplete_fields = ['NIS', ]
     actions = ('acc_pengembalian',)
     
+    
     def status_peminjaman(self, obj):
         if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
             date_now = datetime.date.today()
@@ -324,6 +326,7 @@ class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
     autocomplete_fields = ['DATA_GURU', ]
     list_filter = ('STATUS_PENGAJUAN', )
     actions = ('accept_action', 'decline_action',)
+    exclude = ('STATUS_PENGAJUAN',)
     
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "BUKU":
