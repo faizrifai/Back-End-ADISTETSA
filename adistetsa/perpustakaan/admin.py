@@ -129,17 +129,32 @@ def isbn(obj):
 class KatalogBukuAdmin(ImportExportModelAdmin):
     search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
     list_per_page = 10
-    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA','KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY')
+    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA','KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'jumlah_tersedia')
     list_filter = (TahunTerbitFilter, BahasaFilter, AuthorFilter, MediaFilter, TipeBukuFilter,)
     resource_class = BookMainResource
+    
+    def jumlah_tersedia(self, obj):
+        total_tersedia = 0
+        total = 0
+        
+        donasi_buku = DonasiBuku.objects.filter(REGISTER_DONASI=obj.REGISTER)
+        for data_donasi in donasi_buku:
+            buku_copy = KatalogBukuCopy.objects.filter(DATA_DONASI=data_donasi)
+            for data in buku_copy:
+                if data.STATUS == 'Sudah Dikembalikan':
+                    total_tersedia += 1
+                
+                total += 1
+                
+        return str(total_tersedia) + '/' + str(total)
+    
+admin.site.register(KatalogBuku, KatalogBukuAdmin)
     
 class TahunTerbitAdmin(ImportExportModelAdmin):
     search_fields = ['TAHUN_TERBIT']
     resource_class = TahunTerbitResource
 
 admin.site.register(TahunTerbit, TahunTerbitAdmin)
-
-admin.site.register(KatalogBuku, KatalogBukuAdmin)
 
 class TipeBahasaAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_TIPE', 'KODE_BAHASA']
