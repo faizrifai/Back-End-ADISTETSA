@@ -1,3 +1,4 @@
+from venv import create
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
@@ -12,7 +13,7 @@ from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_gro
 # Create your views here. 
 class KatalogBukuListView(generics.ListAPIView):
     """
-    get: Menampilkan daftar KatalogBuku.
+    get: Menampilkan daftar katalog buku.
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
@@ -21,14 +22,15 @@ class KatalogBukuListView(generics.ListAPIView):
 
     queryset = KatalogBuku.objects.all()
     serializer_class = KatalogBukuListSerializer
-
+    search_fields = ('JUDUL', 'KODE_AUTHOR__NAMA_AUTHOR', 'BAHASA__BAHASA', 'TIPE_MEDIA__NAMA_MEDIA', 'KODE_TIPE__NAMA_TIPE', 'TAHUN_TERBIT__TAHUN_TERBIT')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-class KatalogBukuCopyListView(generics.ListAPIView):
+
+class KatalogBukuTersediaListView(generics.ListAPIView):
     """
-    get: Menampilkan daftar KatalogBuku.
+    get: Menampilkan daftar katalog buku yang bisa dipinjam.
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
@@ -36,45 +38,82 @@ class KatalogBukuCopyListView(generics.ListAPIView):
     }
 
     queryset = KatalogBukuCopy.objects.all()
-    serializer_class = KatalogBukuCopyListSerializer
+    serializer_class = KatalogBukuCopySerializer
+    search_fields = (
+        'DATA_DONASI__REGISTER_DONASI__JUDUL',
+        'DATA_DONASI__REGISTER_DONASI__KODE_AUTHOR__NAMA_AUTHOR',
+        'DATA_DONASI__REGISTER_DONASI__BAHASA__BAHASA',
+        'DATA_DONASI__REGISTER_DONASI__TIPE_MEDIA__NAMA_MEDIA',
+        'DATA_DONASI__REGISTER_DONASI__KODE_TIPE__NAMA_TIPE',
+        'DATA_DONASI__REGISTER_DONASI__TAHUN_TERBIT__TAHUN_TERBIT'
+    )
 
+    def get_queryset(self):
+        queryset = KatalogBukuCopy.objects.filter(STATUS='Sudah Dikembalikan')
+
+        return queryset
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-class KatalogBukuCopyDetailView(generics.UpdateAPIView):
+
+class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
     """
-    get: Menampilkan daftar KatalogBuku.
+    get: Menampilkan daftar pengajuan peminjaman (Staf Perpustakaan, Siswa).
+    post: Membuat pengajuan peminjaman (Siswa).
     """
+
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'PUT': ['Staf Perpustakaan'],
-        'PATCH': ['Staf Perpustakaan'],
+        'GET': ['Staf Perpustakaan', 'Siswa'],
+        'POST': ['Siswa'],
     }
 
-    queryset = KatalogBukuCopy.objects.all()
-    serializer_class = KatalogBukuCopyListSerializer
+    queryset = PengajuanPeminjamanSiswa.objects.all()
+    serializer_class = PengajuanPeminjamanSiswaSerializer
+    search_fields = ('STATUS_PENGAJUAN')
+
+    def get_queryset(self):
+        current_user = self.request.user
+        if (is_in_group(current_user, 'Siswa')):
+            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
+            queryset = PengajuanPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
+            return queryset
+
+        return super().get_queryset()
+
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (is_in_group(current_user, 'Siswa')):
+            return PengajuanPeminjamanSiswaSerializer
+        elif (is_in_group(current_user, 'Staf Perpustakaan')):
+            return PengajuanPeminjamanSiswaAdminSerializer
+
+        return super().get_serializer_class()
+
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+        
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
 
 class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
     """
-    get: Menampilkan daftar peminjaman guru.
-    post: Membuat pengajuan peminjaman guru
+    get: Menampilkan daftar pengajuan peminjaman (Staf Perpustakaan, Guru).
+    post: Membuat pengajuan peminjaman (Guru).
     """
+
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Staf Perpustakaan', 'Guru'],
-        'POST': ['Staf Perpustakaan', 'Guru'],
+        'POST': ['Guru'],
     }
 
     queryset = PengajuanPeminjamanGuru.objects.all()
-    serializer_class = PengajuanPeminjamanGuruListSerializer
-
-    def get_serializer_class(self):
-        if self.request.method == "GET":
-            return PengajuanPeminjamanGuruListSerializer
-
-        elif self.request.method == "POST":
-            return PengajuanPeminjamanGuruSerializer
+    serializer_class = PengajuanPeminjamanGuruSerializer
+    search_fields = ('STATUS_PENGAJUAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -85,36 +124,22 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
 
         return super().get_queryset()
 
-    def get_data_guru(self):
-        user = self.request.user
-        data_guru = DataGuruUser.objects.get(USER=user).DATA_GURU
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (is_in_group(current_user, 'Guru')):
+            return PengajuanPeminjamanGuruSerializer
+        elif (is_in_group(current_user, 'Staf Perpustakaan')):
+            return PengajuanPeminjamanGuruAdminSerializer
 
-        return data_guru        
+        return super().get_serializer_class()
+
+
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+        
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
-    def perform_create(self, serializer):
-        serializer.validated_data['DATA_GURU_id'] = self.get_data_guru().ID
-
-        return super(PengajuanPeminjamanGuruListView, self).perform_create(serializer)
-
-class PengajuanPeminjamanGuruDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    get: Menampilkan daftar pengajuan peminjaman guru.
-    put: Mengubah pengajuan peminjaman guru.
-    patch: Mengubah beberapa pengajuan peminjaman guru.
-    delete: menghapus daftar pengajuan peminjaman guru.
-    """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Perpustakaan'],
-        'PUT': ['Staf Perpustakaan'],
-        'PATCH': ['Staf Perpustakaan'],
-        'DELETE': ['Staf Perpustakaan'],      
-    }
-
-    queryset = PengajuanPeminjamanGuru.objects.all()
-    serializer_class = PengajuanPeminjamanGuruListSerializer
 
 class RiwayatPeminjamanGuruListView(generics.ListAPIView):
     """
@@ -136,82 +161,6 @@ class RiwayatPeminjamanGuruListView(generics.ListAPIView):
             return queryset
 
         return super().get_queryset()
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-class RiwayatPeminjamanGuruDetailView(generics.RetrieveUpdateAPIView):
-    """
-    get: Menampilkan daftar riwayat peminjaman guru.
-    put: Mengubah riwayat peminjaman guru
-    patch: Mengubah beberapa field riwayat peminjaman guru
-    """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Perpustakaan'],
-        'PUT': ['Staf Perpustakaan'],
-        'PATCH': ['Staf Perpustakaan'], 
-    }
-
-    queryset = RiwayatPeminjamanGuru.objects.all()
-    serializer_class = RiwayatPeminjamanGuruListSerializer
-    
-class PengajuanPeminjamanSiswaListView(generics.ListAPIView):
-    """
-    get: Menampilkan daftar KatalogBuku.
-    """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Perpustakaan', 'Siswa'],
-        'POST': ['Staf Perpustakaan', 'Siswa'],
-    }
-
-    queryset = PengajuanPeminjamanSiswa.objects.all()
-    serializer_class = PengajuanPeminjamanSiswaSerializer
-
-
-    def get_queryset(self):
-        current_user = self.request.user
-        if (is_in_group(user, 'Siswa')):
-            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            queryset = PengajuanPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
-            return queryset
-
-        super().get_queryset()
-
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-
-class PengajuanPeminjamanSiswaDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    get: Menampilkan data Tata Tertib.
-    put: Mengubah atribut keseluruhan data Tata Tertib.
-    patch: Mengubah beberapa atribut data Tata Tertib.
-    delete: Menghapus data Tata Tertib.
-    """
-    permission_classes = [HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Siswa', 'Staf Perpustakaan'],
-        'PUT': ['Staf Perpustakaan', 'Siswa'],
-        'PATCH': ['Staf Perpustakaan', 'Siswa'],
-        'DELETE': ['Staf Perpustakaan', 'Siswa'],
-    }
-
-    queryset = PengajuanPeminjamanSiswa.objects.all()
-    serializer_class = PengajuanPeminjamanSiswaSerializer
-
-
-    def get_queryset(self):
-        current_user = self.request.user
-        if (is_in_group(user, 'Siswa')):
-            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            queryset = RiwayatPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
-            return queryset
-
-        super().get_queryset()
-
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

@@ -96,6 +96,7 @@ from .importexportresources import *
 # admin.site.register(TransDataProgram)
 # admin.site.register(TestStopnCirculationDtsource)
 # admin.site.register(DeskripsiFisik)
+
 class KatalogBukuCopyAdmin(ImportExportModelAdmin):
     search_fields = ('DATA_DONASI',)
     list_display = ('DATA_DONASI', 'REGISTER_COPY', 'STATUS')
