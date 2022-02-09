@@ -28,6 +28,7 @@ class PengajuanLaporanPelanggaran(models.Model):
         verbose_name_plural = "Pengajuan Laporan Pelanggaran"
     
 class PelanggaranSiswa(models.Model):
+    ID = models.BigAutoField(primary_key=True)
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     POIN = models.PositiveBigIntegerField(default=0)
     class Meta:
