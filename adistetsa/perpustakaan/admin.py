@@ -129,6 +129,7 @@ def isbn(obj):
 class KatalogBukuAdmin(ImportExportModelAdmin):
     search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
     list_per_page = 10
+    filter_horizontal = ('KODE_DONASI',)
     list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA','KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'jumlah_tersedia')
     list_filter = (TahunTerbitFilter, BahasaFilter, AuthorFilter, MediaFilter, TipeBukuFilter,)
     resource_class = BookMainResource

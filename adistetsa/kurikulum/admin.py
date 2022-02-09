@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
 from django.utils.html import format_html
 
-from import_export.admin import ImportExportModelAdmin, ExportMixin
+from import_export.admin import ImportExportModelAdmin, ImportExportMixin, ExportMixin
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
@@ -94,7 +94,7 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
-class JurnalBelajarAdmin(SubAdmin):
+class JurnalBelajarAdmin(SubAdmin, ExportMixin):
     model = JurnalBelajar
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
     list_per_page = 10
