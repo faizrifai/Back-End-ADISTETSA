@@ -223,18 +223,16 @@ class PengajuanPeminjamanSiswa(models.Model):
     BUKU = models.ManyToManyField(KatalogBukuCopy)
     TANGGAL_PENGAJUAN = models.DateField()
     STATUS_PENGAJUAN = models.CharField(
-        max_length=255, 
+        max_length=255,
         choices=ENUM_PENGAJUAN,
         default='Pengajuan',
     )
     JANGKA_PEMINJAMAN = models.CharField(
         max_length=255,
         choices=ENUM_JANGKA_PEMINJAMAN,
-        blank=True, 
+        blank=True,
     )
     FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Siswa', blank=True)
-    
-    
 
 
 class RiwayatPeminjamanSiswa(models.Model):

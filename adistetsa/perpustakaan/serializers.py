@@ -1,107 +1,157 @@
 from .models import *
 from rest_framework import serializers
 
-class KatalogBukuSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = KatalogBuku
-        fields = '__all__'
+from adistetsa.permissions import is_in_group
+from kustom_autentikasi.models import DataSiswaUser, DataGuruUser
 
-class KatalogBukuListSerializer(serializers.ModelSerializer):
+
+class KatalogBukuCopySerializer(serializers.ModelSerializer):
+    JUDUL = serializers.SerializerMethodField('get_judul')
+    PENULIS = serializers.SerializerMethodField('get_kode_author')   
     BAHASA = serializers.SerializerMethodField('get_bahasa')
-    KODE_MEDIA = serializers.SerializerMethodField('get_kode_media')
-    TIPE_KODE = serializers.SerializerMethodField('get_tipe_kode')
-    KODE_AUTHOR = serializers.SerializerMethodField('get_kode_author')   
     TAHUN_TERBIT = serializers.SerializerMethodField('get_tahun_terbit')
-    KODE_LOKASI = serializers.SerializerMethodField('get_kode_lokasi')
-    LOKASI_SPESIFIK = serializers.SerializerMethodField('get_lokasi_spesifik')
-    KODE_DONASI = serializers.SerializerMethodField('get_kode_donasi')
-    OPERATOR_CODE = serializers.SerializerMethodField('get_operator_code') 
-    
-    class Meta:
-        model = KatalogBuku
-        fields = '__all__'
+    MEDIA = serializers.SerializerMethodField('get_kode_media')
 
-    def get_bahasa(self, obj):
-        return str(obj.BAHASA)
-
-    def get_kode_media(self, obj):
-        return str(obj.KODE_MEDIA)
-
-    def get_tipe_kode(self, obj):
-        return str(obj.TIPE_KODE)
-
-    def get_kode_author(self, obj):
-        return str(obj.KODE_AUTHOR) 
-
-    def get_tahun_terbit(self, obj):
-        return str(obj.TAHUN_TERBIT) 
-
-    def get_kode_lokasi(self, obj):
-        return str(obj.KODE_LOKASI)
-
-    def get_lokasi_spesifik(self, obj):
-        return str(obj.LOKASI_SPESIFIK)
-
-    def get_kode_donasi(self, obj):
-        return str(obj.KODE_DONASI)
-
-    def get_operator_code(self, obj):
-        return str(obj.OPERATOR_CODE) 
-
-class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PengajuanPeminjamanSiswa
-        fields = '__all__'
-
-class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PengajuanPeminjamanSiswa
-        fields = '__all__'
-
-class KatalogBukuCopyListSerializer(serializers.ModelSerializer):
-    
-    DATA_BUKU = serializers.SerializerMethodField('get_data_buku')
-    
     class Meta:
         model = KatalogBukuCopy
+        fields = ('id', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA')
+
+    def get_bahasa(self, obj):
+        return obj.DATA_DONASI.REGISTER_DONASI.BAHASA.BAHASA
+
+    def get_kode_media(self, obj):
+        return obj.DATA_DONASI.REGISTER_DONASI.KODE_MEDIA.NAMA_MEDIA
+
+    def get_kode_author(self, obj):
+        return obj.DATA_DONASI.REGISTER_DONASI.KODE_AUTHOR.NAMA_AUTHOR
+
+    def get_tahun_terbit(self, obj):
+        return obj.DATA_DONASI.REGISTER_DONASI.TAHUN_TERBIT.TAHUN_TERBIT
+
+    def get_judul(self, obj):
+        return obj.DATA_DONASI.REGISTER_DONASI.JUDUL
+
+
+class KatalogBukuListSerializer(serializers.ModelSerializer):
+    PENULIS = serializers.SerializerMethodField('get_kode_author')   
+    BAHASA = serializers.SerializerMethodField('get_bahasa')
+    TAHUN_TERBIT = serializers.SerializerMethodField('get_tahun_terbit')
+    MEDIA = serializers.SerializerMethodField('get_kode_media')
+    TERSEDIA = serializers.SerializerMethodField('get_tersedia')
+    
+    class Meta:
+        model = KatalogBuku
+        fields = ('JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA', 'TERSEDIA')
+
+    def get_bahasa(self, obj):
+        return obj.BAHASA.BAHASA
+
+    def get_kode_media(self, obj):
+        return obj.KODE_MEDIA.NAMA_MEDIA
+
+    def get_kode_author(self, obj):
+        return obj.KODE_AUTHOR.NAMA_AUTHOR
+
+    def get_tahun_terbit(self, obj):
+        return obj.TAHUN_TERBIT.TAHUN_TERBIT
+
+    def get_tersedia(self, obj):
+        total_tersedia = 0
+        total = 0
+        
+        donasi_buku = DonasiBuku.objects.filter(REGISTER_DONASI=obj.REGISTER)
+        for data_donasi in donasi_buku:
+            buku_copy = KatalogBukuCopy.objects.filter(DATA_DONASI=data_donasi)
+            for data in buku_copy:
+                if data.STATUS == 'Sudah Dikembalikan':
+                    total_tersedia += 1
+                
+                total += 1
+                
+        return str(total_tersedia) + '/' + str(total)
+
+
+class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
+    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
+
+    class Meta:
+        model = PengajuanPeminjamanSiswa
+        exclude = ('NIS',)
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        current_user = request.user
+        if (is_in_group(current_user, 'Siswa')):
+            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
+            validated_data['NIS'] = data_siswa_user.DATA_SISWA
+
+        buku = validated_data.pop('BUKU')
+        data_pengajuan = PengajuanPeminjamanSiswa.objects.create(**validated_data)
+
+        for data in buku:
+            data_pengajuan.BUKU.add(data)
+
+        return data_pengajuan
+
+
+class PengajuanPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
+    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
+
+    class Meta:
+        model = PengajuanPeminjamanSiswa
         fields = '__all__'
 
-    def get_data_buku(self, obj):
-        return str(obj.DATA_BUKU)
 
 class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
+    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
+
     class Meta:
         model = PengajuanPeminjamanGuru
         exclude = ('DATA_GURU',)
 
-class PengajuanPeminjamanGuruListSerializer(serializers.ModelSerializer):
-    DATA_GURU = serializers.SerializerMethodField('get_data_guru')
-    BUKU = serializers.SerializerMethodField('get_buku')
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        current_user = request.user
+        if (is_in_group(current_user, 'Guru')):
+            data_guru_user = DataGuruUser.objects.get(USER=current_user)
+            validated_data['DATA_GURU'] = data_guru_user.DATA_GURU
+
+        buku = validated_data.pop('BUKU')
+        data_pengajuan = PengajuanPeminjamanGuru.objects.create(**validated_data)
+
+        for data in buku:
+            data_pengajuan.BUKU.add(data)
+
+        return data_pengajuan
+
+
+class PengajuanPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
+    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
 
     class Meta:
         model = PengajuanPeminjamanGuru
         fields = '__all__'
 
-    def get_data_guru(self, obj):
-        return str(obj.DATA_GURU)
 
-    def get_buku(self, obj):
-        return str(obj.BUKU)
+class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RiwayatPeminjamanSiswa
+        exclude = ('NIS',)
+
+
+class RiwayatPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RiwayatPeminjamanSiswa
+        fields = '__all__'
+
 
 class RiwayatPeminjamanGuruSerializer(serializers.ModelSerializer):
     class Meta:
         model = RiwayatPeminjamanGuru
-        fields = '__all__'
+        exclude = ('DATA_GURU',)
 
-class RiwayatPeminjamanGuruListSerializer(serializers.ModelSerializer):
-    DATA_GURU = serializers.SerializerMethodField('get_data_guru')
-    BUKU = serializers.SerializerMethodField('get_buku')
+
+class RiwayatPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = RiwayatPeminjamanGuru
         fields = '__all__'
-    
-    def get_data_guru(self, obj):
-        return str(obj.DATA_GURU)
-
-    def get_buku(self, obj):
-        return str(obj.BUKU)

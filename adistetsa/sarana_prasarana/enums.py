@@ -18,3 +18,19 @@ ENUM_JENIS_PEMINJAMAN = [
     ('Jangka Pendek', 'Jangka Pendek'),
     ('Jangka Panjang', 'Jangka Panjang'),
 ]
+
+ENUM_PENGAJUAN = [
+    ('Pengajuan','Pengajuan'),
+    ('Disetujui', 'Disetujui'),
+    ('Ditolak', 'Ditolak'),
+]
+
+ENUM_STATUS_PEMINJAMAN = {
+    ('Sedang Dipinjam', 'Sedang Dipinjam'),
+    ('Sudah Dikembalikan', 'Sudah Dikembalikan'),
+    ('Tenggat', 'Tenggat'),
+    ('Pengajuan', 'Pengajuan'),
+    ('Hilang','Hilang'),
+    ('Ditolak', 'Ditolak'),
+}
+

@@ -1,18 +1,13 @@
-from telnetlib import STATUS
-from django import shortcuts
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
 from django.utils.text import Truncator
 
-from dataprofil.models import DataGuru, DataSiswa
+from dataprofil.models import DataSiswa
 from kurikulum.models import PoinPelanggaran
-import datetime
 
 from .enums import *
-
 
 class PengajuanLaporanPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -33,7 +28,14 @@ class PelanggaranSiswa(models.Model):
     POIN = models.PositiveBigIntegerField(default=0)
     class Meta:
         verbose_name_plural = "Pelanggaran Siswa"
-        
+
+def post_save_data_siswa(sender, instance, **kwargs):
+    PelanggaranSiswa.objects.get_or_create(
+        DATA_SISWA = instance,
+    )
+
+post_save.connect(post_save_data_siswa, sender = DataSiswa)
+
 class RiwayatLaporanPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
@@ -50,9 +52,10 @@ class RiwayatLaporanPelanggaran(models.Model):
 def post_save_persetujuan_laporan(sender, instance, **kwargs):
     try: 
         if instance.STATUS_PENGAJUAN == 'Disetujui' :
-            obj = PelanggaranSiswa.objects.get(
-                DATA_SISWA = instance.DATA_SISWA
-            )
+            obj = PelanggaranSiswa.objects.get_or_create(
+                DATA_SISWA = instance.DATA_SISWA,
+            )[0]
+            print(obj)
             obj.POIN += instance.JENIS_PELANGGARAN.POIN
             obj.save()
             try:
@@ -69,8 +72,8 @@ def post_save_persetujuan_laporan(sender, instance, **kwargs):
                 
         elif instance.STATUS_PENGAJUAN == 'Ditolak' :
             instance.delete()
-    except:
-        pass
+    except Exception as e:
+        print(str(e))
 
 post_save.connect(post_save_persetujuan_laporan, sender =  PengajuanLaporanPelanggaran)
 
@@ -152,17 +155,15 @@ class RiwayatProgramKebaikan(models.Model):
 def post_save_pengajuan_program_kebaikan(sender, instance, **kwargs):
     try: 
         if instance.STATUS_PENGAJUAN == 'Disetujui' :
-            obj = PelanggaranSiswa.objects.get(
+            obj = PelanggaranSiswa.objects.get_or_create(
                 DATA_SISWA = instance.DATA_SISWA
-            )
+            )[0]
             if obj.POIN < instance.JENIS_PROGRAM_KEBAIKAN.POIN :
                 obj.POIN = 0 
                 obj.save()
-                print ('ahnan')
             elif obj.POIN >= instance.JENIS_PROGRAM_KEBAIKAN.POIN :
                 obj.POIN -= instance.JENIS_PROGRAM_KEBAIKAN.POIN
                 obj.save()
-                print ('agung')
             try:
                 riwayat = RiwayatProgramKebaikan.objects.create(
                     DATA_SISWA = instance.DATA_SISWA,

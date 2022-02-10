@@ -59,7 +59,7 @@ admin.site.register(DataSemester, DataSemesterAdmin)
 
 class MataPelajaranAdmin(admin.ModelAdmin):
     search_fields = ['KODE', 'NAMA']
-    
+
 admin.site.register(MataPelajaran, MataPelajaranAdmin)
 
 
