@@ -319,7 +319,7 @@ class AbsensiSiswa(models.Model):
         max_length=255, 
         choices= ENUM_KETERANGAN_ABSEN,
     )
-    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa')
+    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa', blank=True)
     JURNAL_BELAJAR = models.ForeignKey(JurnalBelajar, on_delete=models.CASCADE)
     
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
