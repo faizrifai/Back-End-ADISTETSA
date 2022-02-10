@@ -1,14 +1,17 @@
 from .models import *
 from rest_framework import serializers
 
+
 class PengajuanLaporanPelanggaranSerializer(serializers.ModelSerializer):
     class Meta:
         model = PengajuanLaporanPelanggaran
         fields = '__all__'
 
+
 class PengajuanLaporanPelanggaranListSerializer(serializers.ModelSerializer):
     DATA_SISWA = serializers.SerializerMethodField('get_data_siswa')
     JENIS_PELANGGARAN = serializers.SerializerMethodField('get_jenis_pelanggaran')
+
     class Meta:
         model = PengajuanLaporanPelanggaran
         fields = '__all__'
