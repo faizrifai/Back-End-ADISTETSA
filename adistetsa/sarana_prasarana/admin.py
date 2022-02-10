@@ -9,9 +9,6 @@ from import_export.admin import ImportExportModelAdmin, ExportMixin
 from .filter_admin import *
 from .models import *
 
-admin.site.register(JamPenggunaan)
-admin.site.register(HariPenggunaan)
-
 class JenisSaranaAdmin (ImportExportModelAdmin):
     search_fields = ('ID',)
     list_display = ('KATEGORI',)
@@ -32,15 +29,13 @@ class SaranaAdmin(ImportExportModelAdmin):
     acc_pengembalian.short_description = "Konfirmasi Pengembalian Barang"
 
 admin.site.register(Sarana, SaranaAdmin)
-admin.site.register(JenisRuangan)
-admin.site.register(Ruangan)
 
 class PengajuanPeminjamanBarangAdmin(admin.ModelAdmin):
     search_fields = ('ALAT',)
     list_display = ('NAMA_PEMINJAM','NO_TELEPON', 'alat', 'KEGIATAN', 'TANGGAL_PENGAJUAN', 'TANGGAL_PENGGUNAAN','TANGGAL_PENGEMBALIAN','KETERANGAN','status_pengajuan', 'TANDA_TANGAN')
     list_per_page = 10 
     filter_horizontal = ('ALAT',)
-    # autocomplete_fields = [' ' ]
+
     list_filter = ('STATUS_PENGAJUAN', )
     actions = ('accept_action', 'decline_action',)
     
@@ -127,7 +122,6 @@ class RiwayatPeminjamanBarangAdmin(admin.ModelAdmin):
     
     acc_pengembalian.short_description = "Konfirmasi Pengembalian Barang"
     
-    
     def alat(self, obj):
         daftar = ""
         for data in obj.ALAT.all():
@@ -136,8 +130,6 @@ class RiwayatPeminjamanBarangAdmin(admin.ModelAdmin):
         return format_html(daftar)
 
 admin.site.register(RiwayatPeminjamanBarang, RiwayatPeminjamanBarangAdmin)
-
-admin.site.register(PengajuanPeminjamanRuanganPendek)
 
 class JadwalPenggunaanRuanganAdmin(admin.ModelAdmin):
     search_fields = ('RUANGAN', 'JAM', 'STATUS', 'HARI',)
@@ -164,7 +156,6 @@ class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
     list_per_page = 10
     filter_horizontal = ('RUANGAN',)
     list_filter = ('STATUS',)
-    # autocomplete_fields = ['RUANGAN', ]
     actions = ('accept_action','decline_action',)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
@@ -177,7 +168,6 @@ class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
         for d in queryset.values():
             obj = PengajuanPeminjamanRuangan.objects.get(ID=d['ID'])
             obj.save()
-
 
     accept_action.short_description = "Setujui pengajuan peminjaman"
 
@@ -242,9 +232,6 @@ class RiwayatPeminjamanRuanganAdmin(admin.ModelAdmin):
         return format_html(daftar)
 
 admin.site.register(RiwayatPeminjamanRuangan, RiwayatPeminjamanRuanganAdmin)
-# class RiwayatPeminjamanRuanganPendek(admin.ModelAdmin):
-#     search_fields = ('')
-
 
 class JamPenggunaanAdmin(admin.ModelAdmin):
     search_fields = ('JAM_KE', 'PUKUL',)
@@ -261,9 +248,6 @@ class HariPenggunaanAdmin(admin.ModelAdmin):
 
 admin.site.register(HariPenggunaan, HariPenggunaanAdmin)
 
-admin.site.register(JenisSarana)
-admin.site.register(Sarana)
-
 class JenisRuanganAdmin(admin.ModelAdmin):
     search_fields = ('KATEGORI', )
     list_display = ('KATEGORI',)
@@ -278,5 +262,3 @@ class RuanganAdmin(admin.ModelAdmin):
     autocomplete_fields = ('JENIS',)
 
 admin.site.register(Ruangan, RuanganAdmin)
-
-admin.site.register(PengajuanPeminjamanBarang)

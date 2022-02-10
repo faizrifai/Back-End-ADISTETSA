@@ -62,17 +62,6 @@ class Ruangan(models.Model):
     def __str__(self):
         return self.NAMA  
 
-class PengajuanPeminjamanBarang(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    ALAT = models.ForeignKey(Sarana, on_delete=models.CASCADE)
-    KEGIATAN = models.CharField(max_length=255)
-    TANGGAL_PENGAJUAN = models.DateField()
-    TANGGAL_PENGGUNAAN = models.DateField()
-    TANGGAL_PENGEMBALIAN = models.DateField()
-    KETERANGAN = models.CharField(max_length=255)
-    TANDA_TANGAN = models.FileField(max_length=255, upload_to='BuktiPelanggaran')
-
 class JadwalPenggunaanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     RUANGAN = models.ForeignKey(Ruangan, on_delete=models.CASCADE)
@@ -131,10 +120,17 @@ class RiwayatPeminjamanRuangan(models.Model):
 def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
 
+    try:
+        for data in instance.RUANGAN.values():
+            obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
+            obj.STATUS = 'Diajukan'
+            obj.save()
+    except Exception as e:
+        print(str(e))
+
     if instance.STATUS == 'Sedang Dipinjam':
         try:
             for data in instance.RUANGAN.values():
-                print ('Merdeka')
                 obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
                 obj.STATUS = 'Sedang Dipinjam'
                 obj.save()
@@ -199,6 +195,8 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
 
         except Exception as e:
             print(str(e))
+
+post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
 
 class PengajuanPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -311,7 +309,7 @@ def alat_changed(sender, instance, action, pk_set=None, **kwargs):
             print('delete: ' + str(obj))
             obj.STATUS = 'Sudah Dikembalikan'
             obj.save()
-    
+
 m2m_changed.connect(alat_changed, sender=PengajuanPeminjamanBarang.ALAT.through)
     
 class PengajuanPeminjamanRuanganPendek(models.Model):
