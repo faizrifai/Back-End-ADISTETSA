@@ -297,6 +297,8 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
                 return 'Sedang Dipinjam'
         elif obj.STATUS_PEMINJAMAN == 'Sudah Dikembalikan' :
             return 'Selesai'
+        elif obj.STATUS_PEMINJAMAN == 'Ditolak' :
+            return 'Peminjaman Ditolak'
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS_PEMINJAMAN = 'Sudah Dikembalikan')
