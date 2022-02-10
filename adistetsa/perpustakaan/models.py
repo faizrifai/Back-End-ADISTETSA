@@ -311,7 +311,7 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                     TANGGAL_PEMINJAMAN = datetime.date.today(),
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
-                    STATUS_PEMINJAMAN = 'Sudah Dikembalikan',
+                    STATUS_PEMINJAMAN = 'Ditolak',
                     FILE_TTD_PENGAJUAN = instance.FILE_TTD_PENGAJUAN
                 )
                 obj.BUKU.set(buku_m2m)
@@ -435,7 +435,7 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
                     TANGGAL_PEMINJAMAN = datetime.date.today(),
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
-                    STATUS_PEMINJAMAN = 'Sudah Dikembalikan',
+                    STATUS_PEMINJAMAN = 'Ditolak',
                     FILE_TTD_PENGAJUAN = instance.FILE_TTD_PENGAJUAN
                 )
                 obj.BUKU.set(buku_m2m)
