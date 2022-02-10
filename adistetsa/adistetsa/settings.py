@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'kurikulum',
     'sarana_prasarana',
     'perpustakaan',
-    'sarana_prasarana',
     'admin_auto_filters',
     'django_extensions',
     'subadmin',
