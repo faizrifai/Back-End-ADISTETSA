@@ -16,8 +16,8 @@ class PengajuanLaporanPelanggaranListView(generics.ListCreateAPIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Siswa, Guru, Orang Tua, Karyawan'],
-        'POST': ['Siswa, Guru, Orang Tua, Karyawan'],
+        'GET': ['Siswa', 'Guru', 'Orang Tua', 'Karyawan'],
+        'POST': ['Siswa', 'Guru', 'Orang Tua', 'Karyawan'],
     }
     parser_classes = (MultiPartParser,)
 
