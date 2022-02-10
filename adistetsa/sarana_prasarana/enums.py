@@ -7,6 +7,18 @@ ENUM_HARI = [
     ('Sabtu', 'Sabtu')
 ]
 
+ENUM_STATUS_PENGAJUAN = [
+    ('Diajukan', 'Diajukan'),
+    ('Sedang Dipinjam', 'Sedang Dipinjam'),
+    ('Selesai Dipinjam', 'Selesai Dipinjam'),
+    ('Ditolak', 'Ditolak'),
+]
+
+ENUM_JENIS_PEMINJAMAN = [
+    ('Jangka Pendek', 'Jangka Pendek'),
+    ('Jangka Panjang', 'Jangka Panjang'),
+]
+
 ENUM_PENGAJUAN = [
     ('Pengajuan','Pengajuan'),
     ('Disetujui', 'Disetujui'),
@@ -21,3 +33,4 @@ ENUM_STATUS_PEMINJAMAN = {
     ('Hilang','Hilang'),
     ('Ditolak', 'Ditolak'),
 }
+

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'kesiswaan',
     'kustom_autentikasi',
     'kurikulum',
+    'sarana_prasarana',
     'perpustakaan',
     'sarana_prasarana',
     'admin_auto_filters',
