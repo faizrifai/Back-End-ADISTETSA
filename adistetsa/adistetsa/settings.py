@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'kustom_autentikasi',
     'kurikulum',
     'perpustakaan',
+    'sarana_prasarana',
     'admin_auto_filters',
     'django_extensions',
     'subadmin',

@@ -15,7 +15,8 @@ ENUM_STATUS_PEMINJAMAN = {
     ('Sudah Dikembalikan', 'Sudah Dikembalikan'),
     ('Tenggat', 'Tenggat'),
     ('Pengajuan', 'Pengajuan'),
-    ('Hilang','Hilang')
+    ('Hilang','Hilang'),
+    ('Ditolak', 'Ditolak'),
 }
 
 ENUM_ISRESPONSED= [
