@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import *
 
-from kustom_autentikasi.models import DataGuruUser
+from kustom_autentikasi.models import DataGuruUser, DataSiswaUser
 
 # Create your tests here.
 class SetupData(APITestCase):
@@ -145,6 +145,28 @@ class SetupData(APITestCase):
         my_group = Group.objects.get(name='Staf Kesiswaan')
         my_group.user_set.add(data_guru_user.USER)
 
+        # create data siswa
+        self.siswa = DataSiswa.objects.create(**self.data_siswa)
+
+        # import data siswa user to create user
+        open_file = open('kustom_autentikasi/data/data_siswa_user.csv', 'rb')
+        uploaded_file = SimpleUploadedFile('data_siswa_user.csv', open_file.read())
+        data = {
+            'file': uploaded_file
+        }
+        self.client.post(reverse('import_data_siswa_user'), data, format='multipart')
+
+        # data login siswa
+        self.data_login_siswa = {
+            'username': '30117680196686',
+            'password': 'merdeka123'
+        }
+
+        # jadikan sebagai siswa
+        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA = self.data_siswa['NIS'])
+        my_group = Group.objects.get(name='Siswa')
+        my_group.user_set.add(data_siswa_user.USER)
+
         login_response = self.client.post(reverse('login'), self.data_staf_kesiswaan)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
 
@@ -160,17 +182,33 @@ class SetupData(APITestCase):
 
         self.poin_pelanggaran = PoinPelanggaran.objects.create(**self.jenis_pelanggaran)
 
-        self.siswa = DataSiswa.objects.create(**self.data_siswa)
+        # tambah jenis program kebaikan
+        self.jenis_kebaikan = {
+            'KETERANGAN': 'Menyapu',
+            'POIN': 10
+        }
+
+        self.jenis_program_kebaikan = PoinProgramKebaikan.objects.create(**self.jenis_kebaikan)
 
         self.pengajuan = {
-            'DATA_SISWA': self.siswa,
+            'DATA_SISWA': self.siswa.NIS,
             'BUKTI_PELANGGARAN': self.uploaded_file,
-            'JENIS_PELANGGARAN': self.poin_pelanggaran,
+            'JENIS_PELANGGARAN': self.poin_pelanggaran.ID,
+        }
+
+        self.pengajuan_kebaikan = {
+            'BUKTI_PROGRAM_KEBAIKAN': self.uploaded_file,
+            'JENIS_PROGRAM_KEBAIKAN': self.jenis_program_kebaikan.ID,
         }
 
         # login sebagai guru
         login_response = self.client.post(reverse('login'), self.data_staf_kesiswaan)
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        self.guru_token = login_response.data['access']
+
+        # token siswa
+        login_response = self.client.post(reverse('login'), self.data_login_siswa)
+        self.siswa_token = login_response.data['access']
 
         super().setUp()
 
