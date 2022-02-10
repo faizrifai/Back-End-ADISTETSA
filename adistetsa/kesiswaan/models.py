@@ -33,6 +33,13 @@ class PelanggaranSiswa(models.Model):
     POIN = models.PositiveBigIntegerField(default=0)
     class Meta:
         verbose_name_plural = "Pelanggaran Siswa"
+
+def post_save_data_siswa(sender, instance, **kwargs):
+    PelanggaranSiswa.objects.get_or_create(
+        DATA_SISWA = instance.NIS,
+    )
+
+post_save.connect(post_save_data_siswa, sender = DataSiswa)
         
 class RiwayatLaporanPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
