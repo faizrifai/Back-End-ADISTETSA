@@ -94,24 +94,8 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
-class JurnalBelajarAdmin(SubAdmin):
-    model = JurnalBelajar
-    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
-    list_per_page = 10
-    search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    autocomplete_fields = ['DAFTAR']
-    exclude = ('GURU',)
-
-    def aksi(self, obj):
-        return "Edit"
-    
-    def absensi(self, obj):
-        base_url = reverse('admin:kurikulum_absensisiswa_changelist')
-        
-        return mark_safe(u'<a href="%s?JURNAL_BELAJAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Absensi'))
-
-
-class AbsensiSiswaAdmin(admin.ModelAdmin):
+class AbsensiSiswaAdmin(SubAdmin):
+    model = AbsensiSiswa
     list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'mata_pelajaran', 'kelas', 'pertemuan')
     list_per_page = 10
     readonly_fields = ('NIS', 'JURNAL_BELAJAR')
@@ -125,7 +109,27 @@ class AbsensiSiswaAdmin(admin.ModelAdmin):
     def pertemuan(self, obj):
         return obj.JURNAL_BELAJAR.PERTEMUAN
 
-admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
+# admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
+
+
+class JurnalBelajarAdmin(SubAdmin):
+    model = JurnalBelajar
+    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
+    list_per_page = 10
+    search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
+    autocomplete_fields = ['DAFTAR']
+    exclude = ('GURU',)
+
+    subadmins = [AbsensiSiswaAdmin]
+
+    def aksi(self, obj):
+        return "Edit"
+    
+    def absensi(self, obj):
+        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
+        
+        return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+
 
 class KelasSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NIS__NIS', 'NIS__NAMA']
