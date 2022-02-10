@@ -57,9 +57,10 @@ class RiwayatLaporanPelanggaran(models.Model):
 def post_save_persetujuan_laporan(sender, instance, **kwargs):
     try: 
         if instance.STATUS_PENGAJUAN == 'Disetujui' :
-            obj = PelanggaranSiswa.objects.get(
-                DATA_SISWA = instance.DATA_SISWA
-            )
+            obj = PelanggaranSiswa.objects.get_or_create(
+                DATA_SISWA = instance.DATA_SISWA,
+            )[0]
+            print(obj)
             obj.POIN += instance.JENIS_PELANGGARAN.POIN
             obj.save()
             try:
@@ -76,8 +77,8 @@ def post_save_persetujuan_laporan(sender, instance, **kwargs):
                 
         elif instance.STATUS_PENGAJUAN == 'Ditolak' :
             instance.delete()
-    except:
-        pass
+    except Exception as e:
+        print(str(e))
 
 post_save.connect(post_save_persetujuan_laporan, sender =  PengajuanLaporanPelanggaran)
 
@@ -159,17 +160,15 @@ class RiwayatProgramKebaikan(models.Model):
 def post_save_pengajuan_program_kebaikan(sender, instance, **kwargs):
     try: 
         if instance.STATUS_PENGAJUAN == 'Disetujui' :
-            obj = PelanggaranSiswa.objects.get(
+            obj = PelanggaranSiswa.objects.get_or_create(
                 DATA_SISWA = instance.DATA_SISWA
-            )
+            )[0]
             if obj.POIN < instance.JENIS_PROGRAM_KEBAIKAN.POIN :
                 obj.POIN = 0 
                 obj.save()
-                print ('ahnan')
             elif obj.POIN >= instance.JENIS_PROGRAM_KEBAIKAN.POIN :
                 obj.POIN -= instance.JENIS_PROGRAM_KEBAIKAN.POIN
                 obj.save()
-                print ('agung')
             try:
                 riwayat = RiwayatProgramKebaikan.objects.create(
                     DATA_SISWA = instance.DATA_SISWA,
