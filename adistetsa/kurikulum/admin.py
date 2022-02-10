@@ -96,7 +96,7 @@ admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 class JurnalBelajarAdmin(SubAdmin, ExportMixin):
     model = JurnalBelajar
-    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI')
+    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
@@ -108,15 +108,13 @@ class JurnalBelajarAdmin(SubAdmin, ExportMixin):
     def absensi(self, obj):
         base_url = reverse('admin:kurikulum_absensisiswa_changelist')
         
-        return mark_safe(u'<a href="%s?JURNAL_BELAJAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Absensi'))
+        return mark_safe(u'<a href="%s?JURNAL_BELAJAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Absensi'))
 
-
-# admin.site.register(JurnalBelajar, JurnalBelajarAdmin)
 
 class AbsensiSiswaAdmin(admin.ModelAdmin):
-    list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN','mata_pelajaran', 'kelas', 'pertemuan')
+    list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'mata_pelajaran', 'kelas', 'pertemuan')
     list_per_page = 10
-    list_filter = (JurnalBelajarFilter,)
+    readonly_fields = ('NIS', 'JURNAL_BELAJAR')
     
     def mata_pelajaran(self, obj):
         return obj.JURNAL_BELAJAR.DAFTAR.MATA_PELAJARAN
@@ -199,15 +197,15 @@ admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
 class DaftarJurnalBelajarAdmin(RootSubAdmin):
     search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP', 'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
     list_per_page = 10
-    list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN')
+    list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
 
     subadmins = [JurnalBelajarAdmin]
 
-    # def aksi(self, obj):
-    #     base_url = reverse('admin:kurikulum_jurnalbelajar_changelist')
+    def aksi(self, obj):
+        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
         
-    #     return mark_safe(u'<a href="%s?DAFTAR__exact=%d">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+        return mark_safe(u'<a href="%s%d/jurnalbelajar">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
 
 admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
 

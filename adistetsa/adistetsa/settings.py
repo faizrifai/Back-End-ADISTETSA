@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'admin_auto_filters',
     'django_extensions',
     'subadmin',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [
