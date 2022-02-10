@@ -94,7 +94,7 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
-class JurnalBelajarAdmin(SubAdmin, ExportMixin):
+class JurnalBelajarAdmin(SubAdmin):
     model = JurnalBelajar
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10

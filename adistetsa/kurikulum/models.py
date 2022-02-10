@@ -282,7 +282,7 @@ class JurnalBelajar(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['PERTEMUAN'], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['PERTEMUAN', 'DAFTAR'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Jurnal Belajar"
         ordering = ['PERTEMUAN']
