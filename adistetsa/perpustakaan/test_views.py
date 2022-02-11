@@ -95,3 +95,23 @@ class PerpustakaanTestCase(SetupData):
         response = self.client.get(reverse('tolak_pengajuan_peminjaman_guru', kwargs={'pk': 1}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_buku_tidak_tersedia_siswa(self):
+        # login sebagai siswa
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.siswa_token)
+
+        # pengajuan 2x
+        self.client.post(reverse('pengajuan_peminjaman_siswa'), self.pengajuan)
+        response = self.client.post(reverse('pengajuan_peminjaman_siswa'), self.pengajuan)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_buku_tidak_tersedia_guru(self):
+        # login sebagai guru
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.guru_token)
+
+        # pengajuan 2x
+        self.client.post(reverse('pengajuan_peminjaman_guru'), self.pengajuan)
+        response = self.client.post(reverse('pengajuan_peminjaman_guru'), self.pengajuan)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
