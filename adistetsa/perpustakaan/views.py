@@ -1,7 +1,7 @@
-from venv import create
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
+from .utility import check_buku_tersedia
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -92,12 +92,16 @@ class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
 
         return super().get_serializer_class()
 
-
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
         
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        buku = request.data['BUKU']
+
+        if (check_buku_tersedia(buku)):
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(data={'error': 'Buku yang dipilih tidak tersedia untuk dipinjam.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
@@ -139,7 +143,12 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
         return super().list(request, *args, **kwargs)
         
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        buku = request.data['BUKU']
+
+        if (check_buku_tersedia(buku)):
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(data={'error': 'Buku yang dipilih tidak tersedia untuk dipinjam.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RiwayatPeminjamanSiswaListView(generics.ListAPIView):
