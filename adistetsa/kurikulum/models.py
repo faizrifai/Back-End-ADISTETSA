@@ -1,5 +1,3 @@
-from operator import mod
-from tkinter import CASCADE
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator

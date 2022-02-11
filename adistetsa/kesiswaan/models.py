@@ -1,6 +1,4 @@
 from django.db import models
-from django.db.models.signals import post_save, m2m_changed
-from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
 from django.utils.text import Truncator
 
