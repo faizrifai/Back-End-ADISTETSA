@@ -35,6 +35,7 @@ urlpatterns = [
     path('', include('kurikulum.urls')),
     path('', include('perpustakaan.urls')),
     path('', include('kesiswaan.urls')),
+    path('', include('sarana_prasarana.urls')),
     path('admin/filebrowser/', site.urls),
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
