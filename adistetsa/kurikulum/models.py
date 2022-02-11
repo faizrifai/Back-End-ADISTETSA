@@ -1,4 +1,3 @@
-from operator import mod
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -282,7 +281,7 @@ class JurnalBelajar(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['PERTEMUAN'], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['PERTEMUAN', 'DAFTAR'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Jurnal Belajar"
         ordering = ['PERTEMUAN']
@@ -319,7 +318,7 @@ class AbsensiSiswa(models.Model):
         max_length=255, 
         choices= ENUM_KETERANGAN_ABSEN,
     )
-    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa')
+    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa', blank=True)
     JURNAL_BELAJAR = models.ForeignKey(JurnalBelajar, on_delete=models.CASCADE)
     
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
@@ -376,3 +375,17 @@ class JadwalPekanAktif(models.Model):
 
     class Meta:
         verbose_name_plural = 'Jadwal Pekan Aktif'
+
+class NilaiRaport(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
+    KELOMPOK_MATA_PELAJARAN = models.CharField(max_length=255, choices=ENUM_KELOMPOK_MATA_PELAJARAN)
+    BEBAN = models.BigIntegerField()
+    NILAI_PENGETAHUAN = models.BigIntegerField()
+    NILAI_KETERAMPILAN = models.BigIntegerField()
+    DESKRIPSI_PENGETAHUAN = models.CharField(max_length=255)
+    DESKRIPSI_KETERAMPILAN = models.CharField(max_length=255)
+     
+    

@@ -38,3 +38,9 @@ ENUM_BULAN = [
     ('November', 'November'),
     ('Desember', 'Desember')
 ]
+
+ENUM_KELOMPOK_MATA_PELAJARAN = [
+    ('Kelompok A (UMUM)','Kelompok A (UMUM)'),
+    ('Kelompok B (UMUM)','Kelompok A (UMUM)'),
+    ('Kelompok C (PEMINATAN)','Kelompok C (PEMINATAN)')
+]

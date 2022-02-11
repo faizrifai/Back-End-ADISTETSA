@@ -50,10 +50,12 @@ INSTALLED_APPS = [
     'kustom_autentikasi',
     'kurikulum',
     'sarana_prasarana',
+    'keuangan',
     'perpustakaan',
     'admin_auto_filters',
     'django_extensions',
     'subadmin',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [

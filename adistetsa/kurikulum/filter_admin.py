@@ -43,3 +43,4 @@ class KategoriTataTertibFilter(AutocompleteFilter):
 class JadwalMengajarFilter(AutocompleteFilter):
     title = 'SEARCH JADWAL MENGAJAR'
     field_name = 'JADWAL_MENGAJAR'
+

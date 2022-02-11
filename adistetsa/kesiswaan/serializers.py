@@ -1,6 +1,8 @@
 from .models import *
 from rest_framework import serializers
 
+from adistetsa.permissions import is_in_group
+from kustom_autentikasi.models import DataSiswaUser
 
 class PengajuanLaporanPelanggaranSerializer(serializers.ModelSerializer):
     class Meta:
@@ -83,7 +85,18 @@ class PoinProgramKebaikanSerializer(serializers.ModelSerializer):
 class PengajuanProgramKebaikanSerializer(serializers.ModelSerializer):
     class Meta:
         model = PengajuanProgramKebaikan
-        fields = '__all__'
+        exclude = ('DATA_SISWA',)
+
+    def create(self, validated_data):
+        request = self.context.get('request', None)
+        current_user = request.user
+        if (is_in_group(current_user, 'Siswa')):
+            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
+            validated_data['DATA_SISWA'] = data_siswa_user.DATA_SISWA
+
+        data_pengajuan = PengajuanProgramKebaikan.objects.create(**validated_data)
+
+        return data_pengajuan
 
 class PengajuanProgramKebaikanListSerializer(serializers.ModelSerializer):
     DATA_SISWA = serializers.SerializerMethodField('get_data_siswa')
