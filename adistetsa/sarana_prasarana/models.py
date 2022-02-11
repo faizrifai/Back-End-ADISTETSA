@@ -58,7 +58,11 @@ class Ruangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA = models.CharField(max_length=255)
     JENIS = models.ForeignKey(JenisRuangan, on_delete=models.CASCADE)
-    
+    STATUS = models.CharField(
+        max_length=255,
+        choices=ENUM_STATUS_PEMINJAMAN,
+        default='Sudah Dikembalikan',
+    )
     def __str__(self):
         return self.NAMA  
 
@@ -81,6 +85,7 @@ class JadwalPenggunaanRuangan(models.Model):
     
 class PengajuanPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     PENGGUNA = models.CharField(max_length=255)
     NO_HP = models.PositiveBigIntegerField()
     KEGIATAN = models.CharField(max_length=255)
@@ -100,6 +105,7 @@ class PengajuanPeminjamanRuangan(models.Model):
     
 class RiwayatPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     PENGGUNA = models.CharField(max_length=255)
     NO_HP = models.PositiveBigIntegerField()
     KEGIATAN = models.CharField(max_length=255)
@@ -180,6 +186,7 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
                     ruangan_m2m.append(data.ID)
 
                 obj = RiwayatPeminjamanRuangan.objects.create(
+                    USER = instance.USER,
                     PENGGUNA = instance.PENGGUNA,
                     NO_HP = instance.NO_HP,
                     KEGIATAN = instance.KEGIATAN,
@@ -200,6 +207,7 @@ post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminj
 
 class PengajuanPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     NAMA_PEMINJAM = models.CharField(max_length=255, default='')
     NO_TELEPON = models.CharField(max_length=255, default='')
     ALAT = models.ManyToManyField(Sarana)
@@ -217,6 +225,7 @@ class PengajuanPeminjamanBarang(models.Model):
 
 class RiwayatPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    USER = models.ForeignKey(User, on_delete=models.CASCADE)
     NAMA_PEMINJAM = models.CharField(max_length=255, default='')
     NO_TELEPON = models.CharField(max_length=255, default='')
     ALAT = models.ManyToManyField(Sarana)
@@ -247,6 +256,7 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     alat_m2m.append(data.ID)
                 
                 obj = RiwayatPeminjamanBarang.objects.create(
+                    USER = instance.USER,
                     NAMA_PEMINJAM = instance.NAMA_PEMINJAM,
                     NO_TELEPON = instance.NO_TELEPON,
                     KEGIATAN = instance.KEGIATAN,
@@ -277,6 +287,7 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     alat_m2m.append(data.ID)
                 
                 obj = RiwayatPeminjamanBarang.objects.create(
+                    USER = instance.USER,
                     NAMA_PEMINJAM = instance.NAMA_PEMINJAM,
                     NO_TELEPON = instance.NO_TELEPON,
                     KEGIATAN = instance.KEGIATAN,

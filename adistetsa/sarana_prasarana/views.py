@@ -1,3 +1,335 @@
-from django.shortcuts import render
+from venv import create
+from kustom_autentikasi.models import *
+from .models import *
+from .serializers import *
 
-# Create your views here.
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from rest_framework.views import APIView
+
+from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+
+
+# Create your views here. 
+class KatalogSaranaListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar katalog buku.
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru', 'Siswa', "Karyawan"],
+    }
+
+    def get_queryset(self):
+        queryset = Sarana.objects.filter(STATUS='Sudah Dikembalikan')
+        return queryset
+        
+
+    queryset = Sarana.objects.all()
+    serializer_class = KatalogSaranaSerializer
+    search_fields = ('NAMA', 'JENIS__KATEGORI', 'STATUS')
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class PengajuanPeminjamanBarangListView(generics.ListCreateAPIView):
+    """
+    get: Menampilkan daftar pengajuan peminjaman (Staf Perpustakaan, Siswa).
+    post: Membuat pengajuan peminjaman (Siswa).
+    """
+
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras', 'Siswa', 'Guru', 'Karyawan'],
+        'POST': ['Siswa', 'Guru', 'Karyawan'],
+    }
+
+    queryset = PengajuanPeminjamanBarang.objects.all()
+    serializer_class = PengajuanPeminjamanBarangSerializer
+    # search_fields = ('STATUS_PENGAJUAN')
+
+    def get_queryset(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            queryset = PengajuanPeminjamanBarang.objects.filter(USER=current_user)
+            return queryset
+
+        return super().get_queryset()
+
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            return PengajuanPeminjamanBarangSerializer
+        elif (is_in_group(current_user, 'Staf Sarpras')):
+            return PengajuanPeminjamanBarangAdminSerializer
+
+        return super().get_serializer_class()
+
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+        
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class RiwayatPeminjamanBarangListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar riwayat peminjaman siswa (Staf Perpustakaan, Siswa).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras', 'Siswa', 'Guru', 'Karyawan'],
+    }
+
+    queryset = RiwayatPeminjamanBarang.objects.all()
+    serializer_class = RiwayatPeminjamanBarangSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            queryset = RiwayatPeminjamanBarang.objects.filter(USER=current_user)
+            return queryset
+
+        return super().get_queryset()
+
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            return RiwayatPeminjamanBarangSerializer
+        elif (is_in_group(current_user, 'Staf Sarpras')):
+            return RiwayatPeminjamanBarangAdminSerializer
+
+        return super().get_serializer_class()
+
+        return super().get_serializer_class()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs) 
+
+
+
+class AccPengajuanPeminjamanBarangView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanBarang.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.save()
+
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class AccPengajuanPeminjamanBarangView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Perpustakaan'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanBarang.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.save()
+
+            return Response(data={'status': 'Berhasil menyetujui permintaan peminjaman'},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class TolakPengajuanPeminjamanBarangView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil ditolak (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanBarang.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Ditolak'
+            obj.save()
+
+            return Response(data={'status': 'Berhasil menolak permintaan peminjaman'},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+class KatalogRuanganListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar katalog buku.
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru', 'Siswa', "Karyawan"],
+    }
+
+    def get_queryset(self):
+        queryset = Ruangan.objects.filter(STATUS='Sudah Dikembalikan')
+        return queryset
+        
+
+    queryset = Ruangan.objects.all()
+    serializer_class = KatalogRuanganSerializer
+    search_fields = ('NAMA', 'JENIS__KATEGORI', 'STATUS')
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
+    """
+    get: Menampilkan daftar pengajuan peminjaman (Staf Perpustakaan, Siswa).
+    post: Membuat pengajuan peminjaman (Siswa).
+    """
+
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras', 'Siswa', 'Guru', 'Karyawan'],
+        'POST': ['Siswa', 'Guru', 'Karyawan'],
+    }
+
+    queryset = PengajuanPeminjamanRuangan.objects.all()
+    serializer_class = PengajuanPeminjamanRuanganSerializer
+    # search_fields = ('STATUS_PENGAJUAN')
+
+    def get_queryset(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            queryset = PengajuanPeminjamanRuangan.objects.filter(USER=current_user)
+            return queryset
+
+        return super().get_queryset()
+
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            return PengajuanPeminjamanRuanganSerializer
+        elif (is_in_group(current_user, 'Staf Sarpras')):
+            return PengajuanPeminjamanRuanganAdminSerializer
+
+        return super().get_serializer_class()
+
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+        
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class RiwayatPeminjamanRuanganListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar riwayat peminjaman siswa (Staf Perpustakaan, Siswa).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras', 'Siswa', 'Guru', 'Karyawan'],
+    }
+
+    queryset = RiwayatPeminjamanRuangan.objects.all()
+    serializer_class = RiwayatPeminjamanRuanganSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            queryset = RiwayatPeminjamanRuangan.objects.filter(USER=current_user)
+            return queryset
+
+        return super().get_queryset()
+
+    def get_serializer_class(self):
+        current_user = self.request.user
+        if (not is_in_group(current_user, 'Staf Sarpras')):
+            return RiwayatPeminjamanRuanganSerializer
+        elif (is_in_group(current_user, 'Staf Sarpras')):
+            return RiwayatPeminjamanRuanganAdminSerializer
+
+        return super().get_serializer_class()
+
+        return super().get_serializer_class()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs) 
+
+
+
+class AccPengajuanPeminjamanRuanganView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.save()
+
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class AccPengajuanPeminjamanRuanganView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Perpustakaan'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.save()
+
+            return Response(data={'status': 'Berhasil menyetujui permintaan peminjaman'},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class TolakPengajuanPeminjamanRuanganView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan peminjaman siswa berhasil ditolak (Staf Perpustakaan).
+        """
+        try:
+            obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Ditolak'
+            obj.save()
+
+            return Response(data={'status': 'Berhasil menolak permintaan peminjaman'},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
