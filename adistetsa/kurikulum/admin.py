@@ -264,3 +264,11 @@ class JadwalPekanTidakEfektifAdmin(admin.ModelAdmin):
     list_display = ('URAIAN_KEGIATAN', 'JUMLAH_MINGGU', 'KETERANGAN',)
 
 admin.site.register(JadwalPekanTidakEfektif, JadwalPekanTidakEfektifAdmin)
+
+class NilaiRaportAdmin(admin.ModelAdmin):
+    search_fields = ['KELAS_SISWA']
+    list_display = ('KELAS_SISWA', 'SEMESTER', 'MATA_PELAJARAN','BEBAN','NILAI_PENGETAHUAN','NILAI_KETERAMPILAN','DESKRIPSI_PENGETAHUAN','DESKRIPSI_KETERAMPILAN')
+    list_per_page = 10
+    autocomplete_fields = ['KELAS_SISWA']
+    
+admin.site.register(NilaiRaport, NilaiRaportAdmin)

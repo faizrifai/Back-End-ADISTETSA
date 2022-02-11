@@ -1,4 +1,5 @@
 from operator import mod
+from tkinter import CASCADE
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -376,3 +377,17 @@ class JadwalPekanAktif(models.Model):
 
     class Meta:
         verbose_name_plural = 'Jadwal Pekan Aktif'
+
+class NilaiRaport(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
+    KELOMPOK_MATA_PELAJARAN = models.CharField(max_length=255, choices=ENUM_KELOMPOK_MATA_PELAJARAN)
+    BEBAN = models.BigIntegerField()
+    NILAI_PENGETAHUAN = models.BigIntegerField()
+    NILAI_KETERAMPILAN = models.BigIntegerField()
+    DESKRIPSI_PENGETAHUAN = models.CharField(max_length=255)
+    DESKRIPSI_KETERAMPILAN = models.CharField(max_length=255)
+     
+    
