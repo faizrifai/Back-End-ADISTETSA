@@ -38,10 +38,11 @@ class KatalogBukuListSerializer(serializers.ModelSerializer):
     TAHUN_TERBIT = serializers.SerializerMethodField('get_tahun_terbit')
     MEDIA = serializers.SerializerMethodField('get_kode_media')
     TERSEDIA = serializers.SerializerMethodField('get_tersedia')
+    JENIS_BUKU = serializers.SerializerMethodField('get_jenis_buku')
     
     class Meta:
         model = KatalogBuku
-        fields = ('JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA', 'TERSEDIA')
+        fields = ('REGISTER', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA', 'TERSEDIA', 'JENIS_BUKU')
 
     def get_bahasa(self, obj):
         return obj.BAHASA.BAHASA
@@ -51,6 +52,9 @@ class KatalogBukuListSerializer(serializers.ModelSerializer):
 
     def get_kode_author(self, obj):
         return obj.KODE_AUTHOR.NAMA_AUTHOR
+
+    def get_jenis_buku(self, obj):
+        return obj.KODE_TIPE.NAMA_TIPE
 
     def get_tahun_terbit(self, obj):
         return obj.TAHUN_TERBIT.TAHUN_TERBIT

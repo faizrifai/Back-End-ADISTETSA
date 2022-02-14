@@ -35,8 +35,6 @@ class Pendanaan(models.Model):
     def __str__(self):
         return self.NAMA_PENDANAAN
     
-    
-    
 class Lokasi(models.Model):
     KODE_LOKASI = models.CharField(primary_key=True, max_length = 255)
     NAMA_LOKASI = models.CharField(max_length = 255)
