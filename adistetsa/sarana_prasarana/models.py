@@ -126,14 +126,6 @@ class RiwayatPeminjamanRuangan(models.Model):
 def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
 
-    try:
-        for data in instance.RUANGAN.values():
-            obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
-            obj.STATUS = 'Diajukan'
-            obj.save()
-    except Exception as e:
-        print(str(e))
-
     if instance.STATUS == 'Sedang Dipinjam':
         try:
             for data in instance.RUANGAN.values():
@@ -323,6 +315,31 @@ def alat_changed(sender, instance, action, pk_set=None, **kwargs):
             obj.save()
 
 m2m_changed.connect(alat_changed, sender=PengajuanPeminjamanBarang.ALAT.through)
+
+def ruangan_changed(sender, instance, action, pk_set=None, **kwargs):
+    if action == 'post_add':
+        for pk in pk_set:
+            obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
+            print('add: ' + str(obj))
+            obj.STATUS = 'Diajukan' 
+            obj.save()
+
+            ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
+            ruangan.status = 'Pengajuan'
+            ruangan.save()
+            
+    elif action == 'post_remove':
+        for pk in pk_set:
+            obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
+            print('delete: ' + str(obj))
+            obj.STATUS = 'Selesai Dipinjam'
+            obj.save()
+
+            ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
+            ruangan.status = 'Sudah Dikembalikan'
+            ruangan.save()
+
+m2m_changed.connect(ruangan_changed, sender=PengajuanPeminjamanRuangan.RUANGAN.through)
     
 class PengajuanPeminjamanRuanganPendek(models.Model):
     ID = models.BigAutoField(primary_key=True)

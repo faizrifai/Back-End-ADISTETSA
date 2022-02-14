@@ -23,10 +23,26 @@ class KatalogBukuListView(generics.ListAPIView):
 
     queryset = KatalogBuku.objects.all()
     serializer_class = KatalogBukuListSerializer
-    search_fields = ('JUDUL', 'KODE_AUTHOR__NAMA_AUTHOR', 'BAHASA__BAHASA', 'TIPE_MEDIA__NAMA_MEDIA', 'KODE_TIPE__NAMA_TIPE', 'TAHUN_TERBIT__TAHUN_TERBIT')
+    search_fields = ('JUDUL', 'KODE_AUTHOR__NAMA_AUTHOR', 'BAHASA__BAHASA', 'KODE_TIPE__NAMA_TIPE', 'TAHUN_TERBIT__TAHUN_TERBIT')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class KatalogBukuDetailView(generics.RetrieveAPIView):
+    """
+    get: Menampilkan detail buku.
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Perpustakaan', 'Guru', 'Siswa'],
+    }
+
+    queryset = KatalogBuku.objects.all()
+    serializer_class = KatalogBukuListSerializer
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class KatalogBukuTersediaListView(generics.ListAPIView):
