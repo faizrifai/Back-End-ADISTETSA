@@ -74,9 +74,6 @@ class RiwayatPeminjamanBarangAdminSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
 class KatalogRuanganSerializer(serializers.ModelSerializer):
     JENIS = serializers.SerializerMethodField('get_jenis')
     # PENULIS = serializers.SerializerMethodField('get_kode_author')   
@@ -106,7 +103,7 @@ class KatalogRuanganSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
-    RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=Ruangan.objects.all())
+    RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=JadwalPenggunaanRuangan.objects.all())
 
     class Meta:
         model = PengajuanPeminjamanRuangan
@@ -117,7 +114,7 @@ class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
         current_user = request.user
         validated_data['USER'] = current_user
 
-        ruangan = validated_data.pop('ALAT')
+        ruangan = validated_data.pop('RUANGAN')
         data_pengajuan = PengajuanPeminjamanRuangan.objects.create(**validated_data)
 
         for data in ruangan:
@@ -127,8 +124,6 @@ class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanRuanganAdminSerializer(serializers.ModelSerializer):
-    RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=Ruangan.objects.all())
-
     class Meta:
         model = PengajuanPeminjamanRuangan
         fields = '__all__'
