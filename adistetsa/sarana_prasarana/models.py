@@ -152,6 +152,7 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
                     ruangan_m2m.append(data.ID)
 
                 obj = RiwayatPeminjamanRuangan.objects.create(
+                    USER = instance.USER,
                     PENGGUNA = instance.PENGGUNA,
                     NO_HP = instance.NO_HP,
                     KEGIATAN = instance.KEGIATAN,

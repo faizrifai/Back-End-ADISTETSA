@@ -2,6 +2,7 @@ from venv import create
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
+from .utility import check_ruangan_tersedia, check_sarana_tersedia
 
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -72,7 +73,12 @@ class PengajuanPeminjamanBarangListView(generics.ListCreateAPIView):
         return super().list(request, *args, **kwargs)
         
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        sarana = request.data['ALAT']
+
+        if (check_sarana_tersedia(sarana)):
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(data={'error': 'Sarana yang dipilih tidak tersedia untuk dipinjam.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RiwayatPeminjamanBarangListView(generics.ListAPIView):
@@ -104,11 +110,8 @@ class RiwayatPeminjamanBarangListView(generics.ListAPIView):
 
         return super().get_serializer_class()
 
-        return super().get_serializer_class()
-
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs) 
-
 
 
 class AccPengajuanPeminjamanBarangView(APIView):
@@ -130,26 +133,6 @@ class AccPengajuanPeminjamanBarangView(APIView):
         except Exception as e:
             return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-class AccPengajuanPeminjamanBarangView(APIView):
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Perpustakaan'],
-    }
-
-    def get(self, request, pk, format=None):
-        """
-        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
-        """
-        try:
-            obj = PengajuanPeminjamanBarang.objects.get(pk=pk)
-            obj.STATUS_PENGAJUAN = 'Disetujui'
-            obj.save()
-
-            return Response(data={'status': 'Berhasil menyetujui permintaan peminjaman'},status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 class TolakPengajuanPeminjamanBarangView(APIView):
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
@@ -169,11 +152,6 @@ class TolakPengajuanPeminjamanBarangView(APIView):
             return Response(data={'status': 'Berhasil menolak permintaan peminjaman'},status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
 
 
 class KatalogRuanganListView(generics.ListAPIView):
@@ -236,7 +214,12 @@ class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
         return super().list(request, *args, **kwargs)
         
     def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        ruangan = request.data['RUANGAN']
+
+        if (check_ruangan_tersedia(ruangan)):
+            return super().create(request, *args, **kwargs)
+        else:
+            return Response(data={'error': 'Ruangan yang dipilih tidak tersedia untuk dipinjam.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class RiwayatPeminjamanRuanganListView(generics.ListAPIView):
@@ -268,11 +251,8 @@ class RiwayatPeminjamanRuanganListView(generics.ListAPIView):
 
         return super().get_serializer_class()
 
-        return super().get_serializer_class()
-
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs) 
-
 
 
 class AccPengajuanPeminjamanRuanganView(APIView):
@@ -287,32 +267,12 @@ class AccPengajuanPeminjamanRuanganView(APIView):
         """
         try:
             obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
-            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.STATUS = 'Sedang Dipinjam'
             obj.save()
 
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-class AccPengajuanPeminjamanRuanganView(APIView):
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Perpustakaan'],
-    }
-
-    def get(self, request, pk, format=None):
-        """
-        Menampilkan status pengajuan peminjaman siswa berhasil disetujui (Staf Perpustakaan).
-        """
-        try:
-            obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
-            obj.STATUS_PENGAJUAN = 'Disetujui'
-            obj.save()
-
-            return Response(data={'status': 'Berhasil menyetujui permintaan peminjaman'},status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class TolakPengajuanPeminjamanRuanganView(APIView):
