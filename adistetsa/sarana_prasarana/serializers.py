@@ -32,7 +32,6 @@ class KatalogSaranaSerializer(serializers.ModelSerializer):
         return obj.JENIS.KATEGORI
 
 
-
 class PengajuanPeminjamanBarangSerializer(serializers.ModelSerializer):
     ALAT = serializers.PrimaryKeyRelatedField(many=True, queryset=Sarana.objects.all())
 
@@ -54,12 +53,36 @@ class PengajuanPeminjamanBarangSerializer(serializers.ModelSerializer):
         return data_pengajuan
 
 
+class PengajuanPeminjamanBarangListSerializer(serializers.ModelSerializer):
+    ALAT = serializers.SerializerMethodField('get_alat')
+
+    class Meta:
+        model = PengajuanPeminjamanBarang
+        exclude = ('USER',)
+
+    def get_alat(self, obj):
+        alat = obj.ALAT
+        daftar_alat = []
+        for data in alat.all():
+            daftar_alat.append(str(data))
+
+        return daftar_alat
+
+
 class PengajuanPeminjamanBarangAdminSerializer(serializers.ModelSerializer):
-    ALAT = serializers.PrimaryKeyRelatedField(many=True, queryset=Sarana.objects.all())
+    ALAT = serializers.SerializerMethodField('get_alat')
 
     class Meta:
         model = PengajuanPeminjamanBarang
         fields = '__all__'
+
+    def get_alat(self, obj):
+        alat = obj.ALAT
+        daftar_alat = []
+        for data in alat.all():
+            daftar_alat.append(str(data))
+
+        return daftar_alat
 
 
 class RiwayatPeminjamanBarangSerializer(serializers.ModelSerializer):
@@ -68,10 +91,20 @@ class RiwayatPeminjamanBarangSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RiwayatPeminjamanBarangAdminSerializer(serializers.ModelSerializer):
+class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
+    ALAT = serializers.SerializerMethodField('get_alat')
+
     class Meta:
         model = RiwayatPeminjamanBarang
         fields = '__all__'
+
+    def get_alat(self, obj):
+        alat = obj.ALAT
+        daftar_alat = []
+        for data in alat.all():
+            daftar_alat.append(str(data))
+
+        return daftar_alat
 
 
 class KatalogRuanganSerializer(serializers.ModelSerializer):
@@ -101,7 +134,6 @@ class KatalogRuanganSerializer(serializers.ModelSerializer):
         return obj.JENIS.KATEGORI
 
 
-
 class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
     RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=JadwalPenggunaanRuangan.objects.all())
 
@@ -123,10 +155,20 @@ class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
         return data_pengajuan
 
 
-class PengajuanPeminjamanRuanganAdminSerializer(serializers.ModelSerializer):
+class PengajuanPeminjamanRuanganListSerializer(serializers.ModelSerializer):
+    RUANGAN = serializers.SerializerMethodField('get_ruangan')
+
     class Meta:
         model = PengajuanPeminjamanRuangan
-        fields = '__all__'
+        exclude = ('USER',)
+
+    def get_ruangan(self, obj):
+        ruangan = obj.RUANGAN
+        daftar_ruangan = []
+        for data in ruangan.all():
+            daftar_ruangan.append(str(data))
+
+        return daftar_ruangan
 
 
 class RiwayatPeminjamanRuanganSerializer(serializers.ModelSerializer):
@@ -135,7 +177,17 @@ class RiwayatPeminjamanRuanganSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RiwayatPeminjamanRuanganAdminSerializer(serializers.ModelSerializer):
+class RiwayatPeminjamanRuanganListSerializer(serializers.ModelSerializer):
+    RUANGAN = serializers.SerializerMethodField('get_ruangan')
+
     class Meta:
         model = RiwayatPeminjamanRuangan
         fields = '__all__'
+
+    def get_ruangan(self, obj):
+        ruangan = obj.RUANGAN
+        daftar_ruangan = []
+        for data in ruangan.all():
+            daftar_ruangan.append(str(data))
+
+        return daftar_ruangan
