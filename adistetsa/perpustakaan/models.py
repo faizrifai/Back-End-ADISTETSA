@@ -319,7 +319,7 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
 
 post_save.connect(post_save_pengajuan_peminjaman_siswa, sender=PengajuanPeminjamanSiswa)
 
-def buku_changed(sender, instance, action, pk_set=None, **kwargs):
+def buku_changed_siswa(sender, instance, action, pk_set=None, **kwargs):
     if action == 'post_add':
         for pk in pk_set:
             print ('Penthouse Mas')
@@ -335,7 +335,7 @@ def buku_changed(sender, instance, action, pk_set=None, **kwargs):
             obj.STATUS = 'Sudah Dikembalikan'
             obj.save()
     
-m2m_changed.connect(buku_changed, sender=PengajuanPeminjamanSiswa.BUKU.through)
+m2m_changed.connect(buku_changed_siswa, sender=PengajuanPeminjamanSiswa.BUKU.through)
 
 class PengajuanPeminjamanGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -459,7 +459,7 @@ def buku_changed_guru(sender, instance, action, pk_set=None, **kwargs):
             obj.STATUS = 'Sudah Dikembalikan'
             obj.save
     
-m2m_changed.connect(buku_changed, sender=PengajuanPeminjamanGuru.BUKU.through)
+m2m_changed.connect(buku_changed_guru, sender=PengajuanPeminjamanGuru.BUKU.through)
 
 
     
