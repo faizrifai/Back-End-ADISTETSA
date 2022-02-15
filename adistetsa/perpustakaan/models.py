@@ -190,7 +190,7 @@ class KatalogBukuCopy(models.Model):
         default='Sudah Dikembalikan',
     )
     def __str__(self):
-        return '"' + str(self.DATA_DONASI.REGISTER_DONASI.JUDUL) + '"' + ' - ' + str(self.REGISTER_COPY)
+        return str(self.REGISTER_COPY) + ' - ' + str(self.DATA_DONASI.REGISTER_DONASI.JUDUL)
     
 def post_save_donasi_buku(sender, instance, **kwargs):
     try:
