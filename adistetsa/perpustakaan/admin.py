@@ -103,6 +103,8 @@ class KatalogBukuCopyAdmin(ImportExportModelAdmin):
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('acc_pengembalian',)
+
+    change_list_template = 'perpustakaan/katalogbukucopy_changelist.html'
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS = 'Sudah Dikembalikan')
