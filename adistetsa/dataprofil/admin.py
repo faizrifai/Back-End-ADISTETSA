@@ -526,6 +526,10 @@ class DataKompetensiGuruAdmin(admin.ModelAdmin):
 
 admin.site.register(DataKompetensiGuru, DataKompetensiGuruAdmin)
 
+class DataPelatihAdmin (admin.ModelAdmin):
+    pass
+admin.site.register(DataPelatih, DataPelatihAdmin)
+
 # class DataGuruAdmin(admin.ModelAdmin):
 #     filter_horizontal = ('DATA_KOMPETENSI_GURU', 'DATA_ANAK_GURU', 'DATA_BEASISWA_GURU', 'DATA_BUKU_GURU', 'DATA_DIKLAT_GURU', 'DATA_KARYA_TULIS_GURU', 'DATA_KESEJAHTERAAN_GURU', 'DATA_TUNJANGAN_GURU', 'DATA_TUGAS_TAMBAHAN_GURU', 'DATA_PENGHARGAAN_GURU', 'DATA_NILAI_TEST_GURU', 'DATA_RIWAYAT_GAJI_GURU', 'DATA_RIWAYAT_JABATAN_STRUKTURAL_GURU', 'DATA_RIWAYAT_KEPANGKATAN_GURU', 'DATA_PENDIDIKAN_NORMAL_GURU', 'DATA_SERTIFIKASI_GURU', 'DATA_RIWAYAT_JABATAN_FUNGSIONAL_GURU', 'DATA_RIWAYAT_KARIR_GURU',)
 

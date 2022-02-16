@@ -1,9 +1,10 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.utils.text import Truncator
 
-from dataprofil.models import DataSiswa
-from kurikulum.models import PoinPelanggaran
+from dataprofil.models import DataSiswa, DataPelatih
+from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa
 
 from .enums import *
 
@@ -181,3 +182,151 @@ def post_save_pengajuan_program_kebaikan(sender, instance, **kwargs):
 
 post_save.connect(post_save_pengajuan_program_kebaikan, sender =  PengajuanProgramKebaikan)
 
+class KatalogEkskul (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NAMA = models.CharField(max_length=255)
+    KATEGORI = models.CharField(
+        max_length=255,
+        choices=ENUM_KATEGORI_EKSKUL,
+    )
+    DESKRIPSI = models.CharField(max_length=255)
+    DOKUMENTASI = models.ImageField(upload_to='KatalogEkskul', max_length=255)
+    
+    def __str__(self):
+        return self.NAMA
+
+class JadwalEkskul (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    PELATIH = models.ForeignKey(DataPelatih, on_delete=models.CASCADE)
+    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
+    HARI = models.CharField(
+        max_length=255,
+        choices=ENUM_HARI,
+    )
+    WAKTU_MULAI = models.TimeField()
+    WAKTU_BERAKHIR = models.TimeField()
+    
+    def __str__(self):
+        return self.PELATIH.NAMA + ' - ' + self.EKSKUL.NAMA
+
+def post_save_jadwal_ekskul(sender, instance, **kwargs):
+    try:
+        daftar_jurnal_ekskul = DaftarJurnalEkskul.objects.update_or_create(
+            PELATIH = instance.PELATIH,
+            EKSKUL = instance.EKSKUL,
+            SEMESTER = instance.SEMESTER,
+            JADWAL_EKSKUL = instance,
+        )
+        daftar_jurnal_ekskul.save()
+    except Exception as e:
+        print(str(e))
+
+post_save.connect(post_save_jadwal_ekskul, sender=JadwalEkskul)
+
+class DaftarJurnalEkskul(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    PELATIH = models.ForeignKey(DataPelatih,on_delete=models.CASCADE)
+    EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE, default='')
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    JADWAL_EKSKUL = models.ForeignKey(JadwalEkskul, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.EKSKUL.NAMA + ' ' + self.SEMESTER.NAMA
+
+
+class JurnalEkskul(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    PELATIH = models.ForeignKey(DataPelatih,on_delete=models.CASCADE)
+    PERTEMUAN = models.CharField(max_length=255)
+    TANGGAL_MELATIH = models.DateField()
+    DESKRIPSI_KEGIATAN = models.TextField()
+    FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalEkskul')
+    DAFTAR = models.ForeignKey(DaftarJurnalEkskul, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.DAFTAR.EKSKUL) +  ' - ' + str(self.DAFTAR.SEMESTER) + ' - Pertemuan : ' + self.PERTEMUAN
+
+
+def pre_save_jurnal_ekskul(sender, instance, **kwargs):
+    try:
+        daftar = DaftarJurnalEkskul.objects.get(ID=instance.DAFTAR.ID)
+        print(daftar)
+        instance.PELATIH = daftar.PELATIH
+    except Exception as e:
+        print(str(e))
+
+pre_save.connect(pre_save_jurnal_ekskul, sender=JurnalEkskul)
+
+def post_save_jurnal_ekskul(sender, instance, created, **kwargs):
+    try:
+        ekskul = AnggotaEkskul.objects.filter(EKSKUL = instance.DAFTAR.EKSKUL)
+        for kelas_siswa in ekskul:
+            AbsensiEkskul.objects.update_or_create(
+                NIS=kelas_siswa.KELAS_SISWA.NIS, 
+                JURNAL_EKSKUL=instance)
+            
+    except Exception as e:
+        print(str(e))
+        
+post_save.connect(post_save_jurnal_ekskul, sender=JurnalEkskul)
+
+
+class AbsensiEkskul(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    KETERANGAN = models.CharField(
+        max_length=255, 
+        choices= ENUM_KETERANGAN_ABSEN,
+    )
+    FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiEkskul', blank=True)
+    JURNAL_EKSKUL = models.ForeignKey(JurnalEkskul, on_delete=models.CASCADE)
+
+    
+class PengajuanEkskul (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateField()
+    STATUS_PENGAJUAN = models.CharField(
+        max_length=255,
+        choices=ENUM_PENGAJUAN,
+        default='Pengajuan',
+    )
+    
+def post_save_pengajuan_ekskul(sender, instance, created, **kwargs):
+    # ubah status peminjaman setelah disetujui
+    
+    if instance.STATUS_PENGAJUAN == 'Disetujui':
+        try:
+            AnggotaEkskul.objects.update_or_create(
+                KELAS_SISWA = instance.KELAS_SISWA, 
+                EKSKUL=instance.EKSKUL,
+                STATUS='Aktif')
+            instance.delete()
+                    
+        except Exception as e:
+            print(str(e))
+            
+    elif instance.STATUS_PENGAJUAN == '' or instance.STATUS_PENGAJUAN == 'Ditolak':
+        try:
+            instance.delete()
+        except Exception as e:
+            print(str(e))
+
+post_save.connect(post_save_pengajuan_ekskul, sender=PengajuanEkskul)
+
+class AnggotaEkskul (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
+    STATUS = models.CharField(
+        max_length= 255,
+        choices=ENUM_STATUS_ANGGOTA_EKSKUL,
+        default='',
+    )
+    
+    def __str__(self):
+        return str(self.KELAS_SISWA.NIS.NAMA) 
+    

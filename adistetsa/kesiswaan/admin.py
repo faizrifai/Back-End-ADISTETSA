@@ -9,6 +9,7 @@ from import_export.admin import ImportExportModelAdmin, ExportMixin
 from kesiswaan.filter_admin import DataSiswaFilter
 # from .filter_admin import *
 from .models import *
+from subadmin import SubAdmin, RootSubAdmin
 # from .importexportresources import *
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
@@ -138,5 +139,127 @@ class RiwayatProgramKebaikanAdmin(admin.ModelAdmin):
     
 admin.site.register(RiwayatProgramKebaikan, RiwayatProgramKebaikanAdmin)
 
+class AnggotaEkskulAdmin(SubAdmin):
+    model = AnggotaEkskul
+    list_display = ('KELAS_SISWA', 'EKSKUL', 'STATUS')
+    list_per_page = 10
+    # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
+
+class KatalogEkskulAdmin(RootSubAdmin):
+    search_fields = ['']
+    list_per_page = 10
+    list_display = ('NAMA', 'KATEGORI', 'DESKRIPSI', 'DOKUMENTASI', 'aksi')
+    # list_filter = []
+
+    subadmins = [AnggotaEkskulAdmin]
+
+    def aksi(self, obj):
+        base_url = reverse('admin:kesiswaan_katalogekskul_changelist')
+        
+        return mark_safe(u'<a href="%s%d/anggotaekskul">%s</a>' % (base_url, obj.ID, 'Buka Anggota'))
+
+admin.site.register(KatalogEkskul, KatalogEkskulAdmin)
+
+
+class JadwalEkskulAdmin(admin.ModelAdmin):
+    search_fields = ('',)
+    list_display = ['PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL','HARI','WAKTU_MULAI','WAKTU_BERAKHIR',]
+    list_per_page = 10 
+    # autocomplete_fields = ['',]
+    # list_filter = (DataSiswaFilter,)
+    
+admin.site.register(JadwalEkskul, JadwalEkskulAdmin)
+
+class AbsensiEkskulAdmin(SubAdmin):
+    model = AbsensiEkskul
+    list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'ekskul', 'pertemuan')
+    list_per_page = 10
+    readonly_fields = ('NIS', 'JURNAL_EKSKUL')
+    
+    def ekskul(self, obj):
+        return obj.JURNAL_EKSKUL.DAFTAR.EKSKUL
+    
+    def pertemuan(self, obj):
+        return obj.JURNAL_EKSKUL.PERTEMUAN
+
+class JurnalEkskulAdmin(SubAdmin):
+    model = JurnalEkskul
+    list_display = ('aksi', 'PELATIH', 'PERTEMUAN', 'TANGGAL_MELATIH',  'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI', 'absensi')
+    list_per_page = 10
+    search_fields = ['TANGGAL_MELATIH', 'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI']
+    autocomplete_fields = ['DAFTAR']
+    exclude = ('PELATIH',)
+
+    subadmins = [AbsensiEkskulAdmin]
+
+    def aksi(self, obj):
+        return "Edit"
+    
+    def absensi(self, obj):
+        base_url = reverse('admin:kesiswaan_daftarjurnalekskul_changelist')
+        
+        return mark_safe(u'<a href="%s%d/jurnalekskul/%d/absensiekskul">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+
+# class JurnalEkskulAdmin(admin.ModelAdmin):
+#     search_fields = ('',)
+#     list_display = ['PELATIH', 'PERTEMUAN', 'TANGGAL_MELATIH', 'DESKRIPSI_KEGIATAN','FILE_DOKUMENTASI','DAFTAR',]
+#     list_per_page = 10 
+#     # autocomplete_fields = ['',]
+#     # list_filter = (DataSiswaFilter,)
+    
+# admin.site.register(JurnalEkskul, JurnalEkskulAdmin)
+
+class DaftarJurnalEkskulAdmin(RootSubAdmin):
+    search_fields = ['']
+    list_per_page = 10
+    list_display = ('PELATIH', 'EKSKUL', 'SEMESTER', 'JADWAL_EKSKUL', 'aksi')
+    # list_filter = []
+
+    subadmins = [JurnalEkskulAdmin]
+
+    def aksi(self, obj):
+        base_url = reverse('admin:kesiswaan_daftarjurnalekskul_changelist')
+        
+        return mark_safe(u'<a href="%s%d/jurnalekskul">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+
+admin.site.register(DaftarJurnalEkskul, DaftarJurnalEkskulAdmin)
+
+
+# class DaftarJurnalEkskulAdmin(admin.ModelAdmin):
+#     search_fields = ('',)
+#     list_display = ['PELATIH', 'SEMESTER', 'JADWAL_EKSKUL',]
+#     list_per_page = 10 
+#     # autocomplete_fields = ['',]
+#     # list_filter = (DataSiswaFilter,)
+    
+# admin.site.register(DaftarJurnalEkskul, DaftarJurnalEkskulAdmin)
+
+
+
+class PengajuanEkskulAdmin(admin.ModelAdmin):
+    search_fields = ('',)
+    list_display = ['KELAS_SISWA', 'EKSKUL', 'TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
+    list_per_page = 10 
+    list_filter = ('STATUS_PENGAJUAN', )
+    actions = ('accept_action', 'decline_action',)
+    exclude = ('STATUS_PENGAJUAN',)
+    
+    def accept_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Disetujui')
+        for d in queryset.values():
+            obj = PengajuanEkskul.objects.get(ID=d['ID'])
+            obj.save()
+    
+    accept_action.short_description = "Setujui pengajuan ekskul"
+    
+    def decline_action(self, request, queryset):
+        queryset.update(STATUS_PENGAJUAN = 'Ditolak')
+        for d in queryset.values():
+            obj = PengajuanEkskul.objects.get(ID=d['ID'])
+            obj.save()
+    
+    decline_action.short_description = "Tolak pengajuan ekskul"
+    
+admin.site.register(PengajuanEkskul, PengajuanEkskulAdmin)
 
     
