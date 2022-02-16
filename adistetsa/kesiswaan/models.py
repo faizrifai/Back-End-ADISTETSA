@@ -1,6 +1,3 @@
-from operator import mod
-from turtle import ondrag
-from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.utils.text import Truncator
