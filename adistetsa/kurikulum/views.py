@@ -326,17 +326,12 @@ class AbsensiSiswaListView(generics.ListAPIView):
     serializer_class = AbsensiSiswaListSerializer
 
     def get_queryset(self):
-        current_user = self.request.user
-        data_guru_user = DataGuruUser.objects.get(USER=current_user)
-        daftar_jurnal = DaftarJurnalBelajar.objects.get(pk=self.kwargs.get('pk'))
-        queryset = JurnalBelajar.objects.filter(DAFTAR=daftar_jurnal, GURU=data_guru_user.DATA_GURU)
+        queryset = AbsensiSiswa.objects.filter(JURNAL_BELAJAR_id=self.kwargs.get('pk'))
         return queryset
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return JurnalBelajarGuruListSerializer
-        elif self.request.method == 'POST':
-            return JurnalBelajarGuruSerializer
+            return AbsensiSiswaListSerializer
 
         return super().get_serializer_class()
 
