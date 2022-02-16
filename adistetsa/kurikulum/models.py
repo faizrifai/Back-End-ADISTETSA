@@ -247,7 +247,6 @@ class JadwalMengajar(models.Model):
         verbose_name_plural = "Jadwal Mengajar"
         ordering = ['TAHUN_AJARAN', 'KELAS', 'HARI', 'JUMLAH_WAKTU']
     
-
     def __str__(self):
         return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
 

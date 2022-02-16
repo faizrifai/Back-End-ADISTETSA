@@ -235,9 +235,10 @@ class JadwalPekanAktifDetailView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+
 class JadwalMengajarGuruListView(generics.ListAPIView):
     """
-    get: Menampilkan Jadwal Pekan Aktif (Guru).
+    get: Menampilkan Jadwal Mengajar (Guru).
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
@@ -254,6 +255,62 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class DaftarJurnalBelajarGuruListView(generics.ListAPIView):
+    """
+    get: Menampilkan Daftar Jurnal Belajar (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+    }
+
+    serializer_class = DaftarJurnalBelajarGuruListSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        queryset = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class JurnalBelajarGuruListView(generics.ListCreateAPIView):
+    """
+    get: Menampilkan Jurnal Belajar (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+        'POST': ['Guru',]
+    }
+
+    parser_classes = (MultiPartParser,)
+    serializer_class = JurnalBelajarGuruSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        daftar_jurnal = DaftarJurnalBelajar.objects.get(pk=self.kwargs.get('pk'))
+        queryset = JurnalBelajar.objects.filter(DAFTAR=daftar_jurnal, GURU=data_guru_user.DATA_GURU)
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return JurnalBelajarGuruListSerializer
+        elif self.request.method == 'POST':
+            return JurnalBelajarGuruSerializer
+
+        return super().get_serializer_class()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
 
 class TambahKelasSiswaView(generics.CreateAPIView):
