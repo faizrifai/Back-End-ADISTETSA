@@ -215,3 +215,9 @@ class TambahKelasSiswaSerializer(serializers.ModelSerializer):
     class Meta:
         model = KelasSiswa
         fields = '__all__'
+
+
+class AbsensiSiswaListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AbsensiSiswa
+        fields = '__all__'

@@ -313,6 +313,37 @@ class JurnalBelajarGuruListView(generics.ListCreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
+class AbsensiSiswaListView(generics.ListAPIView):
+    """
+    get: Menampilkan Absensi Siswa (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+    }
+
+    parser_classes = (MultiPartParser,)
+    serializer_class = AbsensiSiswaListSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        daftar_jurnal = DaftarJurnalBelajar.objects.get(pk=self.kwargs.get('pk'))
+        queryset = JurnalBelajar.objects.filter(DAFTAR=daftar_jurnal, GURU=data_guru_user.DATA_GURU)
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return JurnalBelajarGuruListSerializer
+        elif self.request.method == 'POST':
+            return JurnalBelajarGuruSerializer
+
+        return super().get_serializer_class()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
 class TambahKelasSiswaView(generics.CreateAPIView):
     """
     post: Mendaftarkan siswa ke dalam kelas yang dipilih (Staf Kurikulum).

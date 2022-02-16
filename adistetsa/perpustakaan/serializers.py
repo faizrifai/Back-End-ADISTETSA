@@ -6,6 +6,7 @@ from kustom_autentikasi.models import DataSiswaUser, DataGuruUser
 
 
 class KatalogBukuCopySerializer(serializers.ModelSerializer):
+    REGISTER = serializers.SerializerMethodField('get_register')
     JUDUL = serializers.SerializerMethodField('get_judul')
     PENULIS = serializers.SerializerMethodField('get_kode_author')   
     BAHASA = serializers.SerializerMethodField('get_bahasa')
@@ -14,7 +15,10 @@ class KatalogBukuCopySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = KatalogBukuCopy
-        fields = ('id', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA')
+        fields = ('id', 'REGISTER', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA')
+
+    def get_register(self, obj):
+        return str(obj.REGISTER_COPY)
 
     def get_bahasa(self, obj):
         return obj.DATA_DONASI.REGISTER_DONASI.BAHASA.BAHASA
