@@ -5,6 +5,7 @@ from django.utils.text import Truncator
 from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
+from kesiswaan.filter_admin import TahunAjaranFilter
 
 from kesiswaan.filter_admin import DataSiswaFilter
 # from .filter_admin import *
@@ -141,15 +142,17 @@ admin.site.register(RiwayatProgramKebaikan, RiwayatProgramKebaikanAdmin)
 
 class AnggotaEkskulAdmin(SubAdmin):
     model = AnggotaEkskul
-    list_display = ('KELAS_SISWA', 'EKSKUL', 'STATUS')
+    list_display = ('KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'STATUS')
     list_per_page = 10
+    list_filter = ('STATUS', TahunAjaranFilter,)
     # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
 
+
 class KatalogEkskulAdmin(RootSubAdmin):
-    search_fields = ['']
+    search_fields = ['NAMA', 'KATEGORI',]
     list_per_page = 10
     list_display = ('NAMA', 'KATEGORI', 'DESKRIPSI', 'DOKUMENTASI', 'aksi')
-    # list_filter = []
+    list_filter = ('KATEGORI', )
 
     subadmins = [AnggotaEkskulAdmin]
 
@@ -165,7 +168,7 @@ class JadwalEkskulAdmin(admin.ModelAdmin):
     search_fields = ('',)
     list_display = ['PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL','HARI','WAKTU_MULAI','WAKTU_BERAKHIR',]
     list_per_page = 10 
-    # autocomplete_fields = ['',]
+    autocomplete_fields = ('PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL',)
     # list_filter = (DataSiswaFilter,)
     
 admin.site.register(JadwalEkskul, JadwalEkskulAdmin)
@@ -238,11 +241,12 @@ admin.site.register(DaftarJurnalEkskul, DaftarJurnalEkskulAdmin)
 
 class PengajuanEkskulAdmin(admin.ModelAdmin):
     search_fields = ('',)
-    list_display = ['KELAS_SISWA', 'EKSKUL', 'TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
+    list_display = ['KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
     list_per_page = 10 
     list_filter = ('STATUS_PENGAJUAN', )
     actions = ('accept_action', 'decline_action',)
-    exclude = ('STATUS_PENGAJUAN',)
+    exclude = ('STATUS_PENGAJUAN', )
+    autocomplete_fields = ('KELAS_SISWA', 'EKSKUL',)
     
     def accept_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Disetujui')
@@ -263,3 +267,10 @@ class PengajuanEkskulAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanEkskul, PengajuanEkskulAdmin)
 
     
+class ProgramKerjaEkskulAdmin(admin.ModelAdmin):
+    search_fields = ('PELATIH__NAMA', 'EKSKUL__NAMA', )
+    list_display = ('PELATIH', 'EKSKUL', 'TAHUN_AJARAN', 'FILE_PROGRAM_KERJA',)
+    list_per_page = 10
+    autocomplete_fields = ('PELATIH', 'EKSKUL', 'TAHUN_AJARAN',)
+
+admin.site.register(ProgramKerjaEkskul, ProgramKerjaEkskulAdmin)

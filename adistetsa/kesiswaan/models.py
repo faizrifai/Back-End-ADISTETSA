@@ -1,10 +1,12 @@
+from operator import mod
+from turtle import ondrag
 from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.utils.text import Truncator
 
 from dataprofil.models import DataSiswa, DataPelatih
-from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa
+from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, OfferingKelas
 
 from .enums import *
 
@@ -263,6 +265,10 @@ def post_save_jurnal_ekskul(sender, instance, created, **kwargs):
     try:
         ekskul = AnggotaEkskul.objects.filter(EKSKUL = instance.DAFTAR.EKSKUL)
         for kelas_siswa in ekskul:
+            anggota_ekskul = AnggotaEkskul.objects.get(KELAS_SISWA=kelas_siswa.KELAS_SISWA)
+            if (anggota_ekskul.STATUS == 'Nonaktif'):
+                continue
+            
             AbsensiEkskul.objects.update_or_create(
                 NIS=kelas_siswa.KELAS_SISWA.NIS, 
                 JURNAL_EKSKUL=instance)
@@ -288,6 +294,7 @@ class PengajuanEkskul (models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
+    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     TANGGAL_PENGAJUAN = models.DateField()
     STATUS_PENGAJUAN = models.CharField(
         max_length=255,
@@ -303,6 +310,7 @@ def post_save_pengajuan_ekskul(sender, instance, created, **kwargs):
             AnggotaEkskul.objects.update_or_create(
                 KELAS_SISWA = instance.KELAS_SISWA, 
                 EKSKUL=instance.EKSKUL,
+                TAHUN_AJARAN = instance.TAHUN_AJARAN,
                 STATUS='Aktif')
             instance.delete()
                     
@@ -320,6 +328,7 @@ post_save.connect(post_save_pengajuan_ekskul, sender=PengajuanEkskul)
 class AnggotaEkskul (models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     STATUS = models.CharField(
         max_length= 255,
@@ -329,4 +338,33 @@ class AnggotaEkskul (models.Model):
     
     def __str__(self):
         return str(self.KELAS_SISWA.NIS.NAMA) 
+
+class ProgramKerjaEkskul(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    PELATIH = models.ForeignKey(DataPelatih, on_delete=models.CASCADE)
+    EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
+    TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
+    FILE_PROGRAM_KERJA = models.FileField(max_length=255, upload_to='ProgramKerjaEkskul')
     
+    def __str__(self):
+        return self.EKSKUL.NAMA 
+
+def post_save_kelas_siswa(sender, instance, created, **kwargs):
+    # ubah status peminjaman setelah disetujui
+    try:
+        daftar = KatalogEkskul.objects.get(NAMA = 'PRAMUKA')
+        print(daftar)
+        instance.EKSKUL = daftar
+        try:
+            AnggotaEkskul.objects.update_or_create(
+                KELAS_SISWA = instance, 
+                EKSKUL=instance.EKSKUL,
+                TAHUN_AJARAN = instance.KELAS.KELAS.TAHUN_AJARAN,
+                STATUS = 'Aktif')
+        except Exception as e:
+            print(str(e))
+                    
+    except Exception as e:
+        print(str(e))
+            
+post_save.connect(post_save_kelas_siswa, sender=KelasSiswa)

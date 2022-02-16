@@ -527,7 +527,10 @@ class DataKompetensiGuruAdmin(admin.ModelAdmin):
 admin.site.register(DataKompetensiGuru, DataKompetensiGuruAdmin)
 
 class DataPelatihAdmin (admin.ModelAdmin):
-    pass
+    search_fields = ('NAMA',)
+    list_display = ('NAMA', )
+    list_per_page = 10 
+    
 admin.site.register(DataPelatih, DataPelatihAdmin)
 
 # class DataGuruAdmin(admin.ModelAdmin):
