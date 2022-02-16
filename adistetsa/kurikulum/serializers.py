@@ -1,3 +1,4 @@
+from datetime import datetime
 from .models import *
 from rest_framework import serializers
 
@@ -153,6 +154,62 @@ class JadwalMengajarSerializer(serializers.ModelSerializer):
 
     def get_semester(self, obj):
         return str(obj.SEMESTER)
+
+
+class DaftarJurnalBelajarGuruListSerializer(serializers.ModelSerializer):
+    GURU = serializers.SerializerMethodField('get_guru')
+    MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
+    KELAS = serializers.SerializerMethodField('get_kelas')
+    SEMESTER = serializers.SerializerMethodField('get_semester')
+    WAKTU_PELAJARAN = serializers.SerializerMethodField('get_waktu_pelajaran')
+
+    class Meta:
+        model = DaftarJurnalBelajar
+        exclude = ('JADWAL_MENGAJAR',)
+
+    def get_guru(self, obj):
+        return str(obj.GURU.NAMA_LENGKAP)
+
+    def get_mata_pelajaran(self, obj):
+        return str(obj.MATA_PELAJARAN.NAMA)
+
+    def get_kelas(self, obj):
+        return str(obj.KELAS)
+
+    def get_semester(self, obj):
+        return str(obj.SEMESTER)
+
+    def get_waktu_pelajaran(self, obj):
+        jadwal_mengajar = JadwalMengajar.objects.get(pk=obj.JADWAL_MENGAJAR.ID)
+        waktu_pelajaran = []
+        for data in jadwal_mengajar.WAKTU_PELAJARAN.all():
+            waktu_pelajaran.append(str(data))
+
+        return waktu_pelajaran
+
+
+class JurnalBelajarGuruSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JurnalBelajar
+        exclude = ('DAFTAR', 'GURU', 'TANGGAL_MENGAJAR')
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        pk = request.parser_context.get('kwargs').get('pk')
+        daftar_jurnal_belajar = DaftarJurnalBelajar.objects.get(pk=pk)
+
+        validated_data['DAFTAR'] = daftar_jurnal_belajar
+        validated_data['GURU'] = daftar_jurnal_belajar.GURU
+        validated_data['TANGGAL_MENGAJAR'] = datetime.today()
+
+        return super().create(validated_data)
+
+
+class JurnalBelajarGuruListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JurnalBelajar
+        exclude = ('GURU', 'DAFTAR')
+
 
 class TambahKelasSiswaSerializer(serializers.ModelSerializer):
     class Meta:
