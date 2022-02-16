@@ -853,3 +853,10 @@ class DataRiwayatKarirKaryawan(models.Model):
     
     class Meta:
         verbose_name_plural = "Data Riwayat Karir Karyawan "
+
+class DataPelatih (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NAMA = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return str(self.NAMA)
