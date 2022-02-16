@@ -85,6 +85,7 @@ class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
         'POST': ['Siswa'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaSerializer
     search_fields = ('STATUS_PENGAJUAN')
@@ -131,6 +132,7 @@ class PengajuanPeminjamanSiswaDetailView(generics.RetrieveAPIView):
         'POST': ['Siswa'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaListSerializer
     search_fields = ('STATUS_PENGAJUAN')
@@ -195,6 +197,7 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
         'POST': ['Guru'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruSerializer
     search_fields = ('STATUS_PENGAJUAN')
@@ -242,6 +245,7 @@ class PengajuanPeminjamanGuruDetailView(generics.RetrieveAPIView):
         'POST': ['Guru'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanGuruListSerializer
     search_fields = ('STATUS_PENGAJUAN')
