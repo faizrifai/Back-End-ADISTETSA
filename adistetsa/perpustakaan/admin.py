@@ -330,7 +330,7 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
 admin.site.register(RiwayatPeminjamanSiswa, RiwayatPeminjamanSiswaAdmin)
 
 class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
-    search_fields = search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP',)
     list_display = ('DATA_GURU', 'buku', 'TANGGAL_PENGAJUAN', 'status_pengajuan', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN')
     list_per_page = 10 
     filter_horizontal = ('BUKU',)
@@ -390,7 +390,7 @@ class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanPeminjamanGuru, PengajuanPeminjamanGuruAdmin)
 
 class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
-    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
     list_display = ('DATA_GURU','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
     list_per_page = 10
     filter_horizontal = ('BUKU',)
