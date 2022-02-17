@@ -195,7 +195,7 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
     parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruSerializer
-    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP',)
 
     def get_queryset(self):
         current_user = self.request.user
@@ -265,7 +265,7 @@ class PengajuanPeminjamanGuruAdminListView(generics.ListAPIView):
 
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruAdminSerializer
-    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP',)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -384,7 +384,7 @@ class RiwayatPeminjamanGuruListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanGuru.objects.all()
     serializer_class = RiwayatPeminjamanGuruSerializer
-    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -435,7 +435,7 @@ class RiwayatPeminjamanGuruAdminListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanGuru.objects.all()
     serializer_class = RiwayatPeminjamanGuruAdminSerializer
-    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
