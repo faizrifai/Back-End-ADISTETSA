@@ -1,19 +1,13 @@
-from cmath import phase
-from logging import exception
-from sre_constants import SUCCESS
-from django import shortcuts
 from django.contrib.auth.models import User
 
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed, pre_save
 from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
+from django.forms import ValidationError
 from django.utils import timezone
-from iniconfig import ParseError
 
-from dataprofil.models import DataGuru, DataSiswa
-from kurikulum.models import PoinPelanggaran
-import datetime
+from dataprofil.models import DataSiswa
 import calendar
 
 from .enums import *    
@@ -112,35 +106,33 @@ class PengajuanPeminjamanRuangan(models.Model):
     )
     KETERANGAN = models.TextField(max_length=255)
 
-def pre_save_pengajuan_peminjaman_ruangan(sender, instance, **kwargs):
-    sukses = False
-    try:
-        ruangan = instance.RUANGAN
-        waktu = instance.TANGGAL_PEMAKAIAN
-        penggunaan = instance.JAM_PENGGUNAAN
-        berakhir = instance.JAM_BERAKHIR
+    def clean(self):
+        sukses = False
+
+        ruangan = self.RUANGAN
+        waktu = self.TANGGAL_PEMAKAIAN
+        penggunaan = self.JAM_PENGGUNAAN
+        berakhir = self.JAM_BERAKHIR
         hari = calendar.day_name[waktu.weekday()]
         if (ruangan.STATUS != 'Sudah Dikembalikan'):
             obj = PengajuanPeminjamanRuangan.objects.filter(RUANGAN=ruangan)
             for data in obj:
                 data_waktu = data.TANGGAL_PEMAKAIAN 
                 data_hari = calendar.day_name[data_waktu.weekday()]
-                #Jika Hari Penggunaan Sama
+                # Jika Hari Penggunaan Sama
                 if (hari == data_hari):
                     data_penggunaan = data.JAM_PENGGUNAAN
                     data_berakhir = data.JAM_BERAKHIR
-                    #menghindari konflik jadwal
-                    if (data_penggunaan < penggunaan and data_berakhir < penggunaan) :
-                        sukses = True 
-                    elif (data_penggunaan > berakhir): 
+                    # Menghindari konflik jadwal
+                    if (penggunaan < data_penggunaan and berakhir < data_penggunaan):
                         sukses = True
-    except Exception as e:
-        print(str(e))
-        
-    if (not sukses):
-        raise ParseError('Sek di gawe lur')
+                    elif (penggunaan > data_berakhir and berakhir > data_berakhir):
+                        sukses = True
+                    else:
+                        sukses = False
 
-pre_save.connect(pre_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
+            if (not sukses):
+                raise ValidationError('Ruangan sudah digunakan, coba pilih waktu pemakaian dan waktu berakhir yang berbeda')
 
 def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
     try:
