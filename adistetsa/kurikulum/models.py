@@ -309,7 +309,7 @@ def post_save_jurnal_belajar(sender, instance, created, **kwargs):
         print(str(e))
         
 post_save.connect(post_save_jurnal_belajar, sender=JurnalBelajar)
-    
+
 class AbsensiSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
