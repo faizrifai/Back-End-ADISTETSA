@@ -98,7 +98,13 @@ from .importexportresources import *
 # admin.site.register(DeskripsiFisik)
 
 class KatalogBukuCopyAdmin(ImportExportModelAdmin):
-    search_fields = ('DATA_DONASI',)
+    search_fields = (
+        'DATA_DONASI__REGISTER_DONASI__JUDUL',
+        'DATA_DONASI__REGISTER_DONASI__KODE_AUTHOR__NAMA_AUTHOR',
+        'DATA_DONASI__REGISTER_DONASI__BAHASA__BAHASA',
+        'DATA_DONASI__REGISTER_DONASI__KODE_TIPE__NAMA_TIPE',
+        'DATA_DONASI__REGISTER_DONASI__TAHUN_TERBIT__TAHUN_TERBIT',
+    )
     list_display = ('DATA_DONASI', 'REGISTER_COPY', 'STATUS')
     list_per_page = 10
     list_filter = ('STATUS',)
@@ -130,9 +136,9 @@ def isbn(obj):
     return Truncator(name).chars(7)
 
 class KatalogBukuAdmin(ImportExportModelAdmin):
-    search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
+    search_fields = ['REGISTER', 'ISBN', 'JUDUL', 'VOLUME', 'EDISI', 'BAHASA__BAHASA', 'TAHUN_TERBIT__TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT']
     list_per_page = 10
-    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA','KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'jumlah_tersedia')
+    list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA', 'KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'jumlah_tersedia')
     list_filter = (TahunTerbitFilter, BahasaFilter, AuthorFilter, MediaFilter, TipeBukuFilter,)
     resource_class = BookMainResource
     
@@ -221,7 +227,7 @@ admin.site.register(Operator, OperatorAdmin)
 
 
 class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
-    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    search_fields = search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
     list_display = ('NIS', 'buku', 'TANGGAL_PENGAJUAN', 'status_pengajuan', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN')
     list_per_page = 10 
     filter_horizontal = ('BUKU',)
@@ -281,7 +287,7 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanPeminjamanSiswa, PengajuanPeminjamanSiswaAdmin)
 
 class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
-    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
     list_display = ('NIS','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
     list_per_page = 10
     filter_horizontal = ('BUKU',)
@@ -324,7 +330,7 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
 admin.site.register(RiwayatPeminjamanSiswa, RiwayatPeminjamanSiswaAdmin)
 
 class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
-    search_fields = ('BUKU__DATA_BUKU__JUDUL',)
+    search_fields = search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
     list_display = ('DATA_GURU', 'buku', 'TANGGAL_PENGAJUAN', 'status_pengajuan', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN')
     list_per_page = 10 
     filter_horizontal = ('BUKU',)

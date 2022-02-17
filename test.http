@@ -9,17 +9,18 @@
 #     "JANGKA_PEMINJAMAN": "Jangka Pendek"
 # }
 
-# GET http://localhost:8000/perpustakaan/katalog_buku_tersedia
-# Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzQ0ODQ2LCJpYXQiOjE2NDUwNDg4NDYsImp0aSI6IjgzNWQxMjU3YzgwYzRiOGY4NjY2MWZlMDQ1N2YyYjNiIiwidXNlcl9pZCI6OX0.YEsn8CQZu4Cna-ghKMyaIuUSYk-9ToxlXozfoN38kPc
-# Content-Type: application/json
-
-POST http://localhost:8000/perpustakaan/pengajuan_peminjaman_siswa
+GET http://localhost:8000/perpustakaan/pengajuan_peminjaman_siswa/search=tes
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzQ0ODQ2LCJpYXQiOjE2NDUwNDg4NDYsImp0aSI6IjgzNWQxMjU3YzgwYzRiOGY4NjY2MWZlMDQ1N2YyYjNiIiwidXNlcl9pZCI6OX0.YEsn8CQZu4Cna-ghKMyaIuUSYk-9ToxlXozfoN38kPc
 Content-Type: application/json
 
-{
-    "BUKU": [14, 15],
-    "TANGGAL_PENGAJUAN": "2022-09-09",
-    "STATUS_PENGAJUAN": "Pengajuan",
-    "JANGKA_PEMINJAMAN": "Jangka Pendek"
-}
+
+# POST http://localhost:8000/perpustakaan/pengajuan_peminjaman_siswa
+# Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzQ0ODQ2LCJpYXQiOjE2NDUwNDg4NDYsImp0aSI6IjgzNWQxMjU3YzgwYzRiOGY4NjY2MWZlMDQ1N2YyYjNiIiwidXNlcl9pZCI6OX0.YEsn8CQZu4Cna-ghKMyaIuUSYk-9ToxlXozfoN38kPc
+# Content-Type: application/json
+
+# {
+#     "BUKU": [14, 15],
+#     "TANGGAL_PENGAJUAN": "2022-09-09",
+#     "STATUS_PENGAJUAN": "Pengajuan",
+#     "JANGKA_PEMINJAMAN": "Jangka Pendek"
+# }
