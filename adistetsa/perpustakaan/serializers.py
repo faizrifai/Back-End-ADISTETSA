@@ -1,3 +1,4 @@
+from django.http import QueryDict
 from .models import *
 from rest_framework import serializers
 
@@ -80,7 +81,7 @@ class KatalogBukuListSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
-    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
+    BUKU = serializers.CharField(max_length=255)
 
     class Meta:
         model = PengajuanPeminjamanSiswa
@@ -100,6 +101,21 @@ class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
             data_pengajuan.BUKU.add(data)
 
         return data_pengajuan
+
+    def validate(self, attrs):
+        attrs['BUKU'] = attrs['BUKU'].split(',')
+
+        return super().validate(attrs)
+
+    def to_representation(self, instance):
+        daftar_buku = []
+        for buku in instance.BUKU.all():
+            daftar_buku.append(str(buku))
+
+        data = super().to_representation(instance)
+        data['BUKU'] = str(daftar_buku)
+
+        return data
 
 
 class PengajuanPeminjamanSiswaListSerializer(serializers.ModelSerializer):
@@ -141,7 +157,7 @@ class PengajuanPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
-    BUKU = serializers.PrimaryKeyRelatedField(many=True, queryset=KatalogBukuCopy.objects.all())
+    BUKU = serializers.CharField(max_length=255)
 
     class Meta:
         model = PengajuanPeminjamanGuru
@@ -161,6 +177,21 @@ class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
             data_pengajuan.BUKU.add(data)
 
         return data_pengajuan
+
+    def validate(self, attrs):
+        attrs['BUKU'] = attrs['BUKU'].split(',')
+
+        return super().validate(attrs)
+
+    def to_representation(self, instance):
+        daftar_buku = []
+        for buku in instance.BUKU.all():
+            daftar_buku.append(str(buku))
+
+        data = super().to_representation(instance)
+        data['BUKU'] = str(daftar_buku)
+
+        return data
 
 
 class PengajuanPeminjamanGuruListSerializer(serializers.ModelSerializer):

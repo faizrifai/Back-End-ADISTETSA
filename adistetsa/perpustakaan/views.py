@@ -4,8 +4,8 @@ from .serializers import *
 from .utility import check_buku_tersedia
 
 from rest_framework import generics, status
-from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
@@ -129,10 +129,8 @@ class PengajuanPeminjamanSiswaDetailView(generics.RetrieveAPIView):
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Siswa'],
-        'POST': ['Siswa'],
     }
 
-    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaListSerializer
     search_fields = ('STATUS_PENGAJUAN')
@@ -155,7 +153,6 @@ class PengajuanPeminjamanSiswaAdminListView(generics.ListAPIView):
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Staf Perpustakaan'],
-        'POST': ['Staf Perpustakaan'],
     }
 
     queryset = PengajuanPeminjamanSiswa.objects.all()
@@ -242,10 +239,8 @@ class PengajuanPeminjamanGuruDetailView(generics.RetrieveAPIView):
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Guru'],
-        'POST': ['Guru'],
     }
 
-    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanGuruListSerializer
     search_fields = ('STATUS_PENGAJUAN')
