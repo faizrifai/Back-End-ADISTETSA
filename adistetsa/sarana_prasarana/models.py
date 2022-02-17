@@ -1,14 +1,20 @@
+from cmath import phase
+from logging import exception
+from sre_constants import SUCCESS
 from django import shortcuts
 from django.contrib.auth.models import User
 
 from django.db import models
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import post_save, m2m_changed, pre_save
 from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
+from django.utils import timezone
+from iniconfig import ParseError
 
 from dataprofil.models import DataGuru, DataSiswa
 from kurikulum.models import PoinPelanggaran
 import datetime
+import calendar
 
 from .enums import *    
 
@@ -87,11 +93,14 @@ class PengajuanPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
     PENGGUNA = models.CharField(max_length=255)
-    NO_HP = models.PositiveBigIntegerField()
+    NO_HP = models.CharField(max_length=255)
     KEGIATAN = models.CharField(max_length=255)
-    RUANGAN = models.ManyToManyField(JadwalPenggunaanRuangan)
-    TANGGAL_PENGAJUAN = models.DateField()
-    TANGGAL_PENGGUNAAN = models.DateField()
+    RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateField(default=timezone.now)
+    TANGGAL_PEMAKAIAN = models.DateField(default=timezone.now)
+    TANGGAL_BERAKHIR = models.DateField(default=timezone.now)
+    JAM_PENGGUNAAN = models.TimeField(default=timezone.now)
+    JAM_BERAKHIR = models.TimeField(default=timezone.now)
     STATUS = models.CharField(
         max_length=255, 
         choices=ENUM_STATUS_PENGAJUAN,
@@ -102,7 +111,50 @@ class PengajuanPeminjamanRuangan(models.Model):
         choices=ENUM_JENIS_PEMINJAMAN,
     )
     KETERANGAN = models.TextField(max_length=255)
-    
+
+def pre_save_pengajuan_peminjaman_ruangan(sender, instance, **kwargs):
+    sukses = False
+    try:
+        ruangan = instance.RUANGAN
+        waktu = instance.TANGGAL_PEMAKAIAN
+        penggunaan = instance.JAM_PENGGUNAAN
+        berakhir = instance.JAM_BERAKHIR
+        hari = calendar.day_name[waktu.weekday()]
+        if (ruangan.STATUS != 'Sudah Dikembalikan'):
+            obj = PengajuanPeminjamanRuangan.objects.filter(RUANGAN=ruangan)
+            for data in obj:
+                data_waktu = data.TANGGAL_PEMAKAIAN 
+                data_hari = calendar.day_name[data_waktu.weekday()]
+                #Jika Hari Penggunaan Sama
+                if (hari == data_hari):
+                    data_penggunaan = data.JAM_PENGGUNAAN
+                    data_berakhir = data.JAM_BERAKHIR
+                    #menghindari konflik jadwal
+                    if (data_penggunaan < penggunaan and data_berakhir < penggunaan) :
+                        sukses = True 
+                    elif (data_penggunaan > berakhir): 
+                        sukses = True
+    except Exception as e:
+        print(str(e))
+        
+    if (not sukses):
+        raise ParseError('Sek di gawe lur')
+
+pre_save.connect(pre_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
+
+def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
+    try:
+        ruangan = instance.RUANGAN 
+        ruangan.STATUS = 'Pengajuan'
+        ruangan.save()
+        
+    except Exception as e:
+        print(str(e))
+
+
+post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
+
+
 class RiwayatPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -123,80 +175,80 @@ class RiwayatPeminjamanRuangan(models.Model):
     )
     KETERANGAN = models.TextField(max_length=255)
 
-def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
-    # ubah status peminjaman setelah disetujui
+# def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
+#     # ubah status peminjaman setelah disetujui
 
-    if instance.STATUS == 'Sedang Dipinjam':
-        try:
-            for data in instance.RUANGAN.values():
-                obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
-                obj.STATUS = 'Sedang Dipinjam'
-                obj.save()
-                # add riwayat peminjaman
-                if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
-                    tanggal_pengembalian = datetime.timedelta(weeks=52)
-                if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
-                    tanggal_pengembalian = datetime.timedelta(weeks=7)
-
-
-                ruangan_m2m = []
-                for data in instance.RUANGAN.all():
-                    ruangan_m2m.append(data.ID)
-
-                obj = RiwayatPeminjamanRuangan.objects.create(
-                    USER = instance.USER,
-                    PENGGUNA = instance.PENGGUNA,
-                    NO_HP = instance.NO_HP,
-                    KEGIATAN = instance.KEGIATAN,
-                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
-                    TANGGAL_SELESAI = datetime.date.today() + tanggal_pengembalian,
-                    JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
-                    STATUS = 'Sedang Dipinjam',
-                    KETERANGAN = instance.KETERANGAN
-                )
-                obj.RUANGAN.set(ruangan_m2m)
-                obj.save()
-                instance.delete()
-
-        except Exception as e:
-            print(str(e))
-
-    elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
-        try:
-            for data in instance.RUANGAN.values():
-                obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
-                obj.STATUS = 'Selesai Dipinjam'
-                obj.save()
-                # add riwayat peminjaman
-                if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
-                    tanggal_pengembalian = datetime.timedelta(weeks=52)
-                if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
-                    tanggal_pengembalian = datetime.timedelta(weeks=7)
+#     if instance.STATUS == 'Sedang Dipinjam':
+#         try:
+#             for data in instance.RUANGAN.values():
+#                 obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
+#                 obj.STATUS = 'Sedang Dipinjam'
+#                 obj.save()
+#                 # add riwayat peminjaman
+#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
+#                     tanggal_pengembalian = datetime.timedelta(weeks=52)
+#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
+#                     tanggal_pengembalian = datetime.timedelta(weeks=7)
 
 
-                ruangan_m2m = []
-                for data in instance.RUANGAN.all():
-                    ruangan_m2m.append(data.ID)
+#                 ruangan_m2m = []
+#                 for data in instance.RUANGAN.all():
+#                     ruangan_m2m.append(data.ID)
 
-                obj = RiwayatPeminjamanRuangan.objects.create(
-                    USER = instance.USER,
-                    PENGGUNA = instance.PENGGUNA,
-                    NO_HP = instance.NO_HP,
-                    KEGIATAN = instance.KEGIATAN,
-                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
-                    TANGGAL_SELESAI = instance.TANGGAL_PENGGUNAAN + tanggal_pengembalian,
-                    JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
-                    STATUS = 'Ditolak',
-                    KETERANGAN = instance.KETERANGAN
-                )
-                obj.RUANGAN.set(ruangan_m2m)
-                obj.save()
-                instance.delete()
+#                 obj = RiwayatPeminjamanRuangan.objects.create(
+#                     USER = instance.USER,
+#                     PENGGUNA = instance.PENGGUNA,
+#                     NO_HP = instance.NO_HP,
+#                     KEGIATAN = instance.KEGIATAN,
+#                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
+#                     TANGGAL_SELESAI = datetime.date.today() + tanggal_pengembalian,
+#                     JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
+#                     STATUS = 'Sedang Dipinjam',
+#                     KETERANGAN = instance.KETERANGAN
+#                 )
+#                 obj.RUANGAN.set(ruangan_m2m)
+#                 obj.save()
+#                 instance.delete()
 
-        except Exception as e:
-            print(str(e))
+#         except Exception as e:
+#             print(str(e))
 
-post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
+#     elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
+#         try:
+#             for data in instance.RUANGAN.values():
+#                 obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
+#                 obj.STATUS = 'Selesai Dipinjam'
+#                 obj.save()
+#                 # add riwayat peminjaman
+#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
+#                     tanggal_pengembalian = datetime.timedelta(weeks=52)
+#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
+#                     tanggal_pengembalian = datetime.timedelta(weeks=7)
+
+
+#                 ruangan_m2m = []
+#                 for data in instance.RUANGAN.all():
+#                     ruangan_m2m.append(data.ID)
+
+#                 obj = RiwayatPeminjamanRuangan.objects.create(
+#                     USER = instance.USER,
+#                     PENGGUNA = instance.PENGGUNA,
+#                     NO_HP = instance.NO_HP,
+#                     KEGIATAN = instance.KEGIATAN,
+#                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
+#                     TANGGAL_SELESAI = instance.TANGGAL_PENGGUNAAN + tanggal_pengembalian,
+#                     JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
+#                     STATUS = 'Ditolak',
+#                     KETERANGAN = instance.KETERANGAN
+#                 )
+#                 obj.RUANGAN.set(ruangan_m2m)
+#                 obj.save()
+#                 instance.delete()
+
+#         except Exception as e:
+#             print(str(e))
+
+# post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
 
 class PengajuanPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -316,30 +368,30 @@ def alat_changed(sender, instance, action, pk_set=None, **kwargs):
 
 m2m_changed.connect(alat_changed, sender=PengajuanPeminjamanBarang.ALAT.through)
 
-def ruangan_changed(sender, instance, action, pk_set=None, **kwargs):
-    if action == 'post_add':
-        for pk in pk_set:
-            obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
-            print('add: ' + str(obj))
-            obj.STATUS = 'Diajukan' 
-            obj.save()
+# def ruangan_changed(sender, instance, action, pk_set=None, **kwargs):
+#     if action == 'post_add':
+#         for pk in pk_set:
+#             obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
+#             print('add: ' + str(obj))
+#             obj.STATUS = 'Diajukan' 
+#             obj.save()
 
-            ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
-            ruangan.status = 'Pengajuan'
-            ruangan.save()
+#             ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
+#             ruangan.status = 'Pengajuan'
+#             ruangan.save()
             
-    elif action == 'post_remove':
-        for pk in pk_set:
-            obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
-            print('delete: ' + str(obj))
-            obj.STATUS = 'Selesai Dipinjam'
-            obj.save()
+#     elif action == 'post_remove':
+#         for pk in pk_set:
+#             obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
+#             print('delete: ' + str(obj))
+#             obj.STATUS = 'Selesai Dipinjam'
+#             obj.save()
 
-            ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
-            ruangan.status = 'Sudah Dikembalikan'
-            ruangan.save()
+#             ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
+#             ruangan.status = 'Sudah Dikembalikan'
+#             ruangan.save()
 
-m2m_changed.connect(ruangan_changed, sender=PengajuanPeminjamanRuangan.RUANGAN.through)
+# m2m_changed.connect(ruangan_changed, sender=PengajuanPeminjamanRuangan.RUANGAN.through)
     
 class PengajuanPeminjamanRuanganPendek(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -350,3 +402,4 @@ class PengajuanPeminjamanRuanganPendek(models.Model):
     TANGGAL_PENGGUNAAN = models.DateField()
     HARI_PENGGUNAAN = models.ForeignKey(HariPenggunaan, on_delete=models.CASCADE)
     KETERANGAN = models.TextField(max_length=255)
+

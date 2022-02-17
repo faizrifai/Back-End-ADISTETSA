@@ -89,7 +89,7 @@ class PengajuanPeminjamanBarangAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanBarang, PengajuanPeminjamanBarangAdmin)
 
-class RiwayatPeminjamanBarangAdmin(admin.ModelAdmin):
+class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
     search_fields = ('',)
     list_display = ('NAMA_PEMINJAM','NO_TELEPON','alat','KEGIATAN', 'TANGGAL_PENGGUNAAN', 'TANGGAL_PENGEMBALIAN','KETERANGAN', 'status_peminjaman','TANDA_TANGAN')
     list_per_page = 10
@@ -151,45 +151,45 @@ class JadwalPenggunaanRuanganAdmin(admin.ModelAdmin):
 admin.site.register(JadwalPenggunaanRuangan, JadwalPenggunaanRuanganAdmin)
 
 class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
-    search_fields = ('PENGGUNA','PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN__NAMA', 'KETERANGAN')
-    list_display = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'peminjaman_ruangan','TANGGAL_PENGAJUAN', 'TANGGAL_PENGGUNAAN', 'KETERANGAN', 'status_pengajuan')
+    search_fields = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN__NAMA', 'KETERANGAN')
+    list_display = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN' ,'TANGGAL_PENGAJUAN', 'TANGGAL_PEMAKAIAN','TANGGAL_BERAKHIR','JAM_PENGGUNAAN','JAM_BERAKHIR', 'JENIS_PEMINJAMAN', 'KETERANGAN',)
     list_per_page = 10
-    filter_horizontal = ('RUANGAN',)
-    list_filter = ('STATUS',)
-    actions = ('accept_action','decline_action',)
+    # filter_horizontal = ('RUANGAN',)
+    # list_filter = ('STATUS',)
+    # actions = ('accept_action','decline_action',)
 
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        if db_field.name == "RUANGAN":
-            kwargs["queryset"] = JadwalPenggunaanRuangan.objects.filter(STATUS='Selesai Dipinjam')
-        return super(PengajuanPeminjamanRuanganAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+    # def formfield_for_manytomany(self, db_field, request, **kwargs):
+    #     if db_field.name == "RUANGAN":
+    #         kwargs["queryset"] = JadwalPenggunaanRuangan.objects.filter(STATUS='Selesai Dipinjam')
+    #     return super(PengajuanPeminjamanRuanganAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
 
-    def accept_action(self, request, queryset):
-        queryset.update(STATUS = 'Sedang Dipinjam')
-        for d in queryset.values():
-            obj = PengajuanPeminjamanRuangan.objects.get(ID=d['ID'])
-            obj.save()
+    # def accept_action(self, request, queryset):
+    #     queryset.update(STATUS = 'Sedang Dipinjam')
+    #     for d in queryset.values():
+    #         obj = PengajuanPeminjamanRuangan.objects.get(ID=d['ID'])
+    #         obj.save()
 
-    accept_action.short_description = "Setujui pengajuan peminjaman"
+    # accept_action.short_description = "Setujui pengajuan peminjaman"
 
-    def decline_action(self, request, queryset):
-        queryset.update(STATUS = 'Ditolak')
-        for d in queryset.values():
-            obj = PengajuanPeminjamanRuangan.objects.get(ID=d['ID'])
-            obj.save()
+    # def decline_action(self, request, queryset):
+    #     queryset.update(STATUS = 'Ditolak')
+    #     for d in queryset.values():
+    #         obj = PengajuanPeminjamanRuangan.objects.get(ID=d['ID'])
+    #         obj.save()
 
-    decline_action.short_description = "Tolak pengajuan peminjaman"
+    # decline_action.short_description = "Tolak pengajuan peminjaman"
 
-    def status_pengajuan(self, obj):
-        return (obj.STATUS == 'Sedang Dipinjam')       
+    # def status_pengajuan(self, obj):
+    #     return (obj.STATUS == 'Sedang Dipinjam')       
 
-    status_pengajuan.boolean = True
+    # status_pengajuan.boolean = True
 
-    def peminjaman_ruangan(self, obj):
-        daftar = ""
-        for data in obj.RUANGAN.all():
-            daftar += str(data) + "<br>"
+    # def peminjaman_ruangan(self, obj):
+    #     daftar = ""
+    #     for data in obj.RUANGAN.all():
+    #         daftar += str(data) + "<br>"
 
-        return format_html(daftar)
+    #     return format_html(daftar)
 
 admin.site.register(PengajuanPeminjamanRuangan, PengajuanPeminjamanRuanganAdmin)
 
