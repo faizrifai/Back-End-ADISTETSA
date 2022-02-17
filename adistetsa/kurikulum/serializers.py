@@ -218,6 +218,11 @@ class TambahKelasSiswaSerializer(serializers.ModelSerializer):
 
 
 class AbsensiSiswaListSerializer(serializers.ModelSerializer):
+    NAMA = serializers.SerializerMethodField('get_nama')
+
     class Meta:
         model = AbsensiSiswa
-        fields = '__all__'
+        exclude = ('JURNAL_BELAJAR',)
+
+    def get_nama(self, obj):
+        return obj.NIS.NAMA

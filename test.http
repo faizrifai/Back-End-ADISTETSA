@@ -9,8 +9,8 @@
 #     "JANGKA_PEMINJAMAN": "Jangka Pendek"
 # }
 
-GET http://localhost:8000/perpustakaan/pengajuan_peminjaman_siswa/search=tes
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzQ0ODQ2LCJpYXQiOjE2NDUwNDg4NDYsImp0aSI6IjgzNWQxMjU3YzgwYzRiOGY4NjY2MWZlMDQ1N2YyYjNiIiwidXNlcl9pZCI6OX0.YEsn8CQZu4Cna-ghKMyaIuUSYk-9ToxlXozfoN38kPc
+GET http://localhost:8000/kurikulum/absensi_siswa/4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzA0MTA3LCJpYXQiOjE2NDUwMDgxMDcsImp0aSI6IjFkODkyYWQ2MTc1NjQ3Zjg5MGI3MjljNzM2OTZiMjk4IiwidXNlcl9pZCI6Mn0.P2i43QgC-LiNGfrmMgzxxhrYbCZ2MkCKbx3TDARiyWc
 Content-Type: application/json
 
 
