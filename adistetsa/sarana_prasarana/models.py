@@ -105,17 +105,26 @@ class PengajuanPeminjamanRuangan(models.Model):
         choices=ENUM_JENIS_PEMINJAMAN,
     )
     KETERANGAN = models.TextField(max_length=255)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan', blank=True)
+
 
     def clean(self):
+        if self.TANGGAL_PENGAJUAN > self.TANGGAL_PEMAKAIAN:
+            raise ValidationError('Tidak bisa mengambil hari Sebelumnya')
+        if self.TANGGAL_PEMAKAIAN > self.TANGGAL_BERAKHIR :
+            raise ValidationError('Tanggal Berakhir Tidak Valid')
+        if self.JAM_PENGGUNAAN > self.JAM_BERAKHIR :
+            raise ValidationError('Jam Penggunaan Tidak Valid')
+        if self.JAM_PENGGUNAAN == self.JAM_BERAKHIR :
+            raise ValidationError('Jam Penggunaan Tidak Valid')
         sukses = False
-
         ruangan = self.RUANGAN
         waktu = self.TANGGAL_PEMAKAIAN
         penggunaan = self.JAM_PENGGUNAAN
         berakhir = self.JAM_BERAKHIR
         hari = calendar.day_name[waktu.weekday()]
         if (ruangan.STATUS != 'Sudah Dikembalikan'):
-            obj = PengajuanPeminjamanRuangan.objects.filter(RUANGAN=ruangan)
+            obj = RiwayatPeminjamanRuangan.objects.filter(RUANGAN=ruangan)
             for data in obj:
                 data_waktu = data.TANGGAL_PEMAKAIAN 
                 data_hari = calendar.day_name[data_waktu.weekday()]
@@ -130,6 +139,8 @@ class PengajuanPeminjamanRuangan(models.Model):
                         sukses = True
                     else:
                         sukses = False
+                else: 
+                    sukses = True  
 
             if (not sukses):
                 raise ValidationError('Ruangan sudah digunakan, coba pilih waktu pemakaian dan waktu berakhir yang berbeda')
@@ -141,8 +152,65 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
         ruangan.save()
         
     except Exception as e:
-        print(str(e))
+            print(str(e))
+        
+    if instance.STATUS == 'Sedang Dipinjam':
+        try:
+            obj = instance.RUANGAN
+            obj.STATUS = 'Sedang Dipinjam'
+            obj.save()
+            # add riwayat peminjaman
 
+            obj = RiwayatPeminjamanRuangan.objects.create(
+                USER = instance.USER,
+                PENGGUNA = instance.PENGGUNA,
+                NO_HP = instance.NO_HP,
+                KEGIATAN = instance.KEGIATAN,
+                RUANGAN = instance.RUANGAN,
+                TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
+                TANGGAL_PEMAKAIAN = instance.TANGGAL_PEMAKAIAN,
+                TANGGAL_BERAKHIR = instance.TANGGAL_BERAKHIR,
+                JAM_PENGGUNAAN = instance.JAM_PENGGUNAAN,
+                JAM_BERAKHIR = instance.JAM_BERAKHIR,
+                JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
+                STATUS = 'Sedang Dipinjam',
+                KETERANGAN = instance.KETERANGAN,
+                TANDA_TANGAN = instance.TANDA_TANGAN
+            )
+            obj.save()
+            instance.delete()
+
+        except Exception as e:
+            print(str(e))
+
+    elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
+        try:
+            obj = instance.RUANGAN
+            obj.STATUS = 'Selesai Dipinjam'
+            obj.save()
+            # add riwayat peminjaman
+
+            obj = RiwayatPeminjamanRuangan.objects.create(
+                USER = instance.USER,
+                PENGGUNA = instance.PENGGUNA,
+                NO_HP = instance.NO_HP,
+                KEGIATAN = instance.KEGIATAN,
+                RUANGAN = instance.RUANGAN,
+                TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
+                TANGGAL_PEMAKAIAN = instance.TANGGAL_PEMAKAIAN,
+                TANGGAL_BERAKHIR = instance.TANGGAL_BERAKHIR,
+                JAM_PENGGUNAAN = instance.JAM_PENGGUNAAN,
+                JAM_BERAKHIR = instance.JAM_BERAKHIR,
+                JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
+                STATUS = 'Ditolak',
+                KETERANGAN = instance.KETERANGAN,
+                TANDA_TANGAN = instance.TANDA_TANGAN
+            )
+            obj.save()
+            instance.delete()
+
+        except Exception as e:
+            print(str(e))
 
 post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
 
@@ -151,21 +219,26 @@ class RiwayatPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
     PENGGUNA = models.CharField(max_length=255)
-    NO_HP = models.PositiveBigIntegerField()
+    NO_HP = models.CharField(max_length=255)
     KEGIATAN = models.CharField(max_length=255)
-    RUANGAN = models.ManyToManyField(JadwalPenggunaanRuangan)
-    TANGGAL_PENGAJUAN = models.DateField()
-    TANGGAL_SELESAI = models.DateField()
-    JENIS_PEMINJAMAN = models.CharField(
-        max_length=255, 
-        choices=ENUM_JENIS_PEMINJAMAN,
-    )
+    RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateField(default=timezone.now)
+    TANGGAL_PEMAKAIAN = models.DateField(default=timezone.now)
+    TANGGAL_BERAKHIR = models.DateField(default=timezone.now)
+    JAM_PENGGUNAAN = models.TimeField(default=timezone.now)
+    JAM_BERAKHIR = models.TimeField(default=timezone.now)
     STATUS = models.CharField(
         max_length=255, 
         choices=ENUM_STATUS_PENGAJUAN,
         default='Diajukan',
     )
+    JENIS_PEMINJAMAN = models.CharField(
+        max_length=255, 
+        choices=ENUM_JENIS_PEMINJAMAN,
+    )
     KETERANGAN = models.TextField(max_length=255)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan', blank=True)
+
 
 # def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
 #     # ubah status peminjaman setelah disetujui
@@ -258,7 +331,7 @@ class PengajuanPeminjamanBarang(models.Model):
         choices=ENUM_PENGAJUAN,
         default='Pengajuan',
     )
-    TANDA_TANGAN = models.FileField(max_length=255, upload_to='BuktiPelanggaran', blank=True)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanBarang', blank=True)
 
 class RiwayatPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -275,7 +348,7 @@ class RiwayatPeminjamanBarang(models.Model):
         choices=ENUM_STATUS_PEMINJAMAN,
         default= 'Sedang Dipinjam'
     )
-    TANDA_TANGAN = models.FileField(max_length=255, upload_to='BuktiPelanggaran', blank=True)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanBarang', blank=True)
 
 
 def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
