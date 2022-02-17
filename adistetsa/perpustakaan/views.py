@@ -88,7 +88,7 @@ class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
     parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaSerializer
-    search_fields = ('STATUS_PENGAJUAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
     def get_queryset(self):
         current_user = self.request.user
@@ -133,7 +133,6 @@ class PengajuanPeminjamanSiswaDetailView(generics.RetrieveAPIView):
 
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaListSerializer
-    search_fields = ('STATUS_PENGAJUAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -157,7 +156,7 @@ class PengajuanPeminjamanSiswaAdminListView(generics.ListAPIView):
 
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaAdminSerializer
-    search_fields = ('STATUS_PENGAJUAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -176,7 +175,6 @@ class PengajuanPeminjamanSiswaAdminDetailView(generics.RetrieveAPIView):
 
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanSiswaAdminSerializer
-    search_fields = ('STATUS_PENGAJUAN')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -197,7 +195,7 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
     parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruSerializer
-    search_fields = ('STATUS_PENGAJUAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
     def get_queryset(self):
         current_user = self.request.user
@@ -243,7 +241,6 @@ class PengajuanPeminjamanGuruDetailView(generics.RetrieveAPIView):
 
     queryset = PengajuanPeminjamanSiswa.objects.all()
     serializer_class = PengajuanPeminjamanGuruListSerializer
-    search_fields = ('STATUS_PENGAJUAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -268,7 +265,7 @@ class PengajuanPeminjamanGuruAdminListView(generics.ListAPIView):
 
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruAdminSerializer
-    search_fields = ('STATUS_PENGAJUAN')
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -287,7 +284,6 @@ class PengajuanPeminjamanGuruAdminDetailView(generics.RetrieveAPIView):
 
     queryset = PengajuanPeminjamanGuru.objects.all()
     serializer_class = PengajuanPeminjamanGuruAdminSerializer
-    search_fields = ('STATUS_PENGAJUAN')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -304,6 +300,7 @@ class RiwayatPeminjamanSiswaListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanSiswa.objects.all()
     serializer_class = RiwayatPeminjamanSiswaSerializer
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -354,6 +351,7 @@ class RiwayatPeminjamanSiswaAdminListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanSiswa.objects.all()
     serializer_class = RiwayatPeminjamanSiswaAdminSerializer
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -386,6 +384,7 @@ class RiwayatPeminjamanGuruListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanGuru.objects.all()
     serializer_class = RiwayatPeminjamanGuruSerializer
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -436,6 +435,7 @@ class RiwayatPeminjamanGuruAdminListView(generics.ListAPIView):
 
     queryset = RiwayatPeminjamanGuru.objects.all()
     serializer_class = RiwayatPeminjamanGuruAdminSerializer
+    search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
