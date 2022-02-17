@@ -441,7 +441,7 @@ class RiwayatPeminjamanGuruAdminListView(generics.ListAPIView):
         return super().list(request, *args, **kwargs)
 
 
-class RiwayatPeminjamanGuruAdminDetailView(generics.ListAPIView):
+class RiwayatPeminjamanGuruAdminDetailView(generics.RetrieveAPIView):
     """
     get: Menampilkan detail riwayat peminjaman guru (Staf Perpustakaan).
     """
