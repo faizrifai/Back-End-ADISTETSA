@@ -7,6 +7,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework import generics, status
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from kurikulum.serializers import PoinPelanggaranSerializer
 # Create your views here.
 
 class PengajuanLaporanPelanggaranListView(generics.ListCreateAPIView):
@@ -122,6 +123,41 @@ class RiwayatProgramKebaikanListView(generics.ListAPIView):
             return queryset
 
         return super().get_queryset()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class DaftarSiswaListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar siswa (All Role).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua'],
+    }
+
+    queryset = DataSiswa.objects.all()
+    serializer_class = DaftarSiswaListSerializer
+    filterset_fields = ('NIS', 'NAMA')
+    search_fields = ('NIS', 'NAMA')
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class DataPelanggaranListView(generics.ListAPIView):
+    """
+    get: Menampilkan data pelanggaran (All Role).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua'],
+    }
+
+    queryset = PoinPelanggaran.objects.all()
+    serializer_class = PoinPelanggaranSerializer
+    search_fields = ['KETERANGAN', 'POIN']
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

@@ -128,3 +128,8 @@ class RiwayatProgramKebaikanListSerializer(serializers.ModelSerializer):
         return str(obj.DATA_SISWA)
     def get_jenis_program_kebaikan(self, obj):
         return str(obj.JENIS_PROGRAM_KEBAIKAN)
+
+class DaftarSiswaListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataSiswa
+        fields = '__all__'
