@@ -465,4 +465,4 @@ m2m_changed.connect(buku_changed_guru, sender=PengajuanPeminjamanGuru.BUKU.throu
     
 class Abstrak (models.Model):
     REGISTER = models.ForeignKey(KatalogBuku,on_delete=models.CASCADE)
-    ABSTRAK = models.CharField(max_length=255)
+    ABSTRAK = models.CharField(max_length=255, default="")

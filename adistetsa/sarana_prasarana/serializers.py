@@ -135,7 +135,7 @@ class KatalogRuanganSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
-    RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=JadwalPenggunaanRuangan.objects.all())
+    # RUANGAN = serializers.PrimaryKeyRelatedField(many=True, queryset=JadwalPenggunaanRuangan.objects.all())
 
     class Meta:
         model = PengajuanPeminjamanRuangan
