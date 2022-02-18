@@ -12,14 +12,14 @@ from .models import *
 import datetime
 
 class JenisSaranaAdmin (ImportExportModelAdmin):
-    search_fields = ('ID',)
+    search_fields = ('KATEGORI',)
     list_display = ('KATEGORI',)
     list_per_page = 10
     
 admin.site.register(JenisSarana, JenisSaranaAdmin)
 
 class SaranaAdmin(ImportExportModelAdmin):
-    search_fields = ('',)
+    search_fields = ('NAMA','JENIS__KATEGORI',)
     list_display = ('NAMA', 'JENIS','STATUS')
     list_per_page = 10
     list_filter = ('STATUS',)
@@ -33,7 +33,7 @@ class SaranaAdmin(ImportExportModelAdmin):
 admin.site.register(Sarana, SaranaAdmin)
 
 class PengajuanPeminjamanBarangAdmin(admin.ModelAdmin):
-    search_fields = ('ALAT',)
+    search_fields = ('NAMA_PEMINJAM','ALAT__NAMA',)
     list_display = ('NAMA_PEMINJAM','NO_TELEPON', 'alat', 'KEGIATAN', 'TANGGAL_PENGAJUAN', 'TANGGAL_PENGGUNAAN','TANGGAL_PENGEMBALIAN','KETERANGAN','status_pengajuan', 'TANDA_TANGAN')
     list_per_page = 10 
     filter_horizontal = ('ALAT',)
@@ -92,7 +92,7 @@ class PengajuanPeminjamanBarangAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanPeminjamanBarang, PengajuanPeminjamanBarangAdmin)
 
 class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
-    search_fields = ('',)
+    search_fields = ('NAMA_PEMINJAM','ALAT__NAMA',)
     list_display = ('NAMA_PEMINJAM','NO_TELEPON','alat','KEGIATAN', 'TANGGAL_PENGGUNAAN', 'TANGGAL_PENGEMBALIAN','KETERANGAN', 'status_peminjaman','TANDA_TANGAN')
     list_per_page = 10
     filter_horizontal = ('ALAT',)
@@ -132,25 +132,6 @@ class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
         return format_html(daftar)
 
 admin.site.register(RiwayatPeminjamanBarang, RiwayatPeminjamanBarangAdmin)
-
-class JadwalPenggunaanRuanganAdmin(admin.ModelAdmin):
-    search_fields = ('RUANGAN', 'JAM', 'STATUS', 'HARI',)
-    list_display = ('RUANGAN', 'JAM', 'STATUS', 'HARI',)
-    list_per_page = 10 
-    list_filter = ('STATUS',)
-    autocomplete_fields = ('RUANGAN', 'JAM')
-    actions = ('confirm_action',)
-
-
-    def confirm_action(self, request, queryset):
-        queryset.update(STATUS = 'Selesai Dipinjam')
-        for d in queryset.values():
-            obj = JadwalPenggunaanRuangan.objects.get(ID=d['ID'])
-            obj.save()
-
-    confirm_action.short_description = "Konfirmasi Ruangan"
-
-admin.site.register(JadwalPenggunaanRuangan, JadwalPenggunaanRuanganAdmin)
 
 class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
     search_fields = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN__NAMA', 'KETERANGAN')
@@ -215,20 +196,6 @@ class RiwayatPeminjamanRuanganAdmin(admin.ModelAdmin):
 
 admin.site.register(RiwayatPeminjamanRuangan, RiwayatPeminjamanRuanganAdmin)
 
-class JamPenggunaanAdmin(admin.ModelAdmin):
-    search_fields = ('JAM_KE', 'PUKUL',)
-    list_display = ('JAM_KE', 'PUKUL')
-    list_per_page = 10
-
-admin.site.register(JamPenggunaan, JamPenggunaanAdmin)
-
-class HariPenggunaanAdmin(admin.ModelAdmin):
-    search_fields = ('HARI', 'JAM__JAM_KE')
-    list_display = ('HARI', 'JAM')
-    list_per_page = 10
-    autocomplete_fields = ('JAM',)
-
-admin.site.register(HariPenggunaan, HariPenggunaanAdmin)
 
 class JenisRuanganAdmin(admin.ModelAdmin):
     search_fields = ('KATEGORI', )

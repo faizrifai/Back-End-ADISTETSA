@@ -14,8 +14,8 @@ from subadmin import SubAdmin, RootSubAdmin
 # from .importexportresources import *
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_SISWA__NAMA_LENGKAP',)
-    list_display = ('DATA_SISWA', 'BUKTI_PELANGGARAN', 'JENIS_PELANGGARAN', 'status_pengajuan')
+    search_fields = ('DATA_SISWA__NAMA',)
+    list_display = ('DATA_SISWA', 'BUKTI_PELANGGARAN', 'JENIS_PELANGGARAN', 'TANGGAL_PENGAJUAN','status_pengajuan')
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PELANGGARAN',]
     actions = ('accept_action', 'decline_action',)
@@ -54,7 +54,7 @@ admin.site.register(PengajuanLaporanPelanggaran, PengajuanLaporanPelanggaranAdmi
 
 
 class PelanggaranSiswaAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_SISWA__NAMA_LENGKAP',)
+    search_fields = ('DATA_SISWA__NAMA',)
     list_display = ('DATA_SISWA', 'POIN',)
     list_per_page =  10 
     list_filter = (DataSiswaFilter,)
@@ -62,8 +62,8 @@ class PelanggaranSiswaAdmin(admin.ModelAdmin):
 admin.site.register(PelanggaranSiswa, PelanggaranSiswaAdmin)
 
 class RiwayatLaporanPelanggaranAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_SISWA__NAMA_LENGKAP',)
-    list_display = ('DATA_SISWA', 'BUKTI_PELANGGARAN', 'JENIS_PELANGGARAN', 'STATUS_PENGAJUAN')
+    search_fields = ('DATA_SISWA__NAMA',)
+    list_display = ('DATA_SISWA', 'BUKTI_PELANGGARAN', 'JENIS_PELANGGARAN','TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN')
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PELANGGARAN',]
     list_filter = (DataSiswaFilter,)
@@ -93,8 +93,8 @@ class PoinProgramKebaikanAdmin(admin.ModelAdmin):
 admin.site.register(PoinProgramKebaikan, PoinProgramKebaikanAdmin)
 
 class PengajuanProgramKebaikanAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_SISWA__NAMA_LENGKAP',)
-    list_display = ['DATA_SISWA', 'BUKTI_PROGRAM_KEBAIKAN', 'JENIS_PROGRAM_KEBAIKAN', 'status_pengajuan',]
+    search_fields = ('DATA_SISWA__NAMA',)
+    list_display = ['DATA_SISWA', 'BUKTI_PROGRAM_KEBAIKAN', 'JENIS_PROGRAM_KEBAIKAN','TANGGAL_PENGAJUAN', 'status_pengajuan',]
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PROGRAM_KEBAIKAN',]
     actions = ('accept_action', 'decline_action',)
@@ -132,8 +132,8 @@ class PengajuanProgramKebaikanAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanProgramKebaikan, PengajuanProgramKebaikanAdmin)
 
 class RiwayatProgramKebaikanAdmin(admin.ModelAdmin):
-    search_fields = ('DATA_SISWA__NAMA_LENGKAP',)
-    list_display = ['DATA_SISWA', 'BUKTI_PROGRAM_KEBAIKAN', 'JENIS_PROGRAM_KEBAIKAN', 'STATUS_PENGAJUAN',]
+    search_fields = ('DATA_SISWA__NAMA',)
+    list_display = ['DATA_SISWA', 'BUKTI_PROGRAM_KEBAIKAN', 'JENIS_PROGRAM_KEBAIKAN','TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PROGRAM_KEBAIKAN',]
     list_filter = (DataSiswaFilter,)
@@ -142,6 +142,7 @@ admin.site.register(RiwayatProgramKebaikan, RiwayatProgramKebaikanAdmin)
 
 class AnggotaEkskulAdmin(SubAdmin):
     model = AnggotaEkskul
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
     list_display = ('KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'STATUS')
     list_per_page = 10
     list_filter = ('STATUS', TahunAjaranFilter,)
@@ -165,7 +166,7 @@ admin.site.register(KatalogEkskul, KatalogEkskulAdmin)
 
 
 class JadwalEkskulAdmin(admin.ModelAdmin):
-    search_fields = ('',)
+    search_fields = ('PELATIH__NAMA','EKSKUL__NAMA',)
     list_display = ['PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL','HARI','WAKTU_MULAI','WAKTU_BERAKHIR',]
     list_per_page = 10 
     autocomplete_fields = ('PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL',)
@@ -175,6 +176,7 @@ admin.site.register(JadwalEkskul, JadwalEkskulAdmin)
 
 class AbsensiEkskulAdmin(SubAdmin):
     model = AbsensiEkskul
+    search_fields = ('NIS__NAMA',)
     list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'ekskul', 'pertemuan')
     list_per_page = 10
     readonly_fields = ('NIS', 'JURNAL_EKSKUL')
@@ -213,7 +215,7 @@ class JurnalEkskulAdmin(SubAdmin):
 # admin.site.register(JurnalEkskul, JurnalEkskulAdmin)
 
 class DaftarJurnalEkskulAdmin(RootSubAdmin):
-    search_fields = ['']
+    search_fields = ('PELATIH__NAMA','EKSKUL__NAMA',)
     list_per_page = 10
     list_display = ('PELATIH', 'EKSKUL', 'SEMESTER', 'JADWAL_EKSKUL', 'aksi')
     # list_filter = []
@@ -240,7 +242,7 @@ admin.site.register(DaftarJurnalEkskul, DaftarJurnalEkskulAdmin)
 
 
 class PengajuanEkskulAdmin(admin.ModelAdmin):
-    search_fields = ('',)
+    search_fields = ('KELAS_SISWA__NIS__NAMA','EKSKUL__NAMA',)
     list_display = ['KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
     list_per_page = 10 
     list_filter = ('STATUS_PENGAJUAN', )

@@ -1,9 +1,9 @@
-from .models import JadwalPenggunaanRuangan, Sarana
+from .models import Ruangan, Sarana
 
 
 def check_ruangan_tersedia(katalog_ruangan):
     for data in katalog_ruangan:
-        ruangan = JadwalPenggunaanRuangan.objects.get(pk=data)
+        ruangan = Ruangan.objects.get(pk=data)
         if (ruangan.STATUS != 'Selesai Dipinjam'):
             return False
 

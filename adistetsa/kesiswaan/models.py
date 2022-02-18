@@ -4,7 +4,7 @@ from django.utils.text import Truncator
 
 from dataprofil.models import DataSiswa, DataPelatih
 from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, OfferingKelas
-
+from django.utils import timezone
 from .enums import *
 
 class PengajuanLaporanPelanggaran(models.Model):
@@ -12,6 +12,7 @@ class PengajuanLaporanPelanggaran(models.Model):
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKTI_PELANGGARAN = models.FileField(max_length=255, upload_to='BuktiPelanggaran')
     JENIS_PELANGGARAN = models.ForeignKey(PoinPelanggaran, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateTimeField(default=timezone.now)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN_PELANGGARAN,
@@ -39,6 +40,7 @@ class RiwayatLaporanPelanggaran(models.Model):
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKTI_PELANGGARAN = models.FileField(max_length=255, upload_to='BuktiPelanggaran')
     JENIS_PELANGGARAN = models.ForeignKey(PoinPelanggaran, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateTimeField(default=timezone.now)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN_PELANGGARAN,
@@ -61,6 +63,7 @@ def post_save_persetujuan_laporan(sender, instance, **kwargs):
                     DATA_SISWA = instance.DATA_SISWA,
                     BUKTI_PELANGGARAN = instance.BUKTI_PELANGGARAN,
                     JENIS_PELANGGARAN = instance.JENIS_PELANGGARAN, 
+                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     STATUS_PENGAJUAN = instance.STATUS_PENGAJUAN
                 )
                 riwayat.save()
@@ -127,6 +130,7 @@ class PengajuanProgramKebaikan(models.Model):
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKTI_PROGRAM_KEBAIKAN = models.FileField(max_length=255, upload_to='BuktiProgramKebaikan')
     JENIS_PROGRAM_KEBAIKAN = models.ForeignKey(PoinProgramKebaikan, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateTimeField(default=timezone.now)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN_PELANGGARAN,
@@ -141,6 +145,7 @@ class RiwayatProgramKebaikan(models.Model):
     DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKTI_PROGRAM_KEBAIKAN = models.FileField(max_length=255, upload_to='BuktiProgramKebaikan')
     JENIS_PROGRAM_KEBAIKAN = models.ForeignKey(PoinProgramKebaikan, on_delete=models.CASCADE)
+    TANGGAL_PENGAJUAN = models.DateTimeField(default=timezone.now)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN_PELANGGARAN,
@@ -167,6 +172,7 @@ def post_save_pengajuan_program_kebaikan(sender, instance, **kwargs):
                     DATA_SISWA = instance.DATA_SISWA,
                     BUKTI_PROGRAM_KEBAIKAN = instance.BUKTI_PROGRAM_KEBAIKAN,
                     JENIS_PROGRAM_KEBAIKAN = instance.JENIS_PROGRAM_KEBAIKAN, 
+                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     STATUS_PENGAJUAN = instance.STATUS_PENGAJUAN
                 )
                 riwayat.save()

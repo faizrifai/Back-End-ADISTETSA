@@ -12,22 +12,6 @@ import calendar
 
 from .enums import *    
 
-class JamPenggunaan(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    JAM_KE = models.IntegerField()
-    PUKUL = models.CharField(max_length=255)
-    
-    def __str__(self):
-        return str(self.JAM_KE) + ' - ' + self.PUKUL
-
-class HariPenggunaan(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    HARI = models.CharField(max_length=255)
-    JAM =  models.ForeignKey(JamPenggunaan, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.HARI
-
 class JenisSarana(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KATEGORI = models.CharField(max_length=255)
@@ -65,24 +49,7 @@ class Ruangan(models.Model):
     )
     def __str__(self):
         return self.NAMA  
-
-class JadwalPenggunaanRuangan(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    RUANGAN = models.ForeignKey(Ruangan, on_delete=models.CASCADE)
-    JAM = models.ForeignKey(JamPenggunaan, on_delete=models.CASCADE)
-    STATUS = models.CharField(
-        max_length=255, 
-        choices=ENUM_STATUS_PENGAJUAN,
-        default='Selesai Dipinjam',
-    )
-    HARI = models.CharField(
-        max_length=255,
-        choices = ENUM_HARI, 
-    )
-    
-    def __str__(self):
-        return str(self.RUANGAN.NAMA) + ' - ' + self.HARI + ' Jam Ke = ' + str(self.JAM.JAM_KE)
-    
+  
 class PengajuanPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -458,13 +425,4 @@ m2m_changed.connect(alat_changed, sender=PengajuanPeminjamanBarang.ALAT.through)
 
 # m2m_changed.connect(ruangan_changed, sender=PengajuanPeminjamanRuangan.RUANGAN.through)
     
-class PengajuanPeminjamanRuanganPendek(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    DATA_SISWA = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    KEGIATAN = models.CharField(max_length=255)
-    RUANGAN = models.ForeignKey(Ruangan, on_delete=models.CASCADE)
-    TANGGAL_PENGAJUAN = models.DateField()
-    TANGGAL_PENGGUNAAN = models.DateField()
-    HARI_PENGGUNAAN = models.ForeignKey(HariPenggunaan, on_delete=models.CASCADE)
-    KETERANGAN = models.TextField(max_length=255)
 
