@@ -9,7 +9,7 @@
 #     "JANGKA_PEMINJAMAN": "Jangka Pendek"
 # }
 
-GET http://localhost:8000/kesiswaan/data_pelanggaran
+GET http://localhost:8000/kesiswaan/data_kebaikan
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzA0MTA3LCJpYXQiOjE2NDUwMDgxMDcsImp0aSI6IjFkODkyYWQ2MTc1NjQ3Zjg5MGI3MjljNzM2OTZiMjk4IiwidXNlcl9pZCI6Mn0.P2i43QgC-LiNGfrmMgzxxhrYbCZ2MkCKbx3TDARiyWc
 Content-Type: application/json
 

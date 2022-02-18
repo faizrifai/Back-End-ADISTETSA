@@ -161,3 +161,20 @@ class DataPelanggaranListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class DataKebaikanListView(generics.ListAPIView):
+    """
+    get: Menampilkan data program kebaikan (All Role).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Guru', 'Karyawan', 'Orang Tua'],
+    }
+
+    queryset = PoinProgramKebaikan.objects.all()
+    serializer_class = PoinProgramKebaikanSerializer
+    search_fields = ['KETERANGAN', 'POIN']
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
