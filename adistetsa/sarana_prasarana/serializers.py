@@ -79,7 +79,7 @@ class PengajuanPeminjamanBarangListSerializer(serializers.ModelSerializer):
         alat = obj.ALAT
         daftar_alat = []
         for data in alat.all():
-            daftar_alat.append(str(data))
+            daftar_alat.append({'ID': str(data.ID), 'NAMA': str(data)})
 
         return daftar_alat
 
@@ -95,7 +95,7 @@ class PengajuanPeminjamanBarangAdminSerializer(serializers.ModelSerializer):
         alat = obj.ALAT
         daftar_alat = []
         for data in alat.all():
-            daftar_alat.append(str(data))
+            daftar_alat.append({'ID': str(data.ID), 'NAMA': str(data)})
 
         return daftar_alat
 
@@ -117,7 +117,7 @@ class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
         alat = obj.ALAT
         daftar_alat = []
         for data in alat.all():
-            daftar_alat.append(str(data))
+            daftar_alat.append({'ID': str(data.ID), 'NAMA': str(data)})
 
         return daftar_alat
 

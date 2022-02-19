@@ -6,7 +6,7 @@
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kurikulum/daftar_jurnal_belajar?tahun_ajaran=1&hari=Selasa
+GET http://localhost:8000/sarpras/riwayat_peminjaman_barang
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
 Content-Type: application/json
 
