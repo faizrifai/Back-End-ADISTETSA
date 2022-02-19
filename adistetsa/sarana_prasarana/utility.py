@@ -1,11 +1,11 @@
 from .models import Ruangan, Sarana
 
 
-def check_ruangan_tersedia(katalog_ruangan):
-    for data in katalog_ruangan:
-        ruangan = Ruangan.objects.get(pk=data)
-        if (ruangan.STATUS != 'Selesai Dipinjam'):
-            return False
+def check_ruangan_tersedia(ruangan):
+    obj = Ruangan.objects.get(pk=ruangan)
+    print(obj.STATUS)
+    if (obj.STATUS != 'Sudah Dikembalikan'):
+        return False
 
     return True
 

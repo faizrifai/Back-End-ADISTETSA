@@ -22,9 +22,12 @@ class SaranaPrasaranaTestCase(SetupData):
             'PENGGUNA': 'Afdhal',
             'NO_HP': '081132324040',
             'KEGIATAN': 'Lomba Basket',
-            'RUANGAN': [1],
+            'RUANGAN': 1,
             'TANGGAL_PENGAJUAN': '2022-02-02',
-            'TANGGAL_PENGGUNAAN': '2022-02-02',
+            'TANGGAL_PEMAKAIAN': '2022-02-02',
+            'TANGGAL_BERAKHIR': '2022-02-03',
+            'JAM_PENGGUNAAN': '09:00',
+            'JAM_BERAKHIR': '09:30',
             'JENIS_PEMINJAMAN': 'Jangka Pendek',
             'KETERANGAN': 'Dibutuhkan pulpen untuk menulis pada acara baca tulis'
         }
@@ -44,6 +47,7 @@ class SaranaPrasaranaTestCase(SetupData):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.siswa_token)
 
         response = self.client.post(reverse('pengajuan_peminjaman_ruangan'), self.pengajuan_ruangan)
+        print(response.data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 

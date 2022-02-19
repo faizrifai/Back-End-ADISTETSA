@@ -146,11 +146,7 @@ class PengajuanPeminjamanRuanganSerializer(serializers.ModelSerializer):
         current_user = request.user
         validated_data['USER'] = current_user
 
-        ruangan = validated_data.pop('RUANGAN')
         data_pengajuan = PengajuanPeminjamanRuangan.objects.create(**validated_data)
-
-        for data in ruangan:
-            data_pengajuan.RUANGAN.add(data)
 
         return data_pengajuan
 
@@ -163,12 +159,7 @@ class PengajuanPeminjamanRuanganListSerializer(serializers.ModelSerializer):
         exclude = ('USER',)
 
     def get_ruangan(self, obj):
-        ruangan = obj.RUANGAN
-        daftar_ruangan = []
-        for data in ruangan.all():
-            daftar_ruangan.append(str(data))
-
-        return daftar_ruangan
+        return str(obj.RUANGAN)
 
 
 class RiwayatPeminjamanRuanganSerializer(serializers.ModelSerializer):
@@ -185,9 +176,4 @@ class RiwayatPeminjamanRuanganListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_ruangan(self, obj):
-        ruangan = obj.RUANGAN
-        daftar_ruangan = []
-        for data in ruangan.all():
-            daftar_ruangan.append(str(data))
-
-        return daftar_ruangan
+        return str(obj.RUANGAN)
