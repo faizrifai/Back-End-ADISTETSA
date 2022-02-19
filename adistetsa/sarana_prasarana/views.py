@@ -467,7 +467,7 @@ class TolakPengajuanPeminjamanRuanganView(APIView):
         """
         try:
             obj = PengajuanPeminjamanRuangan.objects.get(pk=pk)
-            obj.STATUS_PENGAJUAN = 'Ditolak'
+            obj.STATUS = 'Ditolak'
             obj.save()
 
             return Response(data={'status': 'Berhasil menolak permintaan peminjaman'},status=status.HTTP_200_OK)
