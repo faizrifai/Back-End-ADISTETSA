@@ -1,31 +1,28 @@
-# POST http://localhost:8000/perpustakaan/pengajuan_peminjaman_guru
-# Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzA0MTA3LCJpYXQiOjE2NDUwMDgxMDcsImp0aSI6IjFkODkyYWQ2MTc1NjQ3Zjg5MGI3MjljNzM2OTZiMjk4IiwidXNlcl9pZCI6Mn0.P2i43QgC-LiNGfrmMgzxxhrYbCZ2MkCKbx3TDARiyWc
+# POST http://localhost:8000/login/
 # Content-Type: application/json
 
 # {
-#     "BUKU": [7],
-#     "TANGGAL_PENGAJUAN": "2022-09-09",
-#     "STATUS_PENGAJUAN": "Pengajuan",
-#     "JANGKA_PEMINJAMAN": "Jangka Pendek"
+#     "username": "676127685607",
+#     "password": "merdeka123"
 # }
 
-POST http://localhost:8000/sarpras/pengajuan_peminjaman_ruangan
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NDcyMTQ0LCJpYXQiOjE2NDUxNzYxNDQsImp0aSI6ImQ2MzBkZWZkNzRkYzRjNWNiN2M2MTdlM2Q1ZWRlNWY4IiwidXNlcl9pZCI6Mjh9.cjxcIien0J9CEJNpYBGhNRR3TUNUIbazsqxobGdMp_Q
+GET http://localhost:8000/kesiswaan/pelanggaran_saya
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ1MzcxLCJpYXQiOjE2NDUyNDkzNzEsImp0aSI6IjE4ZmZkNTA2NDc3MDQ5OTM4NjkzYmY0NTZkOWZkMDI3IiwidXNlcl9pZCI6MjJ9.WBZ6sY5Gi9IcrURPr3V2_mhcWPvoNeKDkk7pdkETf9E
 Content-Type: application/json
 
-{
-    "PENGGUNA": "Afdhal",
-    "NO_HP": "081132324040",
-    "KEGIATAN": "Lomba Basket",
-    "RUANGAN": 1,
-    "TANGGAL_PENGAJUAN": "2022-02-02",
-    "TANGGAL_PEMAKAIAN": "2022-02-02",
-    "TANGGAL_BERAKHIR": "2022-02-03",
-    "JAM_PENGGUNAAN": "09:00",
-    "JAM_BERAKHIR": "09:30",
-    "JENIS_PEMINJAMAN": "Jangka Pendek",
-    "KETERANGAN": "Dibutuhkan pulpen untuk menulis pada acara baca tulis"
-}
+# {
+#     "PENGGUNA": "Afdhal",
+#     "NO_HP": "081132324040",
+#     "KEGIATAN": "Lomba Basket",
+#     "RUANGAN": 1,
+#     "TANGGAL_PENGAJUAN": "2022-02-02",
+#     "TANGGAL_PEMAKAIAN": "2022-02-02",
+#     "TANGGAL_BERAKHIR": "2022-02-03",
+#     "JAM_PENGGUNAAN": "09:00",
+#     "JAM_BERAKHIR": "09:30",
+#     "JENIS_PEMINJAMAN": "Jangka Pendek",
+#     "KETERANGAN": "Dibutuhkan pulpen untuk menulis pada acara baca tulis"
+# }
 
 
 

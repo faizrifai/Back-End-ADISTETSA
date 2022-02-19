@@ -1,0 +1,6 @@
+1. Pelanggaran Saya
+2. Jadwal Mengajar Guru (Ada filter tahun ajaran dan hari)
+3. Daftar Jurnal Belajar (Ada filter tahun ajaran dan hari)
+4. Isi Jurnal Belajar
+5. Daftar Pertemuan
+6. Presensi Siswa

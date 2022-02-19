@@ -178,3 +178,26 @@ class DataKebaikanListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class PelanggaranSayaListView(generics.ListAPIView):
+    """
+    get: Melihat pelanggaran saya (Siswa)
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa'],
+    }
+
+    queryset = RiwayatLaporanPelanggaran.objects.all()
+    serializer_class = RiwayatLaporanPelanggaranListSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
+        riwayat_pelanggaran = RiwayatLaporanPelanggaran.objects.filter(DATA_SISWA=data_siswa_user.DATA_SISWA, STATUS_PENGAJUAN='Disetujui')
+
+        return riwayat_pelanggaran
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
