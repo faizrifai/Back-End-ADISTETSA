@@ -96,16 +96,16 @@ class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
     list_display = ('NAMA_PEMINJAM','NO_TELEPON','alat','KEGIATAN', 'TANGGAL_PENGGUNAAN', 'TANGGAL_PENGEMBALIAN','KETERANGAN', 'status_peminjaman','TANDA_TANGAN')
     list_per_page = 10
     filter_horizontal = ('ALAT',)
-    list_filter = ('STATUS_PEMINJAMAN',)
+    list_filter = ('STATUS_PEMINJAMAN', AlatFilter,)
     # autocomplete_fields = ['', ]
-    actions = ('acc_pengembalian',)
+    actions = ('acc_pengembalian', )
     
     def status_peminjaman(self, obj):
         if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
-            date_now = datetime.date.today()
-            if date_now > obj.TANGGAL_PENGEMBALIAN :
+            date_now = timezone.localtime()
+            if date_now.date() > obj.TANGGAL_PENGEMBALIAN :
                 return 'Tenggat'
-            elif date_now < obj.TANGGAL_PENGEMBALIAN : 
+            elif date_now.date() <= obj.TANGGAL_PENGEMBALIAN : 
                 return 'Sedang Dipinjam'
         elif obj.STATUS_PEMINJAMAN == 'Sudah Dikembalikan' :
             return 'Selesai'
@@ -164,20 +164,21 @@ class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanRuangan, PengajuanPeminjamanRuanganAdmin)
 
-class RiwayatPeminjamanRuanganAdmin(admin.ModelAdmin):
+class RiwayatPeminjamanRuanganAdmin(ImportExportModelAdmin):
     search_fields = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN__NAMA', 'KETERANGAN')
     list_display = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN' ,'TANGGAL_PENGAJUAN', 'TANGGAL_PEMAKAIAN','TANGGAL_BERAKHIR','JAM_PENGGUNAAN','JAM_BERAKHIR', 'JENIS_PEMINJAMAN', 'KETERANGAN','TANDA_TANGAN', 'status_peminjaman',)
     list_per_page = 10 
     actions = ('acc_pengembalian',)
-    list_filter = ('STATUS',)
+    list_filter = ('STATUS', RuanganFilter,)
 
 
     def status_peminjaman(self, obj):
         if obj.STATUS == 'Sedang Dipinjam' :
-            date_now = datetime.date.today()
-            if date_now > obj.TANGGAL_BERAKHIR :
+            date_now = timezone.localtime()
+            print (type(date_now.date))
+            if date_now.date() >= obj.TANGGAL_BERAKHIR and date_now.time() > obj.JAM_BERAKHIR :
                 return 'Tenggat'
-            elif date_now < obj.TANGGAL_BERAKHIR : 
+            elif date_now.date() <= obj.TANGGAL_BERAKHIR and date_now.time() <= obj.JAM_BERAKHIR : 
                 return 'Sedang Dipinjam'
         elif obj.STATUS == 'Selesai Dipinjam' :
             return 'Selesai'
@@ -211,3 +212,4 @@ class RuanganAdmin(admin.ModelAdmin):
     autocomplete_fields = ('JENIS',)
 
 admin.site.register(Ruangan, RuanganAdmin)
+

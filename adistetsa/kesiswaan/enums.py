@@ -37,3 +37,11 @@ ENUM_STATUS_ANGGOTA_EKSKUL = [
     ('Aktif','Aktif'),
     ('Nonaktif', 'Nonaktif')
 ]
+
+ENUM_PREDIKAT_EKSKUL = [
+    ('A', 'A'),
+    ('B', 'B'),
+    ('C', 'C'),
+    ('D', 'D'),
+    ('E', 'E')
+]

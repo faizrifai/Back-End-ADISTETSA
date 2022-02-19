@@ -276,3 +276,36 @@ class ProgramKerjaEkskulAdmin(admin.ModelAdmin):
     autocomplete_fields = ('PELATIH', 'EKSKUL', 'TAHUN_AJARAN',)
 
 admin.site.register(ProgramKerjaEkskul, ProgramKerjaEkskulAdmin)
+
+class AnggotaEkskulRegisterAdmin(admin.ModelAdmin):
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
+    list_display = ('KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'STATUS')
+    list_per_page = 10
+    list_filter = ('STATUS', TahunAjaranFilter,)
+    # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
+
+admin.site.register(AnggotaEkskul, AnggotaEkskulRegisterAdmin)
+
+class NilaiEkskulAdmin(admin.ModelAdmin):
+    search_fields = ('DATA_ANGGOTA__KELAS_SISWA__NIS__NAMA', 'DATA_ANGGOTA__EKSKUL__NAMA', )
+    list_display = ('DATA_ANGGOTA', 'SEMESTER', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI',)
+    list_per_page = 10 
+    autocomplete_fields = ('DATA_ANGGOTA', 'SEMESTER',)
+    
+    def status_predikat(self, obj):
+        if obj.PREDIKAT == 'A':
+            return 'SANGAT BAIK' 
+        elif obj.PREDIKAT == 'B':
+            return 'BAIK'
+        elif obj.PREDIKAT == 'C':
+            return 'CUKUP' 
+        elif obj.PREDIKAT == 'D':
+            return 'KURANG'
+        elif obj.PREDIKAT == 'E':
+            return 'SANGAT KURANG'
+        
+    def ekskul(self, obj):
+        return obj.DATA_ANGGOTA.EKSKUL.NAMA
+        
+admin.site.register(NilaiEkskul, NilaiEkskulAdmin)
+    

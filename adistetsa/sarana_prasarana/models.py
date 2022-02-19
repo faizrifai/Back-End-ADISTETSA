@@ -1,3 +1,4 @@
+from logging import raiseExceptions
 from django.contrib.auth.models import User
 
 from django.db import models
@@ -299,7 +300,11 @@ class PengajuanPeminjamanBarang(models.Model):
         default='Pengajuan',
     )
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanBarang', blank=True)
-
+    
+    def clean(self):
+        if self.TANGGAL_PENGGUNAAN > self.TANGGAL_PENGEMBALIAN:
+            raise ValidationError('Tanggal Tidak Valid')
+    
 class RiwayatPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
