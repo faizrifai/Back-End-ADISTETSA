@@ -6,16 +6,19 @@ from rest_framework import status
 class SaranaPrasaranaTestCase(SetupData):
     def setUp(self):
         super().setUp()
+
+        open_file = open('kustom_autentikasi/data/data_karyawan_user.csv', 'rb')
+        uploaded_file = SimpleUploadedFile('data_karyawan_user.csv', open_file.read())
         
         self.pengajuan_sarana = {
             'NAMA_PEMINJAM': 'Afdhal',
             'NO_TELEPON': '081132320404',
-            'ALAT': [1],
+            'ALAT': "1,2",
             'KEGIATAN': 'Baca tulis',
-            'TANGGAL_PENGAJUAN': '2022-02-02',
             'TANGGAL_PENGGUNAAN': '2022-02-02',
             'TANGGAL_PENGEMBALIAN': '2022-02-03',
-            'KETERANGAN': 'Dibutuhkan pulpen untuk menulis pada acara baca tulis'
+            'KETERANGAN': 'Dibutuhkan pulpen untuk menulis pada acara baca tulis',
+            'TANDA_TANGAN': uploaded_file,
         }
 
         self.pengajuan_ruangan = {
@@ -23,13 +26,13 @@ class SaranaPrasaranaTestCase(SetupData):
             'NO_HP': '081132324040',
             'KEGIATAN': 'Lomba Basket',
             'RUANGAN': 1,
-            'TANGGAL_PENGAJUAN': '2022-02-02',
             'TANGGAL_PEMAKAIAN': '2022-02-02',
             'TANGGAL_BERAKHIR': '2022-02-03',
             'JAM_PENGGUNAAN': '09:00',
             'JAM_BERAKHIR': '09:30',
             'JENIS_PEMINJAMAN': 'Jangka Pendek',
-            'KETERANGAN': 'Dibutuhkan pulpen untuk menulis pada acara baca tulis'
+            'KETERANGAN': 'Dibutuhkan pulpen untuk menulis pada acara baca tulis',
+            'TANDA_TANGAN': uploaded_file,
         }
 
     def test_get_katalog_ruangan(self):
@@ -40,7 +43,7 @@ class SaranaPrasaranaTestCase(SetupData):
     def test_get_katalog_sarana(self):
         response = self.client.get(reverse('katalog_sarana'))
 
-        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['count'], 2)
 
     def test_pengajuan_peminjaman_ruangan(self):
         # login sebagai siswa

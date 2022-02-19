@@ -175,5 +175,11 @@ class SetupData(APITestCase):
         }
         self.sarana = Sarana.objects.create(**self.data_sarana)
 
+        self.data_sarana2 = {
+            'NAMA': 'Pensil',
+            'JENIS': self.jenis_sarana,
+        }
+        self.sarana = Sarana.objects.create(**self.data_sarana2)
+
         def tearDown(self):
             super().tearDown()

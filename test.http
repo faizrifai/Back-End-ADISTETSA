@@ -2,12 +2,12 @@
 # Content-Type: application/json
 
 # {
-#     "username": "676127685607",
+#     "username": "lauren_ramos_1997",
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kesiswaan/pelanggaran_saya
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ1MzcxLCJpYXQiOjE2NDUyNDkzNzEsImp0aSI6IjE4ZmZkNTA2NDc3MDQ5OTM4NjkzYmY0NTZkOWZkMDI3IiwidXNlcl9pZCI6MjJ9.WBZ6sY5Gi9IcrURPr3V2_mhcWPvoNeKDkk7pdkETf9E
+GET http://localhost:8000/kurikulum/daftar_jurnal_belajar?tahun_ajaran=1&hari=Selasa
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
 Content-Type: application/json
 
 # {

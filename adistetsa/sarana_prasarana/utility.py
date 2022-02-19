@@ -10,7 +10,8 @@ def check_ruangan_tersedia(ruangan):
     return True
 
 def check_sarana_tersedia(katalog_sarana):
-    for data in katalog_sarana:
+    data_sarana = katalog_sarana.split(',')
+    for data in data_sarana:
         sarana = Sarana.objects.get(pk=data)
         if (sarana.STATUS != 'Sudah Dikembalikan'):
             return False
