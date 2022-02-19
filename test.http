@@ -9,9 +9,24 @@
 #     "JANGKA_PEMINJAMAN": "Jangka Pendek"
 # }
 
-GET http://localhost:8000/kesiswaan/data_kebaikan
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2MzA0MTA3LCJpYXQiOjE2NDUwMDgxMDcsImp0aSI6IjFkODkyYWQ2MTc1NjQ3Zjg5MGI3MjljNzM2OTZiMjk4IiwidXNlcl9pZCI6Mn0.P2i43QgC-LiNGfrmMgzxxhrYbCZ2MkCKbx3TDARiyWc
+POST http://localhost:8000/sarpras/pengajuan_peminjaman_ruangan
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NDcyMTQ0LCJpYXQiOjE2NDUxNzYxNDQsImp0aSI6ImQ2MzBkZWZkNzRkYzRjNWNiN2M2MTdlM2Q1ZWRlNWY4IiwidXNlcl9pZCI6Mjh9.cjxcIien0J9CEJNpYBGhNRR3TUNUIbazsqxobGdMp_Q
 Content-Type: application/json
+
+{
+    "PENGGUNA": "Afdhal",
+    "NO_HP": "081132324040",
+    "KEGIATAN": "Lomba Basket",
+    "RUANGAN": 1,
+    "TANGGAL_PENGAJUAN": "2022-02-02",
+    "TANGGAL_PEMAKAIAN": "2022-02-02",
+    "TANGGAL_BERAKHIR": "2022-02-03",
+    "JAM_PENGGUNAAN": "09:00",
+    "JAM_BERAKHIR": "09:30",
+    "JENIS_PEMINJAMAN": "Jangka Pendek",
+    "KETERANGAN": "Dibutuhkan pulpen untuk menulis pada acara baca tulis"
+}
+
 
 
 # POST http://localhost:8000/perpustakaan/pengajuan_peminjaman_siswa

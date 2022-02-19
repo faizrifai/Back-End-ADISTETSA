@@ -166,20 +166,6 @@ class SetupData(APITestCase):
         }
         self.ruangan = Ruangan.objects.create(**self.data_ruangan)
 
-        # menambah jadwal penggunaan ruangan
-        self.data_jam_penggunaan = {
-            'JAM_KE': 1,
-            'PUKUL': '07:00 - 08:30'
-        }
-        self.jam_penggunaan = JamPenggunaan.objects.create(**self.data_jam_penggunaan)
-
-        self.data_jadwal_ruangan = {
-            'RUANGAN': self.ruangan,
-            'JAM': self.jam_penggunaan,
-            'HARI': 'Senin'
-        }
-        self.jadwal_ruangan = JadwalPenggunaanRuangan.objects.create(**self.data_jadwal_ruangan)
-
         self.jenis_sarana = JenisSarana.objects.create(KATEGORI='ATK')
 
         # menambah sarana
