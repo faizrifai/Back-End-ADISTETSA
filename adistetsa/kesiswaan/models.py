@@ -215,6 +215,7 @@ class JadwalEkskul (models.Model):
     
     def __str__(self):
         return self.PELATIH.NAMA + ' - ' + self.EKSKUL.NAMA
+    
 
 def post_save_jadwal_ekskul(sender, instance, **kwargs):
     try:
@@ -340,7 +341,7 @@ class AnggotaEkskul (models.Model):
     )
     
     def __str__(self):
-        return str(self.KELAS_SISWA.NIS.NAMA) 
+        return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) 
 
 class ProgramKerjaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -371,3 +372,13 @@ def post_save_kelas_siswa(sender, instance, created, **kwargs):
         print(str(e))
             
 post_save.connect(post_save_kelas_siswa, sender=KelasSiswa)
+
+class NilaiEkskul(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    DATA_ANGGOTA = models.ForeignKey(AnggotaEkskul, on_delete=models.CASCADE)
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    PREDIKAT = models.CharField(
+        max_length= 255,
+        choices=ENUM_PREDIKAT_EKSKUL,
+    )
+    DESKRIPSI = models.TextField(max_length= 1020)

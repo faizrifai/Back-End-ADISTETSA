@@ -7,3 +7,5 @@ class DataSiswaFilter(AutocompleteFilter):
 class TahunAjaranFilter(AutocompleteFilter):
     title = 'TAHUN AJARAN'
     field_name = 'TAHUN_AJARAN'
+    
+
