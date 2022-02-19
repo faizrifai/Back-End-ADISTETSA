@@ -47,6 +47,7 @@ class PengajuanPeminjamanBarangListView(generics.ListCreateAPIView):
         'POST': ['Siswa', 'Guru', 'Karyawan'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanBarang.objects.all()
     serializer_class = PengajuanPeminjamanBarangSerializer
     # search_fields = ('STATUS_PENGAJUAN')
@@ -264,6 +265,7 @@ class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
         'POST': ['Siswa', 'Guru', 'Karyawan'],
     }
 
+    parser_classes = (MultiPartParser,)
     queryset = PengajuanPeminjamanRuangan.objects.all()
     serializer_class = PengajuanPeminjamanRuanganSerializer
     # search_fields = ('STATUS_PENGAJUAN')

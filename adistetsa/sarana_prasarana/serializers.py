@@ -33,7 +33,7 @@ class KatalogSaranaSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanBarangSerializer(serializers.ModelSerializer):
-    ALAT = serializers.PrimaryKeyRelatedField(many=True, queryset=Sarana.objects.all())
+    ALAT = serializers.CharField(max_length=255)
 
     class Meta:
         model = PengajuanPeminjamanBarang
@@ -51,6 +51,21 @@ class PengajuanPeminjamanBarangSerializer(serializers.ModelSerializer):
             data_pengajuan.ALAT.add(data)
 
         return data_pengajuan
+
+    def validate(self, attrs):
+        attrs['ALAT'] = attrs['ALAT'].split(',')
+
+        return super().validate(attrs)
+
+    def to_representation(self, instance):
+        daftar_alat = []
+        for alat in instance.ALAT.all():
+            daftar_alat.append(str(alat))
+
+        data = super().to_representation(instance)
+        data['ALAT'] = str(daftar_alat)
+
+        return data
 
 
 class PengajuanPeminjamanBarangListSerializer(serializers.ModelSerializer):

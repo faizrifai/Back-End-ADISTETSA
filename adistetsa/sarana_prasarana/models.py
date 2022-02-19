@@ -58,11 +58,11 @@ class PengajuanPeminjamanRuangan(models.Model):
     NO_HP = models.CharField(max_length=255)
     KEGIATAN = models.CharField(max_length=255)
     RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
-    TANGGAL_PENGAJUAN = models.DateField(default=timezone.now)
-    TANGGAL_PEMAKAIAN = models.DateField(default=timezone.now)
-    TANGGAL_BERAKHIR = models.DateField(default=timezone.now)
-    JAM_PENGGUNAAN = models.TimeField(default=timezone.now)
-    JAM_BERAKHIR = models.TimeField(default=timezone.now)
+    TANGGAL_PENGAJUAN = models.DateField(auto_now_add=True)
+    TANGGAL_PEMAKAIAN = models.DateField()
+    TANGGAL_BERAKHIR = models.DateField()
+    JAM_PENGGUNAAN = models.TimeField()
+    JAM_BERAKHIR = models.TimeField()
     STATUS = models.CharField(
         max_length=255, 
         choices=ENUM_STATUS_PENGAJUAN,
@@ -290,9 +290,9 @@ class PengajuanPeminjamanBarang(models.Model):
     NO_TELEPON = models.CharField(max_length=255, default='')
     ALAT = models.ManyToManyField(Sarana)
     KEGIATAN = models.CharField(max_length=255)
-    TANGGAL_PENGAJUAN = models.DateField()
+    TANGGAL_PENGAJUAN = models.DateField(auto_now_add=True)
     TANGGAL_PENGGUNAAN = models.DateField()
-    TANGGAL_PENGEMBALIAN = models.DateField(blank=True, null=True)
+    TANGGAL_PENGEMBALIAN = models.DateField()
     KETERANGAN = models.CharField(max_length=255)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
