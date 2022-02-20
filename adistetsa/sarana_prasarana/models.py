@@ -456,30 +456,5 @@ def alat_changed(sender, instance, action, pk_set=None, **kwargs):
             obj.save()
 
 m2m_changed.connect(alat_changed, sender=PengajuanPeminjamanBarang.ALAT.through)
-
-# def ruangan_changed(sender, instance, action, pk_set=None, **kwargs):
-#     if action == 'post_add':
-#         for pk in pk_set:
-#             obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
-#             print('add: ' + str(obj))
-#             obj.STATUS = 'Diajukan' 
-#             obj.save()
-
-#             ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
-#             ruangan.status = 'Pengajuan'
-#             ruangan.save()
-            
-#     elif action == 'post_remove':
-#         for pk in pk_set:
-#             obj = JadwalPenggunaanRuangan.objects.get(pk=pk)
-#             print('delete: ' + str(obj))
-#             obj.STATUS = 'Selesai Dipinjam'
-#             obj.save()
-
-#             ruangan = Ruangan.objects.get(pk=obj.RUANGAN.ID)
-#             ruangan.status = 'Sudah Dikembalikan'
-#             ruangan.save()
-
-# m2m_changed.connect(ruangan_changed, sender=PengajuanPeminjamanRuangan.RUANGAN.through)
     
 

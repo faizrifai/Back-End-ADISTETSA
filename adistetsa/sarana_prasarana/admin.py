@@ -184,11 +184,6 @@ class RiwayatPeminjamanRuanganAdmin(ImportExportModelAdmin):
 
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS = 'Selesai Dipinjam')
-        for d in queryset.values():
-            riwayat = RiwayatPeminjamanRuangan.objects.get(ID=d['ID'])
-            obj = riwayat.RUANGAN
-            obj.STATUS = 'Selesai Dipinjam'
-            obj.save()
             
     acc_pengembalian.short_description = "Konfirmasi Pengembalian Ruangan"
 
