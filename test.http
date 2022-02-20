@@ -6,23 +6,22 @@
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/sarpras/riwayat_peminjaman_barang
+POST http://localhost:8000/sarpras/pengajuan_peminjaman_ruangan
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
 Content-Type: application/json
 
-# {
-#     "PENGGUNA": "Afdhal",
-#     "NO_HP": "081132324040",
-#     "KEGIATAN": "Lomba Basket",
-#     "RUANGAN": 1,
-#     "TANGGAL_PENGAJUAN": "2022-02-02",
-#     "TANGGAL_PEMAKAIAN": "2022-02-02",
-#     "TANGGAL_BERAKHIR": "2022-02-03",
-#     "JAM_PENGGUNAAN": "09:00",
-#     "JAM_BERAKHIR": "09:30",
-#     "JENIS_PEMINJAMAN": "Jangka Pendek",
-#     "KETERANGAN": "Dibutuhkan pulpen untuk menulis pada acara baca tulis"
-# }
+{
+    "PENGGUNA": "Afdhal",
+    "NO_HP": "081132324040",
+    "KEGIATAN": "Lomba Basket",
+    "RUANGAN": 1,
+    "TANGGAL_PEMAKAIAN": "2022-02-20",
+    "TANGGAL_BERAKHIR": "2022-02-27",
+    "JAM_PENGGUNAAN": "10:00",
+    "JAM_BERAKHIR": "13:00",
+    "JENIS_PEMINJAMAN": "Jangka Pendek",
+    "KETERANGAN": "Dibutuhkan pulpen untuk menulis pada acara baca tulis"
+}
 
 
 
