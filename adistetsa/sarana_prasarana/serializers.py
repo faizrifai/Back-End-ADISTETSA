@@ -112,7 +112,7 @@ class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RiwayatPeminjamanBarang
-        fields = '__all__'
+        exclude = ('STATUS_PEMINJAMAN',)
 
     def get_alat(self, obj):
         alat = obj.ALAT
