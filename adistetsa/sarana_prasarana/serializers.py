@@ -109,6 +109,7 @@ class RiwayatPeminjamanBarangSerializer(serializers.ModelSerializer):
 class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
     ALAT = serializers.SerializerMethodField('get_alat')
     STATUS = serializers.SerializerMethodField('get_status')
+    TANGGAL_PENGAJUAN = serializers.SerializerMethodField('get_tanggal')
 
     class Meta:
         model = RiwayatPeminjamanBarang
@@ -124,6 +125,9 @@ class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
     
     def get_status(self, obj):
         return str(obj.STATUS_PEMINJAMAN)
+    
+    def get_tanggal(self, obj):
+        return str(obj.TANGGAL_PEMAKAIAN)
 
 
 class KatalogRuanganSerializer(serializers.ModelSerializer):
