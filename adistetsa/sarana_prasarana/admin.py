@@ -1,15 +1,12 @@
 from django.contrib import admin
-from django.urls import reverse
-from django.utils.safestring import mark_safe
-from django.utils.text import Truncator
+
 from django.utils.html import format_html
+from django.utils import timezone
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 
 from .filter_admin import *
 from .models import *
-
-import datetime
 
 class JenisSaranaAdmin (ImportExportModelAdmin):
     search_fields = ('KATEGORI',)

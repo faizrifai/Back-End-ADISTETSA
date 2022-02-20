@@ -291,12 +291,10 @@ class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
         return super().list(request, *args, **kwargs)
         
     def create(self, request, *args, **kwargs):
-        ruangan = request.data['RUANGAN']
-
-        if (check_ruangan_tersedia(ruangan)):
+        try:
             return super().create(request, *args, **kwargs)
-        else:
-            return Response(data={'error': 'Ruangan yang dipilih tidak tersedia untuk dipinjam.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PengajuanPeminjamanRuanganDetailView(generics.RetrieveAPIView):

@@ -1,6 +1,5 @@
 from .models import Ruangan, Sarana
 
-
 def check_ruangan_tersedia(ruangan):
     obj = Ruangan.objects.get(pk=ruangan)
     print(obj.STATUS)

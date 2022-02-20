@@ -1,18 +1,174 @@
-from logging import raiseExceptions
 from django.contrib.auth.models import User
 
 from django.db import models
-from django.db.models.signals import post_save, m2m_changed, pre_save
-from django.db.models.query_utils import select_related_descend
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.forms import ValidationError
-from django.utils import timezone
 
-from dataprofil.models import DataSiswa
-import calendar
+import calendar, datetime
 
-from .enums import *    
+from .enums import *
 
+# utility
+def cek_konflik(awal, tengah, akhir):
+    return awal <= tengah <= akhir
+
+def cek_hari_konflik(a_tanggal_pemakaian, b_tanggal_penggunaan, b_tanggal_berakhir):
+    a_hari_pemakaian = calendar.day_name[a_tanggal_pemakaian.weekday()]
+
+    b_delta = b_tanggal_berakhir - b_tanggal_penggunaan
+    for i in range(b_delta.days + 1):
+        tanggal = b_tanggal_penggunaan + datetime.timedelta(days=i)
+        b_hari = calendar.day_name[tanggal.weekday()]
+        if a_hari_pemakaian == b_hari:
+            return True
+
+    return False
+
+def cek_dua_hari_konflik(a_tanggal_pemakaian, b_tanggal_pemakaian):
+    a_hari_pemakaian = calendar.day_name[a_tanggal_pemakaian.weekday()]
+    b_hari_pemakaian = calendar.day_name[b_tanggal_pemakaian.weekday()]
+
+    return a_hari_pemakaian == b_hari_pemakaian
+
+def cek_jangka_pendek(data):
+    # cek pengajuan
+    obj_pengajuan = PengajuanPeminjamanRuangan.objects.filter(RUANGAN=data.RUANGAN).exclude(ID=data.ID)
+    for diajukan in obj_pengajuan:
+        if diajukan.JENIS_PEMINJAMAN == 'Jangka Pendek':
+            # cek tanggal pemakaian yang diajukan berada di antara tanggal yang sudah mengajukan duluan
+            if cek_konflik(diajukan.TANGGAL_PEMAKAIAN, data.TANGGAL_PEMAKAIAN, diajukan.TANGGAL_BERAKHIR)\
+                or cek_konflik(diajukan.TANGGAL_PEMAKAIAN, data.TANGGAL_BERAKHIR, diajukan.TANGGAL_BERAKHIR):
+
+                # Menghindari konflik jam
+                if cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, diajukan.JAM_BERAKHIR)\
+                    or cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_BERAKHIR, diajukan.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+        elif diajukan.JENIS_PEMINJAMAN == 'Jangka Panjang':
+            # cek hari pemakaian konflik
+            if cek_hari_konflik(diajukan.TANGGAL_PEMAKAIAN, data.TANGGAL_PEMAKAIAN, data.TANGGAL_BERAKHIR):
+                # Menghindari konflik jam
+                if cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, diajukan.JAM_BERAKHIR)\
+                    or cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_BERAKHIR, diajukan.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+    
+    if not obj_pengajuan:
+        sukses = True
+
+    if (not sukses):
+        raise ValidationError('Ruangan sudah diajukan pada tanggal yang sama dan jam pemakaian bersinggungan dengan waktu yang dipilih')
+
+    # cek riwayat
+    obj_riwayat = RiwayatPeminjamanRuangan.objects.filter(RUANGAN=data.RUANGAN).filter(STATUS='Sedang Dipinjam')
+    for riwayat in obj_riwayat:
+        if riwayat.JENIS_PEMINJAMAN == 'Jangka Pendek':
+            # cek tanggal pemakaian yang diajukan berada di antara tanggal yang sudah meminjam duluan
+            if cek_konflik(riwayat.TANGGAL_PEMAKAIAN, data.TANGGAL_PEMAKAIAN, riwayat.TANGGAL_BERAKHIR)\
+                or cek_konflik(riwayat.TANGGAL_PEMAKAIAN, data.TANGGAL_BERAKHIR, riwayat.TANGGAL_BERAKHIR):
+
+                # Menghindari konflik jam
+                if cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, riwayat.JAM_BERAKHIR)\
+                    or cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_BERAKHIR, riwayat.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+        elif riwayat.JENIS_PEMINJAMAN == 'Jangka Panjang':
+            # cek hari pemakaian konflik
+            if cek_hari_konflik(riwayat.TANGGAL_PEMAKAIAN, data.TANGGAL_PEMAKAIAN, data.TANGGAL_BERAKHIR):
+                # Menghindari konflik jam
+                if cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, riwayat.JAM_BERAKHIR)\
+                    or cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_BERAKHIR, riwayat.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+    
+    if not obj_riwayat:
+        sukses = True
+
+    if (not sukses):
+        raise ValidationError('Ruangan sudah dipinjam pada tanggal yang sama dan jam pemakaian bersinggungan dengan waktu yang dipilih')
+
+def cek_jangka_panjang(data):
+    # cek pengajuan
+    obj_pengajuan = PengajuanPeminjamanRuangan.objects.filter(RUANGAN=data.RUANGAN).exclude(ID=data.ID)
+    for diajukan in obj_pengajuan:
+        if diajukan.JENIS_PEMINJAMAN == 'Jangka Pendek':
+            # cek hari pemakaian yang diajukan konflik dengan tanggal yang sudah mengajukan duluan
+            if cek_hari_konflik(data.TANGGAL_PEMAKAIAN, diajukan.TANGGAL_PEMAKAIAN, diajukan.TANGGAL_BERAKHIR):
+
+                # Menghindari konflik jam
+                if cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, diajukan.JAM_BERAKHIR)\
+                    or cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_BERAKHIR, diajukan.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+        elif diajukan.JENIS_PEMINJAMAN == 'Jangka Panjang':
+            # cek hari pemakaian konflik
+            if cek_dua_hari_konflik(data.TANGGAL_PEMAKAIAN, diajukan.TANGGAL_PEMAKAIAN):
+                # Menghindari konflik jam
+                if cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, diajukan.JAM_BERAKHIR)\
+                    or cek_konflik(diajukan.JAM_PENGGUNAAN, data.JAM_BERAKHIR, diajukan.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+    
+    if not obj_pengajuan:
+        sukses = True
+
+    if (not sukses):
+        raise ValidationError('Ruangan sudah diajukan pada hari yang sama dan jam pemakaian bersinggungan dengan waktu yang dipilih')
+
+    # cek riwayat
+    obj_riwayat = RiwayatPeminjamanRuangan.objects.filter(RUANGAN=data.RUANGAN).filter(STATUS='Sedang Dipinjam')
+    for riwayat in obj_riwayat:
+        if riwayat.JENIS_PEMINJAMAN == 'Jangka Pendek':
+            # cek hari pemakaian yang diajukan konflik dengan tanggal yang sudah meminjam duluan
+            if cek_hari_konflik(data.TANGGAL_PEMAKAIAN, riwayat.TANGGAL_PEMAKAIAN, riwayat.TANGGAL_BERAKHIR):
+
+                # Menghindari konflik jam
+                if cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, riwayat.JAM_BERAKHIR)\
+                    or cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_BERAKHIR, riwayat.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+        elif riwayat.JENIS_PEMINJAMAN == 'Jangka Panjang':
+            # cek hari pemakaian konflik
+            if cek_dua_hari_konflik(data.TANGGAL_PEMAKAIAN, riwayat.TANGGAL_PEMAKAIAN):
+                # Menghindari konflik jam
+                if cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_PENGGUNAAN, riwayat.JAM_BERAKHIR)\
+                    or cek_konflik(riwayat.JAM_PENGGUNAAN, data.JAM_BERAKHIR, riwayat.JAM_BERAKHIR):
+                    sukses = False
+                else:
+                    sukses = True
+            else:
+                sukses = True
+    
+    if not obj_riwayat:
+        sukses = True
+
+    if (not sukses):
+        raise ValidationError('Ruangan sudah dipinjam pada hari yang sama dan jam pemakaian bersinggungan dengan waktu yang dipilih')
+
+
+
+# Model
 class JenisSarana(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KATEGORI = models.CharField(max_length=255)
@@ -50,7 +206,7 @@ class Ruangan(models.Model):
     )
     def __str__(self):
         return self.NAMA  
-  
+
 class PengajuanPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,7 +214,7 @@ class PengajuanPeminjamanRuangan(models.Model):
     NO_HP = models.CharField(max_length=255)
     KEGIATAN = models.CharField(max_length=255)
     RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
-    TANGGAL_PENGAJUAN = models.DateField(auto_now_add=True)
+    TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
     TANGGAL_PEMAKAIAN = models.DateField()
     TANGGAL_BERAKHIR = models.DateField()
     JAM_PENGGUNAAN = models.TimeField()
@@ -77,56 +233,30 @@ class PengajuanPeminjamanRuangan(models.Model):
 
 
     def clean(self):
-        if self.TANGGAL_PENGAJUAN > self.TANGGAL_PEMAKAIAN:
-            raise ValidationError('Tidak bisa mengambil hari Sebelumnya')
         if self.TANGGAL_PEMAKAIAN > self.TANGGAL_BERAKHIR :
-            raise ValidationError('Tanggal Berakhir Tidak Valid')
+            raise ValidationError('Tanggal Pemakaian tidak boleh lebih dari Tanggal Berakhir')
         if self.JAM_PENGGUNAAN > self.JAM_BERAKHIR :
-            raise ValidationError('Jam Penggunaan Tidak Valid')
+            raise ValidationError('Jam Penggunaan tidak boleh lebih dari Jam Berakhir')
         if self.JAM_PENGGUNAAN == self.JAM_BERAKHIR :
-            raise ValidationError('Jam Penggunaan Tidak Valid')
-        sukses = False
-        ruangan = self.RUANGAN
-        waktu = self.TANGGAL_PEMAKAIAN
-        penggunaan = self.JAM_PENGGUNAAN
-        berakhir = self.JAM_BERAKHIR
-        hari = calendar.day_name[waktu.weekday()]
-        if (ruangan.STATUS != 'Sudah Dikembalikan'):
-            obj = RiwayatPeminjamanRuangan.objects.filter(RUANGAN=ruangan)
-            for data in obj:
-                data_waktu = data.TANGGAL_PEMAKAIAN 
-                data_hari = calendar.day_name[data_waktu.weekday()]
-                # Jika Hari Penggunaan Sama
-                if (hari == data_hari):
-                    data_penggunaan = data.JAM_PENGGUNAAN
-                    data_berakhir = data.JAM_BERAKHIR
-                    # Menghindari konflik jadwal
-                    if (penggunaan < data_penggunaan and berakhir < data_penggunaan):
-                        sukses = True
-                    elif (penggunaan > data_berakhir and berakhir > data_berakhir):
-                        sukses = True
-                    else:
-                        sukses = False
-                else: 
-                    sukses = True  
+            raise ValidationError('Jam Penggunaan tidak boleh sama dengan Jam Berakhir')
 
-            if (not sukses):
-                raise ValidationError('Ruangan sudah digunakan, coba pilih waktu pemakaian dan waktu berakhir yang berbeda')
+        if self.JENIS_PEMINJAMAN == 'Jangka Pendek':
+            cek_jangka_pendek(self)
+        elif self.JENIS_PEMINJAMAN == 'Jangka Panjang':
+            cek_jangka_panjang(self)
+        else:
+            raise ValidationError('Jenis Peminjaman tidak valid')
 
-def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
-    try:
-        ruangan = instance.RUANGAN 
-        ruangan.STATUS = 'Pengajuan'
-        ruangan.save()
-        
-    except Exception as e:
-            print(str(e))
-        
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+
+        return super().save(*args, **kwargs)
+
+
+def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):        
     if instance.STATUS == 'Sedang Dipinjam':
         try:
-            obj = instance.RUANGAN
-            obj.STATUS = 'Sedang Dipinjam'
-            obj.save()
             # add riwayat peminjaman
 
             obj = RiwayatPeminjamanRuangan.objects.create(
@@ -153,9 +283,6 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
 
     elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
         try:
-            obj = instance.RUANGAN
-            obj.STATUS = 'Selesai Dipinjam'
-            obj.save()
             # add riwayat peminjaman
 
             obj = RiwayatPeminjamanRuangan.objects.create(
@@ -190,11 +317,11 @@ class RiwayatPeminjamanRuangan(models.Model):
     NO_HP = models.CharField(max_length=255)
     KEGIATAN = models.CharField(max_length=255)
     RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
-    TANGGAL_PENGAJUAN = models.DateField(default=timezone.now)
-    TANGGAL_PEMAKAIAN = models.DateField(default=timezone.now)
-    TANGGAL_BERAKHIR = models.DateField(default=timezone.now)
-    JAM_PENGGUNAAN = models.TimeField(default=timezone.now)
-    JAM_BERAKHIR = models.TimeField(default=timezone.now)
+    TANGGAL_PENGAJUAN = models.DateField()
+    TANGGAL_PEMAKAIAN = models.DateField()
+    TANGGAL_BERAKHIR = models.DateField()
+    JAM_PENGGUNAAN = models.TimeField()
+    JAM_BERAKHIR = models.TimeField()
     STATUS = models.CharField(
         max_length=255, 
         choices=ENUM_STATUS_PENGAJUAN,
@@ -208,81 +335,6 @@ class RiwayatPeminjamanRuangan(models.Model):
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan', blank=True)
 
 
-# def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
-#     # ubah status peminjaman setelah disetujui
-
-#     if instance.STATUS == 'Sedang Dipinjam':
-#         try:
-#             for data in instance.RUANGAN.values():
-#                 obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
-#                 obj.STATUS = 'Sedang Dipinjam'
-#                 obj.save()
-#                 # add riwayat peminjaman
-#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
-#                     tanggal_pengembalian = datetime.timedelta(weeks=52)
-#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
-#                     tanggal_pengembalian = datetime.timedelta(weeks=7)
-
-
-#                 ruangan_m2m = []
-#                 for data in instance.RUANGAN.all():
-#                     ruangan_m2m.append(data.ID)
-
-#                 obj = RiwayatPeminjamanRuangan.objects.create(
-#                     USER = instance.USER,
-#                     PENGGUNA = instance.PENGGUNA,
-#                     NO_HP = instance.NO_HP,
-#                     KEGIATAN = instance.KEGIATAN,
-#                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
-#                     TANGGAL_SELESAI = datetime.date.today() + tanggal_pengembalian,
-#                     JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
-#                     STATUS = 'Sedang Dipinjam',
-#                     KETERANGAN = instance.KETERANGAN
-#                 )
-#                 obj.RUANGAN.set(ruangan_m2m)
-#                 obj.save()
-#                 instance.delete()
-
-#         except Exception as e:
-#             print(str(e))
-
-#     elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
-#         try:
-#             for data in instance.RUANGAN.values():
-#                 obj = JadwalPenggunaanRuangan.objects.get(ID=data['ID'])
-#                 obj.STATUS = 'Selesai Dipinjam'
-#                 obj.save()
-#                 # add riwayat peminjaman
-#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Panjang'):
-#                     tanggal_pengembalian = datetime.timedelta(weeks=52)
-#                 if (instance.JENIS_PEMINJAMAN == 'Jangka Pendek'):
-#                     tanggal_pengembalian = datetime.timedelta(weeks=7)
-
-
-#                 ruangan_m2m = []
-#                 for data in instance.RUANGAN.all():
-#                     ruangan_m2m.append(data.ID)
-
-#                 obj = RiwayatPeminjamanRuangan.objects.create(
-#                     USER = instance.USER,
-#                     PENGGUNA = instance.PENGGUNA,
-#                     NO_HP = instance.NO_HP,
-#                     KEGIATAN = instance.KEGIATAN,
-#                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
-#                     TANGGAL_SELESAI = instance.TANGGAL_PENGGUNAAN + tanggal_pengembalian,
-#                     JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
-#                     STATUS = 'Ditolak',
-#                     KETERANGAN = instance.KETERANGAN
-#                 )
-#                 obj.RUANGAN.set(ruangan_m2m)
-#                 obj.save()
-#                 instance.delete()
-
-#         except Exception as e:
-#             print(str(e))
-
-# post_save.connect(post_save_pengajuan_peminjaman_ruangan, sender=PengajuanPeminjamanRuangan)
-
 class PengajuanPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -290,7 +342,7 @@ class PengajuanPeminjamanBarang(models.Model):
     NO_TELEPON = models.CharField(max_length=255, default='')
     ALAT = models.ManyToManyField(Sarana)
     KEGIATAN = models.CharField(max_length=255)
-    TANGGAL_PENGAJUAN = models.DateField(auto_now_add=True)
+    TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
     TANGGAL_PENGGUNAAN = models.DateField()
     TANGGAL_PENGEMBALIAN = models.DateField()
     KETERANGAN = models.CharField(max_length=255)
