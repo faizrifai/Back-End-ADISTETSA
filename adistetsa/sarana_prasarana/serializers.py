@@ -127,7 +127,7 @@ class RiwayatPeminjamanBarangListSerializer(serializers.ModelSerializer):
         return str(obj.STATUS_PEMINJAMAN)
     
     def get_tanggal(self, obj):
-        return str(obj.TANGGAL_PEMAKAIAN)
+        return str(obj.TANGGAL_PENGGUNAAN)
 
 
 class KatalogRuanganSerializer(serializers.ModelSerializer):
