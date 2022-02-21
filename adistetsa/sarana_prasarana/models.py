@@ -364,6 +364,7 @@ class RiwayatPeminjamanBarang(models.Model):
     NO_TELEPON = models.CharField(max_length=255, default='')
     ALAT = models.ManyToManyField(Sarana)
     KEGIATAN = models.CharField(max_length=255)
+    TANGGAL_PENGAJUAN = models.DateField()
     TANGGAL_PENGGUNAAN = models.DateField()
     TANGGAL_PENGEMBALIAN = models.DateField()
     KETERANGAN = models.CharField(max_length=255)
@@ -394,6 +395,7 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     NAMA_PEMINJAM = instance.NAMA_PEMINJAM,
                     NO_TELEPON = instance.NO_TELEPON,
                     KEGIATAN = instance.KEGIATAN,
+                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     TANGGAL_PENGGUNAAN = instance.TANGGAL_PENGGUNAAN,
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
@@ -425,6 +427,7 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     NAMA_PEMINJAM = instance.NAMA_PEMINJAM,
                     NO_TELEPON = instance.NO_TELEPON,
                     KEGIATAN = instance.KEGIATAN,
+                    TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     TANGGAL_PENGGUNAAN = instance.TANGGAL_PENGGUNAAN,
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
