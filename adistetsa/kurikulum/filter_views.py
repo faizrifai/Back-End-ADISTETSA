@@ -25,7 +25,7 @@ class TahunAjaranListView(generics.ListAPIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
+        'GET': ['Guru'],
     }
 
     queryset = TahunAjaran.objects.all()
