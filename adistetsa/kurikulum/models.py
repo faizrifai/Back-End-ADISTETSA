@@ -316,6 +316,7 @@ class AbsensiSiswa(models.Model):
     KETERANGAN = models.CharField(
         max_length=255, 
         choices= ENUM_KETERANGAN_ABSEN,
+        default='Hadir'
     )
     FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiSiswa', blank=True)
     JURNAL_BELAJAR = models.ForeignKey(JurnalBelajar, on_delete=models.CASCADE)

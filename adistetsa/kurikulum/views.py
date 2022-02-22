@@ -1,13 +1,11 @@
+from .custom_filter import DaftarJurnalBelajarFilter
 from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
 from .doc_schema import *
-from django.db.models import Q
+
 from rest_framework.views import Response
 from rest_framework.parsers import MultiPartParser
-from .models import KTSP
-from .models import SilabusRPB
-
 from rest_framework import generics, status
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
@@ -248,7 +246,7 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
 
     serializer_class = JadwalMengajarSerializer
     filterset_fields = ('HARI', 'TAHUN_AJARAN')
-    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
+    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__KELAS__KODE_KELAS', 'MATA_PELAJARAN__NAMA']
 
     def get_queryset(self):
         current_user = self.request.user
@@ -272,45 +270,14 @@ class DaftarJurnalBelajarGuruListView(generics.ListAPIView):
     serializer_class = DaftarJurnalBelajarGuruListSerializer
     # filterset_fields = ('JADWAL_MENGAJAR__TAHUN_AJARAN', 'JADWAL_MENGAJAR__HARI')
     search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP', 'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
-
-    def get_tahun_ajaran(self):
-        tahun_ajaran_id = self.request.query_params.get('tahun_ajaran', None)
-
-        try:
-            tahun_ajaran = TahunAjaran.objects.get(pk=tahun_ajaran_id)
-            return tahun_ajaran
-        except:
-            return None
-
-    def get_hari(self):
-        hari = self.request.query_params.get('hari', None)
-
-        return hari
-
-    def get_filter_parameters(self, filter_backend):
-        self.fields = ('HARI',)
-        return super().get_filter_parameters()
+    filter_class = DaftarJurnalBelajarFilter
 
     def get_queryset(self):
         current_user = self.request.user
         data_guru_user = DataGuruUser.objects.get(USER=current_user)
 
-        tahun_ajaran = self.get_tahun_ajaran()
-        hari = self.get_hari()
+        queryset = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
 
-        if tahun_ajaran is None and hari is None:
-            queryset = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
-            
-            return queryset
-        elif tahun_ajaran and hari:
-            queryset = DaftarJurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)\
-                        .filter(JADWAL_MENGAJAR__HARI=hari)
-            
-            return queryset
-
-        queryset = DaftarJurnalBelajar.objects\
-                    .filter(GURU=data_guru_user.DATA_GURU)\
-                    .filter(Q(JADWAL_MENGAJAR__TAHUN_AJARAN=tahun_ajaran) | Q(JADWAL_MENGAJAR__HARI=hari))
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -319,8 +286,8 @@ class DaftarJurnalBelajarGuruListView(generics.ListAPIView):
 
 class JurnalBelajarGuruListView(generics.ListCreateAPIView):
     """
-    get: Menampilkan Jurnal Belajar (Guru) menggunakan ID Daftar Jurnal Belajar.
-    post: Menambahkan Jurnal Belajar (Guru) menggunakan ID Daftar Jurnal Belajar.
+    get: Menampilkan daftar pertemuan (Guru).
+    post: Mengisi jurnal pertemuan (Guru).
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
@@ -334,8 +301,9 @@ class JurnalBelajarGuruListView(generics.ListCreateAPIView):
     def get_queryset(self):
         current_user = self.request.user
         data_guru_user = DataGuruUser.objects.get(USER=current_user)
-        daftar_jurnal = DaftarJurnalBelajar.objects.get(pk=self.kwargs.get('pk'))
+        daftar_jurnal = DaftarJurnalBelajar.objects.get(pk=self.kwargs.get('id_jurnal_belajar_mengajar'))
         queryset = JurnalBelajar.objects.filter(DAFTAR=daftar_jurnal, GURU=data_guru_user.DATA_GURU)
+
         return queryset
 
     def get_serializer_class(self):
@@ -355,7 +323,7 @@ class JurnalBelajarGuruListView(generics.ListCreateAPIView):
 
 class AbsensiSiswaListView(generics.ListAPIView):
     """
-    get: Menampilkan Absensi Siswa (Guru) menggunakan ID Jurnal Belajar.
+    get: Menampilkan presensi siswa (Guru).
     """
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
@@ -366,7 +334,7 @@ class AbsensiSiswaListView(generics.ListAPIView):
     serializer_class = AbsensiSiswaListSerializer
 
     def get_queryset(self):
-        queryset = AbsensiSiswa.objects.filter(JURNAL_BELAJAR_id=self.kwargs.get('pk'))
+        queryset = AbsensiSiswa.objects.filter(JURNAL_BELAJAR_id=self.kwargs.get('id_jurnal_belajar_pertemuan'))
         return queryset
 
     def get_serializer_class(self):
@@ -377,6 +345,36 @@ class AbsensiSiswaListView(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
+
+
+class AbsensiSiswaDetailView(generics.RetrieveUpdateAPIView):
+    """
+    get: Menampilkan detail presensi siswa (Guru).
+    patch: Mengubah keterangan presensi siswa (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+        'PATCH': ['Guru']
+    }
+
+    # parser_classes = (MultiPartParser,)
+    serializer_class = AbsensiSiswaListSerializer
+    queryset = AbsensiSiswa.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return AbsensiSiswaListSerializer
+        elif self.request.method == 'PATCH':
+            return AbsensiSiswaSerializer
+
+        return super().get_serializer_class()
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
 
 class TambahKelasSiswaView(generics.CreateAPIView):

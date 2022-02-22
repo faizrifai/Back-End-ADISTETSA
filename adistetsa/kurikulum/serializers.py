@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from django.db import IntegrityError
 from .models import *
 from rest_framework import serializers
 
@@ -195,14 +197,21 @@ class JurnalBelajarGuruSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        pk = request.parser_context.get('kwargs').get('pk')
+        pk = request.parser_context.get('kwargs').get('id_jurnal_belajar_mengajar')
         daftar_jurnal_belajar = DaftarJurnalBelajar.objects.get(pk=pk)
 
         validated_data['DAFTAR'] = daftar_jurnal_belajar
         validated_data['GURU'] = daftar_jurnal_belajar.GURU
         validated_data['TANGGAL_MENGAJAR'] = datetime.today()
 
-        return super().create(validated_data)
+        try:
+            return super().create(validated_data)
+        except Exception as e:
+            if 'UNIQUE constraint failed' in str(e):
+                raise serializers.ValidationError('Pertemuan ' + str(validated_data['PERTEMUAN']) + ' sudah ada')
+            else:
+                raise serializers.ValidationError(str(e))
+
 
 
 class JurnalBelajarGuruListSerializer(serializers.ModelSerializer):
@@ -226,3 +235,9 @@ class AbsensiSiswaListSerializer(serializers.ModelSerializer):
 
     def get_nama(self, obj):
         return obj.NIS.NAMA
+
+
+class AbsensiSiswaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AbsensiSiswa
+        exclude = ('JURNAL_BELAJAR',)
