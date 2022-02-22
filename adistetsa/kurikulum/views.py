@@ -245,8 +245,8 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
     }
 
     serializer_class = JadwalMengajarSerializer
-    filterset_fields = ('HARI', 'TAHUN_AJARAN')
-    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__KELAS__KODE_KELAS', 'MATA_PELAJARAN__NAMA']
+    filterset_fields = ('HARI', 'TAHUN_AJARAN',)
+    search_fields = ('GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__KELAS__KODE_KELAS', 'MATA_PELAJARAN__NAMA')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -292,11 +292,13 @@ class JurnalBelajarGuruListView(generics.ListCreateAPIView):
     permission_classes = [HasGroupPermissionAny]
     required_groups = {
         'GET': ['Guru'],
-        'POST': ['Guru',]
+        'POST': ['Guru']
     }
 
     parser_classes = (MultiPartParser,)
     serializer_class = JurnalBelajarGuruSerializer
+    search_fields = ('PERTEMUAN', 'TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI')
+
 
     def get_queryset(self):
         current_user = self.request.user
@@ -332,6 +334,7 @@ class AbsensiSiswaListView(generics.ListAPIView):
 
     parser_classes = (MultiPartParser,)
     serializer_class = AbsensiSiswaListSerializer
+    search_fields = ('NIS__NAMA',)
 
     def get_queryset(self):
         queryset = AbsensiSiswa.objects.filter(JURNAL_BELAJAR_id=self.kwargs.get('id_jurnal_belajar_pertemuan'))

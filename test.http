@@ -6,7 +6,7 @@
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kurikulum/jurnal_belajar_mengajar?TAHUN_AJARAN=1&HARI=Senin
+GET http://localhost:8000/kurikulum/presensi_siswa/3?search=Joel
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
 Content-Type: application/json
 
