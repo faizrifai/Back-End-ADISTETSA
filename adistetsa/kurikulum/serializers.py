@@ -215,9 +215,26 @@ class JurnalBelajarGuruSerializer(serializers.ModelSerializer):
 
 
 class JurnalBelajarGuruListSerializer(serializers.ModelSerializer):
+    GURU = serializers.SerializerMethodField('get_guru')
+    MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
+    KELAS = serializers.SerializerMethodField('get_kelas')
+    SEMESTER = serializers.SerializerMethodField('get_semester')
+
     class Meta:
         model = JurnalBelajar
-        exclude = ('GURU', 'DAFTAR')
+        exclude = ('DAFTAR',)
+
+    def get_guru(self, obj):
+        return str(obj.GURU.NAMA_LENGKAP)
+
+    def get_mata_pelajaran(self, obj):
+        return str(obj.DAFTAR.MATA_PELAJARAN)
+
+    def get_kelas(self, obj):
+        return str(obj.DAFTAR.KELAS)
+
+    def get_semester(self, obj):
+        return str(obj.DAFTAR.SEMESTER)
 
 
 class TambahKelasSiswaSerializer(serializers.ModelSerializer):

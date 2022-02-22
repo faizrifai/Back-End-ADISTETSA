@@ -324,6 +324,28 @@ class JurnalBelajarGuruListView(generics.ListCreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
+class JurnalBelajarGuruDetailView(generics.RetrieveAPIView):
+    """
+    get: Menampilkan detail pertemuan (Guru).
+    """
+    permission_classes = [HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Guru'],
+    }
+
+    serializer_class = JurnalBelajarGuruListSerializer
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_guru_user = DataGuruUser.objects.get(USER=current_user)
+        queryset = JurnalBelajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+
+        return queryset
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
 class AbsensiSiswaListView(generics.ListAPIView):
     """
     get: Menampilkan presensi siswa (Guru).
