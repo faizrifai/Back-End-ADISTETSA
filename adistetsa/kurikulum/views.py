@@ -1,4 +1,4 @@
-from .custom_filter import DaftarJurnalBelajarFilter
+from .custom_filter import DaftarJurnalBelajarFilter, JadwalMengajarGuruFilter
 from kustom_autentikasi.models import DataGuruUser
 from .models import *
 from .serializers import *
@@ -245,7 +245,8 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
     }
 
     serializer_class = JadwalMengajarSerializer
-    filterset_fields = ('HARI', 'TAHUN_AJARAN',)
+    # filterset_fields = ('HARI', 'TAHUN_AJARAN',)
+    filter_class = JadwalMengajarGuruFilter
     search_fields = ('GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__KELAS__KODE_KELAS', 'MATA_PELAJARAN__NAMA')
 
     def get_queryset(self):

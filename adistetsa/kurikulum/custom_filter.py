@@ -14,3 +14,16 @@ class DaftarJurnalBelajarFilter(django_filters.FilterSet):
     class Meta:
         model = DaftarJurnalBelajar
         fields = ('TAHUN_AJARAN', 'HARI')
+
+
+class JadwalMengajarGuruFilter(django_filters.FilterSet):
+    TAHUN_AJARAN = django_filters.ModelChoiceFilter(
+        field_name="TAHUN_AJARAN",
+        queryset=TahunAjaran.objects.all())
+    HARI = django_filters.ChoiceFilter(
+        choices=JadwalMengajar._meta.get_field('HARI').choices,
+        field_name='HARI')
+
+    class Meta:
+        model = JadwalMengajar
+        fields = ('TAHUN_AJARAN', 'HARI')
