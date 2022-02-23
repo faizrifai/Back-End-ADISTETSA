@@ -9,5 +9,11 @@ urlpatterns = [
     path('kesiswaan/daftar_siswa', DaftarSiswaListView.as_view(), name='daftar_siswa'),
     path('kesiswaan/data_pelanggaran', DataPelanggaranListView.as_view(), name='data_pelanggaran'),
     path('kesiswaan/data_kebaikan', DataKebaikanListView.as_view(), name='data_kebaikan'),
-    path('kesiswaan/pelanggaran_saya', PelanggaranSayaListView.as_view(), name='pelanggaran_saya')
+    path('kesiswaan/pelanggaran_saya', PelanggaranSayaListView.as_view(), name='pelanggaran_saya'),
+    path('kesiswaan/katalog_ekskul', KatalogEkskulListView.as_view(), name='katalog_ekskul'),
+    path('kesiswaan/katalog_ekskul/<int:pk>', KatalogEkskulDetailView.as_view(), name='katalog_ekskul'),
+    path('kesiswaan/pengajuan_ekskul', PengajuanEkskulListView.as_view(), name='pengajuan_ekskul'),
+    path('kesiswaan/pengajuan_ekskul/<int:pk>', PengajuanEkskulDetailView.as_view(), name='pengajuan_ekskul'),
+    path('kesiswaan/anggota_ekskul', AnggotaEkskulListView.as_view(), name='anggota_ekskul'),
+    path('kesiswaan/anggota_ekskul/<int:pk>', AnggotaEkskulDetailView.as_view(), name='anggota_ekskul')
 ]
