@@ -21,11 +21,11 @@ class SemesterListView(generics.ListAPIView):
 
 class TahunAjaranListView(generics.ListAPIView):
     """
-    get: Menampilkan daftar tahun ajaran (Super Admin/ Staf Kurikulum).
+    get: Menampilkan daftar tahun ajaran (Guru, Pelatih).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Guru'],
+        'GET': ['Guru', 'Pelatih'],
     }
 
     queryset = TahunAjaran.objects.all()
