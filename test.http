@@ -1,24 +1,30 @@
-# POST https://adistetsa.pythonanywhere.com/login/
+# POST http://localhost:8000/login/
 # Content-Type: application/json
 
 # {
-#     "username": "lauren_ramos_1997",
+#     "username": "andi_perbudi_6",
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kurikulum/jurnal_belajar_pertemuan/1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
+GET http://localhost:8000/kesiswaan/presensi_ekskul/2
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTE1MDU1LCJpYXQiOjE2NDU2MTkwNTUsImp0aSI6IjU4YzU1ZmE2M2ExOTRjYjJhNzI3YThiMTY5MGYxYmExIiwidXNlcl9pZCI6Mzl9.t1VX43ZFxoK0m-Ivbqr-xe3zVBmnusjBZJhhf9Pqhmw
 Content-Type: application/json
 
-# {
-#     "KETERANGAN": "Hadir"
-# }
+{
+    "KETERANGAN": "Hadir"
+}
 
 # Token Guru Server
 # Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2ODMxMTQwLCJpYXQiOjE2NDU1MzUxNDAsImp0aSI6ImZjZGZiY2RhYzkxNTQ1OThiMTFjMGQ5OWY4ZjU2NmJlIiwidXNlcl9pZCI6Mjh9.ZDdiGx9DjFSoemJk_cfxGHC7iZrH2x_3p_2GCwu0Uvk
 
 # Token Guru Lokal
 # Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
+
+# Token Siswa Lokal
+# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTEwNzcxLCJpYXQiOjE2NDU2MTQ3NzEsImp0aSI6ImU5NGJjYTY0MmI5YzRiMTc5OWY1MzMyMjc1NzM1YmJiIiwidXNlcl9pZCI6MjJ9.aMkcN4ohXeEYfr648H4pkRq6N9ljjs5w2NVqH0KMV0g
+
+# Token Pelatih Lokal
+# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTE1MDU1LCJpYXQiOjE2NDU2MTkwNTUsImp0aSI6IjU4YzU1ZmE2M2ExOTRjYjJhNzI3YThiMTY5MGYxYmExIiwidXNlcl9pZCI6Mzl9.t1VX43ZFxoK0m-Ivbqr-xe3zVBmnusjBZJhhf9Pqhmw
 
 # PATCH http://localhost:8000/kurikulum/detail_presensi_siswa/7
 # Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
