@@ -210,7 +210,7 @@ class KatalogEkskulListView(generics.ListAPIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Siswa'],
+        'GET': ['Siswa', 'Pelatih'],
     }
 
     queryset = KatalogEkskul.objects.all()
