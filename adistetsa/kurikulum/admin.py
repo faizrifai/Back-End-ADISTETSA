@@ -5,6 +5,7 @@ from django.utils.text import Truncator
 from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ImportExportMixin, ExportMixin
+from config_models.admin import ConfigurationModelAdmin
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
@@ -272,3 +273,5 @@ class NilaiRaportAdmin(admin.ModelAdmin):
     autocomplete_fields = ['KELAS_SISWA']
     
 admin.site.register(NilaiRaport, NilaiRaportAdmin)
+
+admin.site.register(Configuration, ConfigurationModelAdmin)

@@ -214,7 +214,7 @@ class JadwalEkskul (models.Model):
     WAKTU_BERAKHIR = models.TimeField()
     
     def __str__(self):
-        return self.PELATIH.NAMA + ' - ' + self.EKSKUL.NAMA
+        return str(self.WAKTU_MULAI) + ' - ' + str(self.WAKTU_BERAKHIR)
     
 
 def post_save_jadwal_ekskul(sender, instance, **kwargs):
@@ -269,7 +269,7 @@ def post_save_jurnal_ekskul(sender, instance, created, **kwargs):
     try:
         ekskul = AnggotaEkskul.objects.filter(EKSKUL = instance.DAFTAR.EKSKUL)
         for kelas_siswa in ekskul:
-            anggota_ekskul = AnggotaEkskul.objects.get(KELAS_SISWA=kelas_siswa.KELAS_SISWA)
+            anggota_ekskul = AnggotaEkskul.objects.get(KELAS_SISWA=kelas_siswa.KELAS_SISWA, EKSKUL=instance.DAFTAR.EKSKUL)
             if (anggota_ekskul.STATUS == 'Nonaktif'):
                 continue
             
@@ -289,6 +289,7 @@ class AbsensiEkskul(models.Model):
     KETERANGAN = models.CharField(
         max_length=255, 
         choices= ENUM_KETERANGAN_ABSEN,
+        default='Hadir'
     )
     FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiEkskul', blank=True)
     JURNAL_EKSKUL = models.ForeignKey(JurnalEkskul, on_delete=models.CASCADE)
@@ -329,7 +330,7 @@ def post_save_pengajuan_ekskul(sender, instance, created, **kwargs):
 
 post_save.connect(post_save_pengajuan_ekskul, sender=PengajuanEkskul)
 
-class AnggotaEkskul (models.Model):
+class AnggotaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)

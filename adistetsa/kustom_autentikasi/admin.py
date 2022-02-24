@@ -134,7 +134,40 @@ class DataOrangTuaUserAdmin(admin.ModelAdmin):
 
         return group_display
 
+
+class DataPelatihUserAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['DATA_PELATIH', 'USER',]
+    search_fields = ['DATA_PELATIH__NAMA', 'USER__username']
+    list_display = ('aksi', 'nama', 'username', 'role')
+
+    def aksi(self, obj):
+        return 'Detail'
+
+    def nama(self, obj):
+        return obj.DATA_PELATIH.NAMA
+
+    def username(self, obj):
+        user = User.objects.get(pk=obj.USER.id)
+
+        base_url = reverse('admin:auth_user_changelist')
+        
+        return mark_safe(u'<a href="%s%d/change">%s</a>' % (base_url, user.id, user.username))
+
+    def role(self, obj):
+        groups = obj.USER.groups.all()
+
+        group_display = ''
+        for i, group in enumerate(groups):
+            if i == len(groups) - 1:
+                group_display += group.name
+            else:
+                group_display += group.name + ', '
+
+        return group_display
+
+
 admin.site.register(DataSiswaUser, DataSiswaUserAdmin)
 admin.site.register(DataOrangTuaUser, DataOrangTuaUserAdmin)
 admin.site.register(DataGuruUser, DataGuruUserAdmin)
 admin.site.register(DataKaryawanUser, DataKaryawanUserAdmin)
+admin.site.register(DataPelatihUser, DataPelatihUserAdmin)

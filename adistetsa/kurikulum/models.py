@@ -8,6 +8,7 @@ from django.utils.text import Truncator
 from django.conf import settings
 from .enums import *
 from subadmin import SubAdmin, RootSubAdmin
+from config_models.models import ConfigurationModel
 
 # Master Model
 class DataSemester(models.Model):
@@ -389,3 +390,6 @@ class NilaiRaport(models.Model):
     DESKRIPSI_KETERAMPILAN = models.CharField(max_length=255)
      
     
+# Configuration Model
+class Configuration(ConfigurationModel):
+    TAHUN_AJARAN_AKTIF = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)

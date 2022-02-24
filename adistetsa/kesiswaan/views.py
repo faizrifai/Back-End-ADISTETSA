@@ -1,7 +1,8 @@
+from .custom_filter import *
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
-from rest_framework.views import Response
+from rest_framework.views import Response, APIView
 from rest_framework.parsers import MultiPartParser
 
 from rest_framework import generics, status
@@ -219,6 +220,7 @@ class KatalogEkskulListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
+
 class KatalogEkskulDetailView(generics.RetrieveAPIView):
     """
     get: Menampilkan detail data katalog ekskul (Siswa).
@@ -231,82 +233,307 @@ class KatalogEkskulDetailView(generics.RetrieveAPIView):
     queryset = KatalogEkskul.objects.all()
     serializer_class = KatalogEkskulSerializer
 
-class PengajuanEkskulListView(generics.ListCreateAPIView):
+class AjukanEkskulListView(generics.CreateAPIView):
     """
-    get: Menampilkan data daftar Pengajuan ekskul.
-    post: Menambahkan data Pengajuan ekskul.
+    post: Mengajukan ekskul (Siswa).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Siswa'],
         'POST': ['Siswa'],
     }
-    parser_classes = (MultiPartParser,)
 
     queryset = PengajuanEkskul.objects.all()
     serializer_class = PengajuanEkskulSerializer
-
-    def get_serializer_class(self):
-        if self.request.method == "GET":
-            return PengajuanEkskulListSerializer
-
-        elif self.request.method == "POST":
-            return PengajuanEkskulSerializer
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
 
-class PengajuanEkskulDetailView(generics.RetrieveAPIView):
+
+class PengajuanEkskulListView(generics.ListAPIView):
     """
     get: Menampilkan data daftar Pengajuan ekskul.
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Pelatih'],
+        'GET': ['Siswa', 'Pelatih'],
     }
     parser_classes = (MultiPartParser,)
 
     queryset = PengajuanEkskul.objects.all()
-    serializer_class = PengajuanEkskulSerializer
+    serializer_class = PengajuanEkskulListSerializer
+    search_fields = ('EKSKUL__NAMA', 'KELAS_SISWA__NIS__NIS', 'KELAS_SISWA__NIS__NAMA', 'KELAS_SISWA__KELAS__KELAS__KODE_KELAS')
+
+    def get_queryset(self):
+        tahun_ajaran_aktif = Configuration.current().TAHUN_AJARAN_AKTIF
+
+        current_user = self.request.user
+
+        if (is_in_group(current_user, 'Siswa')):
+            data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
+            kelas_siswa = KelasSiswa.objects.get(NIS=data_siswa_user.DATA_SISWA, KELAS__KELAS__TAHUN_AJARAN=tahun_ajaran_aktif)
+            queryset = PengajuanEkskul.objects.filter(KELAS_SISWA=kelas_siswa)
+
+            return queryset
+        else:
+            data_pelatih_user = DataPelatihUser.objects.get(USER=current_user)
+            jadwal_ekskul = JadwalEkskul.objects.filter(PELATIH=data_pelatih_user.DATA_PELATIH, TAHUN_AJARAN=tahun_ajaran_aktif)
+            ids_ekskul = []
+            for ekskul in jadwal_ekskul:
+                ids_ekskul.append(ekskul.EKSKUL.ID)
+
+            queryset = PengajuanEkskul.objects.filter(EKSKUL_id__in=ids_ekskul)
+
+            return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
-class AnggotaEkskulListView(generics.ListAPIView):
+class PengajuanEkskulDetailView(generics.RetrieveDestroyAPIView):
     """
-    get: Melihat ekskul yang sudah diambil (Siswa)
+    get: Menampilkan detail pengajuan ekskul (Siswa).
+    delete: Menghapus pengajuan ekskul (Siswa).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Siswa', 'Pelatih'],
+        'DELETE': ['Siswa', 'Pelatih'],
+    }
+
+    queryset = PengajuanEkskul.objects.all()
+    serializer_class = PengajuanEkskulListSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        return super().destroy(request, *args, **kwargs)
+
+
+class AccPengajuanEkskulView(APIView):
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+    }
+
+    def get(self, request, pk, format=None):
+        """
+        Menampilkan status pengajuan bergabung ekskul disetujui (Pelatih).
+        """
+        try:
+            obj = PengajuanEkskul.objects.get(pk=pk)
+            obj.STATUS_PENGAJUAN = 'Disetujui'
+            obj.save()
+
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(data={'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class EkskulSayaListView(generics.ListAPIView):
+    """
+    get: Melihat ekskul yang sudah diambil (Siswa).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Siswa'],
     }
 
-    queryset = AnggotaEkskul.objects.all()
-    serializer_class = AnggotaEkskulListSerializer
+    queryset = KatalogEkskul.objects.all()
+    serializer_class = KatalogEkskulSerializer
+    search_fields = ('NAMA', 'KATEGORI')
 
     def get_queryset(self):
+        tahun_ajaran_aktif = Configuration.current().TAHUN_AJARAN_AKTIF
+
         current_user = self.request.user
         data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-        kelas_siswa = KelasSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
-        ekskul_yang_diambil = AnggotaEkskul.objects.filter(KELAS_SISWA=kelas_siswa[0], STATUS='Aktif')
+        kelas_siswa = KelasSiswa.objects.get(NIS=data_siswa_user.DATA_SISWA, KELAS__KELAS__TAHUN_AJARAN=tahun_ajaran_aktif)
+        ekskul_yang_diambil = AnggotaEkskul.objects.filter(KELAS_SISWA=kelas_siswa, STATUS='Aktif')
+        ids_ekskul = []
+        for ekskul in ekskul_yang_diambil:
+            ids_ekskul.append(ekskul.EKSKUL.ID)
 
-        return ekskul_yang_diambil
+        queryset = KatalogEkskul.objects.filter(pk__in=ids_ekskul)
+
+        return queryset
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
-class AnggotaEkskulDetailView(generics.RetrieveUpdateAPIView):
+
+class DaftarAnggotaListView(generics.ListAPIView):
     """
-    get: Menampilkan data daftar Pengajuan ekskul.
-    put: Mengubah data anggota ekskul
+    get: Melihat daftar anggota ekskul (Pelatih).
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
         'GET': ['Pelatih'],
-        'PUT': ['Pelatih'],
     }
-    parser_classes = (MultiPartParser,)
 
     queryset = AnggotaEkskul.objects.all()
     serializer_class = AnggotaEkskulListSerializer
+    search_fields = ('KELAS_SISWA__NIS__NIS', 'KELAS_SISWA__NIS__NAMA', 'KELAS_SISWA__KELAS__KELAS__KODE_KELAS', 'STATUS')
+
+    def get_queryset(self):
+        id_ekskul = self.kwargs['id_katalog_ekskul']
+        queryset = AnggotaEkskul.objects.filter(EKSKUL_id=id_ekskul)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class DaftarAnggotaDetailView(generics.RetrieveUpdateAPIView):
+    """
+    get: Melihat detail anggota ekskul (Pelatih).
+    patch: Mengubah status keanggotaan (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+        'PATCH': ['Pelatih']
+    }
+
+    queryset = AnggotaEkskul.objects.all()
+    serializer_class = AnggotaEkskulListSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+
+class JadwalEkskulListView(generics.ListAPIView):
+    """
+    get: Melihat jadwal ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+    }
+
+    queryset = JadwalEkskul.objects.all()
+    serializer_class = JadwalEkskulListSerializer
+    filterset_fields = ('TAHUN_AJARAN', 'HARI',)
+    search_fields = ('TAHUN_AJARAN', 'HARI',)
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_pelatih_user = DataPelatihUser.objects.get(USER=current_user)
+        queryset = JadwalEkskul.objects.filter(PELATIH=data_pelatih_user.DATA_PELATIH)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class DaftarJurnalEkskulListView(generics.ListAPIView):
+    """
+    get: Melihat daftar jurnal ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+    }
+
+    queryset = DaftarJurnalEkskul.objects.all()
+    serializer_class = DaftarJurnalEkskulListSerializer
+    filter_class = DaftarJurnalEkskulFilter
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_pelatih_user = DataPelatihUser.objects.get(USER=current_user)
+        queryset = DaftarJurnalEkskul.objects.filter(PELATIH=data_pelatih_user.DATA_PELATIH)
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class JurnalEkskulListView(generics.ListAPIView):
+    """
+    get: Melihat daftar pertemuan jurnal ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+    }
+
+    queryset = JurnalEkskul.objects.all()
+    serializer_class = JurnalEkskulListSerializer
+    search_fields = ("PERTEMUAN",)
+
+    def get_queryset(self):
+        current_user = self.request.user
+        data_pelatih_user = DataPelatihUser.objects.get(USER=current_user)
+        queryset = JurnalEkskul.objects.filter(PELATIH=data_pelatih_user.DATA_PELATIH, DAFTAR_id=self.kwargs['id_daftar_jurnal_ekskul'])
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class IsiJurnalEkskulListView(generics.CreateAPIView):
+    """
+    post: Mengisi jurnal pertemuan ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'POST': ['Pelatih'],
+    }
+
+    parser_classes = (MultiPartParser,)
+    queryset = JurnalEkskul.objects.all()
+    serializer_class = JurnalEkskulSerializer
+
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+
+class PresensiEkskulListView(generics.ListAPIView):
+    """
+    get: Melihat presensi anggota ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+    }
+
+    queryset = AbsensiEkskul.objects.all()
+    serializer_class = AbsensiEkskulListSerializer
+    search_fields = ('NIS__NIS', 'NIS__NAMA', 'KETERANGAN')
+
+    def get_queryset(self):
+        queryset = AbsensiEkskul.objects.filter(JURNAL_EKSKUL_id=self.kwargs['id_jurnal_ekskul_pertemuan'])
+
+        return queryset
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class PresensiEkskulDetailView(generics.RetrieveUpdateAPIView):
+    """
+    get: Melihat detail presensi anggota ekskul (Pelatih).
+    patch: Mengubah keterangan presensi anggota ekskul (Pelatih).
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Pelatih'],
+        'PATCH': ['Pelatih'],
+    }
+
+    queryset = AbsensiEkskul.objects.all()
+    serializer_class = AbsensiEkskulListSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)

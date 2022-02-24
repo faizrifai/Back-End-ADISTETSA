@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'subadmin',
     'django_cleanup.apps.CleanupConfig',
     'debug_toolbar',
+    'config_models',
 ]
 
 MIDDLEWARE = [
