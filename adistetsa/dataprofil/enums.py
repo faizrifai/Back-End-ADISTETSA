@@ -64,6 +64,8 @@ ENUM_PENGHASILAN = [
 ENUM_STATUS_KAWIN = [
         ('Kawin', 'Kawin'),
         ('Belum Kawin', 'Belum Kawin'),
+        ('Cerai Hidup', 'Cerai Hidup'),
+        ('Cerai Mati', 'Cerai Mati')
 ]
 
 ENUM_PASANGAN_PNS = [

@@ -1,10 +1,14 @@
+from fileinput import filename
 from django.contrib.auth.models import User
 
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.forms import ValidationError
-
 import calendar, datetime
+
+from isort import file
+
+from adistetsa.custom_function import duplikat_file
 
 from .enums import *
 
@@ -273,7 +277,7 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
                 JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
                 STATUS = 'Sedang Dipinjam',
                 KETERANGAN = instance.KETERANGAN,
-                TANDA_TANGAN = instance.TANDA_TANGAN
+                TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
             )
             obj.save()
             instance.delete()
@@ -389,7 +393,6 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                 alat_m2m = []
                 for data in instance.ALAT.all():
                     alat_m2m.append(data.ID)
-                
                 obj = RiwayatPeminjamanBarang.objects.create(
                     USER = instance.USER,
                     NAMA_PEMINJAM = instance.NAMA_PEMINJAM,
@@ -399,9 +402,10 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     TANGGAL_PENGGUNAAN = instance.TANGGAL_PENGGUNAAN,
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
-                    TANDA_TANGAN = instance.TANDA_TANGAN
+                    TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
                 )
                 obj.ALAT.set(alat_m2m)
+                
                 obj.save()
                 instance.delete()
                     
@@ -432,7 +436,7 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
                     STATUS_PEMINJAMAN = 'Ditolak',
-                    TANDA_TANGAN = instance.TANDA_TANGAN
+                    TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
                 )
                 obj.ALAT.set(alat_m2m)
                 obj.save()

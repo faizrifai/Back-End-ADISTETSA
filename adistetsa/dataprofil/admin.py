@@ -47,6 +47,7 @@ admin.site.register(DataTugasTambahanKaryawan)
 admin.site.register(DataTunjanganKaryawan)
 
 class DataSiswaAdmin(ImportExportModelAdmin):
+    # form = DataSiswaForm
     search_fields = ['NIS', 'NAMA']
     list_per_page = 10
     list_display = ('NIS', 'NAMA')
