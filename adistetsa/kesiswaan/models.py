@@ -6,6 +6,7 @@ from dataprofil.models import DataSiswa, DataPelatih
 from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, OfferingKelas
 from django.utils import timezone
 from .enums import *
+from adistetsa.custom_function import duplikat_file
 
 class PengajuanLaporanPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -170,7 +171,7 @@ def post_save_pengajuan_program_kebaikan(sender, instance, **kwargs):
             try:
                 riwayat = RiwayatProgramKebaikan.objects.create(
                     DATA_SISWA = instance.DATA_SISWA,
-                    BUKTI_PROGRAM_KEBAIKAN = instance.BUKTI_PROGRAM_KEBAIKAN,
+                    BUKTI_PROGRAM_KEBAIKAN = duplikat_file(instance, instance.BUKTI_PROGRAM_KEBAIKAN.read(), instance.BUKTI_PROGRAM_KEBAIKAN.name),
                     JENIS_PROGRAM_KEBAIKAN = instance.JENIS_PROGRAM_KEBAIKAN, 
                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     STATUS_PENGAJUAN = instance.STATUS_PENGAJUAN
