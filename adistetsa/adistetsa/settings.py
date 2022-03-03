@@ -35,6 +35,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'filebrowser',
+    'admin_interface',
+    'colorfield',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,7 +60,6 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     # 'debug_toolbar',
     'config_models',
-    'django-model-utils',
 ]
 
 MIDDLEWARE = [
@@ -209,3 +210,6 @@ site.directory = 'saved_files/'
 #     'debug_toolbar.panels.redirects.RedirectsPanel',
 #     'debug_toolbar.panels.profiling.ProfilingPanel',
 # ]
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SILENCED_SYSTEM_CHECKS = ["security.W019"]
