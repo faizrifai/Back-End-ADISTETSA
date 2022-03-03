@@ -62,7 +62,7 @@ def post_save_persetujuan_laporan(sender, instance, **kwargs):
             try:
                 riwayat = RiwayatLaporanPelanggaran.objects.create(
                     DATA_SISWA = instance.DATA_SISWA,
-                    BUKTI_PELANGGARAN = instance.BUKTI_PELANGGARAN,
+                    BUKTI_PELANGGARAN = duplikat_file(instance, instance.BUKTI_PELANGGARAN.read(), instance.BUKTI_PELANGGARAN.name),
                     JENIS_PELANGGARAN = instance.JENIS_PELANGGARAN, 
                     TANGGAL_PENGAJUAN = instance.TANGGAL_PENGAJUAN,
                     STATUS_PENGAJUAN = instance.STATUS_PENGAJUAN

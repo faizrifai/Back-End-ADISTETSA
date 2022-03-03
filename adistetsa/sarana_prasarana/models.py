@@ -8,7 +8,7 @@ import calendar, datetime
 
 from isort import file
 
-from adistetsa.custom_function import duplikat_file
+from adistetsa.custom_function import *
 
 from .enums import *
 
@@ -175,14 +175,14 @@ def cek_jangka_panjang(data):
 # Model
 class JenisSarana(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    KATEGORI = models.CharField(max_length=255)
+    KATEGORI = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
 
     def __str__(self):
         return self.KATEGORI
     
 class Sarana(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     JENIS = models.ForeignKey(JenisSarana, on_delete=models.CASCADE)
     STATUS = models.CharField(
         max_length=255,
@@ -194,14 +194,14 @@ class Sarana(models.Model):
 
 class JenisRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    KATEGORI = models.CharField(max_length=255)
+    KATEGORI = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
 
     def __str__(self):
         return self.KATEGORI
 
 class Ruangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     JENIS = models.ForeignKey(JenisRuangan, on_delete=models.CASCADE)
     STATUS = models.CharField(
         max_length=255,
@@ -214,8 +214,8 @@ class Ruangan(models.Model):
 class PengajuanPeminjamanRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
-    PENGGUNA = models.CharField(max_length=255)
-    NO_HP = models.CharField(max_length=255)
+    PENGGUNA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
+    NO_HP = models.CharField(max_length=255, validators=[validasi_integer])
     KEGIATAN = models.CharField(max_length=255)
     RUANGAN =  models.ForeignKey(Ruangan, on_delete=models.CASCADE)
     TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
@@ -303,7 +303,6 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
                 JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
                 STATUS = 'Ditolak',
                 KETERANGAN = instance.KETERANGAN,
-                TANDA_TANGAN = instance.TANDA_TANGAN
             )
             obj.save()
             instance.delete()
@@ -436,7 +435,6 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
                     STATUS_PEMINJAMAN = 'Ditolak',
-                    TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
                 )
                 obj.ALAT.set(alat_m2m)
                 obj.save()

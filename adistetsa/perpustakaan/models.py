@@ -1,10 +1,11 @@
+from wsgiref.validate import validator
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.db.models.query_utils import select_related_descend
 from django.db.models.signals import post_save
 
-from adistetsa.custom_function import duplikat_file
+from adistetsa.custom_function import *
 
 from dataprofil.models import DataGuru, DataSiswa
 import datetime
@@ -16,36 +17,34 @@ from .enums import *
 
 class TipeBahasa(models.Model):
     KODE_BAHASA = models.CharField(primary_key=True, max_length=255)
-    BAHASA = models.CharField(max_length=255)
+    BAHASA = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return self.KODE_BAHASA + ' - ' + self.BAHASA
         
 class TipeBuku(models.Model):
     KODE_TIPE = models.CharField(primary_key=True, max_length = 255,)
-    NAMA_TIPE = models.CharField(max_length = 255,)
-    LAMA_PINJAM = models.CharField(null=True, blank=True, max_length=255)
-    DENDA = models.CharField(max_length = 255, blank=True, null=True)
+    NAMA_TIPE = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return self.KODE_TIPE + ' - '  + self.NAMA_TIPE  
     
 class Pendanaan(models.Model):
     KODE_PENDANAAN = models.CharField(primary_key=True, max_length = 255)
-    NAMA_PENDANAAN = models.CharField(max_length = 255)
+    NAMA_PENDANAAN = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return self.NAMA_PENDANAAN
     
 class Lokasi(models.Model):
     KODE_LOKASI = models.CharField(primary_key=True, max_length = 255)
-    NAMA_LOKASI = models.CharField(max_length = 255)
+    NAMA_LOKASI = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     def __str__(self):
         return self.KODE_LOKASI + ' - ' + self.NAMA_LOKASI
     
 class LokasiSpesifik(models.Model):
     LOKASI_SPESIFIK = models.CharField(primary_key=True, max_length = 255)
-    NAMA = models.CharField(max_length = 255)
+    NAMA = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return self.LOKASI_SPESIFIK + ' ' + self.NAMA
@@ -60,7 +59,7 @@ class KunjunganGuru(models.Model):
     
 class TipeMedia(models.Model):
     KODE_MEDIA = models.CharField(primary_key=True, max_length = 255)
-    NAMA_MEDIA = models.CharField(max_length = 255)
+    NAMA_MEDIA = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return str(self.KODE_MEDIA) + ' - ' + self.NAMA_MEDIA
@@ -120,7 +119,7 @@ class Operator(models.Model):
 
 class Author(models.Model):
     KODE_AUTHOR = models.CharField(primary_key=True, max_length=255)
-    NAMA_AUTHOR = models.CharField(max_length=255)
+    NAMA_AUTHOR = models.CharField(max_length=255, validators=[paksa_huruf_besar])
     
     def __str__(self):
         return self.KODE_AUTHOR + ' - ' + self.NAMA_AUTHOR
@@ -142,26 +141,26 @@ class TahunTerbit(models.Model):
 
     
 class KatalogBuku(models.Model):
-    REGISTER = models.CharField(primary_key=True, max_length = 255)
-    ISBN = models.CharField(max_length = 255, blank=True)
-    JUDUL = models.CharField(max_length = 255)
-    VOLUME = models.CharField(max_length = 255, blank=True)
-    EDISI = models.CharField(max_length = 255, blank=True)
+    REGISTER = models.CharField(primary_key=True, max_length = 255, validators=[validasi_integer])
+    ISBN = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
+    JUDUL = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    VOLUME = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
+    EDISI = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
     BAHASA = models.ForeignKey(TipeBahasa, on_delete=models.CASCADE)
     KODE_MEDIA = models.ForeignKey(TipeMedia, on_delete=models.CASCADE)
     KODE_TIPE = models.ForeignKey(TipeBuku, on_delete=models.CASCADE)
-    NOMER_DEWEY = models.CharField(max_length = 255)
+    NOMER_DEWEY = models.CharField(max_length = 255, validators=[validasi_integer])
     KODE_AUTHOR = models.ForeignKey(Author, on_delete=models.CASCADE)
     KODE_JUDUL = models.CharField(max_length = 255, blank=True)
     TAHUN_TERBIT = models.ForeignKey(TahunTerbit, on_delete=models.CASCADE)
-    KOTA_PENERBIT = models.CharField(max_length = 255)
-    PENERBIT = models.CharField(max_length = 255)
+    KOTA_PENERBIT = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    PENERBIT = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     DESKRIPSI_FISIK = models.CharField(max_length = 255)
-    INDEX = models.CharField(max_length = 255)
+    INDEX = models.CharField(max_length = 255, blank=True)
     BIBLIOGRAPHY = models.CharField(max_length = 255, blank=True)
     KODE_LOKASI = models.ForeignKey(Lokasi, on_delete=models.CASCADE)
     LOKASI_SPESIFIK = models.ForeignKey(LokasiSpesifik, on_delete=models.CASCADE)
-    HARGA = models.CharField(max_length = 255)
+    HARGA = models.CharField(max_length = 255, validators=[validasi_integer])
     DATA_ENTRY = models.DateField(max_length = 255)
     OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)    
     
@@ -310,7 +309,6 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
                     STATUS_PEMINJAMAN = 'Ditolak',
-                    FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
                 )
                 obj.BUKU.set(buku_m2m)
                 obj.save()
@@ -434,7 +432,6 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
                     STATUS_PEMINJAMAN = 'Ditolak',
-                    FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
                 )
                 obj.BUKU.set(buku_m2m)
                 obj.save()
