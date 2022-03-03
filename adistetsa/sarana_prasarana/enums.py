@@ -25,12 +25,12 @@ ENUM_PENGAJUAN = [
     ('Ditolak', 'Ditolak'),
 ]
 
-ENUM_STATUS_PEMINJAMAN = {
+ENUM_STATUS_PEMINJAMAN = [
     ('Sedang Dipinjam', 'Sedang Dipinjam'),
     ('Sudah Dikembalikan', 'Sudah Dikembalikan'),
     ('Tenggat', 'Tenggat'),
     ('Pengajuan', 'Pengajuan'),
     ('Hilang','Hilang'),
     ('Ditolak', 'Ditolak'),
-}
+]
 

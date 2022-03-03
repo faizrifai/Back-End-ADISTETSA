@@ -1,4 +1,3 @@
-
 ENUM_PENGAJUAN = [
     ('Pengajuan','Pengajuan'),
     ('Disetujui', 'Disetujui'),
@@ -10,14 +9,14 @@ ENUM_JANGKA_PEMINJAMAN = [
     ('Jangka Panjang', 'Jangka Panjang'),
 ]
 
-ENUM_STATUS_PEMINJAMAN = {
+ENUM_STATUS_PEMINJAMAN = [
     ('Sedang Dipinjam', 'Sedang Dipinjam'),
     ('Sudah Dikembalikan', 'Sudah Dikembalikan'),
     ('Tenggat', 'Tenggat'),
     ('Pengajuan', 'Pengajuan'),
     ('Hilang','Hilang'),
     ('Ditolak', 'Ditolak'),
-}
+]
 
 ENUM_ISRESPONSED= [
     ('TRUE', 'TRUE'),
