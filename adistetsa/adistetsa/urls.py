@@ -1,14 +1,17 @@
 from django.contrib import admin
+from django.contrib.admin import site as django_site
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path, re_path
 
 from rest_framework import permissions
-from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from filebrowser.sites import site
+import adminactions.actions as actions
+
+django_site.add_action(actions.byrows_update)
 
 # Swagger documentation setup
 schema_view = get_schema_view(
@@ -28,6 +31,7 @@ urlpatterns = [
     re_path(r'^$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^adminactions/', include('adminactions.urls')),
     path('login/', TokenObtainPairView.as_view(), name='login'),
     path('login/refresh', TokenObtainPairView.as_view(), name='refresh_token'),
     path('', include('kustom_autentikasi.urls')),
@@ -37,7 +41,6 @@ urlpatterns = [
     path('', include('kesiswaan.urls')),
     path('', include('sarana_prasarana.urls')),
     path('admin/filebrowser/', site.urls),
-    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls, name='admin'),
-    path('__debug__/', include('debug_toolbar.urls')),
+    # path('__debug__/', include('debug_toolbar.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

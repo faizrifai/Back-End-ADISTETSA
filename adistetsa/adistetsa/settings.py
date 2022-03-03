@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'filebrowser',
     'admin_interface',
     'colorfield',
+    'adminactions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
