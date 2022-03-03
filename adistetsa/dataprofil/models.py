@@ -47,19 +47,19 @@ class DataSiswa(models.Model):
     )
     NO_KPS = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     ROMBEL_SAAT_INI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_PESERTA_UJIAN_NASIONAL = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NO_PESERTA_UJIAN_NASIONAL = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NO_SERI_IJAZAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     PENERIMA_KIP = models.CharField(
         max_length=5,
         choices=ENUM_PENERIMA_KIP,
     )
-    NOMOR_KIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NAMA_KIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_KKS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NOMOR_KIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    NAMA_KIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[paksa_huruf_besar])
+    NO_KKS = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NO_REGRISTASI_AKTA_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BANK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_REKENING_BANK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    REKENING_ATAS_NAMA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NO_REKENING_BANK = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    REKENING_ATAS_NAMA = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[paksa_huruf_besar])
     LAYAK_PIP = models.CharField(
         max_length=5,
         choices=ENUM_LAYAK_PIP,
@@ -69,7 +69,7 @@ class DataSiswa(models.Model):
     ANAK_KE = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LINTANG = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BUJUR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NO_KK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NO_KK = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     BERAT_BADAN = models.IntegerField(blank=True, null=True)
     TINGGI_BADAN = models.IntegerField(blank=True, null=True)
     LINGKAR_KEPALA = models.IntegerField(blank=True, null=True)
@@ -101,38 +101,38 @@ class DataSiswa(models.Model):
 
 class DataOrangTua(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NIK_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
-    NAMA_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
+    NIK_AYAH = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
+    NAMA_AYAH = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     TAHUN_LAHIR_AYAH = models.DateField()
     JENJANG_PENDIDIKAN_AYAH  = models.CharField(
         max_length=20,
         choices=ENUM_JENJANG_PENDIDIKAN,
     )
-    PEKERJAAN_AYAH = models.CharField(max_length=DEFAULT_LENGTH)
+    PEKERJAAN_AYAH = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
     PENGHASILAN_AYAH = models.CharField(
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN,
     )
-    NIK_IBU = models.CharField(max_length=DEFAULT_LENGTH)
-    NAMA_IBU = models.CharField(max_length=DEFAULT_LENGTH)
+    NIK_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
+    NAMA_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     TAHUN_LAHIR_IBU  = models.DateField()
     JENJANG_PENDIDIKAN_IBU = models.CharField(
         max_length=20,
         choices= ENUM_JENJANG_PENDIDIKAN,
     )
-    PEKERJAAN_IBU = models.CharField(max_length=DEFAULT_LENGTH)
+    PEKERJAAN_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
     PENGHASILAN_IBU = models.CharField(
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
     )
-    NIK_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NAMA_WALI = models.CharField(max_length=DEFAULT_LENGTH)
+    NIK_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    NAMA_WALI = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     TAHUN_LAHIR_WALI  = models.DateField()
     JENJANG_PENDIDIKAN_WALI = models.CharField(
         max_length=20,
         choices= ENUM_JENJANG_PENDIDIKAN,
     )
-    PEKERJAAN_WALI = models.CharField(max_length=DEFAULT_LENGTH)
+    PEKERJAAN_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[cek_huruf_besar_awal_kalimat])
     PENGHASILAN_WALI = models.CharField(
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
@@ -198,13 +198,17 @@ class DataGuru(models.Model):
     NIY = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NIGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NUPTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
-    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True, )
+    JENIS_PTK = models.CharField(
+        max_length=DEFAULT_LENGTH, 
+        blank=True, 
+        choices=ENUM_PTK,
+    )
     STATUS_AKTIF = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_AKTIF,
         blank=True
     )
-    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True, )
     TMT_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -254,63 +258,67 @@ class DataGuru(models.Model):
         
 class DataKaryawan(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH)
-    NSS = models.CharField(max_length=DEFAULT_LENGTH)
-    NPSN = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, default='SMA NEGERI 4 MALANG',validators=[paksa_huruf_besar_dengan_angka])
+    NSS = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
+    NPSN = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
     ALAMAT_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH)
-    NIK = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_LENGKAP = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
+    NIK = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
     JENIS_KELAMIN = models.CharField(
         max_length=20,
         choices=ENUM_JENIS_KELAMIN,
     )
-    TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH)
+    TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
     TANGGAL_LAHIR = models.DateField()
-    NAMA_IBU_KANDUNG = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_IBU_KANDUNG = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     ALAMAT_TEMPAT_TINGGAL = models.CharField(max_length=DEFAULT_LENGTH)
-    DUSUN = models.CharField(max_length=DEFAULT_LENGTH)
-    KELURAHAN = models.CharField(max_length=DEFAULT_LENGTH)
-    KECAMATAN = models.CharField(max_length=DEFAULT_LENGTH)
-    KOTA = models.CharField(max_length=DEFAULT_LENGTH)
-    PROVINSI = models.CharField(max_length=DEFAULT_LENGTH)
-    LINTANG_1 = models.CharField(max_length=DEFAULT_LENGTH)
-    LINTANG_2 = models.CharField(max_length=DEFAULT_LENGTH)
+    DUSUN = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
+    KELURAHAN = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
+    KECAMATAN = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
+    KOTA = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
+    PROVINSI = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
+    LINTANG_1 = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    LINTANG_2 = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     AGAMA = models.CharField(
         max_length=20,
         choices=ENUM_AGAMA,
     )
     NPWP = models.CharField(max_length=DEFAULT_LENGTH)
-    NAMA_WAJIB_PAJAK = models.CharField(max_length=DEFAULT_LENGTH)
-    KEWARGANEGARAAN = models.CharField(max_length=DEFAULT_LENGTH)
+    NAMA_WAJIB_PAJAK = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
+    KEWARGANEGARAAN = models.CharField(max_length=DEFAULT_LENGTH, default='Indonesia', validators=[cek_huruf_besar_awal_kalimat] )
     STATUS_KAWIN = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_KAWIN,
     )
-    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NAMA_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[paksa_huruf_besar])
+    PEKERJAAN_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[cek_huruf_besar_awal_kalimat])
     PASANGAN_PNS = models.CharField(
         max_length=5,
         choices=ENUM_PASANGAN_PNS,
         blank=True,
     )
-    NIP_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIP_PASANGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    STATUS_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True, )
     PNS = models.CharField(
         max_length=5,
         choices=ENUM_PNS,
         blank=True
     )
-    NIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NIY = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NIGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    NUPTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    NIP = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    NIY = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    NIGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    NUPTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
+    JENIS_PTK = models.CharField(
+        max_length=DEFAULT_LENGTH, 
+        blank=True, 
+        choices=ENUM_PTK,
+    )
     STATUS_AKTIF = models.CharField(
         max_length=11,
         choices=ENUM_STATUS_AKTIF,
         blank=True
     )
-    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
+    SK_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True, )
     TMT_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LEMBAGA_PENGANGKATAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     SK_CPNS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -344,9 +352,10 @@ class DataKaryawan(models.Model):
         
     def clean(self):
         v_kawin = wajib_diisi(self.STATUS_KAWIN, 'Kawin', self, ['NAMA_PASANGAN', 'PEKERJAAN_PASANGAN'])
-        v_pasangan_pns = wajib_diisi(self.PASANGAN_PNS, 'Iya', self, ['NIP_PASANGAN'])
+        v_pasangan_pns = wajib_diisi(self.PASANGAN_PNS, 'Iya', self, ['NIP_PASANGAN', 'STATUS_PEGAWAI'])
+        v_pns = wajib_diisi(self.PNS, 'Iya', self, ['NIP',])
         
-        validator_arr = gabung_dictionary(v_kawin, v_pasangan_pns, )
+        validator_arr = gabung_dictionary(v_kawin, v_pasangan_pns, v_pns)
         print(validator_arr)
         
         if validator_arr:
@@ -356,7 +365,7 @@ class DataKaryawan(models.Model):
         self.full_clean()
         
         return super().save(*args, **kwargs)
-
+    
 class DataKompetensiGuru(models.Model):
     OWNER = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     ID = models.BigAutoField(primary_key=True)
@@ -910,7 +919,7 @@ class DataRiwayatKarirKaryawan(models.Model):
 
 class DataPelatih (models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
     
     def __str__(self):
         return str(self.NAMA)

@@ -88,3 +88,18 @@ ENUM_KEAHLIAN_KHUSUS = [
         ('Bahasa Isyarat', 'Bahasa Isyarat'),
 ]
 
+ENUM_PTK = [
+    ('Guru Mapel', 'Guru Mapel'), 
+    ('Guru Kelas', 'Guru Kelas'),
+    ('Guru BK', 'Guru BK'),
+    ('Guru Inklusi', 'Guru Inklusi'),
+    ('Tenaga Administrasi', 'Tenaga Administrasi'), 
+    ('Guru TIK', 'Guru TIK'),
+    ('Laboran', 'Laboran'),
+    ('Tenaga Perpustakaan', 'Tenaga Perpustakaan'), 
+    ('Tukang Kebun', 'Tukang Kebun'), 
+    ('Penjaga Sekolah', 'Penjaga Sekolah'),
+    ('Petugas Keamanan', 'Petugas Keamanan'), 
+    ('Pesuruh/Office Boy', 'Pesuruh/Office Boy'),
+    ('Kepala Sekolah', 'Kepala Sekolah'),
+]
