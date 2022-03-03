@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     # 'debug_toolbar',
     'config_models',
+    'django-model-utils',
 ]
 
 MIDDLEWARE = [
