@@ -4,6 +4,7 @@ attrs==21.4.0
 backports.entry-points-selectable==1.1.1
 certifi==2021.10.8
 charset-normalizer==2.0.9
+click==8.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 defusedxml==0.7.1
@@ -12,6 +13,7 @@ distlib==0.3.4
 Django==4.0
 django-admin-autocomplete-filter==0.7.1
 django-admin-interface==0.18.7
+django-adminactions==1.15
 django-cleanup==6.0.0
 django-colorfield==0.6.3
 django-config-models==2.3.0
@@ -35,10 +37,12 @@ et-xmlfile==1.1.0
 factory-boy==3.2.1
 Faker==10.0.0
 filelock==3.4.2
+html-json-forms==1.1.1
 idna==3.3
 inflection==0.5.1
 iniconfig==1.1.1
 isort==5.10.1
+itertable==2.0.0
 itypes==1.2.0
 Jinja2==3.0.3
 jsonschema==4.3.2
@@ -46,6 +50,7 @@ lazy-object-proxy==1.7.1
 MarkupPy==1.14
 MarkupSafe==2.0.1
 mccabe==0.6.1
+natural-keys==2.0.0
 newrelic==7.4.0.172
 odfpy==1.4.1
 openpyxl==3.0.9
