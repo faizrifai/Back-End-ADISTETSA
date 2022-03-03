@@ -186,9 +186,9 @@ class TipeMediaAdmin(ImportExportModelAdmin):
 admin.site.register(TipeMedia, TipeMediaAdmin)
 
 class TipeBukuAdmin(ImportExportModelAdmin):
-    search_fields = ['KODE_TIPE', 'NAMA_TIPE', 'LAMA_PINJAM', 'DENDA']
+    search_fields = ['KODE_TIPE', 'NAMA_TIPE']
     list_per_page = 10
-    list_display = ('KODE_TIPE', 'NAMA_TIPE', 'LAMA_PINJAM', 'DENDA')
+    list_display = ('KODE_TIPE', 'NAMA_TIPE')
     resource_class = BookTypeResource
     
 admin.site.register(TipeBuku, TipeBukuAdmin)

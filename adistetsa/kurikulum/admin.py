@@ -6,6 +6,8 @@ from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ImportExportMixin, ExportMixin
 from config_models.admin import ConfigurationModelAdmin
+
+from .forms import JadwalMengajarForm
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
@@ -183,9 +185,10 @@ class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
     list_per_page = 10
     filter_horizontal = ('WAKTU_PELAJARAN',)
-    exclude = ('JUMLAH_WAKTU',)
+    exclude = ('JUMLAH_WAKTU', 'TAHUN_AJARAN',)
     list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran')
     list_filter = [TahunFilter ,SemesterFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
+    form = JadwalMengajarForm
 
     resource_class = JadwalMengajarResource
 

@@ -1,5 +1,6 @@
+from cgitb import text
 from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, m2m_changed
 from django.core.validators import MinValueValidator, MaxValueValidator
 from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
@@ -9,7 +10,7 @@ from django.conf import settings
 from .enums import *
 from subadmin import SubAdmin, RootSubAdmin
 from config_models.models import ConfigurationModel
-
+from adistetsa.custom_function import *
 # Master Model
 class DataSemester(models.Model):
     KE = models.CharField(
@@ -54,7 +55,7 @@ class TahunAjaran(models.Model):
 
 class MataPelajaran(models.Model):
     KODE = models.CharField(max_length=255, primary_key=True)
-    NAMA = models.CharField(max_length=255, verbose_name="MATA PELAJARAN")
+    NAMA = models.CharField(max_length=255, verbose_name="MATA PELAJARAN", validators=[cek_huruf_besar_awal_kalimat])
 
     class Meta:
         constraints = [
@@ -68,7 +69,7 @@ class MataPelajaran(models.Model):
 
 class Jurusan(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
     
     class Meta:
         verbose_name_plural = 'Jurusan'
@@ -96,13 +97,14 @@ class Kelas(models.Model):
     def __str__(self):
         return self.KODE_KELAS 
     
+    
     def save(self, *args, **kwargs):
         self.KODE_KELAS = self.TINGKATAN + ' ' + self.JURUSAN.NAMA + '-' + str(self.TAHUN_AJARAN)
         super(Kelas, self).save(*args, **kwargs)
         
 class NamaOfferingKelas(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
     
     class Meta:
         verbose_name_plural = 'Nama Offering Kelas'
@@ -123,7 +125,7 @@ class OfferingKelas(models.Model):
 
 class KategoriTataTertib(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
 
     class Meta:
         constraints = [
@@ -210,11 +212,23 @@ class WaktuPelajaran(models.Model):
     def __str__(self):
         return str(self.WAKTU_MULAI) + '-' + str(self.WAKTU_BERAKHIR) + ' (Jam Ke-' + str(self.JAM_KE) + ')'
 
+    def clean(self):
+        if self.WAKTU_MULAI > self.WAKTU_BERAKHIR :
+            raise ValidationError('Waktu Mulai tidak boleh lebih dari Waktu Berakhir')
+        if self.WAKTU_MULAI == self.WAKTU_BERAKHIR :
+            raise ValidationError('Waktu Mulai tidak boleh sama dengan Waktu Berakhir')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+
+        return super().save(*args, **kwargs)
+
 
 class KelasSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
+    
     
     class Meta:
         constraints = [
@@ -225,7 +239,17 @@ class KelasSiswa(models.Model):
     
     def __str__(self):
         return self.NIS.NAMA + ' - ' + str(self.KELAS)
-
+    
+    def clean(self):
+        kelas = KelasSiswa.objects.filter(NIS=self.NIS, KELAS__KELAS__TINGKATAN=self.KELAS.KELAS.TINGKATAN).exclude(ID=self.ID)
+        
+        if kelas:
+            # tingkatan_sama = kelas.KELAS.KELAS.TINGKATAN == self.KELAS.KELAS.TINGKATAN
+            # tahun_sama = kelas.KELAS.KELAS.TAHUN_AJARAN == self.KELAS.KELAS.TAHUN_AJARAN
+            
+            for data in kelas:
+                if data.KELAS.KELAS.TINGKATAN == self.KELAS.KELAS.TINGKATAN and data.KELAS.KELAS.TAHUN_AJARAN == self.KELAS.KELAS.TAHUN_AJARAN:
+                    raise ValidationError({'KELAS': self.NIS.NAMA + ' sudah terdaftar pada tingkatan dan tahun ajaran yang sama'})
 
 class JadwalMengajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -243,13 +267,37 @@ class JadwalMengajar(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['KELAS', 'MATA_PELAJARAN', 'HARI'], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['KELAS', 'MATA_PELAJARAN', 'HARI', ], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Jadwal Mengajar"
         ordering = ['TAHUN_AJARAN', 'KELAS', 'HARI', 'JUMLAH_WAKTU']
     
     def __str__(self):
-        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
+        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA    
+    
+    # def clean(self):
+    #     if text:
+    #         raise ValidationError(text_error())
+    
+    def save(self, *args, **kwargs):
+        self.TAHUN_AJARAN = self.KELAS.KELAS.TAHUN_AJARAN
+        
+        super(JadwalMengajar, self).save(*args, **kwargs)
+        
+# def waktu_pelajaran_changed(sender, instance, action, pk_set=None, **kwargs):
+#     if action == 'pre_add':
+#         for pk in pk_set:
+#             waktu = WaktuPelajaran.objects.get(pk=pk)
+#             jadwal = JadwalMengajar.objects.filter(GURU=instance.GURU, HARI=instance.HARI)
+            
+#             for obj in jadwal:
+#                 for data in obj.WAKTU_PELAJARAN.all():
+#                     if waktu == data:
+#                         error({'WAKTU_PELAJARAN': 'Jadwal bentrok'})
+    
+# m2m_changed.connect(waktu_pelajaran_changed, sender=JadwalMengajar.WAKTU_PELAJARAN.through)
+
+
 
 class DaftarJurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
