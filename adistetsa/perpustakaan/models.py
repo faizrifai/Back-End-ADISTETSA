@@ -51,11 +51,11 @@ class LokasiSpesifik(models.Model):
 
 class KunjunganSiswa(models.Model): 
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
-    TANGGAL_KUNJUNGAN = models.DateField()
+    TANGGAL_KUNJUNGAN = models.DateField(default=datetime.date.today)
     
 class KunjunganGuru(models.Model):
     NIP = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
-    TANGGAL_KUNJUNGAN = models.DateField()
+    TANGGAL_KUNJUNGAN = models.DateField(default=datetime.date.today)
     
 class TipeMedia(models.Model):
     KODE_MEDIA = models.CharField(primary_key=True, max_length = 255)
@@ -161,7 +161,7 @@ class KatalogBuku(models.Model):
     KODE_LOKASI = models.ForeignKey(Lokasi, on_delete=models.CASCADE)
     LOKASI_SPESIFIK = models.ForeignKey(LokasiSpesifik, on_delete=models.CASCADE)
     HARGA = models.CharField(max_length = 255, validators=[validasi_integer])
-    DATA_ENTRY = models.DateField(max_length = 255)
+    DATA_ENTRY = models.DateField(max_length = 255, default=datetime.date.today)
     OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)    
     
     def __str__(self):
@@ -173,9 +173,9 @@ class KatalogBuku(models.Model):
 
 class DonasiBuku (models.Model):
     REGISTER_DONASI = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE)
-    DUPLIKAT = models.BigIntegerField()
+    DUPLIKAT = models.PositiveBigIntegerField()
     KODE_DONASI = models.ForeignKey(Pendanaan, on_delete=models.CASCADE)
-    TANGGAL_PENERIMAAN = models.DateField(max_length = 255)
+    TANGGAL_PENERIMAAN = models.DateField(max_length = 255, default=datetime.date.today)
     CATATAN_DONASI = models.CharField(max_length = 255)
     
     def __str__(self):
@@ -220,7 +220,7 @@ class PengajuanPeminjamanSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKU = models.ManyToManyField(KatalogBukuCopy)
-    TANGGAL_PENGAJUAN = models.DateField()
+    TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255,
         choices=ENUM_PENGAJUAN,
@@ -238,8 +238,8 @@ class RiwayatPeminjamanSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     BUKU = models.ManyToManyField(KatalogBukuCopy)
-    TANGGAL_PEMINJAMAN = models.DateField()
-    TANGGAL_PENGEMBALIAN = models.DateField()
+    TANGGAL_PEMINJAMAN = models.DateField(default=datetime.date.today)
+    TANGGAL_PENGEMBALIAN = models.DateField(default=datetime.date.today)
     JANGKA_PEMINJAMAN = models.CharField(
         max_length=255,
         choices=ENUM_JANGKA_PEMINJAMAN,
@@ -341,7 +341,7 @@ class PengajuanPeminjamanGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
     DATA_GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     BUKU = models.ManyToManyField(KatalogBukuCopy)
-    TANGGAL_PENGAJUAN = models.DateField()
+    TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255, 
         choices=ENUM_PENGAJUAN,
@@ -361,8 +361,8 @@ class RiwayatPeminjamanGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
     DATA_GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     BUKU = models.ManyToManyField(KatalogBukuCopy)
-    TANGGAL_PEMINJAMAN = models.DateField()
-    TANGGAL_PENGEMBALIAN = models.DateField()
+    TANGGAL_PEMINJAMAN = models.DateField(default=datetime.date.today)
+    TANGGAL_PENGEMBALIAN = models.DateField(default=datetime.date.today)
     JANGKA_PEMINJAMAN = models.CharField(
         max_length=255,
         choices=ENUM_JANGKA_PEMINJAMAN,

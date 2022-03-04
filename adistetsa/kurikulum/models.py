@@ -11,6 +11,8 @@ from .enums import *
 from subadmin import SubAdmin, RootSubAdmin
 from config_models.models import ConfigurationModel
 from adistetsa.custom_function import *
+import calendar, datetime
+
 # Master Model
 class DataSemester(models.Model):
     KE = models.CharField(
@@ -322,7 +324,7 @@ class JurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     PERTEMUAN = models.CharField(max_length=255)
-    TANGGAL_MENGAJAR = models.DateField()
+    TANGGAL_MENGAJAR = models.DateField(default=datetime.date.today)
     DESKRIPSI_MATERI = models.TextField()
     FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalBelajar')
     DAFTAR = models.ForeignKey(DaftarJurnalBelajar, on_delete=models.CASCADE)

@@ -4,7 +4,7 @@ from django.db import models
 from .enums import *
 from adistetsa.custom_function import *
 from django.utils.translation import gettext as _
-
+import calendar, datetime
 # Constant number
 DEFAULT_LENGTH = 225
 
@@ -19,7 +19,7 @@ class DataSiswa(models.Model):
         choices=ENUM_JENIS_KELAMIN,
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
-    TANGGAL_LAHIR = models.DateField()
+    TANGGAL_LAHIR = models.DateField(default=datetime.date.today)
     NIK = models.CharField(max_length=DEFAULT_LENGTH)
     AGAMA = models.CharField(
         max_length=20,
@@ -103,7 +103,7 @@ class DataOrangTua(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIK_AYAH = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
     NAMA_AYAH = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
-    TAHUN_LAHIR_AYAH = models.DateField()
+    TAHUN_LAHIR_AYAH = models.DateField(default=datetime.date.today)
     JENJANG_PENDIDIKAN_AYAH  = models.CharField(
         max_length=20,
         choices=ENUM_JENJANG_PENDIDIKAN,
@@ -115,7 +115,7 @@ class DataOrangTua(models.Model):
     )
     NIK_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
     NAMA_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
-    TAHUN_LAHIR_IBU  = models.DateField()
+    TAHUN_LAHIR_IBU  = models.DateField(default=datetime.date.today)
     JENJANG_PENDIDIKAN_IBU = models.CharField(
         max_length=20,
         choices= ENUM_JENJANG_PENDIDIKAN,
@@ -127,7 +127,7 @@ class DataOrangTua(models.Model):
     )
     NIK_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NAMA_WALI = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
-    TAHUN_LAHIR_WALI  = models.DateField()
+    TAHUN_LAHIR_WALI  = models.DateField(default=datetime.date.today)
     JENJANG_PENDIDIKAN_WALI = models.CharField(
         max_length=20,
         choices= ENUM_JENJANG_PENDIDIKAN,
@@ -159,7 +159,7 @@ class DataGuru(models.Model):
         choices=ENUM_JENIS_KELAMIN,
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
-    TANGGAL_LAHIR = models.DateField()
+    TANGGAL_LAHIR = models.DateField(default=datetime.date.today)
     NAMA_IBU_KANDUNG = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     ALAMAT_TEMPAT_TINGGAL = models.CharField(max_length=DEFAULT_LENGTH)
     DUSUN = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
@@ -219,7 +219,7 @@ class DataGuru(models.Model):
     KARTU_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARIS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TGL_SURAT = models.DateField(blank=True, null=True)
+    TGL_SURAT = models.DateField(blank=True, null=True, default=datetime.date.today)
     TMT_TUGAS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LISENSI_KEPALA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -269,7 +269,7 @@ class DataKaryawan(models.Model):
         choices=ENUM_JENIS_KELAMIN,
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
-    TANGGAL_LAHIR = models.DateField()
+    TANGGAL_LAHIR = models.DateField(default=datetime.date.today)
     NAMA_IBU_KANDUNG = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     ALAMAT_TEMPAT_TINGGAL = models.CharField(max_length=DEFAULT_LENGTH)
     DUSUN = models.CharField(max_length=DEFAULT_LENGTH, validators=[cek_huruf_besar_awal_kalimat])
@@ -329,7 +329,7 @@ class DataKaryawan(models.Model):
     KARTU_PEGAWAI = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     KARIS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SURAT = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TGL_SURAT = models.DateField(blank=True, null=True)
+    TGL_SURAT = models.DateField(blank=True, null=True,default=datetime.date.today)
     TMT_TUGAS = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     SEKOLAH_INDUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LISENSI_KEPALA_SEKOLAH = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -401,7 +401,7 @@ class DataAnakGuru(models.Model):
         blank=True
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_LAHIR = models.DateField(blank=True)
+    TANGGAL_LAHIR = models.DateField(blank=True, default=datetime.date.today)
     TAHUN_MASUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     def __str__(self):
          return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TAHUN_MASUK
@@ -422,7 +422,7 @@ class DataAnakKaryawan(models.Model):
         blank=True
     )
     TEMPAT_LAHIR = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_LAHIR = models.DateField(blank=True)
+    TANGGAL_LAHIR = models.DateField(blank=True, default=datetime.date.today)
     TAHUN_MASUK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     def __str__(self):
          return self.STATUS + ' - ' + self.JENJANG + ' - ' + self.NISN + ' - ' + self.NAMA + ' - ' + self.JENIS_KELAMIN + ' - ' + self.TEMPAT_LAHIR + ' - ' + self.TAHUN_MASUK
@@ -692,7 +692,7 @@ class DataRiwayatGajiBerkalaGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_SK = models.DateField()
+    TANGGAL_SK = models.DateField(default=datetime.date.today)
     TMT_KGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TAHUN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BULAN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)     
@@ -708,7 +708,7 @@ class DataRiwayatGajiBerkalaKaryawan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_SK = models.DateField()
+    TANGGAL_SK = models.DateField(default=datetime.date.today)
     TMT_KGB = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TAHUN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     BULAN_MK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)     
@@ -750,7 +750,7 @@ class DataRiwayatKepangkatanGuru(models.Model):
     ID = models.BigAutoField(primary_key=True)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_SK = models.DateField()
+    TANGGAL_SK = models.DateField(default=datetime.date.today)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_BULAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -766,7 +766,7 @@ class DataRiwayatKepangkatanKaryawan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TANGGAL_SK = models.DateField()
+    TANGGAL_SK = models.DateField(default=datetime.date.today)
     PANGKAT_GOLONGAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_TAHUN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     MK_BULAN = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -882,7 +882,7 @@ class DataRiwayatKarirGuru(models.Model):
     JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LEMBAGA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TGL_SK_KERJA = models.DateField()
+    TGL_SK_KERJA = models.DateField(default=datetime.date.today)
     TMT_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TST_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TEMPAT_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
@@ -904,7 +904,7 @@ class DataRiwayatKarirKaryawan(models.Model):
     JENIS_PTK = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     LEMBAGA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     NO_SK_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
-    TGL_SK_KERJA = models.DateField()
+    TGL_SK_KERJA = models.DateField(default=datetime.date.today)
     TMT_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TST_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
     TEMPAT_KERJA = models.CharField(max_length=DEFAULT_LENGTH, blank=True)
