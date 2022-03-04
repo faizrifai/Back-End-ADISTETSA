@@ -1,11 +1,12 @@
 from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.utils.text import Truncator
-
+from django.core.exceptions import ValidationError
 from dataprofil.models import DataSiswa, DataPelatih
 from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, OfferingKelas
 from django.utils import timezone
 from .enums import *
+import datetime
 from adistetsa.custom_function import duplikat_file
 
 class PengajuanLaporanPelanggaran(models.Model):
@@ -214,6 +215,17 @@ class JadwalEkskul (models.Model):
     WAKTU_MULAI = models.TimeField()
     WAKTU_BERAKHIR = models.TimeField()
     
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['PELATIH','EKSKUL','HARI','TAHUN AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
+        ]
+    
+    def clean(self):
+        if self.WAKTU_MULAI > self.WAKTU_BERAKHIR:
+            raise ValidationError('Waktu mulai tidak boleh lebih dari waktu berakhir')
+        if self.WAKTU_MULAI == self.WAKTU_BERAKHIR:
+            raise ValidationError('Waktu mulai tidak boleh sama dengan waktu berakhir')
+    
     def __str__(self):
         return str(self.WAKTU_MULAI) + ' - ' + str(self.WAKTU_BERAKHIR)
     
@@ -247,7 +259,7 @@ class JurnalEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
     PELATIH = models.ForeignKey(DataPelatih,on_delete=models.CASCADE)
     PERTEMUAN = models.CharField(max_length=255)
-    TANGGAL_MELATIH = models.DateField()
+    TANGGAL_MELATIH = models.DateField(default=datetime.date.today)
     DESKRIPSI_KEGIATAN = models.TextField()
     FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalEkskul')
     DAFTAR = models.ForeignKey(DaftarJurnalEkskul, on_delete=models.CASCADE)
@@ -301,7 +313,7 @@ class PengajuanEkskul (models.Model):
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
-    TANGGAL_PENGAJUAN = models.DateField()
+    TANGGAL_PENGAJUAN = models.DateField(default=datetime.date.today)
     STATUS_PENGAJUAN = models.CharField(
         max_length=255,
         choices=ENUM_PENGAJUAN,
@@ -333,7 +345,7 @@ post_save.connect(post_save_pengajuan_ekskul, sender=PengajuanEkskul)
 
 class AnggotaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
+    KELAS_SISWA = models.OneToOneField(KelasSiswa, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     STATUS = models.CharField(
@@ -344,6 +356,11 @@ class AnggotaEkskul(models.Model):
     
     def __str__(self):
         return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) 
+    
+    def save(self, *args, **kwargs):
+        self.TAHUN_AJARAN = self.KELAS.KELAS.TAHUN_AJARAN
+        super(AnggotaEkskul, self).save(*args, **kwargs)
+      
 
 class ProgramKerjaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -351,6 +368,11 @@ class ProgramKerjaEkskul(models.Model):
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     FILE_PROGRAM_KERJA = models.FileField(max_length=255, upload_to='ProgramKerjaEkskul')
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['PELATIH','EKSKUL','TAHUN_AJARAN'], name='%(app_label)s_%(class)s_unique')
+        ]
     
     def __str__(self):
         return self.EKSKUL.NAMA 
