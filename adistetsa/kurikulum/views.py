@@ -7,8 +7,22 @@ from .doc_schema import *
 from rest_framework.views import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework import generics, status
+from django.http import HttpResponse
+from .importexportresources import JurnalBelajarResource, PoinPelanggaranResource
 
 from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
+
+from datetime import datetime
+
+def export(request):
+    previous_url = request.META.get('HTTP_REFERER').split('/')
+    jurnal_obj = JurnalBelajar.objects.filter(DAFTAR=previous_url[6])
+    resource = JurnalBelajarResource()
+    dataset = resource.export(jurnal_obj)
+    response = HttpResponse(dataset.xls, content_type='text/xls')
+    filename = 'JurnalBelajar-' + str(datetime.date(datetime.now()))
+    response['Content-Disposition'] = 'attachment; filename="' + filename + '.xls"'
+    return response
 
 # Create your views here. 
 class KTSPListView(generics.ListCreateAPIView):

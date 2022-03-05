@@ -1,3 +1,4 @@
+from atexit import register
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -60,8 +61,10 @@ class DataSemesterAdmin(admin.ModelAdmin):
 admin.site.register(DataSemester, DataSemesterAdmin)
 
 
-class MataPelajaranAdmin(admin.ModelAdmin):
+class MataPelajaranAdmin(ImportExportModelAdmin):
     search_fields = ['KODE', 'NAMA']
+    
+    resource_class = MataPelajaranResource
 
 admin.site.register(MataPelajaran, MataPelajaranAdmin)
 
@@ -114,14 +117,14 @@ class AbsensiSiswaAdmin(SubAdmin):
 
 # admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
 
-
-class JurnalBelajarAdmin(SubAdmin):
+class JurnalBelajarAdmin(SubAdmin, ExportMixin):
     model = JurnalBelajar
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
     exclude = ('GURU',)
+    change_list_template = 'kurikulum/jurnalbelajar_change_list.html'
 
     subadmins = [AbsensiSiswaAdmin]
 
@@ -132,7 +135,23 @@ class JurnalBelajarAdmin(SubAdmin):
         base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
         
         return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+    
+class JurnalBelajarExportAdmin(ExportMixin, admin.ModelAdmin):
+    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
+    list_per_page = 10
+    search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
+    autocomplete_fields = ['DAFTAR']
+    exclude = ('GURU',)
+    def aksi(self, obj):
+        return "Edit"
+    
+    def absensi(self, obj):
+        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
+        
+        return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+    
 
+admin.site.register(JurnalBelajar, JurnalBelajarExportAdmin)
 
 class KelasSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NIS__NIS', 'NIS__NAMA']
@@ -153,9 +172,10 @@ class KelasSiswaAdmin(admin.ModelAdmin):
 admin.site.register(KelasSiswa, KelasSiswaAdmin)
 
 
-class KategoriTataTertibAdmin(admin.ModelAdmin):
+class KategoriTataTertibAdmin(ImportExportModelAdmin):
     search_fields = ['NAMA']
     list_per_page = 10
+    resource_class = KategoriTataTertibResource
 
 admin.site.register(KategoriTataTertib, KategoriTataTertibAdmin)
 
@@ -181,11 +201,11 @@ class PoinPelanggaranAdmin(ImportExportModelAdmin):
 admin.site.register(PoinPelanggaran, PoinPelanggaranAdmin)
 
 
-class JadwalMengajarAdmin(ExportMixin, admin.ModelAdmin):
+class JadwalMengajarAdmin(ImportExportModelAdmin):
     search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
     list_per_page = 10
     filter_horizontal = ('WAKTU_PELAJARAN',)
-    exclude = ('JUMLAH_WAKTU', 'TAHUN_AJARAN',)
+    exclude = ('JUMLAH_WAKTU',)
     list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran')
     list_filter = [TahunFilter ,SemesterFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
     form = JadwalMengajarForm
