@@ -217,7 +217,7 @@ class JadwalEkskul (models.Model):
     
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['PELATIH','EKSKUL','HARI','TAHUN AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['PELATIH','EKSKUL','HARI','TAHUN_AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
         ]
     
     def clean(self):
