@@ -4,6 +4,10 @@ from django.utils.html import format_html
 from django.utils import timezone
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
+from sarana_prasarana.importexportresources import RiwayatPeminjamanBarangResource
+from sarana_prasarana.importexportresources import SaranaResource
+
+from sarana_prasarana.importexportresources import RuanganResource
 
 from .filter_admin import *
 from .models import *
@@ -15,12 +19,13 @@ class JenisSaranaAdmin (ImportExportModelAdmin):
     
 admin.site.register(JenisSarana, JenisSaranaAdmin)
 
-class SaranaAdmin(ImportExportModelAdmin):
+class SaranaAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('NAMA','JENIS__KATEGORI',)
     list_display = ('NAMA', 'JENIS','STATUS')
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('acc_pengembalian',)
+    resource_class = SaranaResource
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS = 'Sudah Dikembalikan')
@@ -88,7 +93,7 @@ class PengajuanPeminjamanBarangAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanBarang, PengajuanPeminjamanBarangAdmin)
 
-class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
+class RiwayatPeminjamanBarangAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('NAMA_PEMINJAM','ALAT__NAMA',)
     list_display = ('NAMA_PEMINJAM','NO_TELEPON','alat','KEGIATAN', 'TANGGAL_PENGGUNAAN', 'TANGGAL_PENGEMBALIAN','KETERANGAN', 'status_peminjaman','TANDA_TANGAN')
     list_per_page = 10
@@ -96,6 +101,7 @@ class RiwayatPeminjamanBarangAdmin(ImportExportModelAdmin):
     list_filter = ('STATUS_PEMINJAMAN', AlatFilter,)
     # autocomplete_fields = ['', ]
     actions = ('acc_pengembalian', )
+    resource_class = RiwayatPeminjamanBarangResource
     
     def status_peminjaman(self, obj):
         if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
@@ -161,12 +167,13 @@ class PengajuanPeminjamanRuanganAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanRuangan, PengajuanPeminjamanRuanganAdmin)
 
-class RiwayatPeminjamanRuanganAdmin(ImportExportModelAdmin):
+class RiwayatPeminjamanRuanganAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN__NAMA', 'KETERANGAN')
     list_display = ('PENGGUNA', 'NO_HP', 'KEGIATAN', 'RUANGAN' ,'TANGGAL_PENGAJUAN', 'TANGGAL_PEMAKAIAN','TANGGAL_BERAKHIR','JAM_PENGGUNAAN','JAM_BERAKHIR', 'JENIS_PEMINJAMAN', 'KETERANGAN','TANDA_TANGAN', 'status_peminjaman',)
     list_per_page = 10 
     actions = ('acc_pengembalian',)
     list_filter = ('STATUS', RuanganFilter,)
+    resource_class = RiwayatPeminjamanBarangResource
 
 
     def status_peminjaman(self, obj):
@@ -197,11 +204,12 @@ class JenisRuanganAdmin(admin.ModelAdmin):
 
 admin.site.register(JenisRuangan, JenisRuanganAdmin)
 
-class RuanganAdmin(admin.ModelAdmin):
+class RuanganAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('NAMA', 'JENIS__KATEGORI')
     list_display = ('NAMA', 'JENIS')
     list_per_page = 10
     autocomplete_fields = ('JENIS',)
+    resource_class = RuanganResource
 
 admin.site.register(Ruangan, RuanganAdmin)
 
