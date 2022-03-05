@@ -5,13 +5,14 @@ from django.utils.text import Truncator
 from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
+from kesiswaan.importexportresources import *
 from kesiswaan.filter_admin import TahunAjaranFilter
 
 from kesiswaan.filter_admin import DataSiswaFilter
 # from .filter_admin import *
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
-# from .importexportresources import *
+from .importexportresources import *
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
@@ -70,10 +71,11 @@ class RiwayatLaporanPelanggaranAdmin(admin.ModelAdmin):
     
 admin.site.register(RiwayatLaporanPelanggaran, RiwayatLaporanPelanggaranAdmin)
 
-class KategoriProgramKebaikanAdmin(admin.ModelAdmin):
+class KategoriProgramKebaikanAdmin(ImportExportModelAdmin):
     search_fields = ('NAMA',)
     list_display = ('NAMA',)
     list_per_page = 10 
+    resource_class = KategoriProgramKebaikanResource
     
 admin.site.register(KategoriProgramKebaikan, KategoriProgramKebaikanAdmin)
 
@@ -149,12 +151,12 @@ class AnggotaEkskulAdmin(SubAdmin):
     # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
 
 
-class KatalogEkskulAdmin(RootSubAdmin):
+class KatalogEkskulAdmin(ImportExportModelAdmin):
     search_fields = ['NAMA', 'KATEGORI',]
     list_per_page = 10
     list_display = ('NAMA', 'KATEGORI', 'DESKRIPSI', 'DOKUMENTASI', 'aksi')
     list_filter = ('KATEGORI', )
-
+    resource_class = KatalogEkskulResource
     subadmins = [AnggotaEkskulAdmin]
 
     def aksi(self, obj):
@@ -286,11 +288,12 @@ class AnggotaEkskulRegisterAdmin(admin.ModelAdmin):
 
 admin.site.register(AnggotaEkskul, AnggotaEkskulRegisterAdmin)
 
-class NilaiEkskulAdmin(admin.ModelAdmin):
+class NilaiEkskulAdmin(ImportExportModelAdmin):
     search_fields = ('DATA_ANGGOTA__KELAS_SISWA__NIS__NAMA', 'DATA_ANGGOTA__EKSKUL__NAMA', )
     list_display = ('DATA_ANGGOTA', 'SEMESTER', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI',)
     list_per_page = 10 
     autocomplete_fields = ('DATA_ANGGOTA', 'SEMESTER',)
+    resource_class = NilaiEkskulResource
     
     def status_predikat(self, obj):
         if obj.PREDIKAT == 'A':

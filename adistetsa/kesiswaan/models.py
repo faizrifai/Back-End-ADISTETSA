@@ -197,7 +197,7 @@ class KatalogEkskul (models.Model):
         choices=ENUM_KATEGORI_EKSKUL,
     )
     DESKRIPSI = models.CharField(max_length=255)
-    DOKUMENTASI = models.ImageField(upload_to='KatalogEkskul', max_length=255)
+    DOKUMENTASI = models.ImageField(upload_to='KatalogEkskul', max_length=255, blank=True)
     
     def __str__(self):
         return self.NAMA
@@ -358,7 +358,7 @@ class AnggotaEkskul(models.Model):
         return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) 
     
     def save(self, *args, **kwargs):
-        self.TAHUN_AJARAN = self.KELAS.KELAS.TAHUN_AJARAN
+        self.TAHUN_AJARAN = self.KELAS_SISWA.KELAS.KELAS.TAHUN_AJARAN
         super(AnggotaEkskul, self).save(*args, **kwargs)
       
 

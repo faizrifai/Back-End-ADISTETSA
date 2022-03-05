@@ -67,4 +67,5 @@ def paksa_huruf_besar_dengan_angka(value):
     tes_value = str(value)
     
     if not tes_value.isupper():
-        raise ValidationError(str(value) + ' harus huruf besar ')        
+        raise ValidationError(str(value) + ' harus huruf besar ')
+            
