@@ -67,5 +67,18 @@ def paksa_huruf_besar_dengan_angka(value):
     tes_value = str(value)
     
     if not tes_value.isupper():
-        raise ValidationError(str(value) + ' harus huruf besar ')
-            
+        raise ValidationError(str(value) + ' harus huruf besar ')       
+    
+def cek_error_import(model_name, row_object, row_name, field_name):
+    validator_arr = {}
+    
+    data = {
+        field_name: row_object[row_name]
+    }
+    
+    try:
+        tes = model_name.objects.get(**data)
+    except Exception as e:
+        validator_arr[row_name] = 'Data tidak sesuai atau tidak ada di database'
+        
+    return validator_arr
