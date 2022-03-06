@@ -57,6 +57,17 @@ class JurnalBelajarResource(resources.ModelResource):
         fields = ('PERTEMUAN', 'PERTEMUAN', 'TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI')
         exclude = ('ID',)
         import_id_fields = ('PERTEMUAN',)
+
+class AbsensiSiswaResource(resources.ModelResource):
+    nama = Field(
+        column_name='NIS',
+        attribute='NIS',
+        widget=ForeignKeyWidget(DataSiswa, 'NAMA')
+    )
+    
+    class Meta:
+        model = AbsensiSiswa
+        exclude = ('ID',)
         
 class TahunAjaranForeignKeyWidget(ForeignKeyWidget):
     def get_queryset(self, value, row):

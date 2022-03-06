@@ -31,7 +31,6 @@ urlpatterns = [
     path('kurikulum/jurnal_belajar_pertemuan/<int:id_jurnal_belajar_mengajar>', JurnalBelajarGuruListView.as_view(), name='jurnal_belajar_pertemuan_guru'),
     path('kurikulum/presensi_siswa/<int:id_jurnal_belajar_pertemuan>', AbsensiSiswaListView.as_view(), name='presensi_siswa'),
     path('kurikulum/detail_presensi_siswa/<int:pk>', AbsensiSiswaDetailView.as_view(), name='detail_presensi_siswa'),
-    path('kurikulum/jurnal_belajar_export', export, name='jurnal_belajar_export'),
     #path('data_tata_tertib', TataTertibListView.as_view(), name='data_tata_tertib'),
     #path('data_tata_tertib/<int:tata_tertib_id>', TataTertibDetailView.as_view(), name='data_tata_tertib'),
     #path('data_mata_pelajaran', MataPelajaranListView.as_view(), name='data_mata_pelajaran'),

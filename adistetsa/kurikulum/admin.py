@@ -1,17 +1,17 @@
-from atexit import register
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
 from django.utils.html import format_html
 
-from import_export.admin import ImportExportModelAdmin, ImportExportMixin, ExportMixin
+from import_export.admin import ImportExportModelAdmin
 from config_models.admin import ConfigurationModelAdmin
 
 from .forms import JadwalMengajarForm
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
+from adistetsa.subadminexport import BaseSubAdminExport
 
 # Register your models here.
 admin.site.register(Jurusan)
@@ -100,11 +100,12 @@ class OfferingKelasAdmin(admin.ModelAdmin):
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 
-class AbsensiSiswaAdmin(SubAdmin):
+class AbsensiSiswaAdmin(BaseSubAdminExport):
     model = AbsensiSiswa
     list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'mata_pelajaran', 'kelas', 'pertemuan')
     list_per_page = 10
     readonly_fields = ('NIS', 'JURNAL_BELAJAR')
+    resource_class = AbsensiSiswaResource
     
     def mata_pelajaran(self, obj):
         return obj.JURNAL_BELAJAR.DAFTAR.MATA_PELAJARAN
@@ -117,41 +118,44 @@ class AbsensiSiswaAdmin(SubAdmin):
 
 # admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
 
-class JurnalBelajarAdmin(SubAdmin, ExportMixin):
+class JurnalBelajarAdmin(BaseSubAdminExport):
     model = JurnalBelajar
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
     exclude = ('GURU',)
-    change_list_template = 'kurikulum/jurnalbelajar_change_list.html'
+
+    resource_class = JurnalBelajarResource
 
     subadmins = [AbsensiSiswaAdmin]
 
     def aksi(self, obj):
-        return "Edit"
+        # return "Edit"
+        # return self.model._meta.app_label
+        return self.model._meta.model_name
     
     def absensi(self, obj):
         base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
         
         return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
     
-class JurnalBelajarExportAdmin(ExportMixin, admin.ModelAdmin):
-    list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
-    list_per_page = 10
-    search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    autocomplete_fields = ['DAFTAR']
-    exclude = ('GURU',)
-    def aksi(self, obj):
-        return "Edit"
+# class JurnalBelajarExportAdmin(ExportMixin, admin.ModelAdmin):
+#     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
+#     list_per_page = 10
+#     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
+#     autocomplete_fields = ['DAFTAR']
+#     exclude = ('GURU',)
+#     def aksi(self, obj):
+#         return "Edit"
     
-    def absensi(self, obj):
-        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
+#     def absensi(self, obj):
+#         base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
         
-        return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+#         return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
     
 
-admin.site.register(JurnalBelajar, JurnalBelajarExportAdmin)
+# admin.site.register(JurnalBelajar, JurnalBelajarExportAdmin)
 
 class KelasSiswaAdmin(admin.ModelAdmin):
     search_fields = ['NIS__NIS', 'NIS__NAMA']
