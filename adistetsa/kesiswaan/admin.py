@@ -13,6 +13,7 @@ from kesiswaan.filter_admin import DataSiswaFilter
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
 from .importexportresources import *
+from adistetsa.subadminexport import BaseSubAdminExport
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
@@ -54,20 +55,23 @@ class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
 admin.site.register(PengajuanLaporanPelanggaran, PengajuanLaporanPelanggaranAdmin)
 
 
-class PelanggaranSiswaAdmin(admin.ModelAdmin):
+class PelanggaranSiswaAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
     list_display = ('DATA_SISWA', 'POIN',)
     list_per_page =  10 
     list_filter = (DataSiswaFilter,)
+    resource_class = PelanggaranSiswaResource
 
 admin.site.register(PelanggaranSiswa, PelanggaranSiswaAdmin)
 
-class RiwayatLaporanPelanggaranAdmin(admin.ModelAdmin):
+class RiwayatLaporanPelanggaranAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
     list_display = ('DATA_SISWA', 'BUKTI_PELANGGARAN', 'JENIS_PELANGGARAN','TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN')
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PELANGGARAN',]
     list_filter = (DataSiswaFilter,)
+    resource_class = RiwayatLaporanPelanggaranResource
+    
     
 admin.site.register(RiwayatLaporanPelanggaran, RiwayatLaporanPelanggaranAdmin)
 
@@ -87,10 +91,11 @@ class ProgramKebaikanAdmin(admin.ModelAdmin):
 
 admin.site.register(ProgramKebaikan, ProgramKebaikanAdmin)
 
-class PoinProgramKebaikanAdmin(admin.ModelAdmin):
+class PoinProgramKebaikanAdmin(ImportExportModelAdmin):
     search_fields = ('KETERANGAN', 'POIN',)
     list_display = ('KETERANGAN', 'POIN',)
     list_per_page = 10 
+    resource_class = PoinProgramKebaikanResource
 
 admin.site.register(PoinProgramKebaikan, PoinProgramKebaikanAdmin)
 
@@ -133,25 +138,27 @@ class PengajuanProgramKebaikanAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanProgramKebaikan, PengajuanProgramKebaikanAdmin)
 
-class RiwayatProgramKebaikanAdmin(admin.ModelAdmin):
+class RiwayatProgramKebaikanAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
     list_display = ['DATA_SISWA', 'BUKTI_PROGRAM_KEBAIKAN', 'JENIS_PROGRAM_KEBAIKAN','TANGGAL_PENGAJUAN', 'STATUS_PENGAJUAN',]
     list_per_page = 10 
     autocomplete_fields = ['DATA_SISWA', 'JENIS_PROGRAM_KEBAIKAN',]
     list_filter = (DataSiswaFilter,)
+    resource_class = RiwayatProgramKebaikanResource
     
 admin.site.register(RiwayatProgramKebaikan, RiwayatProgramKebaikanAdmin)
 
-class AnggotaEkskulAdmin(SubAdmin):
+class AnggotaEkskulAdmin(BaseSubAdminExport):
     model = AnggotaEkskul
     search_fields = ('KELAS_SISWA__NIS__NAMA',)
     list_display = ('KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN', 'STATUS')
     list_per_page = 10
     list_filter = ('STATUS', TahunAjaranFilter,)
+    resource_class = AnggotaEkskulResource
     # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
 
 
-class KatalogEkskulAdmin(ImportExportModelAdmin):
+class KatalogEkskulAdmin(RootSubAdmin , ImportExportModelAdmin):
     search_fields = ['NAMA', 'KATEGORI',]
     list_per_page = 10
     list_display = ('NAMA', 'KATEGORI', 'DESKRIPSI', 'DOKUMENTASI', 'aksi')
@@ -167,12 +174,13 @@ class KatalogEkskulAdmin(ImportExportModelAdmin):
 admin.site.register(KatalogEkskul, KatalogEkskulAdmin)
 
 
-class JadwalEkskulAdmin(admin.ModelAdmin):
+class JadwalEkskulAdmin(ImportExportModelAdmin):
     search_fields = ('PELATIH__NAMA','EKSKUL__NAMA',)
     list_display = ['PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL','HARI','WAKTU_MULAI','WAKTU_BERAKHIR',]
     list_per_page = 10 
     autocomplete_fields = ('PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL',)
     # list_filter = (DataSiswaFilter,)
+    resource_class = JadwalEkskulResource
     
 admin.site.register(JadwalEkskul, JadwalEkskulAdmin)
 
@@ -189,13 +197,14 @@ class AbsensiEkskulAdmin(SubAdmin):
     def pertemuan(self, obj):
         return obj.JURNAL_EKSKUL.PERTEMUAN
 
-class JurnalEkskulAdmin(SubAdmin):
+class JurnalEkskulAdmin(BaseSubAdminExport):
     model = JurnalEkskul
     list_display = ('aksi', 'PELATIH', 'PERTEMUAN', 'TANGGAL_MELATIH',  'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MELATIH', 'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI']
     autocomplete_fields = ['DAFTAR']
     exclude = ('PELATIH',)
+    resource_class = JurnalEkskulResource
 
     subadmins = [AbsensiEkskulAdmin]
 
