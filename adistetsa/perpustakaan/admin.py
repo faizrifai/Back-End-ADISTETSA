@@ -286,7 +286,7 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanSiswa, PengajuanPeminjamanSiswaAdmin)
 
-class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
+class RiwayatPeminjamanSiswaAdmin(ExportMixin,admin.ModelAdmin):
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
     list_display = ('NIS','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
     list_per_page = 10
@@ -294,6 +294,7 @@ class RiwayatPeminjamanSiswaAdmin(admin.ModelAdmin):
     list_filter = ('STATUS_PEMINJAMAN',)
     autocomplete_fields = ['NIS', ]
     actions = ('acc_pengembalian',)
+    resource_class = RiwayatPeminjamanSiswaResource
     
     
     def status_peminjaman(self, obj):
@@ -389,7 +390,7 @@ class PengajuanPeminjamanGuruAdmin(admin.ModelAdmin):
 
 admin.site.register(PengajuanPeminjamanGuru, PengajuanPeminjamanGuruAdmin)
 
-class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
+class RiwayatPeminjamanGuruAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
     list_display = ('DATA_GURU','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'status_peminjaman')
     list_per_page = 10
@@ -397,6 +398,7 @@ class RiwayatPeminjamanGuruAdmin(admin.ModelAdmin):
     list_filter = ('STATUS_PEMINJAMAN',)
     autocomplete_fields = ['DATA_GURU', ]
     actions = ('acc_pengembalian',)
+    resource_class = RiwayatPeminjamanGuruResource
     
     def status_peminjaman(self, obj):
         if obj.STATUS_PEMINJAMAN == 'Sedang Dipinjam' :
