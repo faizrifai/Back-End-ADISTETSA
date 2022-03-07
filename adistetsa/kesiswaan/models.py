@@ -217,7 +217,7 @@ class JadwalEkskul (models.Model):
     
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['PELATIH','EKSKUL','HARI','TAHUN_AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['PELATIH','HARI','TAHUN_AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
         ]
     
     def clean(self):
@@ -345,7 +345,7 @@ post_save.connect(post_save_pengajuan_ekskul, sender=PengajuanEkskul)
 
 class AnggotaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    KELAS_SISWA = models.OneToOneField(KelasSiswa, on_delete=models.CASCADE)
+    KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     STATUS = models.CharField(
