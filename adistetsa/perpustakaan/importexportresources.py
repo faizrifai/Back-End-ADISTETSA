@@ -1,7 +1,8 @@
+from attr import field
 from django.contrib.auth.models import User, Group
 
 from import_export.fields import Field
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 from import_export import resources
 
 from .models import *
@@ -43,21 +44,27 @@ class DonasiBukuResource(resources.ModelResource):
     kode_donasi = Field(
         column_name='KODE_DONASI',
         attribute='KODE_DONASI',
-        widget=ForeignKeyWidget(Pendanaan, 'KODE_PENDANAAN')
+        widget=ForeignKeyWidget(Pendanaan, 'NAMA_PENDANAAN')
+    )
+    register_donasi = Field(
+        column_name='REGISTER_DONASI',
+        attribute='REGISTER_DONASI',
+        widget=ForeignKeyWidget(KatalogBuku, 'REGISTER')
     )
     
-    def before_import_row(self, row, **kwargs):
-        tanggal_penerimaan = datetime.datetime.fromisoformat(row['TANGGAL_PENERIMAAN']).astimezone(datetime.timezone.utc)
-        data_entry = datetime.datetime.fromisoformat(row['DATA_ENTRY']).astimezone(datetime.timezone.utc)
+    # def before_import_row(self, row, **kwargs):
+    #     tanggal_penerimaan = datetime.datetime.fromisoformat(row['TANGGAL_PENERIMAAN']).astimezone(datetime.timezone.utc)
+    #     data_entry = datetime.datetime.fromisoformat(row['DATA_ENTRY']).astimezone(datetime.timezone.utc)
         
-        row['TANGGAL_PENERIMAAN'] = tanggal_penerimaan
-        row['DATA_ENTRY'] = data_entry
+    #     row['TANGGAL_PENERIMAAN'] = tanggal_penerimaan
+    #     row['DATA_ENTRY'] = data_entry
         
     class Meta:
         model = DonasiBuku
-        fields = ('REGISTER_DONASI', 'DUPLIKAT', 'KODE_DONASI','TANGGAL_PENERIMAAN','CATATAN_DONASI')
-        import_id_fields = ('id',)
-        export_order = ['REGISTER_DONASI', 'DUPLIKAT', 'KODE_DONASI','TANGGAL_PENERIMAAN','CATATAN_DONASI']
+        fields = ('register_donasi', 'DUPLIKAT', 'kode_donasi','TANGGAL_PENERIMAAN','CATATAN_DONASI')
+        exclude = ('id', 'REGISTER DONASI','KODE_DONASI')
+        import_id_fields = ('register_donasi',)
+        export_order = ['register_donasi', 'DUPLIKAT', 'kode_donasi','TANGGAL_PENERIMAAN','CATATAN_DONASI']
 
 class MediaTypeResource(resources.ModelResource):
 
@@ -109,11 +116,45 @@ class LocationSpecificationResource(resources.ModelResource):
         import_id_fields = ('LOKASI_SPESIFIK',)
 
 
-# # Register your import_export resource model here
-# class BookMainResource(resources.ModelResource):
+class RiwayatPeminjamanGuruResource(resources.ModelResource):
+    data_guru = Field(
+        column_name='DATA_GURU',
+        attribute='DATA_GURU',
+        widget=ForeignKeyWidget(DataGuru, 'NAMA_LENGKAP')
+    )
+    
+    buku = Field(
+        column_name='BUKU',
+        attribute='BUKU',
+        widget=ManyToManyWidget(KatalogBukuCopy, field='REGISTER_COPY')
+    )
 
-#     class Meta:
-#         model = BookMain
+    class Meta:
+        model = RiwayatPeminjamanGuru
+        fields = ('data_guru','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'STATUS_PEMINJAMAN')
+        exclude = ('ID','DATA_GURU', 'BUKU',)
+        export_order = ['data_guru','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'STATUS_PEMINJAMAN']
+
+class RiwayatPeminjamanSiswaResource(resources.ModelResource):
+    nis = Field(
+        column_name='NIS',
+        attribute='NIS',
+        widget=ForeignKeyWidget(DataGuru, 'NAMA')
+    )
+    
+    buku = Field(
+        column_name='BUKU',
+        attribute='BUKU',
+        widget=ManyToManyWidget(KatalogBukuCopy, field='REGISTER_COPY')
+    )
+
+    class Meta:
+        model = RiwayatPeminjamanSiswa
+        fields = ('data_guru','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'STATUS_PEMINJAMAN')
+        exclude = ('ID','NIS', 'BUKU',)
+        export_order = ['nis','buku', 'TANGGAL_PEMINJAMAN', 'TANGGAL_PENGEMBALIAN', 'JANGKA_PEMINJAMAN', 'FILE_TTD_PENGAJUAN', 'STATUS_PEMINJAMAN']
+
+# # Register your import_export resource model here
 
 # class MediaTypeResource(resources.ModelResource):
 
