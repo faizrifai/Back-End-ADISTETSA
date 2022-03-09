@@ -93,11 +93,11 @@ class KatalogKonselorResource(resources.ModelResource):
     user = Field(
         column_name='USER',
         attribute='USER',
-        widget= CharWidget()
+        widget= ForeignKeyWidget(User, 'username')
     )
     
     class Meta:
         model = KatalogKonselor
-        fields = ('user', 'KOMPETENSI', 'ALUMNUS','CONFERENCE', 'WHATSAPP') 
+        fields = ('KOMPETENSI', 'ALUMNUS','CONFERENCE', 'WHATSAPP') 
         exclude = ('ID','STATUS')
         import_id_fields = ('KOMPETENSI',)
