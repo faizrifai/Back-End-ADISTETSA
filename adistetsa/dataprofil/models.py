@@ -372,7 +372,7 @@ class DataKompetensiGuru(models.Model):
     BIDANG_STUDI = models.CharField(max_length=DEFAULT_LENGTH, help_text=('Bidang studi'))
     URUTAN = models.CharField(max_length=DEFAULT_LENGTH)
     def __str__(self):
-        return self.BIDANG_STUDI + ' _ ' + self.URUTAN
+        return str(self.OWNER.NAMA_LENGKAP)+' _ '+ self.BIDANG_STUDI + ' _ ' + self.URUTAN
 
     class Meta:
         verbose_name_plural = "Data Kompetensi Guru"

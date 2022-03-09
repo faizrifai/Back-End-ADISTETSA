@@ -438,7 +438,7 @@ class NilaiRaport(models.Model):
     NILAI_KETERAMPILAN = models.BigIntegerField()
     DESKRIPSI_PENGETAHUAN = models.CharField(max_length=255)
     DESKRIPSI_KETERAMPILAN = models.CharField(max_length=255)
-     
+    
     
 # Configuration Model
 class Configuration(ConfigurationModel):

@@ -14,7 +14,10 @@ from .importexportresources import *
 from adistetsa.subadminexport import BaseSubAdminExport
 
 # Register your models here.
-admin.site.register(Jurusan)
+class JurusanAdmin(admin.ModelAdmin):
+    search_fields = ['NAMA',]
+
+admin.site.register(Jurusan, JurusanAdmin)
 
 # utility function
 
@@ -47,7 +50,7 @@ admin.site.register(KTSP, KTSPAdmin)
 
 
 class KelasAdmin(ImportExportModelAdmin):
-    search_fields = ['KODE_KELAS']
+    search_fields = ['KODE_KELAS',]
     list_per_page = 10
     exclude = ['KODE_KELAS']
     
