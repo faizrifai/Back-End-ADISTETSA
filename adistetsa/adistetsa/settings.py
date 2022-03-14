@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'keuangan',
     'perpustakaan',
     'bimbingan_konseling',
+    'tata_usaha',
     'admin_auto_filters',
     'django_extensions',
     'subadmin',

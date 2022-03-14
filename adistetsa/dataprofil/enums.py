@@ -103,3 +103,8 @@ ENUM_PTK = [
     ('Pesuruh/Office Boy', 'Pesuruh/Office Boy'),
     ('Kepala Sekolah', 'Kepala Sekolah'),
 ]
+
+ENUM_STATUS_SISWA = [
+    ('Lulus','Lulus'),
+    ('Belum Lulus','Belum Lulus'),
+]

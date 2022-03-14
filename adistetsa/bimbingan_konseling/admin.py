@@ -29,7 +29,7 @@ admin.site.register(PeminatanLintasMinat, PeminatanLintasMinatAdmin)
 
 class KatalogKonselorAdmin(ImportExportModelAdmin):
     search_fields = []
-    list_display = ('aksi', 'nip','nama','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference', 'STATUS')
+    list_display = ('aksi', 'nip','nama','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
     # exclude = ('WHATSAPP')
     resource_class = KatalogKonselorResource
     form = KatalogKonselorForm
@@ -58,7 +58,41 @@ admin.site.register(KatalogKonselor, KatalogKonselorAdmin)
 
 class KonsultasiAdmin(admin.ModelAdmin):
     search_fields = []
-    list_display = ('USER','KONSELOR', 'TANGGAL', 'JENIS_MASALAH')
-    exclude = ('TANGGAL',)
+    list_display = ('USER','KONSELOR', 'TANGGAL_KONSULTASI','JAM', 'JENIS_MASALAH','RATING', 'STATUS')
+    list_per_page = 10
+    list_filter = ('STATUS',)
+    actions = ('accept_action', 'decline_action','konsultasi_action','feedback_action',)
+    
+    def accept_action(self, request, queryset):
+        queryset.update(STATUS = 'Dijadwalkan')
+        for d in queryset.values():
+            obj = Konsultasi.objects.get(ID=d['ID'])
+            obj.save()
+        
+    accept_action.short_description = "Setujui pengajuan konsultasi"
+    
+    def decline_action(self, request, queryset):
+        queryset.update(STATUS = 'Ditolak')
+        for d in queryset.values():
+            obj = Konsultasi.objects.get(ID=d['ID'])
+            obj.save()
+    
+    decline_action.short_description = "Tolak pengajuan konsultasi"
+    
+    def konsultasi_action(self, request, queryset):
+        queryset.update(STATUS = 'Selesai')
+        for d in queryset.values():
+            obj = Konsultasi.objects.get(ID=d['ID'])
+            obj.save()
+    
+    konsultasi_action.short_description = "Selesai konsultasi"
+    
+    def feedback_action(self, request, queryset):
+        queryset.update(STATUS = 'Telah Mengisi Feedback')
+        for d in queryset.values():
+            obj = Konsultasi.objects.get(ID=d['ID'])
+            obj.save()
+    
+    feedback_action.short_description = "Telah Mengisi Feedback"
 
 admin.site.register(Konsultasi, KonsultasiAdmin)
