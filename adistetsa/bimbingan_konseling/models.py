@@ -1,18 +1,26 @@
-from cgi import print_arguments
-from pickle import TRUE
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from pytz import timezone
+from kustom_autentikasi.models import DataSiswaUser
+
+from kurikulum.models import TahunAjaran
+from .enums import ENUM_STATUS_KONSULTASI
 from kurikulum.models import Jurusan
-from dataprofil.models import DataKompetensiGuru, DataRiwayatPendidikanFormalGuru
+from dataprofil.models import DataSiswa, DataKompetensiGuru, DataRiwayatPendidikanFormalGuru
 from bimbingan_konseling.enums import ENUM_JENIS_MASALAH, ENUM_KATEGORI_PEMINATAN_LINTAS_MINAT, ENUM_STATUS
 import datetime
 from kurikulum.models import KelasSiswa, Kelas
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models.signals import post_save
+
 
 # Create your models here.
 class DataAlumni(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SISWA = models.CharField(max_length=255)
+    KELAS = models.CharField(max_length=255)
     NISN = models.CharField(max_length=255)
+    NIS = models.CharField(max_length=255)
     TAHUN_AJARAN = models.CharField(max_length=255)
     NAMA_PT = models.CharField(max_length=255, blank=True)
     PROGRAM_STUDI = models.CharField(max_length=255, blank=True)
@@ -26,6 +34,36 @@ class DataAlumni(models.Model):
     class Meta:
         verbose_name_plural = "Data Alumni"
 
+
+def post_save_data_alumni(sender, instance, created, **kwargs):
+    
+    if instance.STATUS_LULUS == 'Lulus':
+        try:
+            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
+            grup_alumni = Group.objects.get(name='Alumni')
+            grup_alumni.user_set.add(data_siswa_user.USER)
+            
+            grup_siswa = Group.objects.get(name='Siswa')
+            grup_siswa.user_set.remove(data_siswa_user.USER)
+                    
+        except Exception as e:
+            print(str(e))
+            
+    if instance.STATUS_LULUS == 'Belum Lulus':
+        try:
+            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
+            grup_alumni = Group.objects.get(name='Siswa')
+            grup_alumni.user_set.add(data_siswa_user.USER)
+            
+            grup_siswa = Group.objects.get(name='Alumni')
+            grup_siswa.user_set.remove(data_siswa_user.USER)
+                    
+        except Exception as e:
+            print(str(e))
+
+post_save.connect(post_save_data_alumni, sender=DataSiswa)
+
+
 class PeminatanLintasMinat(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
@@ -36,7 +74,7 @@ class PeminatanLintasMinat(models.Model):
 
     class Meta:
         verbose_name_plural = "Peminatan dan Lintas Minat"
-        
+
 class KatalogKonselor (models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -44,29 +82,57 @@ class KatalogKonselor (models.Model):
     ALUMNUS = models.CharField(max_length=255, blank=True)
     WHATSAPP = models.URLField(max_length=255, blank=True)
     CONFERENCE = models.URLField(max_length=255, blank=True)
+    FOTO = models.ImageField(max_length=255, upload_to='Foto_Profil_BK', blank=True)
     STATUS = models.CharField(max_length=255, choices=ENUM_STATUS, default='Offline')
-    # def __str__(self):
-    #     pass# return str(self.DATA_GURU) + ' _ ' + self.STATUS
+    
+    def __str__(self):
+        return str(self.USER)
     
     class Meta:
-        verbose_name_plural = "KatalogKonselor"
+        verbose_name_plural = "Katalog Konselor"
         
-    
-
-    
-    # def save(self, *args, **kwargs):
-    #     self.ALUMNUS = DataRiwayatPendidikanFormalGuru.objects.get(OWNER__NIP = self.DATA_GURU.OWNER.NIP).KEPENDIDIKAN
-    #     super(KatalogKonselor, self).save(*args, **kwargs)
 
 class Konsultasi(models.Model):
     ID = models.BigAutoField(primary_key=True)
     USER = models.ForeignKey(User, on_delete=models.CASCADE)
     KONSELOR = models.ForeignKey(KatalogKonselor, on_delete=models.CASCADE)
-    TANGGAL = models.DateTimeField(max_length=255, default=datetime.datetime.today)
+    TANGGAL_KONSULTASI = models.DateField(max_length=255, default=datetime.date.today)
+    JAM = models.TimeField(max_length=255)
     JENIS_MASALAH = models.CharField(max_length=255, choices=ENUM_JENIS_MASALAH)
+    RATING = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)], null=True, blank=True)
+    STATUS = models.CharField(max_length=255, choices=ENUM_STATUS_KONSULTASI, default='Diajukan')
     
     class Meta:
         verbose_name_plural = "Konsultasi"
     
     def __str__(self):
-        return str(self.KONSELOR) + ' _ ' + self.JENIS_MASALAH
+        return str(self.USER) + ' _ ' + self.JENIS_MASALAH
+
+def post_save_konsultasi(sender, instance, created, **kwargs):
+    
+    if instance.STATUS == 'Dijadwalkan':
+        try:
+            instance.STATUS = 'Dijadwalkan'
+                    
+        except Exception as e:
+            print(str(e))
+    if instance.STATUS == 'Selesai':
+        try:
+            instance.STATUS = 'Selesai'
+                    
+        except Exception as e:
+            print(str(e))
+    if instance.STATUS == 'Telah Mengisi Feedback':
+        try:
+            instance.STATUS = 'Telah Mengisi Feedback'
+                    
+        except Exception as e:
+            print(str(e))        
+    elif instance.STATUS == '' or instance.STATUS == 'Ditolak':
+        try:
+            instance.delete()
+                    
+        except Exception as e:
+            print(str(e))
+
+post_save.connect(post_save_konsultasi, sender=Konsultasi)

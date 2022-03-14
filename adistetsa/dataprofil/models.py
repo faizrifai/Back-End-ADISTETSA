@@ -1,10 +1,10 @@
 from collections import ChainMap
 from django.db import models
-
 from .enums import *
 from adistetsa.custom_function import *
 from django.utils.translation import gettext as _
 import calendar, datetime
+from django.db.models.signals import post_save
 # Constant number
 DEFAULT_LENGTH = 225
 
@@ -75,6 +75,7 @@ class DataSiswa(models.Model):
     LINGKAR_KEPALA = models.IntegerField(blank=True, null=True)
     JUMLAH_SAUDARA_KANDUNG = models.IntegerField(blank=True, null=True)
     JARAK_RUMAH_KESEKOLAH_KM = models.IntegerField(blank=True, null=True)
+    STATUS_LULUS = models.CharField(max_length=255, blank=True, choices=ENUM_STATUS_SISWA, default='Belum Lulus')
 
     def __str__(self):
         return str(self.NIS) + ' - ' + self.NAMA
@@ -97,7 +98,6 @@ class DataSiswa(models.Model):
         self.full_clean()
         
         return super().save(*args, **kwargs)
-
 
 class DataOrangTua(models.Model):
     ID = models.BigAutoField(primary_key=True)
