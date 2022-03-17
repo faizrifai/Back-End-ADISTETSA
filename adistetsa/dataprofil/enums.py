@@ -108,3 +108,8 @@ ENUM_STATUS_SISWA = [
     ('Lulus','Lulus'),
     ('Belum Lulus','Belum Lulus'),
 ]
+
+ENUM_MASIH_HIDUP = [
+    ('Masih Hidup','Masih Hidup'),
+    ('Meninggal Dunia', 'Meninggal Dunia'),
+]

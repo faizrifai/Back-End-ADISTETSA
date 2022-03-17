@@ -1,4 +1,5 @@
 from collections import ChainMap
+from doctest import BLANKLINE_MARKER
 from django.db import models
 from .enums import *
 from adistetsa.custom_function import *
@@ -113,6 +114,14 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN,
     )
+    TEMPAT_LAHIR_AYAH = models.CharField(max_length=255, null=True)
+    AGAMA_AYAH = models.CharField(max_length=255, null=True, choices=ENUM_AGAMA)
+    KEWARGANEGARAAN_AYAH = models.CharField(max_length=255, null=True)
+    PENGELUARAN_PER_BULAN_AYAH = models.CharField(max_length=255, null=True)
+    ALAMAT_AYAH = models.CharField(max_length=255, null=True)
+    TELEPON_AYAH = models.CharField(max_length=255, null=True)
+    HP_AYAH = models.CharField(max_length=255, null=True)
+    MASIH_HIDUP_AYAH = models.CharField(max_length=255, null=True, choices=ENUM_MASIH_HIDUP)
     NIK_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[validasi_integer])
     NAMA_IBU = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     TAHUN_LAHIR_IBU  = models.DateField(default=datetime.date.today)
@@ -125,6 +134,14 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
     )
+    TEMPAT_LAHIR_IBU = models.CharField(max_length=255, null=True)
+    AGAMA_IBU = models.CharField(max_length=255, null=True, choices=ENUM_AGAMA)
+    KEWARGANEGARAAN_IBU = models.CharField(max_length=255, null=True)
+    PENGELUARAN_PER_BULAN_IBU = models.CharField(max_length=255, null=True)
+    ALAMAT_IBU = models.CharField(max_length=255, null=True)
+    TELEPON_IBU = models.CharField(max_length=255, null=True)
+    HP_IBU = models.CharField(max_length=255, null=True)
+    MASIH_HIDUP_IBU = models.CharField(max_length=255, null=True, choices=ENUM_MASIH_HIDUP)
     NIK_WALI = models.CharField(max_length=DEFAULT_LENGTH, blank=True, validators=[validasi_integer])
     NAMA_WALI = models.CharField(max_length=DEFAULT_LENGTH, validators=[paksa_huruf_besar])
     TAHUN_LAHIR_WALI  = models.DateField(default=datetime.date.today)
@@ -137,6 +154,14 @@ class DataOrangTua(models.Model):
         max_length=DEFAULT_LENGTH,
         choices=ENUM_PENGHASILAN, 
     )
+    TEMPAT_LAHIR_WALI = models.CharField(max_length=255, null=True)
+    AGAMA_WALI = models.CharField(max_length=255, null=True, choices=ENUM_AGAMA)
+    KEWARGANEGARAAN_WALI = models.CharField(max_length=255, null=True)
+    PENGELUARAN_PER_BULAN_WALI = models.CharField(max_length=255, null=True)
+    ALAMAT_WALI = models.CharField(max_length=255, null=True)
+    TELEPON_WALI = models.CharField(max_length=255, null=True)
+    HP_WALI = models.CharField(max_length=255, null=True)
+    MASIH_HIDUP_WALI = models.CharField(max_length=255, null=True, choices=ENUM_MASIH_HIDUP)
     DATA_ANAK = models.ManyToManyField(DataSiswa, verbose_name="DAFTAR ANAK", blank=True)
     
     def __str__(self):
