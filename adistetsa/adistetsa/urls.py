@@ -40,6 +40,7 @@ urlpatterns = [
     path('', include('perpustakaan.urls')),
     path('', include('kesiswaan.urls')),
     path('', include('sarana_prasarana.urls')),
+    path('', include('bimbingan_konseling.urls')),
     path('admin/filebrowser/', site.urls),
     path('admin/', admin.site.urls, name='admin'),
     # path('__debug__/', include('debug_toolbar.urls')),
