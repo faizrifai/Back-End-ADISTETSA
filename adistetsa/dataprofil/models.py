@@ -90,7 +90,6 @@ class DataSiswa(models.Model):
         v_pip = wajib_diisi(self.LAYAK_PIP, 'Iya', self,  ['ALASAN_LAYAK_PIP'])
         
         validator_arr = gabung_dictionary(v_kps, v_kip, v_pip)
-        print(validator_arr)
         
         if validator_arr:
             raise ValidationError(validator_arr)
@@ -271,7 +270,6 @@ class DataGuru(models.Model):
         v_pns = wajib_diisi(self.PNS, 'Iya', self, ['NIP',])
         
         validator_arr = gabung_dictionary(v_kawin, v_pasangan_pns, v_pns)
-        print(validator_arr)
         
         if validator_arr:
             raise ValidationError(validator_arr)
@@ -381,7 +379,6 @@ class DataKaryawan(models.Model):
         v_pns = wajib_diisi(self.PNS, 'Iya', self, ['NIP',])
         
         validator_arr = gabung_dictionary(v_kawin, v_pasangan_pns, v_pns)
-        print(validator_arr)
         
         if validator_arr:
             raise ValidationError(validator_arr)

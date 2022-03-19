@@ -62,6 +62,11 @@ def post_save_data_alumni(sender, instance, created, **kwargs):
     if instance.STATUS_LULUS == 'Belum Lulus':
         try:
             data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
+        except:
+            data_siswa_user = None
+        
+        if data_siswa_user:
+            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
             grup_alumni = Group.objects.get(name='Siswa')
             grup_alumni.user_set.add(data_siswa_user.USER)
             
@@ -69,9 +74,6 @@ def post_save_data_alumni(sender, instance, created, **kwargs):
             grup_siswa.user_set.remove(data_siswa_user.USER)
             
             DataAlumni.objects.get(NIS=instance.NIS).delete()
-            
-        except Exception as e:
-            print(str(e))
 
 post_save.connect(post_save_data_alumni, sender=DataSiswa)
 

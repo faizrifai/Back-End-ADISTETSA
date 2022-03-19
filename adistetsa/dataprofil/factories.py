@@ -13,17 +13,21 @@ def random_enum(nama_enum):
     pilihan = [x[0] for x in nama_enum]
     return pilihan
 
-
 # factory class section
 class DataSiswaFactory(DjangoModelFactory):
     class Meta:
         model = DataSiswa
+        exclude = ('nama', 'tempat_lahir')
+
+    nama = factory.Faker('name')
+    tempat_lahir = factory.Faker('city')
 
     NIS = factory.Faker('credit_card_number')
-    NAMA = factory.Faker('name')
+    NISN = factory.Faker('credit_card_number')
+    NAMA = factory.LazyAttribute(lambda p: '{}'.format(p.nama.upper()))
     NIPD = factory.Faker('credit_card_number')
     JENIS_KELAMIN = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_KELAMIN))
-    TEMPAT_LAHIR = factory.Faker('city')
+    TEMPAT_LAHIR = factory.LazyAttribute(lambda p: '{}'.format(p.tempat_lahir.upper()))
     TANGGAL_LAHIR = factory.Faker('date')
     NIK = factory.Faker('credit_card_number')
     AGAMA = factory.Faker('random_element', elements=random_enum(ENUM_AGAMA))
@@ -35,6 +39,9 @@ class DataSiswaFactory(DjangoModelFactory):
     KECAMATAN = factory.Faker('city')
     KODE_POS = factory.Faker('postcode')
     JENIS_TINGGAL = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_TINGGAL))
+    PENERIMA_KPS = 'Tidak'
+    PENERIMA_KIP = 'Tidak'
+    LAYAK_PIP = 'Tidak'
     
 class DataOrangTuaFactory(DjangoModelFactory):
     class Meta:
@@ -62,17 +69,26 @@ class DataOrangTuaFactory(DjangoModelFactory):
 class DataGuruFactory(DjangoModelFactory):
     class Meta:
         model = DataGuru
+        exclude = ('nama', 'nama_sekolah', 'nama_ibu_kandung', 'nama_wajib_pajak', 'nama_pasangan', 'pekerjaan_pasangan', 'tempat_lahir')
+
+    nama = factory.Faker('name')
+    nama_sekolah = factory.Faker('company')
+    nama_ibu_kandung = factory.Faker('name')
+    nama_wajib_pajak = factory.Faker('name')
+    nama_pasangan = factory.Faker('name')
+    pekerjaan_pasangan = factory.Faker('job')
+    tempat_lahir = factory.Faker('city')
         
-    NAMA_SEKOLAH = factory.Faker('company')
+    NAMA_SEKOLAH = factory.LazyAttribute(lambda p: '{}'.format(p.nama_sekolah.upper()))
     NSS = factory.Faker('credit_card_number')
     NPSN = factory.Faker('credit_card_number')
     ALAMAT_SEKOLAH = factory.Faker('address')
-    NAMA_LENGKAP = factory.Faker('name')
+    NAMA_LENGKAP = factory.LazyAttribute(lambda p: '{}'.format(p.nama.upper()))
     NIK = factory.Faker('credit_card_number')
     JENIS_KELAMIN = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_KELAMIN))
     TEMPAT_LAHIR = factory.Faker('city')
     TANGGAL_LAHIR = factory.Faker('date')
-    NAMA_IBU_KANDUNG = factory.Faker('name')
+    NAMA_IBU_KANDUNG = factory.LazyAttribute(lambda p: '{}'.format(p.nama_ibu_kandung.upper()))
     ALAMAT_TEMPAT_TINGGAL = factory.Faker('address')
     DUSUN = factory.Faker('city')
     KELURAHAN = factory.Faker('city')
@@ -83,11 +99,11 @@ class DataGuruFactory(DjangoModelFactory):
     LINTANG_2 = factory.Faker('latitude')
     AGAMA = factory.Faker('random_element', elements=random_enum(ENUM_AGAMA))
     NPWP = factory.Faker('credit_card_number')
-    NAMA_WAJIB_PAJAK = factory.Faker('name')
-    KEWARGANEGARAAN = factory.Faker('country')
+    NAMA_WAJIB_PAJAK = factory.LazyAttribute(lambda p: '{}'.format(p.nama_wajib_pajak.upper()))
+    KEWARGANEGARAAN = 'Indonesia'
     STATUS_KAWIN = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_KAWIN))
-    NAMA_PASANGAN = factory.Faker('name')
-    PEKERJAAN_PASANGAN = factory.Faker('job')
+    NAMA_PASANGAN = factory.LazyAttribute(lambda p: '{}'.format(p.nama_pasangan.upper()))
+    PEKERJAAN_PASANGAN = 'Guru'
     PASANGAN_PNS = factory.Faker('random_element', elements=random_enum(ENUM_LAYAK_PIP))
     NIP_PASANGAN = factory.Faker('credit_card_number')
     STATUS_PEGAWAI = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
@@ -96,7 +112,7 @@ class DataGuruFactory(DjangoModelFactory):
     NIY = factory.Faker('credit_card_number')
     NIGB = factory.Faker('credit_card_number')
     NUPTK = factory.Faker('credit_card_number')
-    JENIS_PTK = factory.Faker('word')
+    JENIS_PTK = factory.Faker('random_element', elements=random_enum(ENUM_PTK))
     STATUS_AKTIF = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
     SK_PENGANGKATAN = factory.Faker('credit_card_number')
     TMT_PENGANGKATAN = factory.Faker('credit_card_number')
@@ -122,17 +138,26 @@ class DataGuruFactory(DjangoModelFactory):
 class DataKaryawanFactory(DjangoModelFactory):
     class Meta:
         model = DataKaryawan
+        exclude = ('nama', 'nama_sekolah', 'nama_ibu_kandung', 'nama_wajib_pajak', 'nama_pasangan', 'pekerjaan_pasangan', 'tempat_lahir')
+
+    nama = factory.Faker('name')
+    nama_sekolah = factory.Faker('company')
+    nama_ibu_kandung = factory.Faker('name')
+    nama_wajib_pajak = factory.Faker('name')
+    nama_pasangan = factory.Faker('name')
+    pekerjaan_pasangan = factory.Faker('job')
+    tempat_lahir = factory.Faker('city')
         
-    NAMA_SEKOLAH = factory.Faker('company')
+    NAMA_SEKOLAH = factory.LazyAttribute(lambda p: '{}'.format(p.nama_sekolah.upper()))
     NSS = factory.Faker('credit_card_number')
     NPSN = factory.Faker('credit_card_number')
     ALAMAT_SEKOLAH = factory.Faker('address')
-    NAMA_LENGKAP = factory.Faker('name')
+    NAMA_LENGKAP = factory.LazyAttribute(lambda p: '{}'.format(p.nama.upper()))
     NIK = factory.Faker('credit_card_number')
     JENIS_KELAMIN = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_KELAMIN))
     TEMPAT_LAHIR = factory.Faker('city')
     TANGGAL_LAHIR = factory.Faker('date')
-    NAMA_IBU_KANDUNG = factory.Faker('name')
+    NAMA_IBU_KANDUNG = factory.LazyAttribute(lambda p: '{}'.format(p.nama_ibu_kandung.upper()))
     ALAMAT_TEMPAT_TINGGAL = factory.Faker('address')
     DUSUN = factory.Faker('city')
     KELURAHAN = factory.Faker('city')
@@ -143,11 +168,11 @@ class DataKaryawanFactory(DjangoModelFactory):
     LINTANG_2 = factory.Faker('latitude')
     AGAMA = factory.Faker('random_element', elements=random_enum(ENUM_AGAMA))
     NPWP = factory.Faker('credit_card_number')
-    NAMA_WAJIB_PAJAK = factory.Faker('name')
-    KEWARGANEGARAAN = factory.Faker('country')
+    NAMA_WAJIB_PAJAK = factory.LazyAttribute(lambda p: '{}'.format(p.nama_wajib_pajak.upper()))
+    KEWARGANEGARAAN = 'Indonesia'
     STATUS_KAWIN = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_KAWIN))
-    NAMA_PASANGAN = factory.Faker('name')
-    PEKERJAAN_PASANGAN = factory.Faker('job')
+    NAMA_PASANGAN = factory.LazyAttribute(lambda p: '{}'.format(p.nama_pasangan.upper()))
+    PEKERJAAN_PASANGAN = 'Guru'
     PASANGAN_PNS = factory.Faker('random_element', elements=random_enum(ENUM_LAYAK_PIP))
     NIP_PASANGAN = factory.Faker('credit_card_number')
     STATUS_PEGAWAI = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
@@ -156,7 +181,7 @@ class DataKaryawanFactory(DjangoModelFactory):
     NIY = factory.Faker('credit_card_number')
     NIGB = factory.Faker('credit_card_number')
     NUPTK = factory.Faker('credit_card_number')
-    JENIS_PTK = factory.Faker('word')
+    JENIS_PTK = factory.Faker('random_element', elements=random_enum(ENUM_PTK))
     STATUS_AKTIF = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
     SK_PENGANGKATAN = factory.Faker('credit_card_number')
     TMT_PENGANGKATAN = factory.Faker('credit_card_number')
