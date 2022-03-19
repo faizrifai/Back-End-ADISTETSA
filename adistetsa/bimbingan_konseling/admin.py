@@ -29,7 +29,7 @@ admin.site.register(PeminatanLintasMinat, PeminatanLintasMinatAdmin)
 
 class KatalogKonselorAdmin(ImportExportModelAdmin):
     search_fields = []
-    list_display = ('aksi', 'nip','nama','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
+    list_display = ('aksi', 'nip','NAMA','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
     # exclude = ('WHATSAPP')
     resource_class = KatalogKonselorResource
     form = KatalogKonselorForm
@@ -40,8 +40,8 @@ class KatalogKonselorAdmin(ImportExportModelAdmin):
     def nip(self, obj):
         return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NIP)
     
-    def nama(self, obj):
-        return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NAMA_LENGKAP)
+    # def nama(self, obj):
+    #     return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NAMA_LENGKAP)
     
     def whatsapp(self, obj):
         return format_html('<a href="'+obj.WHATSAPP+'">Buka WA</a>')
@@ -58,7 +58,7 @@ admin.site.register(KatalogKonselor, KatalogKonselorAdmin)
 
 class KonsultasiAdmin(admin.ModelAdmin):
     search_fields = []
-    list_display = ('USER','KONSELOR', 'TANGGAL_KONSULTASI','JAM', 'JENIS_MASALAH','RATING', 'STATUS')
+    list_display = ('USER','KONSELOR', 'TANGGAL_KONSULTASI','JAM_AWAL','JAM_AKHIR', 'JENIS_MASALAH','RATING', 'STATUS', 'KRITIK_SARAN',)
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('accept_action', 'decline_action','konsultasi_action','feedback_action',)

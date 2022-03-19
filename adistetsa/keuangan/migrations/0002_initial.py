@@ -9,8 +9,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('kurikulum', '0001_initial'),
         ('keuangan', '0001_initial'),
+        ('kurikulum', '0001_initial'),
     ]
 
     operations = [
