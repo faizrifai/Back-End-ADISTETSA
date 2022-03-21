@@ -75,6 +75,9 @@ class BukuInduk(models.Model):
         print(self.ORANG_TUA)
         super(BukuInduk, self).save(*args, **kwargs)
     
+    def get_some_field_value(self):
+        return self.NIS.some_field
+    
 class DataBeasiswaSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TAHUN = models.CharField(max_length=255)

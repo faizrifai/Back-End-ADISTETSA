@@ -22,10 +22,12 @@ class DataBeasiswaSiswaAdmin(SubAdmin):
     def aksi(self, obj):
         return "Edit"
 
+
 class BukuIndukAdmin(RootSubAdmin):
     search_fields = []
     list_display = ('nama','nis','aksi')
-    readonly_fields = ('ORANG_TUA','DITERIMA_DI_KELAS','KELOMPOK')
+    readonly_fields = ('DITERIMA_DI_KELAS','KELOMPOK')
+    # inlines = [DataSiswaTabular,]
 
     subadmins = [DataBeasiswaSiswaAdmin]
     def nis(self, obj):
