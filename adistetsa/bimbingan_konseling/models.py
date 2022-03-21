@@ -85,11 +85,11 @@ class PeminatanLintasMinat(models.Model):
     FILE = models.FileField(max_length=255, upload_to='Dokumen_Peminatan_Lintas_Minat')
     def __str__(self):
         return str(self.KELAS_SISWA) + ' _ ' + self.KATEGORI
-
+    
     class Meta:
         verbose_name_plural = "Peminatan dan Lintas Minat"
         constraints = [
-            models.UniqueConstraint(fields=['KATEGORI',], name='%(app_label)s_%(class)s_unique')
+            models.UniqueConstraint(fields=['KELAS_SISWA','KATEGORI',], name='%(app_label)s_%(class)s_unique')
         ]
 
 def post_save_peminatan_lintas_minat(sender, instance, created, **kwargs):
