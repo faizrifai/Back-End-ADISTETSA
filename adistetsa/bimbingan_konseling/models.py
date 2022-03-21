@@ -88,6 +88,21 @@ class PeminatanLintasMinat(models.Model):
 
     class Meta:
         verbose_name_plural = "Peminatan dan Lintas Minat"
+        constraints = [
+            models.UniqueConstraint(fields=['KATEGORI',], name='%(app_label)s_%(class)s_unique')
+        ]
+
+def post_save_peminatan_lintas_minat(sender, instance, created, **kwargs):
+    if instance.KELAS.KELAS.TINGKATAN == 'X':
+        try:
+            for kategori in ENUM_KATEGORI_PEMINATAN_LINTAS_MINAT:
+                obj = PeminatanLintasMinat.objects.update_or_create(
+                    KELAS_SISWA = instance,
+                    KATEGORI = kategori[0],
+                )
+        except Exception as e:
+            print(str(e))
+post_save.connect(post_save_peminatan_lintas_minat, sender=KelasSiswa)    
 
 class KatalogKonselor (models.Model):
     ID = models.BigAutoField(primary_key=True)
