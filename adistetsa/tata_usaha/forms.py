@@ -1,3 +1,4 @@
+from email.policy import default
 from django import forms
 
 from dataprofil.models import DataSiswa
@@ -46,4 +47,8 @@ class MutasiKeluarForm(forms.ModelForm):
             instance.save()
             
         return instance
+
+# class BukuIndukForms (forms.ModelForm):
+#     data_siswa = DataSiswa.objects.get(NIS=instance.NIS.NIS)
+#     NAMA = forms.cleaned_data[]
     
