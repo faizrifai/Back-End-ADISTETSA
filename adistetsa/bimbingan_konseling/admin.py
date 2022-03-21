@@ -3,6 +3,8 @@ from django.utils.html import format_html
 from .forms import KatalogKonselorForm
 from kustom_autentikasi.models import DataGuruUser
 
+from django.utils.safestring import mark_safe
+
 
 from bimbingan_konseling.importexportresources import DataAlumniResource, KatalogKonselorResource, PeminatanLintasMinatResource
 from .custom_filter import JurusanFilter, TingkatanFilter
@@ -29,8 +31,7 @@ admin.site.register(PeminatanLintasMinat, PeminatanLintasMinatAdmin)
 
 class KatalogKonselorAdmin(ImportExportModelAdmin):
     search_fields = []
-    list_display = ('aksi', 'nip','NAMA','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
-    # exclude = ('WHATSAPP')
+    list_display = ('aksi', 'foto', 'nip','NAMA','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
     resource_class = KatalogKonselorResource
     form = KatalogKonselorForm
 
@@ -40,8 +41,8 @@ class KatalogKonselorAdmin(ImportExportModelAdmin):
     def nip(self, obj):
         return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NIP)
     
-    # def nama(self, obj):
-    #     return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NAMA_LENGKAP)
+    def foto(self, obj):
+        return mark_safe(u'<img src="%s" width="100" height="100"/>' % (obj.FOTO.url))
     
     def whatsapp(self, obj):
         return format_html('<a href="'+obj.WHATSAPP+'">Buka WA</a>')
