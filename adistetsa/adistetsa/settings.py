@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'kurikulum',
     'sarana_prasarana',
     'keuangan',
+    'adiwiyata',
     'perpustakaan',
     'bimbingan_konseling',
     'unit_penjamin_mutu',
