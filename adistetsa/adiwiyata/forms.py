@@ -1,59 +1,47 @@
 from email.policy import default
 from django import forms
-from adistetsa.adiwiyata.enums import ENUM_3R
+from .enums import ENUM_UNSUR_TERLIBAT  
 
-from dataprofil.models import DataSiswa
+from .models import SanitasiDrainase, ReuseReduceRecycle
 
-from .models import SanitasiDrainase
-
-# class SanitasiForm(forms.ModelForm):
-#     UNSUR_TERLIBAT = forms.MultipleChoiceField(
-#         widget= forms.CheckboxSelectMultiple,
-#         choices=ENUM_3R,
-#         label='UNSUR TERLIBAT',
-#     )
+class SanitasiDrainaseForm(forms.ModelForm):
+    UNSUR_TERLIBAT = forms.MultipleChoiceField(
+        widget= forms.CheckboxSelectMultiple,
+        choices=ENUM_UNSUR_TERLIBAT,
+        label='UNSUR TERLIBAT',
+    )
     
-#     class Meta:
-#         model = SanitasiDrainase
-#         exclude = ('UNSUR_TERLIBAT',)
+    class Meta:
+        model = SanitasiDrainase
+        exclude = ('UNSUR_TERLIBAT',)
         
-#     def save(self, commit=True):
-#         data_siswa = self.cleaned_data['DATA_SISWA']
-#         siswa = DataSiswa.objects.get(NIS=data_siswa.NIS.NIS)
-#         kelas = OfferingKelas.objects.get(ID=data_siswa.KELAS.ID)
-#         instance = super(MutasiMasukForm, self).save(commit=False)
-#         instance.NO_INDUK_BARU = siswa.NIS
-#         instance.NAMA_SISWA = siswa.NAMA
-#         instance.ALAMAT = siswa.ALAMAT
-#         instance.KELAS = kelas.KELAS.TINGKATAN + ' ' + str(kelas.KELAS.JURUSAN) + ' ' + kelas.OFFERING.NAMA
-        
-#         if commit:
-#             instance.save()
+    def save(self, commit=True):
+
+        instance = super(SanitasiDrainaseForm, self).save(commit=False)
+        instance.UNSUR_TERLIBAT =", ".join(self.cleaned_data['UNSUR_TERLIBAT'])
+
+        if commit:
+            instance.save()
             
-#         return instance
+        return instance
     
-# class MutasiKeluarForm(forms.ModelForm):
-#     DATA_SISWA = forms.ModelChoiceField(queryset=KelasSiswa.objects.all(), label='DATA SISWA')
+class ReuseReduceRecycleForm(forms.ModelForm):
+    PIHAK_TERLIBAT = forms.MultipleChoiceField(
+        widget= forms.CheckboxSelectMultiple,
+        choices=ENUM_UNSUR_TERLIBAT,
+        label='PIHAK TERLIBAT',
+    )
     
-#     class Meta:
-#         model = MutasiKeluar
-#         exclude = ('NAMA_SISWA','KELAS','NO_INDUK',)
+    class Meta:
+        model = ReuseReduceRecycle
+        exclude = ('PIHAK_TERLIBAT',)
         
-#     def save(self, commit=True):
-#         data_siswa = self.cleaned_data['DATA_SISWA']
-#         siswa = DataSiswa.objects.get(NIS=data_siswa.NIS.NIS)
-#         kelas = OfferingKelas.objects.get(ID=data_siswa.KELAS.ID)
-#         instance = super(MutasiKeluarForm, self).save(commit=False)
-#         instance.NO_INDUK = siswa.NIS
-#         instance.NAMA_SISWA = siswa.NAMA
-#         instance.KELAS = kelas.KELAS.TINGKATAN + ' ' + str(kelas.KELAS.JURUSAN) + ' ' + kelas.OFFERING.NAMA
-        
-#         if commit:
-#             instance.save()
-            
-#         return instance
+    def save(self, commit=True):
 
-# class BukuIndukForms (forms.ModelForm):
-#     data_siswa = DataSiswa.objects.get(NIS=instance.NIS.NIS)
-#     NAMA = forms.cleaned_data[]
-    
+        instance = super(ReuseReduceRecycleForm, self).save(commit=False)
+        instance.PIHAK_TERLIBAT =", ".join(self.cleaned_data['PIHAK_TERLIBAT'])
+
+        if commit:
+            instance.save()
+            
+        return instance
