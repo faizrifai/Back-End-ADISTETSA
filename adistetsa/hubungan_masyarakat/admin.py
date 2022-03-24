@@ -1,8 +1,10 @@
+import imp
 from django.contrib import admin
 from .forms import *
 from import_export.admin import ExportMixin
 from .models import *
 from .importexportresources import*
+import datetime
 
 # Register your models here.
 class LogUKSSiswaAdmin(ExportMixin, admin.ModelAdmin):
@@ -27,5 +29,7 @@ class BukuTamuAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = []
     list_display = ('NAMA','INSTANSI_ASAL','ALAMAT','NO_HP','HARI','TANGGAL','KEPERLUAN')
     resource_class = BukuTamuResource
+    exclude = ('HARI',)
+
     
 admin.site.register(BukuTamu, BukuTamuAdmin)
