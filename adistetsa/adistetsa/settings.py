@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'keuangan',
     'adiwiyata',
     'perpustakaan',
+    'hubungan_masyarakat',
     'bimbingan_konseling',
     'unit_penjamin_mutu',
     'admin_auto_filters',

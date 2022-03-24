@@ -28,6 +28,15 @@ class Pembayaran(models.Model):
     )
     TANGGAL_PEMBAYARAN = models.DateField()
     NOMINAL_PEMBAYARAN = models.PositiveIntegerField()
+    # KUITANSI 
+    
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+        
+        
+            
+    #     return super().save(*args, **kwargs)
+    
     
     
     
