@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from .forms import ReuseReduceRecycleForm, SanitasiDrainaseForm
+
 from.models import *
 
 # Register your models here.
@@ -7,6 +9,7 @@ class SanitasiDraineseAdmin (admin.ModelAdmin):
     search_fields = ('TANGGAL', 'NAMA_KEGIATAN', 'UNSUR_TERLIBAT', 'KETERANGAN')
     list_display = ('TANGGAL', 'NAMA_KEGIATAN', 'UNSUR_TERLIBAT', 'KETERANGAN', 'FILE')
     list_per_page = 10
+    form = SanitasiDrainaseForm
     
 admin.site.register(SanitasiDrainase, SanitasiDraineseAdmin)
 
@@ -84,6 +87,7 @@ class ReuseReduceRecycleAdmin(admin.ModelAdmin):
     search_fields = ('TANGGAL', 'NAMA_KEGIATAN','JENIS_KEGIATAN','PIHAK_TERLIBAT', 'KETERANGAN', 'FILE')
     list_display = ('TANGGAL', 'NAMA_KEGIATAN','JENIS_KEGIATAN','PIHAK_TERLIBAT', 'KETERANGAN', 'FILE')
     list_per_page = 10
+    form = ReuseReduceRecycleForm
 
 admin.site.register(ReuseReduceRecycle, ReuseReduceRecycleAdmin)
 
