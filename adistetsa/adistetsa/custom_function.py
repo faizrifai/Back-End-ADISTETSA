@@ -23,7 +23,7 @@ def gabung_dictionary(*parameters):
             temp = dict
         else:
             temp = temp | dict
-    print(temp)    
+
     return temp
 
 def validasi_integer(value):

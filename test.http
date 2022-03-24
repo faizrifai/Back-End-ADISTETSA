@@ -2,29 +2,35 @@
 # Content-Type: application/json
 
 # {
-#     "username": "andi_perbudi_6",
+#     "username": "jeremy_lang",
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kesiswaan/presensi_ekskul/2
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTE1MDU1LCJpYXQiOjE2NDU2MTkwNTUsImp0aSI6IjU4YzU1ZmE2M2ExOTRjYjJhNzI3YThiMTY5MGYxYmExIiwidXNlcl9pZCI6Mzl9.t1VX43ZFxoK0m-Ivbqr-xe3zVBmnusjBZJhhf9Pqhmw
+GET http://localhost:8000/bimbingan_konseling/katalog_konselor/1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MTQ0NjAxLCJpYXQiOjE2NDc4NDg2MDEsImp0aSI6ImM4NTkyYWYzNzNiNjQxZjRhNmNhYTFjMTFiMDg2ZDE0IiwidXNlcl9pZCI6MTd9.O1ZvNe3UvuykP7j46zU3wTZPWkfZb6pMbulaJuC5seM
 Content-Type: application/json
 
 {
-    "KETERANGAN": "Hadir"
+    "TANGGAL_KONSULTASI": "2022-01-01",
+    "JAM_AWAL": "05:00",
+    "JAM_AKHIR": "06:00",
+    "JENIS_MASALAH": "Karier"
 }
 
 # Token Guru Server
 # Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2ODMxMTQwLCJpYXQiOjE2NDU1MzUxNDAsImp0aSI6ImZjZGZiY2RhYzkxNTQ1OThiMTFjMGQ5OWY4ZjU2NmJlIiwidXNlcl9pZCI6Mjh9.ZDdiGx9DjFSoemJk_cfxGHC7iZrH2x_3p_2GCwu0Uvk
 
 # Token Guru Lokal
-# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds
+# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ4OTczMjM3LCJpYXQiOjE2NDc2NzcyMzcsImp0aSI6ImE5OTIzNDJjZjA3NzRjMTBiZjI3ZGJjODllNmRlZDdhIiwidXNlcl9pZCI6MTF9.AVMkbcxAeNW6WHV5R8qyVjIjKMJrTO1I74-HMgvutwU
 
 # Token Siswa Lokal
-# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTEwNzcxLCJpYXQiOjE2NDU2MTQ3NzEsImp0aSI6ImU5NGJjYTY0MmI5YzRiMTc5OWY1MzMyMjc1NzM1YmJiIiwidXNlcl9pZCI6MjJ9.aMkcN4ohXeEYfr648H4pkRq6N9ljjs5w2NVqH0KMV0g
+# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MTM5NjUwLCJpYXQiOjE2NDc4NDM2NTAsImp0aSI6IjJhMWFkN2ZjYjljNzRiYzQ4M2NhOWQwMDMwMjViYjM4IiwidXNlcl9pZCI6NH0.BsCMSbiis0jffYxXw-BJWhMBD7rvlynXNpEpw1aenh8
 
 # Token Pelatih Lokal
 # Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2OTE1MDU1LCJpYXQiOjE2NDU2MTkwNTUsImp0aSI6IjU4YzU1ZmE2M2ExOTRjYjJhNzI3YThiMTY5MGYxYmExIiwidXNlcl9pZCI6Mzl9.t1VX43ZFxoK0m-Ivbqr-xe3zVBmnusjBZJhhf9Pqhmw
+
+# Token Orang Tua Lokal
+# Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MTQ0NjAxLCJpYXQiOjE2NDc4NDg2MDEsImp0aSI6ImM4NTkyYWYzNzNiNjQxZjRhNmNhYTFjMTFiMDg2ZDE0IiwidXNlcl9pZCI6MTd9.O1ZvNe3UvuykP7j46zU3wTZPWkfZb6pMbulaJuC5seM
 
 # PATCH http://localhost:8000/kurikulum/detail_presensi_siswa/7
 # Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2NTQ2OTM2LCJpYXQiOjE2NDUyNTA5MzYsImp0aSI6IjQ5YTUwZjJiZTg4NjQwOTA5OTJkYmFjNzUzM2NhZDYyIiwidXNlcl9pZCI6Mjh9.5qW7DK8V-tzp-2KnbcMX2JYMhEtqlsiGahFm6eUizds

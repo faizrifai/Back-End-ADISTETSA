@@ -15,3 +15,11 @@ ENUM_STATUS = [
     ('Online', 'Online'),
     ('Offline', 'Offline'),
 ]
+
+ENUM_STATUS_KONSULTASI = [
+    ('Dijadwalkan', 'Dijadwalkan'),
+    ('Selesai', 'Selesai'),
+    ('Diajukan', 'Diajukan'),
+    ('Telah Mengisi Feedback', 'Telah Mengisi Feedback'),
+    ('Ditolak','Ditolak'),
+]
