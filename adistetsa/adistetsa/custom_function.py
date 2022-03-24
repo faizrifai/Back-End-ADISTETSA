@@ -1,7 +1,6 @@
-from cgi import test
-import string
-from django.core.files.base import ContentFile
 from django.forms import ValidationError
+from django.core.files.base import ContentFile
+
 
 def duplikat_file(obj, file, nama_file):
     file_baru = ContentFile(file)
@@ -82,3 +81,4 @@ def cek_error_import(model_name, row_object, row_name, field_name):
         validator_arr[row_name] = 'Data tidak sesuai atau tidak ada di database'
         
     return validator_arr
+
