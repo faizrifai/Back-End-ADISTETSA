@@ -36,4 +36,9 @@ class TambahLogUKSTendikSerializer(serializers.ModelSerializer):
 class BukuTamuListSerializer(serializers.ModelSerializer):
     class Meta:
         model = BukuTamu
+        fields = '__all__'
+
+class BukuTamuPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BukuTamu
         exclude = ('HARI',)

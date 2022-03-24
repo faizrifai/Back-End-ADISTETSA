@@ -3,6 +3,7 @@ from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
 
+from rest_framework import reverse
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -162,6 +163,13 @@ class BukuTamuListView(generics.ListCreateAPIView):
     queryset = BukuTamu.objects.all()
     search_fields = ('NAMA', )
     filterset_class = BukuTamuFilter
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return BukuTamuListSerializer
+
+        elif self.request.method == "POST":
+            return BukuTamuPostSerializer
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)

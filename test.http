@@ -6,7 +6,7 @@
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/hubungan_masyarakat/buku_tamu?TANGGAL=2
+GET http://localhost:8000/hubungan_masyarakat/buku_tamu?TANGGAL=1
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MjIxMjM4LCJpYXQiOjE2NDc5MjUyMzgsImp0aSI6ImI0MjQ4YzQ3Mjc3MzRjYjBhMThjYjllMzVmMDg4NzA5IiwidXNlcl9pZCI6MTB9.J0to2nuQRYjinGo7drinTbr-Nb_r5lrZcmks-Eip_P8
 Content-Type: application/json
 
