@@ -120,6 +120,9 @@ class OfferingKelas(models.Model):
     OFFERING = models.ForeignKey(NamaOfferingKelas, on_delete=models.CASCADE)
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['KELAS', 'OFFERING'], name='%(app_label)s_%(class)s_unique')
+        ]
         verbose_name_plural = 'Offering Kelas'
     
     def __str__(self):
@@ -382,6 +385,12 @@ def post_save_jadwal_mengajar(sender, instance, **kwargs):
             JADWAL_MENGAJAR = instance,
         )
         daftar_jurnal_belajar.save()
+        
+        # rekap_jam_guru = RekapJamGuru.objects.update_or_create(
+        #     DATA_GURU = instance.GURU,
+        #     DATA_MENGAJAR_GURU =+ instance
+        # )
+        
     except Exception as e:
         print(str(e))
 

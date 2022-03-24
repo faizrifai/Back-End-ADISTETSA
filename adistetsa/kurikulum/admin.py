@@ -99,6 +99,7 @@ class OfferingKelasAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_filter = (KelasFilter, NamaOfferingKelasFilter,)
     list_display = ('KELAS', 'OFFERING',)
+    ordering = ('KELAS__TINGKATAN', '-KELAS__JURUSAN__NAMA', 'OFFERING')
 
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
@@ -213,11 +214,16 @@ class JadwalMengajarAdmin(ImportExportModelAdmin):
     list_per_page = 10
     filter_horizontal = ('WAKTU_PELAJARAN',)
     exclude = ('JUMLAH_WAKTU',)
-    list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran')
+    list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran','jumlah_waktu' )
     list_filter = [TahunFilter ,SemesterFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
     form = JadwalMengajarForm
 
     resource_class = JadwalMengajarResource
+    
+    def jumlah_waktu(self, obj):
+        jumlah_waktu = (obj.WAKTU_PELAJARAN.all()).count()
+        return str(jumlah_waktu)
+        
 
     def jam_pelajaran(self, obj):
         daftar = ""
