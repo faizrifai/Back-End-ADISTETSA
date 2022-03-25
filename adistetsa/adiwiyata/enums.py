@@ -12,9 +12,15 @@ ENUM_3R =[
     ('Reduce', 'Reduce'),
     ('Recycle','Recycle'),
 ]
+
 ENUM_UNSUR_TERLIBAT = [
     ('Siswa','Siswa'),
     ('Guru','Guru'),
     ('Karyawan','Karyawan'),
     ('Lainnya','Lainnya'),
+]
+
+ENUM_JENIS_SAMPAH = [
+    ('Basah','Basah'),
+    ('Kering', 'Kering'),
 ]

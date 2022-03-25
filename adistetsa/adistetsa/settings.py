@@ -55,7 +55,6 @@ INSTALLED_APPS = [
     'sarana_prasarana',
     'keuangan',
     'tata_usaha',
-    'hubungan_masyarakat',
     'adiwiyata',
     'perpustakaan',
     'hubungan_masyarakat',

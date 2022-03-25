@@ -1,0 +1,56 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools-items %}
+{% endblock %}
+
+{% block content_title %}
+    {% comment %} <h3> Tabungan Sampah </h3> {% endcomment %}
+    <h1> <b> {{ tanggal }} </b> </h1>
+{% endblock %}
+
+<!-- ... -->
+
+{% block result_list %}
+
+<div class="results">
+    <table>
+
+    <thead>
+      <tr>
+        <th>
+            <div class="text">
+              <a href="#">Kategori</a>
+            </div>
+          </th>
+        <th>
+          <div class="text">
+            <a href="#">Jumlah Sampah</a>
+          </div>
+        </th>
+      </tr>
+    </thead>
+
+    <tbody>
+      
+      <tr>
+        <td> Sampah Basah </td>
+        <td> {{ basah }} </td>
+      </tr>
+      <tr>
+        <td> Sampah Kering </td>
+        <td> {{ kering }} </td>
+      </tr>
+      <tr>
+        <th> Total </th>
+        <th> {{ total }} </th>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+
+<!-- ... -->
+
+{% endblock %}
+
+{% block pagination %}{% endblock %}

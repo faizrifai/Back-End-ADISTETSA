@@ -1,6 +1,7 @@
 from distutils.archive_util import make_archive
 from distutils.command.upload import upload
 from pyexpat import model
+from tabnanny import verbose
 from django.db import models
 from django.forms import CharField
 from dataprofil.models import DataSiswa
@@ -15,6 +16,9 @@ class SanitasiDrainase(models.Model):
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='SanitasiDrainase', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Sanitasi Drainase'
+    
 class JaringanKerja(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
@@ -22,6 +26,9 @@ class JaringanKerja(models.Model):
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='JaringanKerja', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Jaringan Kerja'
+        
 class Publikasi(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
@@ -30,9 +37,15 @@ class Publikasi(models.Model):
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='Publikasi', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Publikasi'
+    
 class DaftarKader(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name_plural ='Daftar Kader'
 
 class KegiatanKader(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -41,6 +54,9 @@ class KegiatanKader(models.Model):
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='KegiatanKader', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Kegiatan Kader'
+    
 class Konservasi(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
@@ -48,6 +64,9 @@ class Konservasi(models.Model):
     NAMA_KEGIATAN = models.CharField(max_length=255)
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='Konservasi', max_length=255)
+    
+    class Meta:
+        verbose_name_plural ='Konservasi'
 
 class PenanamanPohon(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -57,12 +76,18 @@ class PenanamanPohon(models.Model):
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='PenanamanPohon', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Penanaman Pohon'
+    
 class PembibitanPohon(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
     NAMA_KEGIATAN = models.CharField(max_length=255)
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='PembibitanPohon', max_length=255)
+    
+    class Meta:
+        verbose_name_plural ='Pembibitan Pohon'
 
 class PemeliharaanPohon(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -70,6 +95,9 @@ class PemeliharaanPohon(models.Model):
     NAMA_KEGIATAN = models.CharField(max_length=255)
     KETERANGAN = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='PemeliharaanPohon', max_length=255)
+    
+    class Meta:
+        verbose_name_plural ='Pemeliharaan Pohon'
     
 class KaryaInovatif(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -79,6 +107,9 @@ class KaryaInovatif(models.Model):
     JENIS = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='KaryaInovatif', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Karya Inovatif'
+    
 class PenerapanPRLH(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
@@ -86,6 +117,9 @@ class PenerapanPRLH(models.Model):
     PESERTA = models.CharField(max_length=255)
     KETERANGAN = models.TextField()
     FILE = models.FileField(upload_to='PenerapanPRLH', max_length=255)
+    
+    class Meta:
+        verbose_name_plural ='Penerapan PRLH'
     
 class ReuseReduceRecycle(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -99,6 +133,9 @@ class ReuseReduceRecycle(models.Model):
     KETERANGAN = models.TextField()
     FILE = models.FileField(upload_to='ReuseReduceRecycle', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Reuse Reduce Recycle'
+    
 class PemeliharaanSampah(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TANGGAL = models.DateField()
@@ -106,11 +143,23 @@ class PemeliharaanSampah(models.Model):
     KETERANGAN = models.TextField()
     FILE = models.FileField(upload_to='PemeliharaanSampah', max_length=255)
     
+    class Meta:
+        verbose_name_plural ='Pemeliharaan Sampah'
+        
 class TabunganSampah(models.Model):
     ID = models.BigAutoField(primary_key=True)
+    KATEGORI = models.CharField(max_length=255, choices=ENUM_JENIS_SAMPAH)
     TANGGAL = models.DateField()
-    JUMLAH_PERTANGGAL = models.PositiveIntegerField()
+    JUMLAH = models.PositiveIntegerField()
     
+    class Meta:
+        verbose_name_plural ='Tabungan Sampah'
+
+class TabunganSampahProxy(TabunganSampah):
+    class Meta:
+        ordering = ["TANGGAL"]
+        proxy = True    
+        verbose_name_plural ='Jumlah Tabungan Sampah'
     
     
 
