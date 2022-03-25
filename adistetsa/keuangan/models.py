@@ -22,7 +22,7 @@ class Pembayaran(models.Model):
         max_length=255,
         choices=ENUM_JENIS_PEMBAYARAN,
         )
-    PEMBAYARAN_BULAN = models.CharField(max_length=255)
+    PEMBAYARAN_BULAN = models.CharField(max_length=255,blank=True)
     TANGGAL_PEMBAYARAN = models.DateField()
     NOMINAL_PEMBAYARAN = models.PositiveIntegerField()
     TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
@@ -31,10 +31,15 @@ class Pembayaran(models.Model):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # self.KUITANSI = buat_kuitansi(self)
-        
+        self.KUITANSI = buat_kuitansi(self)
             
         return super().save(*args, **kwargs)
     
+class KuitansiPembayaranProxy(Pembayaran):
+    class Meta:
+        ordering = ["NAMA_SISWA"]
+        proxy = True    
+        verbose_name_plural ='Kwitansi Pembayaran'
     
     
     

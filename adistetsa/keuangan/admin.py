@@ -27,5 +27,12 @@ class PembayaranAdmin(admin.ModelAdmin):
     
 
 admin.site.register(Pembayaran, PembayaranAdmin)
+
+class KwitansiKeuanganProxyAdmin(admin.ModelAdmin):
+    change_list_template = 'admin/keuangan/kuitansipembayaran_change_list.html'
+    date_hierarchy = 'TANGGAL_PEMBAYARAN'
+
+admin.site.register(KuitansiPembayaranProxy, KwitansiKeuanganProxyAdmin)
     
+
     
