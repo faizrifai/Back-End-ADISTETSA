@@ -1,15 +1,9 @@
-# import pdfkit as pdf 
+from io import  BytesIO
+from django.core.files.base import ContentFile
+import openpyxl
 
-# def pdf(self):
-#     persons = self.ID
-#     template = pdf.get_template('plapp/person_list.html')
-#     html = template.render({'persons': persons})
-#     options = {
-#         'page-size': 'Letter',
-#         'encoding': "UTF-8",
-#     }
-#     pdf = pdf.from_string(html, False, options)
-#     response = HttpResponse(pdf, content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment;
-#     filename="pperson_list_pdf.pdf"'
-#     return response    
+def buat_kuitansi(self): 
+    
+   pembayaran = {}
+   pembayaran['NAMA_SISWA'] = self.DATA_SISWA.NAMA_LENGKAP
+   pembayaran['KELAS']  
