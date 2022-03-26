@@ -82,6 +82,7 @@ class PeminatanLintasMinat(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     KATEGORI = models.CharField(max_length=255, choices=ENUM_KATEGORI_PEMINATAN_LINTAS_MINAT)
+    FILE_ANGKET = models.FileField(max_length=255, upload_to='Dokumen_Peminatan_Lintas_Minat', null=True, blank=True)
     FILE = models.FileField(max_length=255, upload_to='Dokumen_Peminatan_Lintas_Minat')
     def __str__(self):
         return str(self.KELAS_SISWA) + ' _ ' + self.KATEGORI
