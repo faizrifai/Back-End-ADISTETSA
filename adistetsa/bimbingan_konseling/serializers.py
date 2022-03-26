@@ -9,7 +9,7 @@ class KatalogKonselorListSerializer(serializers.ModelSerializer):
     class Meta:
         model = KatalogKonselor
         
-        exclude = ('KOMPETENSI','ALUMNUS','WHATSAPP','CONFERENCE','FOTO')
+        exclude = ('KOMPETENSI','ALUMNUS','WHATSAPP','CONFERENCE')
 
     def get_user(self, obj): 
         if (is_in_group(obj.USER, 'Guru')):
