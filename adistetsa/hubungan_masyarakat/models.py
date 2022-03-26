@@ -1,8 +1,9 @@
 from django.db import models
 from kurikulum.enums import ENUM_HARI
-from hubungan_masyarakat.enums import ENUM_JENIS_PTK_UKS
+
+from .enums import *
+
 import datetime
-from django.utils import timezone
 
 # Create your models here.
 class BukuTamu(models.Model):
@@ -20,7 +21,11 @@ class BukuTamu(models.Model):
         verbose_name_plural = "Buku Tamu"
         
     def save(self, *args, **kwargs):
-        hari = self.TANGGAL.weekday()
+        if isinstance(self.TANGGAL, str):
+            hari = datetime.datetime.strptime(self.TANGGAL, '%Y-%m-%d').weekday()
+        else:
+            hari = self.TANGGAL.weekday()
+
         self.HARI = ENUM_HARI[hari][0]
         super(BukuTamu, self).save(*args, **kwargs)
     

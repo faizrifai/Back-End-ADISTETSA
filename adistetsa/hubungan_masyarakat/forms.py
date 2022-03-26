@@ -3,7 +3,7 @@ from django import forms
 from dataprofil.models import DataSiswa
 
 from .models import *
-from kurikulum.models import KelasSiswa, Kelas, OfferingKelas
+from kurikulum.models import KelasSiswa, OfferingKelas
 
 class LogUKSSiswaForm(forms.ModelForm):
     DATA_SISWA = forms.ModelChoiceField(queryset=KelasSiswa.objects.all(), label='DATA SISWA')
