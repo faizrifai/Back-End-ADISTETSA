@@ -1,5 +1,4 @@
 import factory
-import random
 
 from factory.django import DjangoModelFactory
 
@@ -7,7 +6,6 @@ from .models import *
 from .enums import *
 
 # random function section
-
 
 def random_enum(nama_enum):
     pilihan = [x[0] for x in nama_enum]

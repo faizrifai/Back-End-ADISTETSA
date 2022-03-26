@@ -1,9 +1,4 @@
-from distutils.archive_util import make_archive
-from distutils.command.upload import upload
-from pyexpat import model
-from tabnanny import verbose
 from django.db import models
-from django.forms import CharField
 from dataprofil.models import DataSiswa
 from .enums import *
 

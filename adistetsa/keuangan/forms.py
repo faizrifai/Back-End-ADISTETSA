@@ -1,5 +1,3 @@
-from email.policy import default
-from msilib.schema import Class
 from django import forms
 from .enums import ENUM_JENIS_PEMBAYARAN
 from kurikulum.enums import ENUM_BULAN
