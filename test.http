@@ -6,20 +6,20 @@
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/hubungan_masyarakat/buku_tamu?TANGGAL=1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MjIxMjM4LCJpYXQiOjE2NDc5MjUyMzgsImp0aSI6ImI0MjQ4YzQ3Mjc3MzRjYjBhMThjYjllMzVmMDg4NzA5IiwidXNlcl9pZCI6MTB9.J0to2nuQRYjinGo7drinTbr-Nb_r5lrZcmks-Eip_P8
+GET http://localhost:8000/hubungan_masyarakat/log_uks
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5NzU5OTY3LCJpYXQiOjE2NDg0NjM5NjcsImp0aSI6IjdjNzNhNjU3N2M1ODRkZTJiNWU1OGRkNTgyNGQ1NGY1IiwidXNlcl9pZCI6MTB9.5uULznn7wEbKgJA9hdqFgb0g5GK-xCd6ED-xpWa3bqY
 Content-Type: application/json
 
-{
-    "NAMA": "ANDIKA",
-    "INSTANSI_ASAL": "UM",
-    "ALAMAT": "Jalan Merpati",
-    "NO_HP": "0303030303",
-    "HARI": "Senin",
-    "TANGGAL": "2022-03-22",
-    "JAM": "14:44:56",
-    "KEPERLUAN": "Makan"
-}
+# {
+#     "NAMA": "ANDIKA",
+#     "INSTANSI_ASAL": "UM",
+#     "ALAMAT": "Jalan Merpati",
+#     "NO_HP": "0303030303",
+#     "HARI": "Senin",
+#     "TANGGAL": "2022-03-22",
+#     "JAM": "14:44:56",
+#     "KEPERLUAN": "Makan"
+# }
 
 # Token Guru Server
 # Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ2ODMxMTQwLCJpYXQiOjE2NDU1MzUxNDAsImp0aSI6ImZjZGZiY2RhYzkxNTQ1OThiMTFjMGQ5OWY4ZjU2NmJlIiwidXNlcl9pZCI6Mjh9.ZDdiGx9DjFSoemJk_cfxGHC7iZrH2x_3p_2GCwu0Uvk
