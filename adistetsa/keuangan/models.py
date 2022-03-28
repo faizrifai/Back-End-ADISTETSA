@@ -25,21 +25,23 @@ class Pembayaran(models.Model):
     PEMBAYARAN_BULAN = models.CharField(max_length=255,blank=True)
     TANGGAL_PEMBAYARAN = models.DateField()
     NOMINAL_PEMBAYARAN = models.PositiveIntegerField()
+    GENERATE = models.BooleanField(default= False)
     TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     KUITANSI = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # self.KUITANSI = buat_kuitansi(self)
-        self.KUITANSI = buat_kuitansi(self)
+        if self.GENERATE :
+            self.KUITANSI = buat_kuitansi(self)
             
         return super().save(*args, **kwargs)
     
-class KuitansiPembayaranProxy(Pembayaran):
-    class Meta:
-        ordering = ["NAMA_SISWA"]
-        proxy = True    
-        verbose_name_plural ='Kwitansi Pembayaran'
+# class KuitansiPembayaranProxy(Pembayaran):
+#     class Meta:
+#         ordering = ["NAMA_SISWA"]
+#         proxy = True    
+#         verbose_name_plural ='Kwitansi Pembayaran'
     
     
     
