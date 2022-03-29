@@ -1,11 +1,13 @@
 from re import I
 from urllib import request
+
+from django.shortcuts import get_object_or_404
 from .filters import AngketFilter
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
 
-from rest_framework import generics, status
+from rest_framework import generics, status, filters
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -61,6 +63,7 @@ class KatalogKonselorListView(generics.ListAPIView):
 
     queryset = KatalogKonselor.objects.all()
     serializer_class = KatalogKonselorListSerializer
+    search_fields = ('NAMA',)
 
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -96,6 +99,7 @@ class DaftarKonsultasiListView(generics.ListAPIView):
         current_user = self.request.user
         if (not is_in_group(current_user, 'Staf BK')):
             queryset = Konsultasi.objects.filter(USER=current_user)
+            
             return queryset
 
         return super().get_queryset()
@@ -174,6 +178,7 @@ class PengajuanKonsultasiNonStafListView(generics.ListAPIView):
 
     queryset = Konsultasi.objects.all()
     serializer_class = PengajuanKonsultasiListSerializer
+    search_fields = ('KONSELOR__NAMA')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -195,6 +200,7 @@ class DaftarAlumniListView(generics.ListAPIView):
 
     queryset = DataAlumni.objects.all()
     serializer_class = DataAlumniListSerializer
+    search_fields = ('NAMA_SISWA', 'NISN')
 
     def get_queryset(self):
         current_user = self.request.user
@@ -241,6 +247,7 @@ class AngketPeminatanListView(generics.ListAPIView):
     queryset = PeminatanLintasMinat.objects.all()
     serializer_class = PeminatanLintasMinatListSerializer
     filter_class = AngketFilter
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
 
     def get_queryset(self):
         qs = PeminatanLintasMinat.objects.filter(KATEGORI='Angket Peminatan')
@@ -263,6 +270,7 @@ class AngketPeminatanSiswaDetailView(APIView):
     parser_classes = (MultiPartParser,)
     queryset = PeminatanLintasMinat.objects.all()
     serializer_class = PeminatanLintasMinatListSerializer
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
 
     def get_queryset(self):
         current_user = self.request.user
@@ -302,6 +310,7 @@ class AngketLintasMinatListView(generics.ListAPIView):
     queryset = PeminatanLintasMinat.objects.all()
     serializer_class = PeminatanLintasMinatListSerializer
     filter_class = AngketFilter
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
 
     def get_queryset(self):
         qs = PeminatanLintasMinat.objects.filter(KATEGORI='Angket Lintas Minat')
@@ -363,6 +372,7 @@ class AngketDataDiriListView(generics.ListAPIView):
     serializer_class = PeminatanLintasMinatListSerializer
     parser_classes= (MultiPartParser,)
     filter_class = AngketFilter
+    search_fields = ('KELAS_SISWA__NIS__NAMA',)
 
     def get_queryset(self):
         qs = PeminatanLintasMinat.objects.filter(KATEGORI='Angket Data Diri')
