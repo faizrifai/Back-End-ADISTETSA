@@ -2,12 +2,12 @@
 # Content-Type: application/json
 
 # {
-#     "username": "jason_reynolds_2019",
+#     "username": "chloe_smith_2007",
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/hubungan_masyarakat/log_uks
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5NzU5OTY3LCJpYXQiOjE2NDg0NjM5NjcsImp0aSI6IjdjNzNhNjU3N2M1ODRkZTJiNWU1OGRkNTgyNGQ1NGY1IiwidXNlcl9pZCI6MTB9.5uULznn7wEbKgJA9hdqFgb0g5GK-xCd6ED-xpWa3bqY
+GET http://localhost:8000/bimbingan_konseling/angket_peminatan
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjQ5ODE4NzIzLCJpYXQiOjE2NDg1MjI3MjMsImp0aSI6Ijc0ZjUyMjA4MTE1MjRhZjU4YmUzOTg3ZDhmYzQwMWRlIiwidXNlcl9pZCI6MTF9.6SmhbhhIEQdzbtC7xUIIZCdRGW319uHDdGgYf_I5fIw
 Content-Type: application/json
 
 # {

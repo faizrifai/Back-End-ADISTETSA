@@ -210,10 +210,14 @@ class DataAlumniDetailSerializer(serializers.ModelSerializer):
 
 class PeminatanLintasMinatListSerializer(serializers.ModelSerializer):
     KELAS = serializers.SerializerMethodField('get_kelas')
+    NAMA = serializers.SerializerMethodField('get_nama')
 
     class Meta:
         model = PeminatanLintasMinat
         fields = '__all__'  
+
+    def get_nama(self, obj):
+        return str(obj.KELAS_SISWA.NIS.NAMA)
 
     def get_kelas(self, obj):
         return str(obj.KELAS_SISWA.KELAS)
