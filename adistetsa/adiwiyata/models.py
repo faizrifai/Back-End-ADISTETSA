@@ -101,6 +101,7 @@ class KaryaInovatif(models.Model):
     NAMA_KARYA_INOVATIF = models.CharField(max_length=255)
     JENIS = models.CharField(max_length=255)
     FILE = models.FileField(upload_to='KaryaInovatif', max_length=255)
+    KETERANGAN = models.CharField(max_length=255)
     
     class Meta:
         verbose_name_plural ='Karya Inovatif'
