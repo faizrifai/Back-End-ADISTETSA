@@ -328,7 +328,7 @@ class TabunganSampahListView(APIView):
                     elif record.KATEGORI == 'Kering':
                         o.sampah_kering += int(record.JUMLAH)
 
-                    o.total_tabungan += o.sampah_basah + o.sampah_kering
+                    o.total_tabungan = o.sampah_basah + o.sampah_kering
 
         return data
 
