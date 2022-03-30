@@ -17,7 +17,7 @@ admin.site.register(SanitasiDrainase, SanitasiDraineseAdmin)
 
 class JaringanKerjaAdmin(admin.ModelAdmin):
     search_fields = ('TANGGAL', 'NAMA_KEGIATAN', 'KETERANGAN')
-    list_display = ('TANGGAL', 'NAMA_KEGIATAN', 'KETERANGAN', 'FILE')
+    list_display = ('TANGGAL', 'NAMA_KEGIATAN', 'KETERANGAN', 'FILE_MOU','FILE_DOKUMENTASI')
     list_per_page = 10
     
 admin.site.register(JaringanKerja, JaringanKerjaAdmin)

@@ -19,7 +19,8 @@ class JaringanKerja(models.Model):
     TANGGAL = models.DateField()
     NAMA_KEGIATAN = models.CharField(max_length=255)
     KETERANGAN = models.CharField(max_length=255)
-    FILE = models.FileField(upload_to='JaringanKerja', max_length=255)
+    FILE_MOU = models.FileField(upload_to='JaringanKerja/MOU', max_length=255)
+    FILE_DOKUMENTASI = models.FileField(upload_to='JaringanKerja/Dokumentasi', max_length=255)
     
     class Meta:
         verbose_name_plural ='Jaringan Kerja'
