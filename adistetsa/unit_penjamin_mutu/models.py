@@ -3,7 +3,7 @@ from itertools import count
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 
-from .custom_function import buat_file_prototype
+from .custom_function import buat_file_prototype, pembagian_bk
 from unit_penjamin_mutu.enums import ENUM_KATEGORI_BAHAN_BUKU
 from django.db.models.signals import post_save
 
@@ -37,16 +37,16 @@ class BahanBukuUPM(models.Model):
         super().save(*args, **kwargs)
         
         if self.GENERATE:
-            if self.KATEGORI =='Pembagian Tugas BK Semester':
-                count = PembagianTugasGuruBK.objects.all()
-                self.FILE = buat_file_prototype(self, count)
-            elif self.KATEGORI == 'Pembagian Tugas Pokok dan Tambahan Tenaga Kependidikan':
-                print ('Makan Lur')
-                count = PembagianTugasPokokTambahanTendik.objects.all()
-                self.FILE = buat_file_prototype(self, count)
+            # if self.KATEGORI =='Pembagian Tugas BK Semester':
+            #     count = PembagianTugasGuruBK.objects.all()
+            #     self.FILE = buat_file_prototype(self, count)
+            # elif self.KATEGORI == 'Pembagian Tugas Pokok dan Tambahan Tenaga Kependidikan':
+            #     print ('Makan Lur')
+            #     count = PembagianTugasPokokTambahanTendik.objects.all()
+            #     self.FILE = buat_file_prototype(self, count)
                 
-            count = ''
-            self.FILE = buat_file_prototype(self, count)
+            count = PembagianTugasGuruBK.objects.all()
+            self.FILE = pembagian_bk(self, count)
             
         return super().save(*args, **kwargs)
 
