@@ -60,6 +60,7 @@ class KonservasiAdmin(admin.ModelAdmin):
     search_fields = ('TANGGAL', 'KATEGORI','NAMA_KEGIATAN', 'KETERANGAN', 'FILE')
     list_display = ('TANGGAL', 'KATEGORI','NAMA_KEGIATAN', 'KETERANGAN', 'FILE')
     list_per_page = 10
+    list_filter = ('KATEGORI',)
 
 admin.site.register(Konservasi, KonservasiAdmin)
 
@@ -85,8 +86,8 @@ class PemeliharaanPohonAdmin(admin.ModelAdmin):
 admin.site.register(PemeliharaanPohon, PemeliharaanPohonAdmin)
 
 class KaryaInovatifAdmin(admin.ModelAdmin):
-    search_fields = ('TANGGAL', 'NAMA_INOVATOR', 'NAMA_KARYA_INOVATIF','JENIS', 'FILE')
-    list_display = ('TANGGAL', 'NAMA_INOVATOR', 'NAMA_KARYA_INOVATIF','JENIS', 'FILE')
+    search_fields = ('TANGGAL', 'NAMA_INOVATOR', 'NAMA_KARYA_INOVATIF','JENIS', 'FILE','KETERANGAN')
+    list_display = ('TANGGAL', 'NAMA_INOVATOR', 'NAMA_KARYA_INOVATIF','JENIS', 'FILE','KETERANGAN')
     list_per_page = 10
 
 admin.site.register(KaryaInovatif, KaryaInovatifAdmin) 
