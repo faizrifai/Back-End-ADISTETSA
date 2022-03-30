@@ -19,4 +19,7 @@ urlpatterns = [
     path('adiwiyata/prlh', PenerapanPRLHListView.as_view(), name='prlh'),
     path('adiwiyata/reuse_reduce_recycle', ReuseReduceRecycleListView.as_view(), name='reuse_reduce_recycle'),
     path('adiwiyata/pemeliharaan_sampah', PemeliharaanSampahListView.as_view(), name='pemeliharaan_sampah'),
+    path('adiwiyata/penanaman_pohon', PenanamanPohonListView.as_view(), name='penanaman_pohon'),
+    path('adiwiyata/tabungan_sampah_tahun', FilterTahunListView.as_view(), name='tabungan_sampah_tahun'),
+    path('adiwiyata/tabungan_sampah', TabunganSampahListView.as_view(), name='tabungan_sampah'),
 ]

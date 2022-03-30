@@ -30,10 +30,11 @@ ENUM_BULAN = [
     ('Februari', 'Februari'),
     ('Maret', 'Maret'),
     ('April', 'April'),
+    ('Mei', 'Mei'),
     ('Juni', 'Juni'),
     ('Juli', 'Juli'),
     ('Agustus', 'Agustus'),
-    ('Semester', 'Semester'),
+    ('September', 'September'),
     ('Oktober', 'Oktober'),
     ('November', 'November'),
     ('Desember', 'Desember')
