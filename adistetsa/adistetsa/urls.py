@@ -42,6 +42,7 @@ urlpatterns = [
     path('', include('sarana_prasarana.urls')),
     path('', include('bimbingan_konseling.urls')),
     path('', include('hubungan_masyarakat.urls')),
+    path('', include('adiwiyata.urls')),
     # path('', include('tata_usaha.urls')),
     path('admin/filebrowser/', site.urls),
     path('admin/', admin.site.urls, name='admin'),
