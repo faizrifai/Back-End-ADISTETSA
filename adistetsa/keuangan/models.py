@@ -18,20 +18,21 @@ from .customs_template import buat_kuitansi
 class Pembayaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
-    JENIS_PEMBAYARAN = models.CharField(
-        max_length=255,
-        choices=ENUM_JENIS_PEMBAYARAN,
-        )
-    PEMBAYARAN_BULAN = models.CharField(max_length=255,blank=True)
+    # JENIS_PEMBAYARAN = models.CharField(max_length=255, blank=True)
     TANGGAL_PEMBAYARAN = models.DateField()
-    NOMINAL_PEMBAYARAN = models.PositiveIntegerField()
+    PEMBAYARAN_DPSM_RUTIN = models.CharField(blank=True, default='', max_length=1024)
+    PEMBAYARAN_DPSM_INSINDENTAL = models.CharField(blank=True, default='', max_length=1024)
+    BIMBEL = models.CharField(blank=True, default='', max_length=1024)
+    NOMINAL_SPP = models.CharField(blank=True, default='', max_length=1024)
+    PEMBAYARAN_SPP = models.CharField(max_length=1024,blank=True, default='')
     GENERATE = models.BooleanField(default= False)
     TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     KUITANSI = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     
+    
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # self.KUITANSI = buat_kuitansi(self)
+        self.KUITANSI = buat_kuitansi(self)
         if self.GENERATE :
             self.KUITANSI = buat_kuitansi(self)
             

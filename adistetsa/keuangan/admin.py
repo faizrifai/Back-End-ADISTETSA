@@ -16,12 +16,13 @@ from kesiswaan.filter_admin import DataSiswaFilter
 from .models import *
 
 class PembayaranAdmin( ExportMixin, admin.ModelAdmin):
-    search_fields = ('NAMA_SISWA__NIS__NAMA', 'NAMA_SISWA__NIS__NIS', 'NAMA_SISWA__KELAS__KELAS__KODE_KELAS','NAMA_SISWA__KELAS__OFFERING__NAMA', 'JENIS_PEMBAYARAN',)
-    list_display = ('NAMA_SISWA','nis', 'JENIS_PEMBAYARAN','PEMBAYARAN_BULAN', 'KUITANSI')
+    search_fields = ('NAMA_SISWA__NIS__NAMA', 'NAMA_SISWA__NIS__NIS', 'NAMA_SISWA__KELAS__KELAS__KODE_KELAS','NAMA_SISWA__KELAS__OFFERING__NAMA',)
+    list_display = ('NAMA_SISWA','nis','TANGGAL_PEMBAYARAN','PEMBAYARAN_SPP','PEMBAYARAN_DPSM_RUTIN','PEMBAYARAN_DPSM_INSINDENTAL', 'BIMBEL', 'NOMINAL_SPP', 'KUITANSI')
     list_per_page = 10
     autocomplete_fields = ('NAMA_SISWA',)
-    list_filter = ('JENIS_PEMBAYARAN',)
+    # list_filter = ('JENIS_PEMBAYARAN',)
     form = PembayaranForm
+    exclude = ('KUITANSI',)
     resource_class = PembayaranResource
 
     def nis(self, obj):

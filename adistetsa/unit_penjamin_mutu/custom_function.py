@@ -1,3 +1,5 @@
+from asyncore import write
+from genericpath import exists
 from heapq import merge
 import pandas as pd
 from io import BytesIO
@@ -7,6 +9,7 @@ from kurikulum.models import JadwalMengajar, OfferingKelas, KelasSiswa, Kelas
 from dataprofil.models import DataRiwayatKepangkatanGuru
 from adistetsa.custom_function import gabung_dictionary
 import openpyxl
+from openpyxl import Workbook
 
 import time
 
@@ -310,79 +313,108 @@ def buat_file_prototype(self, count):
         
         
         writer.save()
-    
+
+#Pembagian Tugas BK
+
     elif self.KATEGORI == 'Pembagian Tugas BK Semester':
         pembagian_tugas = count
         kelas_tingkatan = OfferingKelas.objects.all().order_by('KELAS__TINGKATAN',)
         kelas_siswa = KelasSiswa.objects.all().filter(KELAS__KELAS__TAHUN_AJARAN = self.TAHUN_AJARAN)
         
-        
         guru = []
         for data in pembagian_tugas:
             exist = multiple_value_exist({
-                'NAMA/NIP/JABATAN': data.DATA_GURU.NAMA_LENGKAP + ',' + data.DATA_GURU.NIP
+                'NAMA_NIP' : data.DATA_GURU.NAMA_LENGKAP
             }, guru)
             
             if not (exist):
                 guru.append({
-                    'NAMA/NIP/JABATAN': data.DATA_GURU.NAMA_LENGKAP + ',' + data.DATA_GURU.NIP,
-                    'PANGKAT_GOLONGAN': data.DATA_GURU.PANGKAT + ',' + str(cari_pangkat(data.DATA_GURU)),
+                    'NAMA_NIP' : data.DATA_GURU.NAMA_LENGKAP
                 })
         
-                
-        jumlah = {}
-        
-        
         jumlah_keseluruhan = []
-        for g in guru:
-            if not any(d['NAMA/NIP/JABATAN'] == g['NAMA/NIP/JABATAN'] for d in jumlah_keseluruhan):
-                data_baru = g
-                data_baru = gabung_dictionary(data_baru, jumlah)
-            else:
-                data_baru = next(d for d in jumlah_keseluruhan if d['NAMA/NIP/JABATAN'] == g['NAMA/NIP/JABATAN'])
-
-            list_kelas_x =  []
-            list_kelas_xi =  []
-            list_kelas_xii =  []
-            
-            jumlah_kelas_x = []
-            jumlah_kelas_xi = []
-            jumlah_kelas_xii = []
-            for data in pembagian_tugas:
-                for data_kelas in data.DATA_KELAS.all():
-                    if data_kelas.KELAS.TINGKATAN == 'X' :
-                        list_kelas_x.append(data_kelas)
-                        jumlah_kelas_x.append(kelas_siswa.filter(KELAS = data_kelas).count())   
-                    elif data_kelas.KELAS.TINGKATAN == 'XI' :
-                        list_kelas_xi.append(data_kelas)               
-                        jumlah_kelas_xi.append(kelas_siswa.filter(KELAS = data_kelas).count())
-                    elif data_kelas.KELAS.TINGKATAN == 'XII' :
-                        list_kelas_xii.append(data_kelas)               
-                        jumlah_kelas_xii.append(kelas_siswa.filter(KELAS = data_kelas).count())
-                    # jumlah[str(data)]  = kelas_siswa.filter(KELAS = data_kelas,).count()
-
-            data_baru['KELAS_X'] = str(list_kelas_x) 
-            data_baru['JUMLAH_KELAS_X'] = str(jumlah_kelas_x)
-            data_baru['KELAS_XI'] = str(list_kelas_xi)
-            data_baru['JUMLAH_KELAS_XI'] = str(jumlah_kelas_xi)
-            data_baru['KELAS_XII'] = str(list_kelas_xii)
-            data_baru['JUMLAH_KELAS_XII'] = (jumlah_kelas_xii)
-            
-            data_baru['KETERANGAN'] = data.KETERANGAN_TUGAS
-            if not any(d['NAMA/NIP/JABATAN'] == g['NAMA/NIP/JABATAN'] for d in jumlah_keseluruhan):
-                jumlah_keseluruhan.append(data_baru)
-                print('merdeka')
         
+        for g in guru :
+            if not any(d['NAMA_NIP'] == g['NAMA_NIP'] for d in jumlah_keseluruhan):
+                jumlah_keseluruhan.append(g)
+                
         
-        df = pd.DataFrame(jumlah_keseluruhan)
-        df_ = pd.DataFrame(jumlah_keseluruhan)
+        kb = pd.DataFrame(jumlah_keseluruhan)
+        print (kb)
         b = BytesIO()
         writer = pd.ExcelWriter(b, engine='openpyxl')
-        df_.to_excel(writer, sheet_name=self.KATEGORI, index=True, )
-        worksheet = writer.sheets[self.KATEGORI]
-        print('worksheet')
-        print(df_)
+        kb.to_excel(writer, index=False)
+        # worksheet = writer.sheets['BK']
+        # print('worksheet')
+        # print(df)
         writer.save()
+        
+        
+        # guru = []
+        # for data in pembagian_tugas:
+        #     exist = multiple_value_exist({
+        #         'NAMA_NIP_JABATAN': data.DATA_GURU.NAMA_LENGKAP + ',' + data.DATA_GURU.NIP
+        #     }, guru)
+            
+        #     if not (exist):
+        #         guru.append({
+        #             'NAMA_NIP_JABATAN': data.DATA_GURU.NAMA_LENGKAP + ',' + data.DATA_GURU.NIP,
+        #             'PANGKAT_GOLONGAN': data.DATA_GURU.PANGKAT + ',' + str(cari_pangkat(data.DATA_GURU)),
+        #         })
+        
+                
+        # jumlah = {}
+        # jumlah_keseluruhan = []
+        
+        # for g in guru:
+        #     if not any(d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'] for d in jumlah_keseluruhan):
+        #         data_baru = g
+        #         data_baru = gabung_dictionary(data_baru, jumlah)
+        #     else:
+        #         data_baru = next(d for d in jumlah_keseluruhan if d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'])
+
+        #     list_kelas_x =  []
+        #     list_kelas_xi =  []
+        #     list_kelas_xii =  []
+            
+        #     jumlah_kelas_x = []
+        #     jumlah_kelas_xi = []
+        #     jumlah_kelas_xii = []
+        #     for data in pembagian_tugas:
+        #         for data_kelas in data.DATA_KELAS.all():
+        #             if data_kelas.KELAS.TINGKATAN == 'X' :
+        #                 list_kelas_x.append(str(data_kelas))
+        #                 jumlah_kelas_x.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+        #             elif data_kelas.KELAS.TINGKATAN == 'XI' :
+        #                 list_kelas_xi.append(str(data_kelas))               
+        #                 jumlah_kelas_xi.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+        #             elif data_kelas.KELAS.TINGKATAN == 'XII' :
+        #                 list_kelas_xii.append(str(data_kelas))               
+        #                 jumlah_kelas_xii.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+        #             # jumlah[str(data)]  = kelas_siswa.filter(KELAS = data_kelas,).count()
+
+        #     data_baru['KELAS_X'] = ", ".join(list_kelas_x)
+        #     data_baru['JUMLAH_KELAS_X'] = ", ".join(jumlah_kelas_x)
+        #     data_baru['KELAS_XI'] = ", ".join(list_kelas_xi)
+        #     data_baru['JUMLAH_KELAS_XI'] = ", ".join(jumlah_kelas_xi)
+        #     data_baru['KELAS_XII'] = ", ".join(list_kelas_xii)
+        #     data_baru['JUMLAH_KELAS_XII'] = ", ".join(jumlah_kelas_xii)
+            
+        #     data_baru['KETERANGAN'] = data.KETERANGAN_TUGAS
+        #     if not any(d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'] for d in jumlah_keseluruhan):
+        #         jumlah_keseluruhan.append(data_baru)
+        #         print('merdeka')
+        
+        # print (jumlah_keseluruhan)
+        
+        # df = pd.DataFrame(jumlah_keseluruhan)
+        # b = BytesIO()
+        # writer = pd.ExcelWriter(b, engine='openpyxl', )
+        # df.to_excel(writer, sheet_name=self.KATEGORI , merge_cells=True)
+        # worksheet = writer.sheets[self.KATEGORI]
+        # print('worksheet')
+        # print(df)
+        # # writer.save()
 
     elif self.KATEGORI == 'Pembagian Tugas Pokok dan Tambahan Tenaga Kependidikan':
         pembagian_tugas_tendik = count
@@ -437,5 +469,169 @@ def buat_file_prototype(self, count):
     # print('Waktu Eksekusi: ' + str(time.time() - start))
     
     return ContentFile(b.getvalue(), self.KATEGORI + '.xlsx')
+
+def pembagian_bk(self, count):
+    pembagian_tugas = count 
+    kelas_siswa = KelasSiswa.objects.all().filter(KELAS__KELAS__TAHUN_AJARAN = self.TAHUN_AJARAN)
+    # for tets in pembagian_tugas:
+    #     print (tets.DATA_KELAS.all)
+    # bk = []
+    # for data in pembagian_tugas:
+    #     list_kelas = {} 
+    #     for kelas in data.DATA_KELAS.all(): 
+    #         if kelas.KELAS.TINGKATAN == 'X': 
+    #             list_kelas['X'] = kelas
+    #         elif kelas.KELAS.TINGKATAN == 'XI': 
+    #             list_kelas['XI'] = kelas
+    #         elif kelas.KELAS.TINGKATAN == 'XII': 
+    #             list_kelas['XII'] = kelas
+    #     print (list_kelas)
+    
+    guru = []
+    for data in pembagian_tugas:
+        exist = multiple_value_exist({
+            'NAMA_NIP_JABATAN': data.DATA_GURU.NAMA_LENGKAP,
+        }, guru)
+        
+        if not (exist):
+            guru.append({
+                'NAMA_NIP_JABATAN': data.DATA_GURU.NAMA_LENGKAP,
+                'PANGKAT_GOLONGAN': data.DATA_GURU.PANGKAT + ',' + str(cari_pangkat(data.DATA_GURU)),
+            })
+    
+            
+    jumlah = {}
+    jumlah_keseluruhan = []
+    for g in guru:
+        if not any(d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'] for d in jumlah_keseluruhan):
+            data_baru = g
+            data_baru = gabung_dictionary(data_baru, jumlah)
+        else:
+            data_baru = next(d for d in jumlah_keseluruhan if d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'])
+            
+        
+        list_kelas_x =  []
+        list_kelas_xi =  []
+        list_kelas_xii =  []
+        
+        jumlah_kelas_x = []
+        jumlah_kelas_xi = []
+        jumlah_kelas_xii = []
+        # tugas_individual = pembagian_tugas.filter(DAT)
+        for data in pembagian_tugas.filter(DATA_GURU__NAMA_LENGKAP = g['NAMA_NIP_JABATAN']):
+            for data_kelas in data.DATA_KELAS.all():
+                print (data_kelas)
+                if data_kelas.KELAS.TINGKATAN == 'X' :
+                    print (data_kelas)
+                    list_kelas_x.append(str(data_kelas))
+                    jumlah_kelas_x.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+                elif data_kelas.KELAS.TINGKATAN == 'XI' :
+                    list_kelas_xi.append(str(data_kelas))               
+                    jumlah_kelas_xi.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+                elif data_kelas.KELAS.TINGKATAN == 'XII' :
+                    list_kelas_xii.append(str(data_kelas))               
+                    jumlah_kelas_xii.append(str(kelas_siswa.filter(KELAS = data_kelas).count()))
+                # jumlah[str(data)]  = kelas_siswa.filter(KELAS = data_kelas,).count()
+
+        # data_baru['KELAS_X'] = ", ".join(list_kelas_x)
+        data_baru['KELAS_X'] = "~ ".join(list_kelas_x)
+        data_baru['JUMLAH_KELAS_X'] = "~ ".join(jumlah_kelas_x)
+        data_baru['KELAS_XI'] = "~ ".join(list_kelas_xi)
+        data_baru['JUMLAH_KELAS_XI'] = "~ ".join(jumlah_kelas_xi)
+        data_baru['KELAS_XII'] = "~ ".join(list_kelas_xii)
+        data_baru['JUMLAH_KELAS_XII'] = "~ ".join(jumlah_kelas_xii)
+        
+        merdeka = data_baru['KELAS_X'].split('~')
+        print ('test' + str(merdeka[0]))
+        
+        data_cek = []
+        for list in data_baru:
+            data_x = data_baru['KELAS_X'].split('~')
+            data_x = data_baru['KELAS_XI'].split('~')
+            data_x = data_baru['KELAS_XI'].split('~')
+            # for i in range(len())
+            
+            data_cek['NAMA_NIP_JABATAN'] =  list['NAMA_NIP_JABATAN']
+        
+        data_baru['KETERANGAN'] = data.KETERANGAN_TUGAS
+        if not any(d['NAMA_NIP_JABATAN'] == g['NAMA_NIP_JABATAN'] for d in jumlah_keseluruhan):
+            jumlah_keseluruhan.append(data_baru)
+    
+            # print('merdeka')
+    # hasil = []
+    # tets_2 = []
+    # for next_data in jumlah_keseluruhan :
+    #     kelas_x = next_data['KELAS_X'].split(',')
+    #     print (kelas_x[0])
+    #     for i in range(len(kelas_x)) : 
+    #         index = i - 1
+    #         data_kelas = (kelas_x[i])
+    #         tets_2['KELAS_X'] = data_kelas
+            
+    # print (hasil)
+    # print (str(jumlah_kelas_x[0].split(',')))
+    print (jumlah_keseluruhan)
+    dt = pd.DataFrame(jumlah_keseluruhan)
+    # dt = dt.applymap(str)
+    # dt = dt.astype(str)
+    b = BytesIO()
+    writer = pd.ExcelWriter(b, engine='openpyxl')
+    dt.to_excel(writer, sheet_name='PEMBAGIAN_BK', index=True)
+    # dt.to_excel("output.xlsx")  
+    writer.save()
+    worksheet = writer.sheets['PEMBAGIAN_BK']
+    # wb = Workbook(dt)
+    # wb.save('balances.xlsx')
+    wb_obj = openpyxl.load_workbook(self.TEMPLATE.path)
+    sheet_obj = wb_obj.active
+        
+    start_row = self.START_ROW - 2
+    start_col = self.START_COL - 1
+    
+    no_row = start_row - 2
+    no_col = start_col + 2
+    
+    mr = worksheet.max_row + 1
+    mc = worksheet.max_column + 1
+    
+    no = 1
+    
+    for i in range (2, mr ):
+        baris_terbanyak = 0
+        
+        for j in range (1, mc ):
+            # reading cell value from source excel file
+            c = worksheet.cell(row = i, column = j)
+            s = str(c.value).split('~')
+            if len(s) > baris_terbanyak:
+                baris_terbanyak = len(s)
+                print (str(i) + '-' + str(j))
+                
+                
+            # writing the read value to destination excel file
+            cell = sheet_obj.cell(row = i + start_row, column = start_col + j)
+            cell.value = c.value
+            
+            cell = sheet_obj.cell(row = i + start_row, column = start_col + 3)
+            cell.value = s[0]
+            
+            
+            # if c.value != None and j == 1:
+            #     cell = sheet_obj.cell(row = i + no_row + 2, column = 1)
+            #     cell.value = no
+            #     no += 1
+        print (i, j)
+        print(baris_terbanyak)
+    
+    
+    
+    virtual_workbook = BytesIO()
+    wb_obj.save(virtual_workbook)
+    self.FILE_HASIL = ContentFile(virtual_workbook.getvalue(), self.KATEGORI + '.xlsx')
+    
+        
+    return ContentFile(b.getvalue(), 'PEMBAGIAN_BK' + '.xlsx') 
+            
+    
 
 
