@@ -334,6 +334,33 @@ class TabunganSampahListView(APIView):
 
     def get(self, request, format=None):
         data = self.get_queryset()
-        serializer = TabunganSampahListSerializer(data, many=True)
+
+        tahun = self.request.query_params.get('TAHUN')
+        if tahun:
+            filter_tahun = tahun
+        else:
+            now = dt.datetime.now()
+            filter_tahun = now.year
+
+        sampah_kering = TabunganSampah.objects.filter(TANGGAL__year=filter_tahun, KATEGORI='Kering').aggregate(Sum('JUMLAH'))['JUMLAH__sum'],
+        sampah_basah = TabunganSampah.objects.filter(TANGGAL__year=filter_tahun, KATEGORI='Basah').aggregate(Sum('JUMLAH'))['JUMLAH__sum'],
+        total_tabungan = TabunganSampah.objects.filter(TANGGAL__year=filter_tahun).aggregate(Sum('JUMLAH'))['JUMLAH__sum'],
+
+        if not sampah_kering[0]:
+            sampah_kering = (0,)
         
-        return Response(serializer.data)
+        if not sampah_basah[0]:
+            sampah_basah = (0,)
+
+        if not total_tabungan[0]:
+            total_tabungan = (0,)
+
+        serializer = TabunganSampahListSerializer(data, many=True)
+
+        new_data = {}
+        new_data['results'] = list(serializer.data)
+        new_data['SAMPAH_KERING'] = sampah_kering[0]
+        new_data['SAMPAH_BASAH'] =  sampah_basah[0]
+        new_data['TOTAL_TABUNGAN'] =  total_tabungan[0]
+        
+        return Response(new_data)
