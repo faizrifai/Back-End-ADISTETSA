@@ -19,7 +19,7 @@ class PembayaranResource(resources.ModelResource):
     
     class Meta: 
         model = Pembayaran
-        fields = ('JENIS_PEMBAYARAN', 'PEMBAYARAN_BULAN', 'TANGGAL_PEMBAYARAN', 'NOMINAL_PEMBAYARAN')
+        fields = ('JENIS_PEMBAYARAN','TANGGAL_PEMBAYARAN', 'PEMBAYARAN_DPSM_RUTIN','PEMBAYARAN_DPSM_INSINDENTAL', 'BIMBEL', 'NOMINAL_SPP', 'PEMBAYARAN_SPP')
         exclude = ('ID',)
         import_id_fields = ('nama_siswa',)
         
