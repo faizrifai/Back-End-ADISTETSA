@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save, pre_save
+from kurikulum.enums import ENUM_BULAN
 from kurikulum.models import KelasSiswa
 from django.conf import settings
 from .enums import ENUM_JENIS_PEMBAYARAN
@@ -25,6 +26,12 @@ class Pembayaran(models.Model):
     BIMBEL = models.CharField(blank=True, default='', max_length=1024)
     NOMINAL_SPP = models.CharField(blank=True, default='', max_length=1024)
     PEMBAYARAN_SPP = models.CharField(max_length=1024,blank=True, default='')
+    BULAN = models.CharField(
+        max_length=1024,
+        blank=True, 
+        choices=ENUM_BULAN,
+        default='')
+    TAHUN = models.CharField(max_length=1024,blank=True, default='')
     GENERATE = models.BooleanField(default= False)
     TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     KUITANSI = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
