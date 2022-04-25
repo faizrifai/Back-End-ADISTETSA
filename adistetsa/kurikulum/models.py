@@ -2,16 +2,17 @@ from cgitb import text
 from django.db import models
 from django.db.models.signals import post_save, pre_save, m2m_changed
 from django.core.validators import MinValueValidator, MaxValueValidator
+from numpy import var
 from dataprofil.models import DataGuru, DataSiswa
 from django.core.exceptions import ValidationError
 from django.utils.html import format_html
 from django.utils.text import Truncator
 from django.conf import settings
 from .enums import *
-from subadmin import SubAdmin, RootSubAdmin, SubAdminHelper
 from config_models.models import ConfigurationModel
 from adistetsa.custom_function import *
 import calendar, datetime
+from tata_usaha.models import BukuInduk
 
 # Master Model
 class DataSemester(models.Model):
@@ -256,6 +257,25 @@ class KelasSiswa(models.Model):
                 if data.KELAS.KELAS.TINGKATAN == self.KELAS.KELAS.TINGKATAN and data.KELAS.KELAS.TAHUN_AJARAN == self.KELAS.KELAS.TAHUN_AJARAN:
                     raise ValidationError({'KELAS': self.NIS.NAMA + ' sudah terdaftar pada tingkatan dan tahun ajaran yang sama'})
 
+def post_save_buku_induk(sender, instance, created, **kwargs):
+    try:
+        kelas_siswa = KelasSiswa.objects.filter(NIS = instance.NIS)
+        for siswa in kelas_siswa:
+            for i in range (2):
+                if i == 0:
+                    semester = "I"
+                elif i == 1:
+                    semester = "II"
+                Raport.objects.update_or_create(
+                    KELAS_SISWA=siswa, 
+                    SEMESTER=DataSemester.objects.get(KE=semester),
+                    BUKU_INDUK = instance
+                )
+    except Exception as e:
+        print(str(e))
+        
+post_save.connect(post_save_buku_induk, sender=BukuInduk)
+
 class JadwalMengajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
@@ -436,10 +456,25 @@ class JadwalPekanAktif(models.Model):
     class Meta:
         verbose_name_plural = 'Jadwal Pekan Aktif'
 
-class NilaiRaport(models.Model):
+class Raport (models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
+    BUKU_INDUK = models.ForeignKey(BukuInduk, on_delete=models.CASCADE)
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['KELAS_SISWA', 'SEMESTER'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Raport"
+    
+    def __str__(self):
+        return str(self.KELAS_SISWA)
+    
+    
+class NilaiRaport(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    RAPORT = models.ForeignKey(Raport, on_delete=models.CASCADE)
     MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
     KELOMPOK_MATA_PELAJARAN = models.CharField(max_length=255, choices=ENUM_KELOMPOK_MATA_PELAJARAN)
     BEBAN = models.BigIntegerField()
@@ -448,6 +483,12 @@ class NilaiRaport(models.Model):
     DESKRIPSI_PENGETAHUAN = models.CharField(max_length=255)
     DESKRIPSI_KETERAMPILAN = models.CharField(max_length=255)
     
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['MATA_PELAJARAN'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Nilai Raport"
+        
     
 # Configuration Model
 class Configuration(ConfigurationModel):

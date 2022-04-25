@@ -3,15 +3,16 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
 from django.utils.html import format_html
-
+from kesiswaan.admin import NilaiEkskulAdmin
 from import_export.admin import ImportExportModelAdmin
 from config_models.admin import ConfigurationModelAdmin
 
-from .forms import JadwalMengajarForm
+from .forms import *
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
 from adistetsa.subadminexport import BaseSubAdminExport
+from subadmin import SubAdmin, RootSubAdmin
 
 # Register your models here.
 class JurusanAdmin(admin.ModelAdmin):
@@ -302,12 +303,38 @@ class JadwalPekanTidakEfektifAdmin(admin.ModelAdmin):
 
 admin.site.register(JadwalPekanTidakEfektif, JadwalPekanTidakEfektifAdmin)
 
-class NilaiRaportAdmin(admin.ModelAdmin):
-    search_fields = ['KELAS_SISWA']
-    list_display = ('KELAS_SISWA', 'SEMESTER', 'MATA_PELAJARAN','BEBAN','NILAI_PENGETAHUAN','NILAI_KETERAMPILAN','DESKRIPSI_PENGETAHUAN','DESKRIPSI_KETERAMPILAN')
+class NilaiRaportAdmin(SubAdmin):
+    model = NilaiRaport
+    search_fields = ['MATA_PELAJARAN','BEBAN','NILAI_PENGETAHUAN','NILAI_KETERAMPILAN','DESKRIPSI_PENGETAHUAN','DESKRIPSI_KETERAMPILAN']
+    list_display = ('RAPORT','MATA_PELAJARAN','BEBAN','NILAI_PENGETAHUAN','NILAI_KETERAMPILAN','DESKRIPSI_PENGETAHUAN','DESKRIPSI_KETERAMPILAN')
     list_per_page = 10
-    autocomplete_fields = ['KELAS_SISWA']
+    exclude = ['RAPORT']
+    ordering = ['-RAPORT',]
     
-admin.site.register(NilaiRaport, NilaiRaportAdmin)
+    # form = NilaiRaportForm
+   
+# admin.site.register(NilaiRaport, NilaiRaportAdmin)
+
+class RaportAdmin(SubAdmin):
+    model = Raport
+    search_fields = ['KELAS_SISWA']
+    list_display = ('KELAS_SISWA', 'SEMESTER','aksi_nilai_raport','aksi_nilai_ekskul')
+    list_per_page = 10
+    subadmins = [NilaiRaportAdmin, NilaiEkskulAdmin]
+    exclude = ['KELAS_SISWA']
+    ordering = ['KELAS_SISWA','SEMESTER']
+    
+    
+    def aksi_nilai_raport(self, obj):
+        base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
+        
+        return mark_safe(u'<a href="%s%d/raport/%d/nilairaport">%s</a>' % (base_url,obj.BUKU_INDUK.ID, obj.ID, 'Buka Raport'))
+    
+     
+    def aksi_nilai_ekskul(self, obj):
+        base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
+        
+        return mark_safe(u'<a href="%s%d/raport/%d/nilaiekskul">%s</a>' % (base_url,obj.BUKU_INDUK.ID, obj.ID, 'Buka Nilai Ekskul'))
+    
 
 admin.site.register(Configuration, ConfigurationModelAdmin)

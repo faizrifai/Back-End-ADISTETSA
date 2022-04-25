@@ -297,11 +297,12 @@ class AnggotaEkskulRegisterAdmin(admin.ModelAdmin):
 
 admin.site.register(AnggotaEkskul, AnggotaEkskulRegisterAdmin)
 
-class NilaiEkskulAdmin(ImportExportModelAdmin):
+class NilaiEkskulAdmin(SubAdmin,ImportExportModelAdmin):
+    model = NilaiEkskul
     search_fields = ('DATA_ANGGOTA__KELAS_SISWA__NIS__NAMA', 'DATA_ANGGOTA__EKSKUL__NAMA', )
-    list_display = ('DATA_ANGGOTA', 'SEMESTER', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI',)
+    list_display = ('DATA_ANGGOTA', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI','RAPORT')
     list_per_page = 10 
-    autocomplete_fields = ('DATA_ANGGOTA', 'SEMESTER',)
+    exclude = ['DATA_ANGGOTA', 'RAPORT']
     resource_class = NilaiEkskulResource
     
     def status_predikat(self, obj):
@@ -319,5 +320,5 @@ class NilaiEkskulAdmin(ImportExportModelAdmin):
     def ekskul(self, obj):
         return obj.DATA_ANGGOTA.EKSKUL.NAMA
         
-admin.site.register(NilaiEkskul, NilaiEkskulAdmin)
+# admin.site.register(NilaiEkskul, NilaiEkskulAdmin)
     
