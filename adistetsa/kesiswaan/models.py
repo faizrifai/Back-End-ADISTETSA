@@ -3,7 +3,7 @@ from django.db.models.signals import post_save, pre_save
 from django.utils.text import Truncator
 from django.core.exceptions import ValidationError
 from dataprofil.models import DataSiswa, DataPelatih
-from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, OfferingKelas
+from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSiswa, Raport
 from django.utils import timezone
 from .enums import *
 import datetime
@@ -400,9 +400,37 @@ post_save.connect(post_save_kelas_siswa, sender=KelasSiswa)
 class NilaiEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
     DATA_ANGGOTA = models.ForeignKey(AnggotaEkskul, on_delete=models.CASCADE)
-    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
     PREDIKAT = models.CharField(
         max_length= 255,
         choices=ENUM_PREDIKAT_EKSKUL,
     )
     DESKRIPSI = models.TextField(max_length= 1020)
+    RAPORT= models.ForeignKey(Raport, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.DATA_ANGGOTA)
+
+def post_save_raport(sender, instance, created, **kwargs):
+    try:
+        anggota_ekskul = AnggotaEkskul.objects.filter(KELAS_SISWA = instance.KELAS_SISWA, STATUS='Aktif')
+        for siswa in anggota_ekskul:
+            NilaiEkskul.objects.update_or_create(
+                DATA_ANGGOTA=siswa,
+                RAPORT = instance
+            )
+    except Exception as e:
+        print(str(e))
+        
+post_save.connect(post_save_raport, sender=Raport)
+    
+# def pre_save_nilai_ekskul(sender, instance, **kwargs):
+#     try:
+#         daftar = instance.BUKU_INDUK
+#         try:
+#             anggota = AnggotaEkskul.objects.get(daftar.KELAS_SISWA)
+#         print(daftar)
+#         instance.GURU = daftar.GURU
+#     except Exception as e:
+#         print(str(e))
+
+# pre_save.connect(pre_save_nilai_ekskul, sender=NilaiEkskul)

@@ -1,5 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin, ExportMixin
+
+from kurikulum.admin import RaportAdmin
 from .models import *
 from .forms import *
 from .importexportresources import *
@@ -25,21 +27,28 @@ class DataBeasiswaSiswaAdmin(SubAdmin):
 
 class BukuIndukAdmin(RootSubAdmin):
     search_fields = []
-    list_display = ('nama','nis','aksi')
-    readonly_fields = ('DITERIMA_DI_KELAS','KELOMPOK')
+    list_display = ('nama','nis','aksi_beasiswa','aksi_raport')
+    readonly_fields = ('DITERIMA_DI_KELAS','KELOMPOK','ORANG_TUA')
+    autocomplete_fields = ['NIS']
     # inlines = [DataSiswaTabular,]
 
-    subadmins = [DataBeasiswaSiswaAdmin]
+    subadmins = [DataBeasiswaSiswaAdmin, RaportAdmin]
     def nis(self, obj):
         return DataSiswa.objects.get(NIS=obj.NIS.NIS).NIS
     
     def nama(self, obj):
         return DataSiswa.objects.get(NIS=obj.NIS.NIS).NAMA
     
-    def aksi(self, obj):
+    def aksi_beasiswa(self, obj):
         base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
         
         return mark_safe(u'<a href="%s%d/databeasiswasiswa">%s</a>' % (base_url, obj.ID, 'Buka Beasiswa'))
+    
+    def aksi_raport(self, obj):
+        base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
+        
+        return mark_safe(u'<a href="%s%d/raport">%s</a>' % (base_url, obj.ID, 'Buka Raport'))
+    
     
     # <button style="background-color: #04AA6D; border:0px; border-radius:2px; color:white; padding: 5px; font-size: 12px;" >
     

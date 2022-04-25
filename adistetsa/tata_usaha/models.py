@@ -2,13 +2,13 @@ from email.policy import default
 from django.db import models
 from pytz import timezone
 from django.db.models.signals import post_save
-from kurikulum.models import KelasSiswa
 from dataprofil.models import DataOrangTua
 from .enums import ENUM_ANAK_YATIM_PIATU, ENUM_BULAN, ENUM_GOLONGAN_DARAH
 from dataprofil.models import DataSiswa
 from adistetsa.custom_function import *
-import datetime
 # Create your models here.
+from django.apps import apps
+
 
 class BukuInduk(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -68,11 +68,10 @@ class BukuInduk(models.Model):
         verbose_name_plural = "Buku Induk"
         
     def save(self, *args, **kwargs):
-        kelas = KelasSiswa.objects.get(NIS__NIS=self.NIS.NIS)
-        self.DITERIMA_DI_KELAS = kelas.KELAS.KELAS.TINGKATAN + str(kelas.KELAS.KELAS.JURUSAN)
+        kelas = apps.get_model('kurikulum', 'KelasSiswa').objects.get(NIS__NIS=self.NIS.NIS, KELAS__KELAS__TINGKATAN="X")
+        self.DITERIMA_DI_KELAS = kelas.KELAS.KELAS.TINGKATAN +' '+ str(kelas.KELAS.KELAS.JURUSAN)
         self.KELOMPOK = kelas.KELAS.OFFERING.NAMA
         self.ORANG_TUA = DataOrangTua.objects.get(DATA_ANAK__NIS=self.NIS.NIS)
-        print(self.ORANG_TUA)
         super(BukuInduk, self).save(*args, **kwargs)
     
     def get_some_field_value(self):

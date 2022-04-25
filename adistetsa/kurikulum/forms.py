@@ -1,7 +1,7 @@
 from xml.dom import ValidationErr
 from django import forms
-
-from .models import JadwalMengajar
+from tata_usaha.models import BukuInduk
+from .models import JadwalMengajar, KelasSiswa, NilaiRaport
 from django.forms import ValidationError
 
 class JadwalMengajarForm(forms.ModelForm):
@@ -23,3 +23,14 @@ class JadwalMengajarForm(forms.ModelForm):
         #         for waktu in waktu_pelajaran.all():
         #             if data == waktu:
         #                 raise ValidationError({'WAKTU_PELAJARAN': 'Luwe'})
+        
+# class NilaiRaportForm(forms.ModelForm):
+    
+#     class Meta:
+#         model = NilaiRaport
+#         fields = "__all__"
+        
+#     def __init__(self, *args, **kwargs):
+#         super(NilaiRaportForm, self).__init__(*args, **kwargs)
+#         siswa = BukuInduk.objects.get(ID=self.BUKU_INDUK.ID)
+#         self.fields['KELAS_SISWA'].queryset = KelasSiswa.objects.filter(NIS=siswa.NIS)
