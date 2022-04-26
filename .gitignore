@@ -7,6 +7,9 @@ db.sqlite3
 media
 adistetsa_env_linux/
 .vscode/
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
 
 # Backup files # 
 *.bak 
