@@ -1,12 +1,5 @@
-from email.mime import image
 from io import  BytesIO
 from django.core.files.base import ContentFile
-import openpyxl
-import pandas as pd
-import pdfkit
-from win32com import client
-from pdfrw import pdfwriter
-from xlsx2html import xlsx2html
 from fpdf import FPDF
 
 def buat_kuitansi(self): 
