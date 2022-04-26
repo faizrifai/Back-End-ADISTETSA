@@ -20,10 +20,11 @@ class PembayaranAdmin( ExportMixin, admin.ModelAdmin):
     list_display = ('NAMA_SISWA','nis','TANGGAL_PEMBAYARAN','PEMBAYARAN_SPP','PEMBAYARAN_DPSM_RUTIN','PEMBAYARAN_DPSM_INSINDENTAL', 'BIMBEL', 'NOMINAL_SPP', 'KUITANSI')
     list_per_page = 10
     autocomplete_fields = ('NAMA_SISWA',)
-    list_filter = ('TANGGAL_PEMBAYARAN','BULAN', 'TAHUN')
+    # list_filter = ('TANGGAL_PEMBAYARAN','BULAN', 'TAHUN')
     form = PembayaranForm
     exclude = ('KUITANSI',)
     resource_class = PembayaranResource
+    date_hierarchy = 'TANGGAL_PEMBAYARAN'
 
     def nis(self, obj):
         return obj.NAMA_SISWA.NIS.NIS
