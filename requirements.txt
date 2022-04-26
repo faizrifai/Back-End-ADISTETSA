@@ -37,6 +37,7 @@ et-xmlfile==1.1.0
 factory-boy==3.2.1
 Faker==10.0.0
 filelock==3.4.2
+fpdf==1.7.2
 html-json-forms==1.1.1
 idna==3.3
 inflection==0.5.1
