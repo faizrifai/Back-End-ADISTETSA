@@ -157,6 +157,3 @@ class TabunganSampahProxy(TabunganSampah):
         ordering = ["TANGGAL"]
         proxy = True    
         verbose_name_plural ='Jumlah Tabungan Sampah'
-    
-    
-

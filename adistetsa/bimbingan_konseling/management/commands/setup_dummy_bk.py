@@ -8,13 +8,13 @@ from bimbingan_konseling.factories import *
 NUM_DATA = 10
 
 class Command(BaseCommand):
-    help = "Melakukan generate data dummy adiwiyata"
+    help = "Melakukan generate data dummy bimbingan konseling"
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            DataAlumni, PeminatanLintasMinat, Konsultasi,
+            DataAlumni, PeminatanLintasMinat, Konsultasi
         ]
         for m in models:
             m.objects.all().delete()
@@ -46,13 +46,6 @@ class Command(BaseCommand):
                 FILE=file,
             )
 
-        if len(KatalogKonselor.objects.all()) > 0:
-            self.stdout.write("Membuat data baru...")
-            for _ in range(NUM_DATA):
-                DataAlumniFactory()
-                KonsultasiFactory()
-        else:
-            self.stdout.write("Membuat data katalog konselor...")
-            for _ in range(NUM_DATA):
-                KatalogKonselor.objects.all().delete()
-                KatalogKonselorFactory()
+        for _ in range(NUM_DATA):
+            DataAlumniFactory()
+            KonsultasiFactory()

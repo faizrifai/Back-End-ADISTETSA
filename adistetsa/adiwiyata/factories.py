@@ -40,7 +40,8 @@ class JaringanKerjaFactory(DjangoModelFactory):
     TANGGAL = factory.Faker('date')
     NAMA_KEGIATAN = factory.Faker('catch_phrase')
     KETERANGAN = factory.Faker('bs')
-    FILE = factory.django.FileField(filename='jaringankerja.txt', data=b'tes')
+    FILE_MOU = factory.django.FileField(filename='jaringankerja.txt', data=b'tes')
+    FILE_DOKUMENTASI = factory.django.FileField(filename='jaringankerja.txt', data=b'tes')
 
 class PublikasiFactory(DjangoModelFactory):
     class Meta:

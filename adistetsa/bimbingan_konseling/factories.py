@@ -1,14 +1,13 @@
-from telnetlib import STATUS
 from factory.django import DjangoModelFactory
 
 from .models import *
 from .enums import *
 
-import factory
+import factory, random
 
 from django.db.models import Model
 from kurikulum.models import MataPelajaran, OfferingKelas
-from kustom_autentikasi.models import DataGuruUser
+from kustom_autentikasi.models import DataGuruUser, DataKaryawanUser
 
 # random function section
 def random_enum(nama_enum):
@@ -23,14 +22,24 @@ def random_id_from_model(model: Model):
 
     return ids
 
-def random_guru_user():
-    result = DataGuruUser.objects.all()
+def random_staf_bk():
+    data_guru = DataGuruUser.objects.filter(USER__groups__name__in=['Staf BK'])
+    data_karyawan = DataKaryawanUser.objects.filter(USER__groups__name__in=['Staf BK'])
 
-    guru = []
-    for data in result:
-        guru.append(data.USER)
+    result = []
+    for data in data_guru:
+        result.append({
+            'USER': data.USER,
+            'NAMA': data.DATA_GURU.NAMA_LENGKAP
+        })
 
-    return guru
+    for data in data_karyawan:
+        result.append({
+            'USER': data.USER,
+            'NAMA': data.DATA_KARYAWAN.NAMA_LENGKAP
+        })
+
+    return result
 
 def random_siswa_user():
     result = DataSiswaUser.objects.all()
@@ -62,9 +71,15 @@ class DataAlumniFactory(DjangoModelFactory):
 class KatalogKonselorFactory(DjangoModelFactory):
     class Meta:
         model = KatalogKonselor
+        django_get_or_create=(
+            'USER',
+        )
+        exclude = ('data_user',)
 
-    USER = factory.Faker('random_element', elements=random_guru_user())
-    NAMA = factory.Faker('name')
+    data_user = random.choice(random_staf_bk())
+
+    USER = data_user['USER']
+    NAMA = data_user['NAMA']
     KOMPETENSI = factory.Faker('random_element', elements=random_id_from_model(MataPelajaran))
     ALUMNUS = factory.Faker('company')
     WHATSAPP = 'https://wa.me/082394033'

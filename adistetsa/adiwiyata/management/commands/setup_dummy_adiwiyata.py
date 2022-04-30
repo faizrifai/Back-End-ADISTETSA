@@ -4,8 +4,6 @@ from django.core.management.base import BaseCommand
 from adiwiyata.models import *
 from adiwiyata.factories import *
 
-from inspect import isclass
-
 NUM_DATA = 10
 
 class Command(BaseCommand):

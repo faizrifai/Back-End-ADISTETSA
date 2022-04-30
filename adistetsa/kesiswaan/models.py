@@ -381,7 +381,6 @@ def post_save_kelas_siswa(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
     try:
         daftar = KatalogEkskul.objects.get(NAMA = 'PRAMUKA')
-        print(daftar)
         instance.EKSKUL = daftar
         try:
             AnggotaEkskul.objects.update_or_create(
@@ -422,15 +421,3 @@ def post_save_raport(sender, instance, created, **kwargs):
         print(str(e))
         
 post_save.connect(post_save_raport, sender=Raport)
-    
-# def pre_save_nilai_ekskul(sender, instance, **kwargs):
-#     try:
-#         daftar = instance.BUKU_INDUK
-#         try:
-#             anggota = AnggotaEkskul.objects.get(daftar.KELAS_SISWA)
-#         print(daftar)
-#         instance.GURU = daftar.GURU
-#     except Exception as e:
-#         print(str(e))
-
-# pre_save.connect(pre_save_nilai_ekskul, sender=NilaiEkskul)

@@ -1,5 +1,4 @@
 from django.db import transaction
-from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 
 from hubungan_masyarakat.models import *
