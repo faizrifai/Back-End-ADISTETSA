@@ -1,6 +1,4 @@
-from kurikulum.models import KelasSiswa
 
-# def kelass(obj):
 #     kelas = KelasSiswa.objects.get(NIS__NIS=obj)
 #     return kelas
 

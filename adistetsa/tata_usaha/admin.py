@@ -27,8 +27,8 @@ class DataBeasiswaSiswaAdmin(SubAdmin):
 
 class BukuIndukAdmin(RootSubAdmin):
     search_fields = []
-    list_display = ('nama','nis','aksi_beasiswa','aksi_raport')
-    readonly_fields = ('DITERIMA_DI_KELAS','KELOMPOK','ORANG_TUA')
+    list_display = ('nama','nis','aksi_beasiswa','aksi_raport', 'HASIL_EXPORT')
+    readonly_fields = ('DITERIMA_DI_KELAS','KELOMPOK','ORANG_TUA',)
     autocomplete_fields = ['NIS']
     # inlines = [DataSiswaTabular,]
 
