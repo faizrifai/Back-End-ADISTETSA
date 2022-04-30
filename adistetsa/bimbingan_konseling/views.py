@@ -1,13 +1,9 @@
-from re import I
-from urllib import request
-
-from django.shortcuts import get_object_or_404
 from .filters import AngketFilter
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
 
-from rest_framework import generics, status, filters
+from rest_framework import generics, status
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView

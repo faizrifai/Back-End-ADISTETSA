@@ -16,6 +16,7 @@ ENUM_HARI = [
     ('Kamis', 'Kamis'),
     ('Jum`at', 'Jum`at'),
     ('Sabtu', 'Sabtu'),
+    ('Minggu', 'Minggu')
 ]
 
 ENUM_KETERANGAN_ABSEN = [

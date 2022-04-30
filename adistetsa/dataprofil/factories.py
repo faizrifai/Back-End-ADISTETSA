@@ -201,3 +201,9 @@ class DataKaryawanFactory(DjangoModelFactory):
     SPESIALIS_MENANGANI = factory.Faker('words')
     STATUS_AKTIF = factory.Faker('random_element', elements=random_enum(ENUM_STATUS_AKTIF))
     EMAIL = factory.Faker('email')
+
+class DataPelatihFactory(DjangoModelFactory):
+    class Meta:
+        model = DataPelatih
+
+    NAMA = factory.Faker('name')

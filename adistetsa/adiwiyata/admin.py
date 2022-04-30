@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.db.models import Sum
 
 from .forms import ReuseReduceRecycleForm, SanitasiDrainaseForm
 
@@ -155,11 +154,8 @@ class TabunganSampahProxyAdmin(admin.ModelAdmin):
         else:
             tanggal = 'Total Keseluruhan'
         
-        print (qs)
-        
         basah = 0
         kering = 0
-        total = 0
         for data in qs:
             if data.KATEGORI == 'Basah':
                 basah += data.JUMLAH

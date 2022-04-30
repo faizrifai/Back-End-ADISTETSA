@@ -13,6 +13,8 @@ class DataSiswaAuthModelBackend(ModelBackend):
                 return data_siswa.USER
         except DataSiswaUser.DoesNotExist:
             return None
+        except ValueError:
+            return None
 
     def get_user(self, user_id):
         try:

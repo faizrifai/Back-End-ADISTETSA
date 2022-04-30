@@ -278,10 +278,14 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                     TANGGAL_PEMINJAMAN = datetime.date.today(),
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
-                    FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
                 )
                 obj.BUKU.set(buku_m2m)
+                
+                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
+                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+
                 obj.save()
+
                 instance.delete()
                     
         except Exception as e:
@@ -401,9 +405,12 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
                     TANGGAL_PEMINJAMAN = datetime.date.today(),
                     TANGGAL_PENGEMBALIAN = datetime.date.today() + tanggal_pengembalian,
                     JANGKA_PEMINJAMAN = instance.JANGKA_PEMINJAMAN,
-                    FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
                 )
                 obj.BUKU.set(buku_m2m)
+                
+                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
+                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+                
                 obj.save()
                 instance.delete()
                     
