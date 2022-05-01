@@ -8,6 +8,11 @@ from import_export import resources
 from .models import *
 class BookMainResource(resources.ModelResource):
     
+    bahasa = Field(
+        column_name='BAHASA', 
+        attribute='BAHASA',
+        widget=ForeignKeyWidget(TipeBahasa, 'BAHASA')
+    )
     
     kode_media = Field(
         column_name='KODE_MEDIA',
@@ -30,16 +35,17 @@ class BookMainResource(resources.ModelResource):
     lokasi_spesifik = Field(
         column_name='LOKASI_SPESIFIK',
         attribute='LOKASI_SPESIFIK',
-        widget=ForeignKeyWidget(LokasiSpesifik, 'LOKASI_SPESIFIK')
+        widget=ForeignKeyWidget(LokasiSpesifik, 'NAMA')
     )
     
     class Meta:
         model = KatalogBuku
-        fields = ('REGISTER','ISBN','JUDUL','VOLUME','EDISI','BAHASA','kode_media','kode_tipe','NOMER_DEWEY','KODE_AUTHOR','KODE_JUDUL','TAHUN_TERBIT','KOTA_PENERBIT','PENERBIT','DESKRIPSI_FISIK','INDEX','BIBLIOGRAPHY','kode_lokasi','lokasi_spesifik','HARGA','DATA_ENTRY','OPERATOR_CODE')
+        fields = ('REGISTER','ISBN','JUDUL','VOLUME','EDISI','bahasa','kode_media','kode_tipe','NOMER_DEWEY','KODE_AUTHOR','KODE_JUDUL','TAHUN_TERBIT','KOTA_PENERBIT','PENERBIT','DESKRIPSI_FISIK','INDEX','BIBLIOGRAPHY','kode_lokasi','lokasi_spesifik','HARGA','DATA_ENTRY','OPERATOR_CODE')
         import_id_fields = ('REGISTER',)
-        export_order = ['REGISTER','ISBN','JUDUL','VOLUME','EDISI','BAHASA','kode_media','kode_tipe','NOMER_DEWEY','KODE_AUTHOR','KODE_JUDUL','TAHUN_TERBIT','KOTA_PENERBIT','PENERBIT','DESKRIPSI_FISIK','INDEX','BIBLIOGRAPHY','kode_lokasi','lokasi_spesifik','HARGA','DATA_ENTRY','OPERATOR_CODE']
+        export_order = ['REGISTER','ISBN','JUDUL','VOLUME','EDISI','bahasa','kode_media','kode_tipe','NOMER_DEWEY','KODE_AUTHOR','KODE_JUDUL','TAHUN_TERBIT','KOTA_PENERBIT','PENERBIT','DESKRIPSI_FISIK','INDEX','BIBLIOGRAPHY','kode_lokasi','lokasi_spesifik','HARGA','DATA_ENTRY','OPERATOR_CODE']
 
 class DonasiBukuResource(resources.ModelResource):
+    
     
     kode_donasi = Field(
         column_name='KODE_DONASI',
