@@ -44,7 +44,7 @@ class Lokasi(models.Model):
     
 class LokasiSpesifik(models.Model):
     LOKASI_SPESIFIK = models.CharField(primary_key=True, max_length = 255)
-    NAMA = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    NAMA = models.CharField(max_length = 255,)
     
     def __str__(self):
         return self.LOKASI_SPESIFIK + ' ' + self.NAMA
@@ -59,7 +59,7 @@ class KunjunganGuru(models.Model):
     
 class TipeMedia(models.Model):
     KODE_MEDIA = models.CharField(primary_key=True, max_length = 255)
-    NAMA_MEDIA = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    NAMA_MEDIA = models.CharField(max_length = 255,)
     
     def __str__(self):
         return str(self.KODE_MEDIA) + ' - ' + self.NAMA_MEDIA
@@ -119,13 +119,13 @@ class Operator(models.Model):
 
 class Author(models.Model):
     KODE_AUTHOR = models.CharField(primary_key=True, max_length=255)
-    NAMA_AUTHOR = models.CharField(max_length=255, validators=[paksa_huruf_besar])
+    NAMA_AUTHOR = models.CharField(max_length=255,)
     
     def __str__(self):
         return self.KODE_AUTHOR + ' - ' + self.NAMA_AUTHOR
 
 class TahunTerbit(models.Model):
-    TAHUN_TERBIT = models.PositiveBigIntegerField(primary_key=True)
+    TAHUN_TERBIT = models.CharField(primary_key=True, max_length=255)
     
     def __str__(self):
         return str(self.TAHUN_TERBIT)
@@ -141,26 +141,26 @@ class TahunTerbit(models.Model):
 
     
 class KatalogBuku(models.Model):
-    REGISTER = models.CharField(primary_key=True, max_length = 255, validators=[validasi_integer])
-    ISBN = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
-    JUDUL = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
-    VOLUME = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
-    EDISI = models.CharField(max_length = 255, blank=True, validators=[validasi_integer])
+    REGISTER = models.CharField(primary_key=True, max_length = 255, )
+    ISBN = models.CharField(max_length = 255, blank=True, )
+    JUDUL = models.CharField(max_length = 255, )
+    VOLUME = models.CharField(max_length = 255, )
+    EDISI = models.CharField(max_length = 255, )
     BAHASA = models.ForeignKey(TipeBahasa, on_delete=models.CASCADE)
     KODE_MEDIA = models.ForeignKey(TipeMedia, on_delete=models.CASCADE)
     KODE_TIPE = models.ForeignKey(TipeBuku, on_delete=models.CASCADE)
-    NOMER_DEWEY = models.CharField(max_length = 255, validators=[validasi_integer])
+    NOMER_DEWEY = models.CharField(max_length = 255, )
     KODE_AUTHOR = models.ForeignKey(Author, on_delete=models.CASCADE)
     KODE_JUDUL = models.CharField(max_length = 255, blank=True)
     TAHUN_TERBIT = models.ForeignKey(TahunTerbit, on_delete=models.CASCADE)
-    KOTA_PENERBIT = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
-    PENERBIT = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    KOTA_PENERBIT = models.CharField(max_length = 255, )
+    PENERBIT = models.CharField(max_length = 255, )
     DESKRIPSI_FISIK = models.CharField(max_length = 255)
     INDEX = models.CharField(max_length = 255, blank=True)
     BIBLIOGRAPHY = models.CharField(max_length = 255, blank=True)
     KODE_LOKASI = models.ForeignKey(Lokasi, on_delete=models.CASCADE)
     LOKASI_SPESIFIK = models.ForeignKey(LokasiSpesifik, on_delete=models.CASCADE)
-    HARGA = models.CharField(max_length = 255, validators=[validasi_integer])
+    HARGA = models.CharField(max_length = 255, )
     DATA_ENTRY = models.DateField(max_length = 255, default=datetime.date.today)
     OPERATOR_CODE = models.ForeignKey(Operator, on_delete=models.CASCADE)    
     
@@ -463,7 +463,7 @@ def buku_changed_guru(sender, instance, action, pk_set=None, **kwargs):
             obj = KatalogBukuCopy.objects.get(pk=pk)
             print('delete: ' + str(obj))
             obj.STATUS = 'Sudah Dikembalikan'
-            obj.save
+            obj.save()
     
 m2m_changed.connect(buku_changed_guru, sender=PengajuanPeminjamanGuru.BUKU.through)
 
