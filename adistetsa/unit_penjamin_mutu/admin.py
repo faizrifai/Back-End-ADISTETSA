@@ -59,7 +59,7 @@ admin.site.register(RincianTugasPokokTambahanTendik, RincianTugasPokokTambahanTe
 
 class JenisBidangAdmin(admin.ModelAdmin):
     search_fields = ('KODE_BIDANG', 'NAMA_BIDANG')
-    list_display = ('KODE_BIDANG', 'KODE_BIDANG')
+    list_display = ('KODE_BIDANG', 'NAMA_BIDANG')
     list_per_page = 10
 
 admin.site.register(JenisBidang, JenisBidangAdmin)
