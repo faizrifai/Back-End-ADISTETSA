@@ -20,11 +20,15 @@ class Command(BaseCommand):
 
 
         # Buku Induk, Mutasi Masuk, dan Mutasi Keluar
-        for _ in range(60):
+        for _ in range(5):
             BukuIndukFactory()
+            
+        for _ in range(60):
             MutasiKeluarFactory()
             MutasiMasukFactory()
         
-        for _ in range(120):
+        
+            
+        for _ in range(60):
             DataBeasiswaSiswaFactory()
         

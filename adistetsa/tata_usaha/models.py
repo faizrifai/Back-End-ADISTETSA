@@ -70,7 +70,7 @@ class BukuInduk(models.Model):
         verbose_name_plural = "Buku Induk"
         
     def save(self, *args, **kwargs):
-        kelas = apps.get_model('kurikulum', 'KelasSiswa').objects.get(NIS__NIS=self.NIS.NIS, KELAS__KELAS__TINGKATAN="X")
+        kelas = apps.get_model('kurikulum', 'KelasSiswa').objects.filter(NIS__NIS=self.NIS.NIS, KELAS__KELAS__TINGKATAN="X").order_by('ID')[0]
         self.DITERIMA_DI_KELAS = kelas.KELAS.KELAS.TINGKATAN +' '+ str(kelas.KELAS.KELAS.JURUSAN)
         self.KELOMPOK = kelas.KELAS.OFFERING.NAMA
         self.ORANG_TUA = DataOrangTua.objects.get(DATA_ANAK__NIS=self.NIS.NIS)
