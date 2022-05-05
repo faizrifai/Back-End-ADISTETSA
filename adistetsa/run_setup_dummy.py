@@ -20,3 +20,6 @@ call(["python", "manage.py", "setup_dummy_bk"])
 
 print('\nHumas\n')
 call(["python", "manage.py", "setup_dummy_humas"])
+
+print('\nKesiswaan\n')
+call(["python", "manage.py", "setup_dummy_kesiswaan"])

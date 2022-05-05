@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            Kelas, NilaiRaport
+            Kelas, OfferingKelas, KelasSiswa, JadwalMengajar, NilaiRaport
         ]
         for m in models:
             m.objects.all().delete()
