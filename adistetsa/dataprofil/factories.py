@@ -63,6 +63,15 @@ class DataOrangTuaFactory(DjangoModelFactory):
     JENJANG_PENDIDIKAN_WALI = factory.Faker('random_element', elements=random_enum(ENUM_JENJANG_PENDIDIKAN))
     PEKERJAAN_WALI = factory.Faker('job')
     PENGHASILAN_WALI = factory.Faker('random_element', elements=random_enum(ENUM_PENGHASILAN))
+
+    @factory.post_generation
+    def anak(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for data in extracted:
+                self.DATA_ANAK.add(data)
     
 class DataGuruFactory(DjangoModelFactory):
     class Meta:

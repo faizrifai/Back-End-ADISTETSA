@@ -35,8 +35,8 @@ class Command(BaseCommand):
             data_siswa = DataSiswaFactory()
             
         # Membuat data orang tua
-        for _ in range(NUM_ORANG_TUA):
-            data_orang_tua = DataOrangTuaFactory()
+        for data in DataSiswa.objects.all():
+            data_orang_tua = DataOrangTuaFactory(anak = [data])
             
         for _ in range(NUM_GURU):
             data_guru = DataGuruFactory()
