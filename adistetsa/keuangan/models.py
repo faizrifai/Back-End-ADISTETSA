@@ -37,6 +37,9 @@ class Pembayaran(models.Model):
     # TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     KUITANSI = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     
+    class Meta:
+        verbose_name_plural = "Pembayaran"
+    
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -45,6 +48,8 @@ class Pembayaran(models.Model):
             self.KUITANSI = buat_kuitansi(self)
             
         return super().save(*args, **kwargs)
+    
+    
     
 # class KuitansiPembayaranProxy(Pembayaran):
 #     class Meta:

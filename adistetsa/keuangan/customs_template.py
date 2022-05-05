@@ -213,7 +213,7 @@ def buat_kuitansi(self):
                 align= 'L', fill=bool)
    pdf.set_xy(85, 140)
    # pdf.ln(1)
-   pdf.multi_cell(125, 10, txt= self.NOMINAL_SPP, border = 0, 
+   pdf.multi_cell(125, 10, txt= str(self.NOMINAL_SPP), border = 0, 
                 align= 'L', fill=bool)
    pdf.set_xy(10, 150)
    pdf.multi_cell(80, 10, txt= 'PEMBAYARAN BULAN : ', border = 0, 
