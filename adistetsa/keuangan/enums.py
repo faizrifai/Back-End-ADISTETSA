@@ -6,3 +6,8 @@ ENUM_JENIS_PEMBAYARAN = [
 ]
 
 
+ENUM_NOMINAL_PEMBAYARAN =[
+    (0, 0),
+    (75000, 75000),
+    (100000, 100000),
+]
