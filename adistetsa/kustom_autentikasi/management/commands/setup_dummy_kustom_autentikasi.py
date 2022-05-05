@@ -26,6 +26,7 @@ class Command(BaseCommand):
         data_guru = DataGuru.objects.all()
         data_karyawan = DataKaryawan.objects.all()
         data_orang_tua = DataOrangTua.objects.all()
+        data_pelatih = DataPelatih.objects.all()
         
         staf = [
             'Staf Adiwiyata', 'Staf BK', 'Staf PPDB', 'Staf Humas',
@@ -60,7 +61,7 @@ class Command(BaseCommand):
             username = (guru.NAMA_LENGKAP + '_' + str(guru.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
             password = 'merdeka123'
 
-            new_user = User.objects.create_user(username, siswa.EMAIL, password)
+            new_user = User.objects.create_user(username, guru.EMAIL, password)
 
             grup_guru = Group.objects.get(name='Guru')
             grup_guru.user_set.add(new_user)
@@ -79,7 +80,7 @@ class Command(BaseCommand):
             username = (karyawan.NAMA_LENGKAP + '_' + str(karyawan.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
             password = 'merdeka123'
 
-            new_user = User.objects.create_user(username, siswa.EMAIL, password)
+            new_user = User.objects.create_user(username, karyawan.EMAIL, password)
 
             grup_karyawan = Group.objects.get(name='Karyawan')
             grup_karyawan.user_set.add(new_user)
@@ -98,9 +99,23 @@ class Command(BaseCommand):
             username = (orang_tua.NAMA_AYAH + '_' + str(orang_tua.TAHUN_LAHIR_AYAH.year)).lower().replace(' ', '_')
             password = 'merdeka123'
 
-            new_user = User.objects.create_user(username, siswa.EMAIL, password)
+            new_user = User.objects.create_user(username, orang_tua.EMAIL, password)
 
             grup_orang_tua = Group.objects.get(name='Orang Tua')
             grup_orang_tua.user_set.add(new_user)
 
             DataOrangTuaUser.objects.create(USER=new_user, DATA_ORANG_TUA=orang_tua)
+
+        for i in range(len(data_pelatih)):
+            # Data Pelatih User
+            pelatih = data_pelatih[i]
+
+            username = (pelatih.NAMA).lower().replace(' ', '_')
+            password = 'merdeka123'
+
+            new_user = User.objects.create_user(username, pelatih.EMAIL, password)
+
+            grup_pelatih = Group.objects.get(name='Pelatih')
+            grup_pelatih.user_set.add(new_user)
+
+            DataPelatihUser.objects.create(USER=new_user, DATA_PELATIH=data_pelatih)
