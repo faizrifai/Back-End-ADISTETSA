@@ -14,7 +14,7 @@ class Command(BaseCommand):
         models = [
             DataSemester, TahunAjaran, MataPelajaran,
             Jurusan, NamaOfferingKelas, WaktuPelajaran,
-            KatalogEkskul
+            KatalogEkskul, PoinPelanggaran
         ]
         for m in models:
             m.objects.all().delete()
@@ -71,3 +71,20 @@ class Command(BaseCommand):
 
         # Ekskul Pramuka
         KatalogEkskul.objects.create(NAMA='PRAMUKA', KATEGORI='Wajib', DESKRIPSI='Ekskul wajib untuk semua siswa')
+
+        # Poin Pelanggaran
+        poin_pelanggaran = [
+            {'POIN': 10, 'KETERANGAN': 'Menyontek'},
+            {'POIN': 20, 'KETERANGAN': 'Membuang sampah sembarangan'},
+            {'POIN': 30, 'KETERANGAN': 'Tidak menggunakan seragam sekolah'},
+            {'POIN': 40, 'KETERANGAN': 'Bolos'},
+            {'POIN': 50, 'KETERANGAN': 'Membawa HP ke sekolah'},
+            {'POIN': 60, 'KETERANGAN': 'Rambut panjang menutupi telinga untuk laki-laki'},
+            {'POIN': 70, 'KETERANGAN': 'Mencuri'},
+            {'POIN': 80, 'KETERANGAN': 'Mencoret dinding sekolah'},
+            {'POIN': 90, 'KETERANGAN': 'Merokok'},
+            {'POIN': 100, 'KETERANGAN': 'Melakukan perundungan terhadap siswa lain'},
+        ]
+
+        for data in poin_pelanggaran:
+            PoinPelanggaran.objects.create(**data)

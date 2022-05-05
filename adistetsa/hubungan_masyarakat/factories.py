@@ -32,7 +32,7 @@ class BukuTamuFactory(DjangoModelFactory):
     ALAMAT = factory.Faker('address')
     NO_HP = factory.Faker('phone_number')
     TANGGAL = factory.Faker('date')
-    JAM = '07:00'
+    JAM = factory.Faker('time')
     KEPERLUAN = factory.Faker('catch_phrase')
 
 class LogUKSSiswaFactory(DjangoModelFactory):

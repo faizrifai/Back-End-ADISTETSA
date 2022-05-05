@@ -238,7 +238,6 @@ def post_save_jadwal_ekskul(sender, instance, **kwargs):
             SEMESTER = instance.SEMESTER,
             JADWAL_EKSKUL = instance,
         )
-        daftar_jurnal_ekskul.save()
     except Exception as e:
         print(str(e))
 
