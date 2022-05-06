@@ -5,7 +5,7 @@ import pandas as pd
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.db.models import Count
-# from adistetsa.custom_function import gabung_dictionary
+# from utility.custom_function import gabung_dictionary
 # from unit_penjamin_mutu.custom_function import value_in_list_of_dict, multiple_value_exist,get_column, get_columns_from_worksheet,apply_style_to_cell, merge_cell
 import openpyxl
 from openpyxl import Workbook

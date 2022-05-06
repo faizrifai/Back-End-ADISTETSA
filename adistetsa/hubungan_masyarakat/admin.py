@@ -1,4 +1,3 @@
-import imp
 from django.contrib import admin
 from .forms import *
 from import_export.admin import ExportMixin

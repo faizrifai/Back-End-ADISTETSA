@@ -3,7 +3,7 @@ from .filter_serializers import *
 
 from rest_framework import generics
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 # Create your views here. 
 class SemesterListView(generics.ListAPIView):

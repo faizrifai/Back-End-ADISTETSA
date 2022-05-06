@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 from django.db.models import Count
 from kurikulum.models import JadwalMengajar, OfferingKelas, KelasSiswa, Kelas
 from dataprofil.models import DataRiwayatKepangkatanGuru
-from adistetsa.custom_function import gabung_dictionary
+from utility.custom_function import gabung_dictionary
 import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import NamedStyle, Font, Border, Side

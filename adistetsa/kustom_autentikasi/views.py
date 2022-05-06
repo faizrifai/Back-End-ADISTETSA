@@ -9,7 +9,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework import status
 import tablib
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
 from dataprofil.importexportresources import DataGuruResource, DataSiswaResource, DataKaryawanResource, DataOrangTuaResource
 from dataprofil.models import DataSiswa, DataGuru, DataOrangTua, DataKaryawan
 from dataprofil.serializers import DataSiswaSerializer, DataGuruSerializer, DataOrangTuaSerializer, DataKaryawanSerializer

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
 
 
 # Create your views here. 

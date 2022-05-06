@@ -5,7 +5,7 @@ from kurikulum.models import KelasSiswa
 from django.conf import settings
 from .enums import ENUM_JENIS_PEMBAYARAN
 from .customs_template import buat_kuitansi
-from adistetsa.custom_function import validasi_integer
+from utility.custom_function import validasi_integer
 # from .enums import *
 
 

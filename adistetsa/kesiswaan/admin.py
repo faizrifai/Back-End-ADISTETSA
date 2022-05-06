@@ -13,7 +13,7 @@ from kesiswaan.filter_admin import DataSiswaFilter
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
 from .importexportresources import *
-from adistetsa.subadminexport import BaseSubAdminExport
+from utility.subadminexport import BaseSubAdminExport
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)

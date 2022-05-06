@@ -8,7 +8,7 @@ import calendar, datetime
 
 from isort import file
 
-from adistetsa.custom_function import *
+from utility.custom_function import *
 
 from .enums import *
 

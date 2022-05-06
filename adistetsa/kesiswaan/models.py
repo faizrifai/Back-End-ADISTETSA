@@ -7,7 +7,7 @@ from kurikulum.models import PoinPelanggaran, TahunAjaran, DataSemester, KelasSi
 from django.utils import timezone
 from .enums import *
 import datetime
-from adistetsa.custom_function import duplikat_file
+from utility.custom_function import duplikat_file
 
 class PengajuanLaporanPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)

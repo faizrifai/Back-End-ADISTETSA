@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from dataprofil.models import DataOrangTua
 from .enums import ENUM_ANAK_YATIM_PIATU, ENUM_BULAN, ENUM_GOLONGAN_DARAH
 from dataprofil.models import DataSiswa
-from adistetsa.custom_function import *
+from utility.custom_function import *
 from .customs_template import data_buku_induk
 # Create your models here.
 from django.apps import apps

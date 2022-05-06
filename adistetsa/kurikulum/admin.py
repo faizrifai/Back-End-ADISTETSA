@@ -11,7 +11,7 @@ from .forms import *
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
-from adistetsa.subadminexport import BaseSubAdminExport
+from utility.subadminexport import BaseSubAdminExport
 from subadmin import SubAdmin, RootSubAdmin
 
 # Register your models here.

@@ -8,7 +8,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 # Create model
 class LogUKSModel:

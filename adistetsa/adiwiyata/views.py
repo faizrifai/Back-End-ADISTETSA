@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 import datetime as dt
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 # Create your views here.
 class SanitasiDrainaseListView(generics.ListAPIView):

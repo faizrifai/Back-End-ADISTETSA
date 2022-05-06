@@ -8,7 +8,7 @@ from django.utils.text import Truncator
 
 from dataprofil.models import DataGuru, DataSiswa
 from config_models.models import ConfigurationModel
-from adistetsa.custom_function import *
+from utility.custom_function import *
 from tata_usaha.models import BukuInduk
 from .enums import *
 

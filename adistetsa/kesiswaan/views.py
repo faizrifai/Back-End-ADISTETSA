@@ -7,7 +7,7 @@ from rest_framework.parsers import MultiPartParser
 
 from rest_framework import generics, status
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
 from kurikulum.serializers import PoinPelanggaranSerializer
 # Create your views here.
 

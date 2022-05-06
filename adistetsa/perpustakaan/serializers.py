@@ -2,7 +2,7 @@ from django.http import QueryDict
 from .models import *
 from rest_framework import serializers
 
-from adistetsa.permissions import is_in_group
+from utility.permissions import is_in_group
 from kustom_autentikasi.models import DataSiswaUser, DataGuruUser
 
 

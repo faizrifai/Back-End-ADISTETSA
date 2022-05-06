@@ -2,7 +2,7 @@ from collections import ChainMap
 from doctest import BLANKLINE_MARKER
 from django.db import models
 from .enums import *
-from adistetsa.custom_function import *
+from utility.custom_function import *
 from django.utils.translation import gettext as _
 import calendar, datetime
 from django.db.models.signals import post_save

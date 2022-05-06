@@ -9,7 +9,7 @@ from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget, CharWidget, ManyToManyWidget
 from import_export import resources
 
-from adistetsa.custom_function import cek_error_import
+from utility.custom_function import cek_error_import
 
 from .models import *
 

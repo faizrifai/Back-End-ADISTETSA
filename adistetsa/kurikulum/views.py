@@ -9,7 +9,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework import generics, status
 from urllib.parse import urlparse
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 from datetime import datetime
 

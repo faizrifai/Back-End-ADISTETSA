@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 import tablib
 
-from adistetsa.permissions import HasGroupPermissionAny, IsSuperAdmin
+from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 from .importexportresources import *
 from .models import *
