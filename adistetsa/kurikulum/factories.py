@@ -86,3 +86,13 @@ class NilaiRaportFactory(DjangoModelFactory):
     NILAI_KETERAMPILAN = factory.Faker('pyint', min_value=75, max_value=100)
     DESKRIPSI_PENGETAHUAN = factory.Faker('bs')
     DESKRIPSI_KETERAMPILAN = factory.Faker('bs')
+
+class KTSPFactory(DjangoModelFactory):
+    class Meta:
+        model = KTSP
+        django_get_or_create=(
+            'TAHUN_AJARAN',
+        )
+
+    TAHUN_AJARAN = factory.Iterator(TahunAjaran.objects.all())
+    NAMA_FILE = factory.django.ImageField(color='blue')
