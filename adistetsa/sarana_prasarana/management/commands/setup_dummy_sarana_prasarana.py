@@ -4,6 +4,7 @@ from django.core.management.base import BaseCommand
 from kurikulum.models import *
 from kurikulum.factories import *
 from sarana_prasarana.models import *
+from sarana_prasarana.factories import PengajuanPeminjamanBarangFactory, PengajuanPeminjamanRuanganFactory
 
 import random
 
@@ -14,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            Sarana, Ruangan
+            Sarana, Ruangan, PengajuanPeminjamanRuangan, PengajuanPeminjamanBarang
         ]
         for m in models:
             m.objects.all().delete()
@@ -54,3 +55,15 @@ class Command(BaseCommand):
         
         for data_ruangan in ruangan:
             Ruangan.objects.create(**data_ruangan)
+
+        
+        for _ in range(10):
+            PengajuanPeminjamanRuanganFactory()
+
+        barang = Sarana.objects.all()
+
+        for _ in range(20):
+            n = random.randint(2, 4)
+            sampel = random.choices(barang, k=n)
+            
+            PengajuanPeminjamanBarangFactory(alat = sampel)

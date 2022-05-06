@@ -14,7 +14,8 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            PembagianTugasGuruBK, PembagianTugasGuruTIK, PembagianTugasPokokTambahanTendik, RincianTugasPokokTambahanTendik, TugasTambahanKepanitiaanTendik
+            JenisBidang, TugasPokokTendik, PembagianTugasGuruBK, PembagianTugasGuruTIK,
+            PembagianTugasPokokTambahanTendik, RincianTugasPokokTambahanTendik, TugasTambahanKepanitiaanTendik
         ]
         for m in models:
             m.objects.all().delete()
@@ -22,6 +23,10 @@ class Command(BaseCommand):
         self.stdout.write("Membuat data baru...")
         
         data_kelas = OfferingKelas.objects.all()
+
+        for _ in range(100):
+            TugasPokokTendikFactory()
+            JenisBidangFactory()
             
         for _ in range(10):
             n = random.randint(2, 4)

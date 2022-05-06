@@ -35,6 +35,7 @@ drf-yasg==1.20.0
 edx-django-utils==4.5.0
 et-xmlfile==1.1.0
 factory-boy==3.2.1
+factory-djoy==2.2.0
 Faker==10.0.0
 filelock==3.4.2
 fpdf==1.7.2

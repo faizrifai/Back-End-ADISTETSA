@@ -12,6 +12,19 @@ def random_enum(nama_enum):
     pilihan = [x[0] for x in nama_enum]
     return pilihan
 
+class TugasPokokTendikFactory(DjangoModelFactory):
+    class Meta:
+        model = TugasPokokTendik
+
+    JENIS_TUGAS = factory.Faker('sentence')
+
+class JenisBidangFactory(DjangoModelFactory):
+    class Meta:
+        model = JenisBidang
+
+    KODE_BIDANG = factory.Faker('pyint', min_value=1, max_value=999)
+    NAMA_BIDANG = factory.Faker('bs')
+
 class PembagianTugasBKFactory(DjangoModelFactory):
     class Meta:
         model = PembagianTugasGuruBK
