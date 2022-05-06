@@ -14,8 +14,10 @@ def random_enum(nama_enum):
 
 def random_jam():
     jam = random.randint(1, 15)
+    tanggal = random.randint(1, 29)
+    bulan = random.randint(1, 12)
 
-    return datetime.datetime(2022, 1, 1, jam, 0, 0)
+    return datetime.datetime(2022, bulan, tanggal, jam, 0, 0)
 
 
 # factory class section

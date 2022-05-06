@@ -58,3 +58,6 @@ call(["python", "manage.py", "setup_dummy_upm"])
 
 print('\nPerpustakaan\n')
 call(["python", "manage.py", "setup_dummy_perpustakaan"])
+
+print('\nTata Usaha\n')
+call(["python", "manage.py", "setup_dummy_tata_usaha"])
