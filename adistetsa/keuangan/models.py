@@ -42,12 +42,11 @@ class Pembayaran(models.Model):
     
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         # self.KUITANSI = buat_kuitansi(self)
         if self.GENERATE :
             self.KUITANSI = buat_kuitansi(self)
             
-        return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
     
     
     

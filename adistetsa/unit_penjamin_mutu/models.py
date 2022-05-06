@@ -117,6 +117,7 @@ class JenisBidang(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KODE_BIDANG = models.PositiveIntegerField()
     NAMA_BIDANG = models.CharField(max_length=255)
+    
     def __str__(self):
         return self.NAMA_BIDANG
     class Meta:

@@ -99,7 +99,7 @@ class Command(BaseCommand):
             username = (orang_tua.NAMA_AYAH + '_' + str(orang_tua.TAHUN_LAHIR_AYAH.year)).lower().replace(' ', '_')
             password = 'merdeka123'
 
-            new_user = User.objects.create_user(username, orang_tua.EMAIL, password)
+            new_user = User.objects.create_user(username=username, password=password)
 
             grup_orang_tua = Group.objects.get(name='Orang Tua')
             grup_orang_tua.user_set.add(new_user)
@@ -113,9 +113,9 @@ class Command(BaseCommand):
             username = (pelatih.NAMA).lower().replace(' ', '_')
             password = 'merdeka123'
 
-            new_user = User.objects.create_user(username, pelatih.EMAIL, password)
+            new_user = User.objects.create_user(username=username, password=password)
 
             grup_pelatih = Group.objects.get(name='Pelatih')
             grup_pelatih.user_set.add(new_user)
 
-            DataPelatihUser.objects.create(USER=new_user, DATA_PELATIH=data_pelatih)
+            DataPelatihUser.objects.create(USER=new_user, DATA_PELATIH=pelatih)
