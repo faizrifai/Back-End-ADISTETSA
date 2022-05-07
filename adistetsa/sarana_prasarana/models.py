@@ -6,8 +6,6 @@ from django.db.models.signals import post_save, m2m_changed
 from django.forms import ValidationError
 import calendar, datetime
 
-from isort import file
-
 from utility.custom_function import *
 
 from .enums import *

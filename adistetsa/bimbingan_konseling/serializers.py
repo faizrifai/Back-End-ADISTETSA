@@ -15,7 +15,10 @@ class KatalogKonselorListSerializer(serializers.ModelSerializer):
     def get_user(self, obj): 
         if (is_in_group(obj.USER, 'Guru')):
             data_guru = DataGuruUser.objects.get(USER=obj.USER).DATA_GURU
-            return str(data_guru.NAMA_LENGKAP)    
+            return str(data_guru.NAMA_LENGKAP)
+        elif (is_in_group(obj.USER, 'Karyawan')):
+            data_karyawan = DataKaryawanUser.objects.get(USER=obj.USER).DATA_KARYAWAN
+            return str(data_karyawan.NAMA_LENGKAP)   
 
 class KatalogKonselorDetailSerializer(serializers.ModelSerializer):
     NIP = serializers.SerializerMethodField('get_nip')
@@ -25,8 +28,14 @@ class KatalogKonselorDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_nip(self, obj):
-        data_guru = DataGuruUser.objects.get(USER=obj.USER).DATA_GURU
-        return str(data_guru.NIP)
+        if (is_in_group(obj.USER, 'Guru')):
+            data_guru = DataGuruUser.objects.get(USER=obj.USER).DATA_GURU
+
+            return str(data_guru.NIP)
+        elif (is_in_group(obj.USER, 'Karyawan')):
+            data_karyawan = DataKaryawanUser.objects.get(USER=obj.USER).DATA_KARYAWAN
+            
+            return str(data_karyawan.NIP)
 
 class KonselorDetailSerializer(serializers.ModelSerializer):
     NIP = serializers.SerializerMethodField('get_nip')
@@ -36,9 +45,14 @@ class KonselorDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_nip(self, obj):
-        data_guru = DataGuruUser.objects.get(USER=obj.USER).DATA_GURU
+        if (is_in_group(obj.USER, 'Guru')):
+            data_guru = DataGuruUser.objects.get(USER=obj.USER).DATA_GURU
 
-        return str(data_guru.NIP)
+            return str(data_guru.NIP)
+        elif (is_in_group(obj.USER, 'Karyawan')):
+            data_karyawan = DataKaryawanUser.objects.get(USER=obj.USER).DATA_KARYAWAN
+
+            return str(data_karyawan.NIP)
 
     def create(self, validated_data):
         request = self.context.get('request', None)

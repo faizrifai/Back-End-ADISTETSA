@@ -42,7 +42,10 @@ class KatalogKonselorAdmin(ImportExportModelAdmin):
         return str(DataGuruUser.objects.get(USER=obj.USER).DATA_GURU.NIP)
     
     def foto(self, obj):
-        return mark_safe(u'<img src="%s" width="100" height="100"/>' % (obj.FOTO.url))
+        if obj.FOTO:
+            return mark_safe(u'<img src="%s" width="100" height="100"/>' % (obj.FOTO.url))
+        else:
+            return ''
     
     def whatsapp(self, obj):
         return format_html('<a href="'+obj.WHATSAPP+'">Buka WA</a>')

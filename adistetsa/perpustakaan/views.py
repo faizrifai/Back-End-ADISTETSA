@@ -86,7 +86,7 @@ class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
     }
 
     parser_classes = (MultiPartParser,)
-    queryset = PengajuanPeminjamanSiswa.objects.all()
+    queryset = PengajuanPeminjamanSiswa.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanSiswaSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
@@ -94,7 +94,7 @@ class PengajuanPeminjamanSiswaListView(generics.ListCreateAPIView):
         current_user = self.request.user
         if (is_in_group(current_user, 'Siswa')):
             data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            queryset = PengajuanPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
+            queryset = PengajuanPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA).order_by('-TANGGAL_PENGAJUAN')
             return queryset
 
         return super().get_queryset()
@@ -154,7 +154,7 @@ class PengajuanPeminjamanSiswaAdminListView(generics.ListAPIView):
         'GET': ['Staf Perpustakaan'],
     }
 
-    queryset = PengajuanPeminjamanSiswa.objects.all()
+    queryset = PengajuanPeminjamanSiswa.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanSiswaAdminSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'NIS__NIS', 'NIS__NAMA',)
 
@@ -193,7 +193,7 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
     }
 
     parser_classes = (MultiPartParser,)
-    queryset = PengajuanPeminjamanGuru.objects.all()
+    queryset = PengajuanPeminjamanGuru.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanGuruSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP',)
 
@@ -201,7 +201,7 @@ class PengajuanPeminjamanGuruListView(generics.ListCreateAPIView):
         current_user = self.request.user
         if (is_in_group(current_user, 'Guru')):
             data_guru_user = DataGuruUser.objects.get(USER=current_user)
-            queryset = PengajuanPeminjamanGuru.objects.filter(DATA_GURU=data_guru_user.DATA_GURU)
+            queryset = PengajuanPeminjamanGuru.objects.filter(DATA_GURU=data_guru_user.DATA_GURU).order_by('-TANGGAL_PENGAJUAN')
             return queryset
 
         return super().get_queryset()
@@ -263,7 +263,7 @@ class PengajuanPeminjamanGuruAdminListView(generics.ListAPIView):
         'POST': ['Staf Perpustakaan'],
     }
 
-    queryset = PengajuanPeminjamanGuru.objects.all()
+    queryset = PengajuanPeminjamanGuru.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanGuruAdminSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PENGAJUAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP',)
 
@@ -298,7 +298,7 @@ class RiwayatPeminjamanSiswaListView(generics.ListAPIView):
         'GET': ['Siswa'],
     }
 
-    queryset = RiwayatPeminjamanSiswa.objects.all()
+    queryset = RiwayatPeminjamanSiswa.objects.all().order_by('-TANGGAL_PEMINJAMAN')
     serializer_class = RiwayatPeminjamanSiswaSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
@@ -306,7 +306,7 @@ class RiwayatPeminjamanSiswaListView(generics.ListAPIView):
         current_user = self.request.user
         if (is_in_group(current_user, 'Siswa')):
             data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            queryset = RiwayatPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA)
+            queryset = RiwayatPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA).order_by('-TANGGAL_PENGAJUAN')
             return queryset
 
         return super().get_queryset()
@@ -349,7 +349,7 @@ class RiwayatPeminjamanSiswaAdminListView(generics.ListAPIView):
         'GET': ['Staf Perpustakaan'],
     }
 
-    queryset = RiwayatPeminjamanSiswa.objects.all()
+    queryset = RiwayatPeminjamanSiswa.objects.all().order_by('-TANGGAL_PEMINJAMAN')
     serializer_class = RiwayatPeminjamanSiswaAdminSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'NIS__NIS', 'NIS__NAMA', 'JANGKA_PEMINJAMAN')
 
@@ -382,7 +382,7 @@ class RiwayatPeminjamanGuruListView(generics.ListAPIView):
         'GET': ['Guru'],
     }
 
-    queryset = RiwayatPeminjamanGuru.objects.all()
+    queryset = RiwayatPeminjamanGuru.objects.all().order_by('-TANGGAL_PEMINJAMAN')
     serializer_class = RiwayatPeminjamanGuruSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
 
@@ -433,7 +433,7 @@ class RiwayatPeminjamanGuruAdminListView(generics.ListAPIView):
         'GET': ['Staf Perpustakaan'],
     }
 
-    queryset = RiwayatPeminjamanGuru.objects.all()
+    queryset = RiwayatPeminjamanGuru.objects.all().order_by('-TANGGAL_PEMINJAMAN')
     serializer_class = RiwayatPeminjamanGuruAdminSerializer
     search_fields = ('BUKU__DATA_DONASI__REGISTER_DONASI__JUDUL', 'STATUS_PEMINJAMAN', 'DATA_GURU__NIK', 'DATA_GURU__NAMA_LENGKAP', 'JANGKA_PEMINJAMAN')
 

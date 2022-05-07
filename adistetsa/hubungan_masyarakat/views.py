@@ -19,6 +19,18 @@ class LogUKSModel:
         self.TANGGAL = tanggal
         self.DETAIL_URL = detail_url
 
+class BukuTamuModel:
+    def __init__(self, id, nama, instansi_asal, alamat, no_hp, hari, tanggal, jam, keperluan):
+        self.ID = id
+        self.NAMA = nama
+        self.INSTANSI_ASAL = instansi_asal
+        self.ALAMAT = alamat
+        self.NO_HP = no_hp
+        self.HARI = hari
+        self.TANGGAL = tanggal
+        self.JAM = jam
+        self.KEPERLUAN = keperluan
+
 # Create your views here. 
 class LogUKSListView(APIView):
     """
@@ -60,29 +72,41 @@ class LogUKSListView(APIView):
             )
             qs_combined.append(new_data)
         
-        if query_params.get('TANGGAL'):
+        if query_params.get('TANGGAL') and not query_params.get('NAMA'):
             param = query_params.get('TANGGAL')
             if param == '1': # Terbaru
                 qs_combined.sort(key=lambda x: x.TANGGAL, reverse=True)
             elif param == '2': # Terlama
                 qs_combined.sort(key=lambda x: x.TANGGAL)
 
-        if query_params.get('NAMA'):
+        elif query_params.get('NAMA') and not query_params.get('TANGGAL'):
             param = query_params.get('NAMA')
             if param == '1': # Z - A
                 qs_combined.sort(key=lambda x: x.NAMA, reverse=True)
             elif param == '2': # A - Z
                 qs_combined.sort(key=lambda x: x.NAMA)
 
+        elif query_params.get('NAMA') and query_params.get('TANGGAL'):
+            param_nama = query_params.get('NAMA')
+            param_tanggal = query_params.get('TANGGAL')
+            reverse_nama = param_nama == '1'
+            reverse_tanggal = param_tanggal == '1'
+
+            qs_combined.sort(key=lambda x: x.NAMA, reverse=reverse_nama)
+            qs_combined.sort(key=lambda x: x.TANGGAL, reverse=reverse_tanggal)
+
+        else:
+            pass
+
         if query_params.get('JENIS_PTK'):
             qs_combined = filter(lambda x: x.JENIS_PTK == query_params.get('JENIS_PTK'), qs_combined)
 
         if query_params.get('search'):
             # cannot search if filter exists
-            if query_params.get('TANGGAL') or query_params.get('NAMA') or query_params.get('JENIS_PTK'):
-                pass
-            else:
-                qs_combined = filter(lambda x: x.NAMA.lower().startswith(query_params.get('search').lower()), qs_combined)
+            # if query_params.get('TANGGAL') or query_params.get('NAMA') or query_params.get('JENIS_PTK'):
+            #     pass
+            # else:
+            qs_combined = filter(lambda x: x.NAMA.lower().startswith(query_params.get('search').lower()), qs_combined)
 
         serializer = LogUKSListSerializer(qs_combined, many=True)
 
@@ -161,8 +185,6 @@ class BukuTamuListView(generics.ListCreateAPIView):
 
     serializer_class = BukuTamuListSerializer
     queryset = BukuTamu.objects.all()
-    search_fields = ('NAMA', )
-    filterset_class = BukuTamuFilter
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -171,8 +193,61 @@ class BukuTamuListView(generics.ListCreateAPIView):
         elif self.request.method == "POST":
             return BukuTamuPostSerializer
     
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
+    def list(self, request, *args, **kwargs):
+        qs = BukuTamu.objects.all()
+
+        qs_combined = []
+        query_params = self.request.query_params
+
+        for data in qs:
+            new_data = BukuTamuModel(
+                id = data.ID,
+                nama = data.NAMA,
+                instansi_asal = data.INSTANSI_ASAL,
+                alamat = data.ALAMAT,
+                no_hp = data.NO_HP,
+                hari = data.HARI,
+                tanggal = data.TANGGAL,
+                jam = data.JAM,
+                keperluan = data.KEPERLUAN
+            )
+            qs_combined.append(new_data)
+        
+        if query_params.get('TANGGAL') and not query_params.get('NAMA'):
+            param = query_params.get('TANGGAL')
+            if param == '1': # Terbaru
+                qs_combined.sort(key=lambda x: x.TANGGAL, reverse=True)
+            elif param == '2': # Terlama
+                qs_combined.sort(key=lambda x: x.TANGGAL)
+
+        elif query_params.get('NAMA') and not query_params.get('TANGGAL'):
+            param = query_params.get('NAMA')
+            if param == '1': # Z - A
+                qs_combined.sort(key=lambda x: x.NAMA, reverse=True)
+            elif param == '2': # A - Z
+                qs_combined.sort(key=lambda x: x.NAMA)
+
+        elif query_params.get('NAMA') and query_params.get('TANGGAL'):
+            param_nama = query_params.get('NAMA')
+            param_tanggal = query_params.get('TANGGAL')
+            reverse_nama = param_nama == '1'
+            reverse_tanggal = param_tanggal == '1'
+
+            qs_combined.sort(key=lambda x: x.NAMA, reverse=reverse_nama)
+            qs_combined.sort(key=lambda x: x.TANGGAL, reverse=reverse_tanggal)
+
+        else:
+            pass
+
+        if query_params.get('search'):
+            qs_combined = filter(lambda x: x.NAMA.lower().startswith(query_params.get('search').lower()), qs_combined)
+
+        serializer = BukuTamuListSerializer(qs_combined, many=True)
+
+        new_data = {}
+        new_data['results'] = list(serializer.data)
+
+        return Response(new_data)
 
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)

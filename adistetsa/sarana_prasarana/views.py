@@ -1,4 +1,3 @@
-from venv import create
 from kustom_autentikasi.models import *
 from .models import *
 from .serializers import *
@@ -23,9 +22,12 @@ class KatalogSaranaListView(generics.ListAPIView):
     }
 
     def get_queryset(self):
-        queryset = Sarana.objects.filter(STATUS='Sudah Dikembalikan')
-        return queryset
-        
+        current_user = self.request.user
+        queryset = Sarana.objects.all()
+        if (is_in_group(current_user, 'Staf Sarpras')):
+            return queryset
+        else:
+            return queryset.filter(STATUS='Sudah Dikembalikan')
 
     queryset = Sarana.objects.all()
     serializer_class = KatalogSaranaSerializer
@@ -48,13 +50,13 @@ class PengajuanPeminjamanBarangListView(generics.ListCreateAPIView):
     }
 
     parser_classes = (MultiPartParser,)
-    queryset = PengajuanPeminjamanBarang.objects.all()
+    queryset = PengajuanPeminjamanBarang.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanBarangSerializer
     # search_fields = ('STATUS_PENGAJUAN')
 
     def get_queryset(self):
         current_user = self.request.user
-        queryset = PengajuanPeminjamanBarang.objects.filter(USER=current_user)
+        queryset = PengajuanPeminjamanBarang.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
         return queryset
 
     def get_serializer_class(self):
@@ -111,7 +113,7 @@ class PengajuanPeminjamanBarangAdminListView(generics.ListAPIView):
         'GET': ['Staf Sarpras'],
     }
 
-    queryset = PengajuanPeminjamanBarang.objects.all()
+    queryset = PengajuanPeminjamanBarang.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanBarangAdminSerializer
     # search_fields = ('STATUS_PENGAJUAN')
 
@@ -146,13 +148,13 @@ class RiwayatPeminjamanBarangListView(generics.ListAPIView):
         'GET': ['Siswa', 'Guru', 'Karyawan'],
     }
 
-    queryset = RiwayatPeminjamanBarang.objects.all()
+    queryset = RiwayatPeminjamanBarang.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = RiwayatPeminjamanBarangSerializer
 
     def get_queryset(self):
         current_user = self.request.user
         if (not is_in_group(current_user, 'Staf Sarpras')):
-            queryset = RiwayatPeminjamanBarang.objects.filter(USER=current_user)
+            queryset = RiwayatPeminjamanBarang.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
             return queryset
 
         return super().get_queryset()
@@ -241,7 +243,8 @@ class KatalogRuanganListView(generics.ListAPIView):
     }
 
     def get_queryset(self):
-        queryset = Ruangan.objects.filter(STATUS='Sudah Dikembalikan')
+        queryset = Ruangan.objects.all()
+        
         return queryset
         
 
@@ -266,14 +269,14 @@ class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
     }
 
     parser_classes = (MultiPartParser,)
-    queryset = PengajuanPeminjamanRuangan.objects.all()
+    queryset = PengajuanPeminjamanRuangan.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanRuanganSerializer
     # search_fields = ('STATUS_PENGAJUAN')
 
     def get_queryset(self):
         current_user = self.request.user
         if (not is_in_group(current_user, 'Staf Sarpras')):
-            queryset = PengajuanPeminjamanRuangan.objects.filter(USER=current_user)
+            queryset = PengajuanPeminjamanRuangan.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
             return queryset
 
         return super().get_queryset()
@@ -333,7 +336,7 @@ class PengajuanPeminjamanRuanganAdminListView(generics.ListAPIView):
         'GET': ['Staf Sarpras'],
     }
 
-    queryset = PengajuanPeminjamanRuangan.objects.all()
+    queryset = PengajuanPeminjamanRuangan.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = PengajuanPeminjamanRuanganListSerializer
     # search_fields = ('STATUS_PENGAJUAN')
 
@@ -368,12 +371,12 @@ class RiwayatPeminjamanRuanganListView(generics.ListAPIView):
         'GET': ['Siswa', 'Guru', 'Karyawan'],
     }
 
-    queryset = RiwayatPeminjamanRuangan.objects.all()
+    queryset = RiwayatPeminjamanRuangan.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = RiwayatPeminjamanRuanganListSerializer
 
     def get_queryset(self):
         current_user = self.request.user
-        queryset = RiwayatPeminjamanRuangan.objects.filter(USER=current_user)
+        queryset = RiwayatPeminjamanRuangan.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
         return queryset
 
     def list(self, request, *args, **kwargs):
@@ -410,7 +413,7 @@ class RiwayatPeminjamanRuanganAdminListView(generics.ListAPIView):
         'GET': ['Staf Sarpras'],
     }
 
-    queryset = RiwayatPeminjamanRuangan.objects.all()
+    queryset = RiwayatPeminjamanRuangan.objects.all().order_by('-TANGGAL_PENGAJUAN')
     serializer_class = RiwayatPeminjamanRuanganListSerializer
 
     def list(self, request, *args, **kwargs):
