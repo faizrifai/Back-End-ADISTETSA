@@ -18,4 +18,6 @@ urlpatterns = [
     path('bimbingan_konseling/angket_data_diri_siswa', AngketDataDiriSiswaDetailView.as_view(), name='angket_data_diri'),
     path('bimbingan_konseling/pengajuan_konsultasi/<int:id_konselor>', PengajuanKonsultasiView.as_view(), name='pengajuan_konsultasi'),
     path('bimbingan_konseling/pengajuan_konsultasi', PengajuanKonsultasiNonStafListView.as_view(), name='pengajuan_konsultasi'),
+    path('bimbingan_konseling/parameter_jurusan', ParameterJurusanListView.as_view(), name='parameter_jurusan'),
+    path('bimbingan_konseling/parameter_kelas', ParameterKelasListView.as_view(), name='parameter_kelas'),
 ]

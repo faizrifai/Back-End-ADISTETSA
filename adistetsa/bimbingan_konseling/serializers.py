@@ -1,8 +1,9 @@
-from .models import *
-from rest_framework import serializers
-
-from utility.permissions import is_in_group
 from kustom_autentikasi.models import *
+from kurikulum.models import NamaOfferingKelas
+from rest_framework import serializers
+from utility.permissions import is_in_group
+
+from .models import *
 
 class KatalogKonselorListSerializer(serializers.ModelSerializer):
     NAMA = serializers.SerializerMethodField('get_user')
@@ -154,7 +155,7 @@ class KonsultasiDetailSiswaSerializer(serializers.ModelSerializer):
 
     def get_kelas(self, obj):
         data_siswa = DataSiswaUser.objects.get(USER=obj.USER).DATA_SISWA
-        kelas_siswa = KelasSiswa.objects.get(NIS=data_siswa)
+        kelas_siswa = KelasSiswa.objects.filter(NIS=data_siswa).last()
         return str(kelas_siswa.KELAS.KELAS.TINGKATAN) + " " + str(kelas_siswa.KELAS.KELAS.JURUSAN) + " " + str(kelas_siswa.KELAS.OFFERING.NAMA)  
 
     def get_konselor(self, obj):
@@ -221,3 +222,13 @@ class PeminatanLintasMinatListSerializer(serializers.ModelSerializer):
 
     def get_kelas(self, obj):
         return str(obj.KELAS_SISWA.KELAS)
+
+class ParameterJurusanListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jurusan
+        fields = '__all__'
+
+class ParameterKelasListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NamaOfferingKelas
+        fields = '__all__'

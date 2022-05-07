@@ -1,11 +1,11 @@
 import django_filters
-from kurikulum.models import Jurusan, KelasSiswa
+from kurikulum.models import Jurusan, NamaOfferingKelas
 from bimbingan_konseling.models import PeminatanLintasMinat
 
 class AngketFilter(django_filters.FilterSet):
     KELAS = django_filters.ModelChoiceFilter(
-        field_name="KELAS_SISWA",
-        queryset=KelasSiswa.objects.all()
+        field_name="KELAS_SISWA__KELAS__OFFERING",
+        queryset=NamaOfferingKelas.objects.all()
     )
     JURUSAN = django_filters.ModelChoiceFilter(
         field_name="KELAS_SISWA__KELAS__KELAS__JURUSAN",

@@ -3,7 +3,7 @@ from factory.django import DjangoModelFactory
 from .models import *
 from .enums import *
 
-import factory, random
+import factory, random, datetime
 
 from django.db.models import Model
 from kurikulum.models import MataPelajaran, OfferingKelas
@@ -50,6 +50,13 @@ def random_siswa_user():
 
     return siswa
 
+def random_jam():
+    jam = random.randint(1, 15)
+    tanggal = random.randint(1, 29)
+    bulan = random.randint(1, 12)
+
+    return datetime.datetime(2022, bulan, tanggal, jam, 0, 0)
+
 
 # factory class section
 class DataAlumniFactory(DjangoModelFactory):
@@ -76,10 +83,10 @@ class KatalogKonselorFactory(DjangoModelFactory):
         )
         exclude = ('data_user',)
 
-    data_user = random.choice(random_staf_bk())
+    data_user = factory.Faker('random_element', elements=random_staf_bk())
 
-    USER = data_user['USER']
-    NAMA = data_user['NAMA']
+    USER = factory.LazyAttribute(lambda x: x.data_user['USER'])
+    NAMA = factory.LazyAttribute(lambda x: x.data_user['NAMA'])
     KOMPETENSI = factory.Faker('random_element', elements=random_id_from_model(MataPelajaran))
     ALUMNUS = factory.Faker('company')
     WHATSAPP = 'https://wa.me/082394033'
@@ -94,7 +101,7 @@ class KonsultasiFactory(DjangoModelFactory):
     USER = factory.Faker('random_element', elements=random_siswa_user())
     KONSELOR = factory.Faker('random_element', elements=random_id_from_model(KatalogKonselor))
     TANGGAL_KONSULTASI = factory.Faker('date')
-    JAM_AWAL = '05:00'
-    JAM_AKHIR = '08:00'
+    JAM_AWAL = factory.LazyFunction(random_jam)
+    JAM_AKHIR = factory.LazyAttribute(lambda x: x.JAM_AWAL + datetime.timedelta(hours = 3))
     JENIS_MASALAH = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_MASALAH))
     STATUS = 'Diajukan'

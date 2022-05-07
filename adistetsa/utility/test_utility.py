@@ -45,7 +45,7 @@ def get_attribute(instance, name):
 def generateUserSiswa():
     # Generate data siswa
     DataSiswaFactory()
-    data = DataSiswa.objects.get(pk=1)
+    data = DataSiswa.objects.last()
 
     # Set username and password
     username = str(data.NIS)
@@ -63,7 +63,7 @@ def generateUserSiswa():
 def generateUserGuru(extra_roles=None):
     # Generate data guru
     DataGuruFactory()
-    data = DataGuru.objects.get(pk=1)
+    data = DataGuru.objects.last()
 
     # Set username and password
     username = (data.NAMA_LENGKAP + '_' + str(data.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
@@ -86,7 +86,7 @@ def generateUserGuru(extra_roles=None):
 def generateUserKaryawan(extra_roles=None):
     # Generate data karyawan
     DataKaryawanFactory()
-    data = DataKaryawan.objects.get(pk=1)
+    data = DataKaryawan.objects.last()
 
     # Set username and password
     username = (data.NAMA_LENGKAP + '_' + str(data.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
@@ -109,7 +109,7 @@ def generateUserKaryawan(extra_roles=None):
 def generateUserOrangTua():
     # Generate data orang tua
     DataOrangTuaFactory()
-    data = DataOrangTua.objects.get(pk=1)
+    data = DataOrangTua.objects.last()
 
     # Set username and password
     username = (data.NAMA_AYAH + '_' + str(data.TAHUN_LAHIR_AYAH.year)).lower().replace(' ', '_')
@@ -127,7 +127,7 @@ def generateUserOrangTua():
 def generateUserPelatih():
     # Generate data pelatih
     DataPelatihFactory()
-    data = DataPelatih.objects.get(pk=1)
+    data = DataPelatih.objects.last()
 
     # Set username and password
     username = (data.NAMA).lower().replace(' ', '_')
