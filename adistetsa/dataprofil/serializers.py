@@ -1,10 +1,17 @@
 from .models import *
+from kurikulum.models import KelasSiswa
 from rest_framework import serializers
 
 class DataSiswaSerializer(serializers.ModelSerializer):
+    KELAS = serializers.SerializerMethodField('get_kelas')
+
     class Meta:
         model = DataSiswa
         fields = '__all__'
+
+    def get_kelas(self, obj):
+        kelas_siswa = KelasSiswa.objects.filter(NIS=obj).last()
+        return str(kelas_siswa.KELAS.KELAS.TINGKATAN) + " " + str(kelas_siswa.KELAS.KELAS.JURUSAN) + " " + str(kelas_siswa.KELAS.OFFERING.NAMA)  
 
 class DataOrangTuaSerializer(serializers.ModelSerializer):
     class Meta:
