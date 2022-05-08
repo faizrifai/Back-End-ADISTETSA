@@ -12,18 +12,20 @@ def random_enum(nama_enum):
     pilihan = [x[0] for x in nama_enum]
     return pilihan
 
+jenis_bidang_dummy = ['Ka.Subag Tata Usaha','Pengadministrasi Kepegawaian', 'Pengadministrasi Sarana Prasarana','Pengadministrasi Keuangan','Pengadministrasi Perpustakaan','Pengadministrasi Kurikulum','Laboran Komputer dan Mulmed','Laboran Biologi dan Kimia','Petugas Kebersihan','Satpam']
+nama_bidang_dummy = ['Wakil Kepala Sekolah','Staff Waka Kurikulum','Staff Waka Kesiswaan', 'Staff Waka Sarana Prasarana', 'Staff Waka Humas','Bendahara','Tim UPM','Tim Adiwiyata','Wali Kelas','Petugas Piket',' Panitia Ujian','Panitia Assesment','Tim Kesiswaan']
 class TugasPokokTendikFactory(DjangoModelFactory):
     class Meta:
         model = TugasPokokTendik
 
-    JENIS_TUGAS = factory.Faker('sentence')
+    JENIS_TUGAS = factory.Faker('random_element', elements=random_enum(jenis_bidang_dummy))
 
 class JenisBidangFactory(DjangoModelFactory):
     class Meta:
         model = JenisBidang
 
     KODE_BIDANG = factory.Faker('pyint', min_value=1, max_value=999)
-    NAMA_BIDANG = factory.Faker('bs')
+    NAMA_BIDANG = factory.Faker('random_element', elements=random_enum(jenis_bidang_dummy))
 
 class PembagianTugasBKFactory(DjangoModelFactory):
     class Meta:
