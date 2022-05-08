@@ -20,7 +20,6 @@ class PengajuanSiswaFactory(DjangoModelFactory):
     
     NIS = factory.Iterator(DataSiswa.objects.all())
     TANGGAL_PENGAJUAN = factory.Faker('date')
-    STATUS_PENGAJUAN = factory.Faker('random_element', elements=random_enum(ENUM_PENGAJUAN))
     JANGKA_PEMINJAMAN = factory.Faker('random_element', elements=random_enum(ENUM_JANGKA_PEMINJAMAN))
     
     @factory.post_generation
@@ -41,7 +40,6 @@ class PengajuanGuruFactory(DjangoModelFactory):
     
     DATA_GURU = factory.Iterator(DataGuru.objects.all())
     TANGGAL_PENGAJUAN = factory.Faker('date')
-    STATUS_PENGAJUAN = factory.Faker('random_element', elements=random_enum(ENUM_PENGAJUAN))
     JANGKA_PEMINJAMAN = factory.Faker('random_element', elements=random_enum(ENUM_JANGKA_PEMINJAMAN))
     
     @factory.post_generation
