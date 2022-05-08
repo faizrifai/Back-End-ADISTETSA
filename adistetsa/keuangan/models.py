@@ -5,7 +5,7 @@ from kurikulum.models import KelasSiswa
 from django.conf import settings
 from .enums import ENUM_JENIS_PEMBAYARAN
 from .customs_template import buat_kuitansi
-from utility.custom_function import validasi_integer
+from utility.custom_function import validasi_integer, validasi_keuangan
 # from .enums import *
 
 
@@ -22,10 +22,10 @@ class Pembayaran(models.Model):
     NAMA_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     # JENIS_PEMBAYARAN = models.CharField(max_length=255, blank=True)
     TANGGAL_PEMBAYARAN = models.DateField()
-    PEMBAYARAN_DPSM_RUTIN = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer])
-    PEMBAYARAN_DPSM_INSINDENTAL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer])
-    BIMBEL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer])
-    NOMINAL_SPP = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer])
+    PEMBAYARAN_DPSM_RUTIN = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer, validasi_keuangan])
+    PEMBAYARAN_DPSM_INSINDENTAL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer, validasi_keuangan])
+    BIMBEL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer, validasi_keuangan])
+    NOMINAL_SPP = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_integer, validasi_keuangan])
     PEMBAYARAN_SPP = models.CharField(max_length=1024,blank=True, default='')
     # BULAN = models.CharField(
     #     max_length=1024,
