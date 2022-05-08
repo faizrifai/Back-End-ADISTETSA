@@ -175,6 +175,9 @@ class JenisSarana(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KATEGORI = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
 
+    class Meta:
+        verbose_name_plural = "Jenis Sarana"
+
     def __str__(self):
         return self.KATEGORI
     
@@ -187,12 +190,19 @@ class Sarana(models.Model):
         choices=ENUM_STATUS_PEMINJAMAN,
         default='Sudah Dikembalikan',
     )
+    class Meta:
+        verbose_name_plural = "Sarana"
+    
     def __str__(self):
         return str(self.NAMA) + ' - ' + str(self.JENIS.KATEGORI)
 
 class JenisRuangan(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KATEGORI = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
+    
+    class Meta:
+        verbose_name_plural = "Jenis Ruangan"
+    
 
     def __str__(self):
         return self.KATEGORI
@@ -206,6 +216,10 @@ class Ruangan(models.Model):
         choices=ENUM_STATUS_PEMINJAMAN,
         default='Sudah Dikembalikan',
     )
+
+    class Meta:
+        verbose_name_plural = "Ruangan"
+    
     def __str__(self):
         return self.NAMA  
 
@@ -233,6 +247,8 @@ class PengajuanPeminjamanRuangan(models.Model):
     KETERANGAN = models.TextField(max_length=255)
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan')
 
+    class Meta:
+        verbose_name_plural = "Pengajuan Peminjaman Ruangan"
 
     def clean(self):
         if self.TANGGAL_PEMAKAIAN > self.TANGGAL_BERAKHIR :
@@ -340,6 +356,9 @@ class RiwayatPeminjamanRuangan(models.Model):
     KETERANGAN = models.TextField(max_length=255)
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan')
 
+    class Meta:
+        verbose_name_plural = "Riwayat Peminjaman Ruangan"
+
 
 class PengajuanPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -359,6 +378,9 @@ class PengajuanPeminjamanBarang(models.Model):
     )
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanBarang', blank=True)
     
+    class Meta:
+        verbose_name_plural = "Pengajuan Peminjaman Barang"
+
     def clean(self):
         if self.TANGGAL_PENGGUNAAN > self.TANGGAL_PENGEMBALIAN:
             raise ValidationError('Tanggal Tidak Valid')
@@ -383,6 +405,8 @@ class RiwayatPeminjamanBarang(models.Model):
     )
     TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanBarang', blank=True)
 
+    class Meta:
+        verbose_name_plural = "Riwayat Peminjaman Barang"
 
 def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
