@@ -13,6 +13,10 @@ from openpyxl.styles import NamedStyle, Font, Border, Side
 import time
 # from .kelas import Nilai_raport
 
+import os
+
+current_folder = os.path.dirname(os.path.abspath(__file__))
+
 
 
 def data_buku_induk(self, obj1, obj2, obj3, obj4, obj5, obj6, obj7, obj8, obj9, obj10, obj11,obj12, obj13):
@@ -30,7 +34,7 @@ def data_buku_induk(self, obj1, obj2, obj3, obj4, obj5, obj6, obj7, obj8, obj9, 
     nilai_xii_2 = obj12
     ekskul_xii_2 = obj13
     
-    wb_obj = openpyxl.load_workbook('tata_usaha/template_induk.xlsx')
+    wb_obj = openpyxl.load_workbook(os.path.join(current_folder, 'template_induk.xlsx'))
     wb_obj.active = wb_obj['Data_Siswa']
     sheet_obj = wb_obj.active
     nama_cell =  sheet_obj.cell(row = 2, column= 4)
