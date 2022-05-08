@@ -109,6 +109,7 @@ class KatalogBukuCopyAdmin(ImportExportModelAdmin):
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('acc_pengembalian',)
+    autocomplete_fields = ['DATA_DONASI']
 
     change_list_template = 'perpustakaan/katalogbukucopy_changelist.html'
     
@@ -124,6 +125,7 @@ class DonasiBukuAdmin (ImportExportModelAdmin):
     list_display = ('REGISTER_DONASI', 'DUPLIKAT', 'KODE_DONASI','TANGGAL_PENERIMAAN','CATATAN_DONASI')
     list_per_page = 10
     resource_class = DonasiBukuResource
+    autocomplete_fields = ['REGISTER_DONASI','KODE_DONASI']
 
 admin.site.register(DonasiBuku, DonasiBukuAdmin)
 
@@ -141,6 +143,7 @@ class KatalogBukuAdmin(ImportExportModelAdmin):
     list_display = ('REGISTER', isbn, judul, 'VOLUME', 'EDISI', 'BAHASA', 'KODE_MEDIA', 'KODE_TIPE', 'NOMER_DEWEY', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KOTA_PENERBIT', 'PENERBIT', 'DESKRIPSI_FISIK', 'INDEX', 'BIBLIOGRAPHY', 'jumlah_tersedia')
     list_filter = (TahunTerbitFilter, BahasaFilter, AuthorFilter, MediaFilter, TipeBukuFilter,)
     resource_class = BookMainResource
+    autocomplete_fields = ['BAHASA', 'KODE_MEDIA', 'KODE_TIPE', 'KODE_AUTHOR', 'TAHUN_TERBIT', 'KODE_LOKASI', 'LOKASI_SPESIFIK', 'OPERATOR_CODE']
     
     def jumlah_tersedia(self, obj):
         total_tersedia = 0
@@ -221,6 +224,7 @@ class OperatorAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_OPERATOR', 'UNIT']
     list_per_page = 10
     list_display = ('KODE_OPERATOR',)
+    autocomplete_fields = ['KODE_OPERATOR']
     # resource_class = OperatorResource
     
 admin.site.register(Operator, OperatorAdmin)

@@ -76,24 +76,67 @@ class BukuInduk(models.Model):
         self.ORANG_TUA = DataOrangTua.objects.get(DATA_ANAK__NIS=self.NIS.NIS)
         if self.GENERATE :
             obj1 = DataBeasiswaSiswa.objects.all().filter(BUKU_INDUK = self)
-            rptx1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'I')
-            nrptx1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx1)
-            exsx1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx1)
-            rptx2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'II')
-            nrptx2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx2)
-            exsx2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx2)
-            rptxi1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'I')
-            nrptxi1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi1)
-            exsxi1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi1)
-            rptxi2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'II')
-            nrptxi2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi2)
-            exsxi2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi2)
-            rptxii1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'I')
-            nrptxii1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii1)
-            exsxii1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii1)
-            rptxii2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'II')
-            nrptxii2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii2)
-            exsxii2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii2)
+        
+            #Rapor kelas x semester 1
+            try:
+                rptx1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'I')
+                nrptx1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx1)
+                exsx1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx1)
+            except:
+                rptx1 = None
+                nrptx1 = None
+                exsx1 = None
+            
+            #Rapor kelas x semester 2
+            try:
+                rptx2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'II')
+                nrptx2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx2)
+                exsx2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx2)
+            except:
+                rptx2 = None
+                nrptx2 = None
+                exsx2 = None
+            
+            #Rapor kelas xi semester 1
+            try:
+                rptxi1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'I')
+                nrptxi1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi1)
+                exsxi1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi1)
+            except:
+                rptxi1 = None
+                nrptxi1 = None
+                exsxi1 = None
+            
+            #Rapor kelas xi semester 2
+            try:
+                rptxi2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'II')
+                nrptxi2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi2)
+                exsxi2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi2)
+            except:
+                rptxi2 = None
+                nrptxi2 = None
+                exsxi2 = None
+            
+            #Rapor kelas xii semester 1
+            try:
+                rptxii1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'I')
+                nrptxii1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii1)
+                exsxii1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii1)
+            except:
+                rptxii1 = None
+                nrptxii1 = None
+                exsxii1 = None
+            
+            #Rapor kelas xii semester 2
+            try:
+                rptxii2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'II')
+                nrptxii2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii2)
+                exsxii2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii2)
+            except:
+                rptxii2 = None
+                nrptxii2 = None
+                exsxii2 = None
+            
             data_buku_induk(self, obj1, nrptx1, exsx1, nrptx2, exsx2, nrptxi1, exsxi1, nrptxi2, exsxi2, nrptxii1, exsxii1, nrptxii2, exsxii2)
         super(BukuInduk, self).save(*args, **kwargs)
         
