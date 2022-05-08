@@ -1,16 +1,17 @@
 from django.db import models
-from django.db.models.signals import post_save, pre_save
+from django.db.models.signals import post_save, pre_save, m2m_changed
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.core.exceptions import ValidationError
-from django.conf import settings
-from django.utils import timezone
-from django.utils.text import Truncator
-
+from numpy import var
 from dataprofil.models import DataGuru, DataSiswa
+from django.core.exceptions import ValidationError
+from django.utils.html import format_html
+from django.utils.text import Truncator
+from django.conf import settings
+from .enums import *
 from config_models.models import ConfigurationModel
 from utility.custom_function import *
+import datetime
 from tata_usaha.models import BukuInduk
-from .enums import *
 
 # Master Model
 class DataSemester(models.Model):
@@ -296,12 +297,31 @@ class JadwalMengajar(models.Model):
         ordering = ['TAHUN_AJARAN', 'KELAS', 'HARI', 'JUMLAH_WAKTU']
     
     def __str__(self):
-        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA
+        return self.GURU.NAMA_LENGKAP + ' - ' + self.MATA_PELAJARAN.NAMA    
+    
+    # def clean(self):
+    #     if text:
+    #         raise ValidationError(text_error())
     
     def save(self, *args, **kwargs):
         self.TAHUN_AJARAN = self.KELAS.KELAS.TAHUN_AJARAN
         
         super(JadwalMengajar, self).save(*args, **kwargs)
+        
+# def waktu_pelajaran_changed(sender, instance, action, pk_set=None, **kwargs):
+#     if action == 'pre_add':
+#         for pk in pk_set:
+#             waktu = WaktuPelajaran.objects.get(pk=pk)
+#             jadwal = JadwalMengajar.objects.filter(GURU=instance.GURU, HARI=instance.HARI)
+            
+#             for obj in jadwal:
+#                 for data in obj.WAKTU_PELAJARAN.all():
+#                     if waktu == data:
+#                         error({'WAKTU_PELAJARAN': 'Jadwal bentrok'})
+    
+# m2m_changed.connect(waktu_pelajaran_changed, sender=JadwalMengajar.WAKTU_PELAJARAN.through)
+
+
 
 class DaftarJurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -326,7 +346,7 @@ class JurnalBelajar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     GURU = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     PERTEMUAN = models.CharField(max_length=255)
-    TANGGAL_MENGAJAR = models.DateField(default=timezone.now)
+    TANGGAL_MENGAJAR = models.DateField(default=datetime.date.today)
     DESKRIPSI_MATERI = models.TextField()
     FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalBelajar')
     DAFTAR = models.ForeignKey(DaftarJurnalBelajar, on_delete=models.CASCADE)
@@ -383,6 +403,12 @@ def post_save_jadwal_mengajar(sender, instance, **kwargs):
             SEMESTER = instance.SEMESTER,
             JADWAL_MENGAJAR = instance,
         )
+        daftar_jurnal_belajar.save()
+        
+        # rekap_jam_guru = RekapJamGuru.objects.update_or_create(
+        #     DATA_GURU = instance.GURU,
+        #     DATA_MENGAJAR_GURU =+ instance
+        # )
         
     except Exception as e:
         print(str(e))
@@ -462,7 +488,7 @@ class NilaiRaport(models.Model):
         ]
         verbose_name_plural = "Nilai Raport"
         
-
+    
 # Configuration Model
 class Configuration(ConfigurationModel):
     TAHUN_AJARAN_AKTIF = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)

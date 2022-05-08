@@ -281,9 +281,8 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                 )
                 obj.BUKU.set(buku_m2m)
                 
-                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
-                    if instance.FILE_TTD_PENGAJUAN :
-                        duplikat_file(obj, instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang' and instance.FILE_TTD_PENGAJUAN:
+                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name)
 
                 obj.save()
 
@@ -409,9 +408,8 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, created, **kwargs):
                 )
                 obj.BUKU.set(buku_m2m)
                 
-                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
-                    if instance.FILE_TTD_PENGAJUAN :
-                        duplikat_file(obj, instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+                if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang' and instance.FILE_TTD_PENGAJUAN:
+                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name)
                 
                 obj.save()
                 instance.delete()
