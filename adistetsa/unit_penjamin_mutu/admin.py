@@ -9,7 +9,7 @@ from .models import BahanBukuUPM, JenisBidang, PembagianTugasGuruBK, TugasPokokT
 class BahanBukuUPMadmin(admin.ModelAdmin):
     list_display = ('KATEGORI', 'TAHUN_AJARAN', 'FILE',)
     list_per_page = 10 
-    list_filter = ('TAHUN_AJARAN','SEMESTER')
+    list_filter = ('TAHUN_AJARAN','SEMESTER', 'KATEGORI')
 admin.site.register(BahanBukuUPM, BahanBukuUPMadmin)
 
 class PembagianTugasGuruBKAdmin(admin.ModelAdmin):
