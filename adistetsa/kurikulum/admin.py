@@ -46,6 +46,7 @@ class KTSPAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR']
     list_filter = (TahunFilter,)
+    autocomplete_fields = ['TAHUN_AJARAN']
 
 admin.site.register(KTSP, KTSPAdmin)
 
@@ -54,6 +55,7 @@ class KelasAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_KELAS',]
     list_per_page = 10
     exclude = ['KODE_KELAS']
+    autocomplete_fields = ['TAHUN_AJARAN', 'JURUSAN']
     
 admin.site.register(Kelas, KelasAdmin)
 
@@ -84,6 +86,7 @@ class SilabusRPBAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['MATA_PELAJARAN__NAMA', 'KELAS__KODE_KELAS', 'SEMESTER__NAMA']
     list_filter = (TahunFilter, MataPelajaranFilter, KelasFilter, SemesterFilter)
+    autocomplete_fields = ['MATA_PELAJARAN', 'TAHUN_AJARAN', 'KELAS', 'SEMESTER']
 
 admin.site.register(SilabusRPB, SilabusRPBAdmin)
 
@@ -101,6 +104,7 @@ class OfferingKelasAdmin(admin.ModelAdmin):
     list_filter = (KelasFilter, NamaOfferingKelasFilter,)
     list_display = ('KELAS', 'OFFERING',)
     ordering = ('KELAS__TINGKATAN', '-KELAS__JURUSAN__NAMA', 'OFFERING')
+    autocomplete_fields = ['KELAS', 'OFFERING']
 
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
@@ -111,6 +115,7 @@ class AbsensiSiswaAdmin(BaseSubAdminExport):
     list_per_page = 10
     readonly_fields = ('NIS', 'JURNAL_BELAJAR')
     resource_class = AbsensiSiswaResource
+    autocomplete_fields = ['NIS', 'JURNAL_BELAJAR']
     
     def mata_pelajaran(self, obj):
         return obj.JURNAL_BELAJAR.DAFTAR.MATA_PELAJARAN
@@ -128,7 +133,7 @@ class JurnalBelajarAdmin(BaseSubAdminExport):
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MENGAJAR', 'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    autocomplete_fields = ['DAFTAR']
+    autocomplete_fields = ['GURU','DAFTAR']
     exclude = ('GURU',)
 
     resource_class = JurnalBelajarResource
@@ -194,6 +199,7 @@ class TataTertibAdmin(ImportExportModelAdmin):
     list_display = (deskripsi_tata_tertib, 'KATEGORI',)
     list_per_page = 10
     list_filter = [KategoriTataTertibFilter]
+    autocomplete_fields = ['KATEGORI']
 
     resource_class = TataTertibResource
 
@@ -218,6 +224,7 @@ class JadwalMengajarAdmin(ImportExportModelAdmin):
     list_display = ('GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'HARI', 'jam_pelajaran','jumlah_waktu' )
     list_filter = [TahunFilter ,SemesterFilter ,'HARI', KelasFilter, MataPelajaranFilter,WaktuPelajaranFIlter, GuruFilter]
     form = JadwalMengajarForm
+    autocomplete_fields = ['GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN']
 
     resource_class = JadwalMengajarResource
     
@@ -241,6 +248,7 @@ class DaftarJurnalBelajarAdmin(RootSubAdmin):
     list_per_page = 10
     list_display = ('GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
+    autocomplete_fields = ['GURU', 'MATA_PELAJARAN', 'KELAS', 'SEMESTER', 'JADWAL_MENGAJAR']
 
     subadmins = [JurnalBelajarAdmin]
 
@@ -255,6 +263,7 @@ class JadwalPekanAktifAdmin(admin.ModelAdmin):
     filter_horizontal = ['MINGGU_TIDAK_EFEKTIF', 'MINGGU_EFEKTIF',] 
     list_display = ('aksi', 'bulan_efektif', 'jumlah_minggu', 'jumlah_minggu_efektif', 'jumlah_minggu_tidak_efektif','uraian_kegiatan',  'MATA_PELAJARAN', 'KELAS', 'SEMESTER')
     list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter]
+    autocomplete_fields = ['MATA_PELAJARAN', 'KELAS', 'SEMESTER']
 
     def uraian_kegiatan(self, obj):
         daftar = ""
@@ -310,6 +319,7 @@ class NilaiRaportAdmin(SubAdmin):
     list_per_page = 10
     exclude = ['RAPORT']
     ordering = ['-RAPORT',]
+    autocomplete_fields = ['RAPORT', 'MATA_PELAJARAN']
     
     # form = NilaiRaportForm
    
@@ -323,6 +333,7 @@ class RaportAdmin(SubAdmin):
     subadmins = [NilaiRaportAdmin, NilaiEkskulAdmin]
     exclude = ['KELAS_SISWA']
     ordering = ['KELAS_SISWA','SEMESTER']
+    autocomplete_fields = ['KELAS_SISWA', 'SEMESTER', 'BUKU_INDUK']
     
     
     def aksi_nilai_raport(self, obj):

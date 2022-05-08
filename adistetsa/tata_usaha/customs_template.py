@@ -196,528 +196,536 @@ def data_buku_induk(self, obj1, obj2, obj3, obj4, obj5, obj6, obj7, obj8, obj9, 
             #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
             #     cell.value = no
             #     no += 1
-    
-    n_x_1 = []
-    for data in nilai_x_1:
-        print (data.MATA_PELAJARAN)
-        n_x_1.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    dc = pd.DataFrame(n_x_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dc.to_excel(writer, sheet_name='RAPORT_X_I', index=False, )
-    worksheet3 = writer.sheets['RAPORT_X_I']
-    
-    wb_obj.active = wb_obj['RAPORT_X_I']
-    sheet3_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet3.max_row + 1
-    mc = worksheet3.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet3.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet3_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_x_1 = []
-    for data in ekskul_x_1:
-        e_x_1.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    dd = pd.DataFrame(e_x_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dd.to_excel(writer, sheet_name='EKSKUL_X_I', index=False, )
-    worksheet4 = writer.sheets['EKSKUL_X_I']
-    
-    wb_obj.active = wb_obj['EKSKUL_X_I']
-    sheet4_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet4.max_row + 1
-    mc = worksheet4.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet4.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet4_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
+    if nilai_x_1 != None :
+        n_x_1 = []
+        for data in nilai_x_1:
+            print (data.MATA_PELAJARAN)
+            n_x_1.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        dc = pd.DataFrame(n_x_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dc.to_excel(writer, sheet_name='RAPORT_X_I', index=False, )
+        worksheet3 = writer.sheets['RAPORT_X_I']
         
-    n_x_2 = []
-    for data in nilai_x_2:
-        print (data.MATA_PELAJARAN)
-        n_x_2.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    de = pd.DataFrame(n_x_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    de.to_excel(writer, sheet_name='RAPORT_X_II', index=False, )
-    worksheet5 = writer.sheets['RAPORT_X_II']
-    
-    wb_obj.active = wb_obj['RAPORT_X_II']
-    sheet5_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet5.max_row + 1
-    mc = worksheet5.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet5.cell(row = i, column = j)
+        wb_obj.active = wb_obj['RAPORT_X_I']
+        sheet3_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet3.max_row + 1
+        mc = worksheet3.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet3.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet5_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_x_2 = []
-    for data in ekskul_x_2:
-        e_x_2.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    df = pd.DataFrame(e_x_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    df.to_excel(writer, sheet_name='EKSKUL_X_II', index=False, )
-    worksheet6 = writer.sheets['EKSKUL_X_II']
-    
-    wb_obj.active = wb_obj['EKSKUL_X_II']
-    sheet6_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet6.max_row + 1
-    mc = worksheet6.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet6.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet3_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_x_1 = []
+        for data in ekskul_x_1:
+            e_x_1.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        dd = pd.DataFrame(e_x_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dd.to_excel(writer, sheet_name='EKSKUL_X_I', index=False, )
+        worksheet4 = writer.sheets['EKSKUL_X_I']
+        
+        wb_obj.active = wb_obj['EKSKUL_X_I']
+        sheet4_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet4.max_row + 1
+        mc = worksheet4.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet4.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet6_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-            
-    n_xi_1 = []
-    for data in nilai_xi_1:
-        print (data.MATA_PELAJARAN)
-        n_xi_1.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    dg = pd.DataFrame(n_xi_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dg.to_excel(writer, sheet_name='RAPORT_XI_I', index=False, )
-    worksheet7 = writer.sheets['RAPORT_XI_I']
-    
-    wb_obj.active = wb_obj['RAPORT_XI_I']
-    sheet7_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet7.max_row + 1
-    mc = worksheet7.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet7.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet4_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+    if nilai_x_2 != None:
+        n_x_2 = []
+        for data in nilai_x_2:
+            print (data.MATA_PELAJARAN)
+            n_x_2.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        de = pd.DataFrame(n_x_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        de.to_excel(writer, sheet_name='RAPORT_X_II', index=False, )
+        worksheet5 = writer.sheets['RAPORT_X_II']
+        
+        wb_obj.active = wb_obj['RAPORT_X_II']
+        sheet5_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet5.max_row + 1
+        mc = worksheet5.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet5.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet7_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_xi_1 = []
-    for data in ekskul_xi_1:
-        e_xi_1.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    dh = pd.DataFrame(e_xi_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dh.to_excel(writer, sheet_name='EKSKUL_XI_I', index=False, )
-    worksheet8 = writer.sheets['EKSKUL_XI_I']
-    
-    wb_obj.active = wb_obj['EKSKUL_XI_I']
-    sheet8_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet8.max_row + 1
-    mc = worksheet8.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet8.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet5_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_x_2 = []
+        for data in ekskul_x_2:
+            e_x_2.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        df = pd.DataFrame(e_x_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        df.to_excel(writer, sheet_name='EKSKUL_X_II', index=False, )
+        worksheet6 = writer.sheets['EKSKUL_X_II']
+        
+        wb_obj.active = wb_obj['EKSKUL_X_II']
+        sheet6_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet6.max_row + 1
+        mc = worksheet6.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet6.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet8_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
+                # writing the read value to destination excel file
+                cell = sheet6_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
     
-    n_xi_2 = []
-    for data in nilai_xi_2:
-        print (data.MATA_PELAJARAN)
-        n_xi_2.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    di = pd.DataFrame(n_xi_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    di.to_excel(writer, sheet_name='RAPORT_XI_II', index=False, )
-    worksheet9 = writer.sheets['RAPORT_XI_II']
-    
-    wb_obj.active = wb_obj['RAPORT_XI_II']
-    sheet9_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet9.max_row + 1
-    mc = worksheet9.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet9.cell(row = i, column = j)
+    if nilai_xi_1 != None :
+        n_xi_1 = []
+        for data in nilai_xi_1:
+            print (data.MATA_PELAJARAN)
+            n_xi_1.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        dg = pd.DataFrame(n_xi_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dg.to_excel(writer, sheet_name='RAPORT_XI_I', index=False, )
+        worksheet7 = writer.sheets['RAPORT_XI_I']
+        
+        wb_obj.active = wb_obj['RAPORT_XI_I']
+        sheet7_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet7.max_row + 1
+        mc = worksheet7.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet7.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet9_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_xi_2 = []
-    for data in ekskul_xi_2:
-        e_xi_2.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    dj = pd.DataFrame(e_xi_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dj.to_excel(writer, sheet_name='EKSKUL_XI_II', index=False, )
-    worksheet10 = writer.sheets['EKSKUL_XI_II']
-    
-    wb_obj.active = wb_obj['EKSKUL_XI_II']
-    sheet10_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet10.max_row + 1
-    mc = worksheet10.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet10.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet7_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_xi_1 = []
+        for data in ekskul_xi_1:
+            e_xi_1.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        dh = pd.DataFrame(e_xi_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dh.to_excel(writer, sheet_name='EKSKUL_XI_I', index=False, )
+        worksheet8 = writer.sheets['EKSKUL_XI_I']
+        
+        wb_obj.active = wb_obj['EKSKUL_XI_I']
+        sheet8_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet8.max_row + 1
+        mc = worksheet8.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet8.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet10_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
+                # writing the read value to destination excel file
+                cell = sheet8_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
     
-    n_xii_1 = []
-    for data in nilai_xii_1:
-        print (data.MATA_PELAJARAN)
-        n_xii_1.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    dk = pd.DataFrame(n_xii_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dk.to_excel(writer, sheet_name='RAPORT_XII_I', index=False, )
-    worksheet11 = writer.sheets['RAPORT_XII_I']
+    if nilai_xi_2 != None:
     
-    wb_obj.active = wb_obj['RAPORT_XII_I']
-    sheet11_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet11.max_row + 1
-    mc = worksheet11.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet11.cell(row = i, column = j)
+        n_xi_2 = []
+        for data in nilai_xi_2:
+            print (data.MATA_PELAJARAN)
+            n_xi_2.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        di = pd.DataFrame(n_xi_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        di.to_excel(writer, sheet_name='RAPORT_XI_II', index=False, )
+        worksheet9 = writer.sheets['RAPORT_XI_II']
+        
+        wb_obj.active = wb_obj['RAPORT_XI_II']
+        sheet9_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet9.max_row + 1
+        mc = worksheet9.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet9.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet11_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_xii_1 = []
-    for data in ekskul_xii_1:
-        e_xii_1.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    dl = pd.DataFrame(e_xii_1)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dl.to_excel(writer, sheet_name='EKSKUL_XII_I', index=False, )
-    worksheet12 = writer.sheets['EKSKUL_XII_I']
-    
-    wb_obj.active = wb_obj['EKSKUL_XII_I']
-    sheet12_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet12.max_row + 1
-    mc = worksheet12.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet12.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet9_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_xi_2 = []
+        for data in ekskul_xi_2:
+            e_xi_2.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        dj = pd.DataFrame(e_xi_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dj.to_excel(writer, sheet_name='EKSKUL_XI_II', index=False, )
+        worksheet10 = writer.sheets['EKSKUL_XI_II']
+        
+        wb_obj.active = wb_obj['EKSKUL_XI_II']
+        sheet10_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet10.max_row + 1
+        mc = worksheet10.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet10.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet12_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
+                # writing the read value to destination excel file
+                cell = sheet10_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
     
-    n_xii_2 = []
-    for data in nilai_xii_2:
-        print (data.MATA_PELAJARAN)
-        n_xii_2.append({
-            'MATA_PELAJARAN' : data.MATA_PELAJARAN,
-            'BEBAN' : data.BEBAN,
-            'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
-            'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
-            'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
-            'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
-        }) 
-    dm = pd.DataFrame(n_xii_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dm.to_excel(writer, sheet_name='RAPORT_XII_II', index=False, )
-    worksheet13 = writer.sheets['RAPORT_XII_II']
-    
-    wb_obj.active = wb_obj['RAPORT_XII_II']
-    sheet13_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet13.max_row + 1
-    mc = worksheet13.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet13.cell(row = i, column = j)
+    if nilai_xii_1 != None :
+        n_xii_1 = []
+        for data in nilai_xii_1:
+            print (data.MATA_PELAJARAN)
+            n_xii_1.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        dk = pd.DataFrame(n_xii_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dk.to_excel(writer, sheet_name='RAPORT_XII_I', index=False, )
+        worksheet11 = writer.sheets['RAPORT_XII_I']
+        
+        wb_obj.active = wb_obj['RAPORT_XII_I']
+        sheet11_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet11.max_row + 1
+        mc = worksheet11.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet11.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet13_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
-    
-    e_xii_2 = []
-    for data in ekskul_xii_2:
-        e_xii_2.append({
-            'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
-            'PREDIKAT' : data.PREDIKAT, 
-            'DESKRIPSI' : data.DESKRIPSI
-        }) 
-    
-    dn = pd.DataFrame(e_xii_2)
-    b = BytesIO()
-    writer = pd.ExcelWriter(b, engine='openpyxl')
-    dn.to_excel(writer, sheet_name='EKSKUL_XII_II', index=False, )
-    worksheet14 = writer.sheets['EKSKUL_XII_II']
-    
-    wb_obj.active = wb_obj['EKSKUL_XII_II']
-    sheet14_obj = wb_obj.active
-    
-    start_row = 0
-    start_col = 0
-    
-    kelas_row = start_row - 1
-    kelas_col = start_col + 2
-    
-    mr = worksheet14.max_row + 1
-    mc = worksheet14.max_column + 1
-    
-    no = 1
-    
-    for i in range (2, mr ):
-        for j in range (1, mc ):
-            # reading cell value from source excel file
-            c = worksheet14.cell(row = i, column = j)
+                # writing the read value to destination excel file
+                cell = sheet11_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_xii_1 = []
+        for data in ekskul_xii_1:
+            e_xii_1.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        dl = pd.DataFrame(e_xii_1)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dl.to_excel(writer, sheet_name='EKSKUL_XII_I', index=False, )
+        worksheet12 = writer.sheets['EKSKUL_XII_I']
+        
+        wb_obj.active = wb_obj['EKSKUL_XII_I']
+        sheet12_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet12.max_row + 1
+        mc = worksheet12.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet12.cell(row = i, column = j)
 
-            # writing the read value to destination excel file
-            cell = sheet14_obj.cell(row = i + start_row, column = start_col + j)
-            cell.value = c.value
-            
-            # if c.value != None and j == 1:
-            #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
-            #     cell.value = no
-            #     no += 1
+                # writing the read value to destination excel file
+                cell = sheet12_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+    
+    if nilai_xii_2 != None :
+        n_xii_2 = []
+        for data in nilai_xii_2:
+            print (data.MATA_PELAJARAN)
+            n_xii_2.append({
+                'MATA_PELAJARAN' : data.MATA_PELAJARAN,
+                'BEBAN' : data.BEBAN,
+                'NILAI_PENGETAHUAN' : data.NILAI_PENGETAHUAN,
+                'NILAI_KETERAMPILAN' : data.NILAI_KETERAMPILAN,
+                'DESKRIPSI_PENGETAHUAN' : data.DESKRIPSI_PENGETAHUAN,
+                'DESKRIPSI_KETERAMPILAN' : data.DESKRIPSI_KETERAMPILAN
+            }) 
+        dm = pd.DataFrame(n_xii_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dm.to_excel(writer, sheet_name='RAPORT_XII_II', index=False, )
+        worksheet13 = writer.sheets['RAPORT_XII_II']
+        
+        wb_obj.active = wb_obj['RAPORT_XII_II']
+        sheet13_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet13.max_row + 1
+        mc = worksheet13.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet13.cell(row = i, column = j)
+
+                # writing the read value to destination excel file
+                cell = sheet13_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
+        
+        e_xii_2 = []
+        for data in ekskul_xii_2:
+            e_xii_2.append({
+                'EKSKUL' : data.DATA_ANGGOTA.EKSKUL,
+                'PREDIKAT' : data.PREDIKAT, 
+                'DESKRIPSI' : data.DESKRIPSI
+            }) 
+        
+        dn = pd.DataFrame(e_xii_2)
+        b = BytesIO()
+        writer = pd.ExcelWriter(b, engine='openpyxl')
+        dn.to_excel(writer, sheet_name='EKSKUL_XII_II', index=False, )
+        worksheet14 = writer.sheets['EKSKUL_XII_II']
+        
+        wb_obj.active = wb_obj['EKSKUL_XII_II']
+        sheet14_obj = wb_obj.active
+        
+        start_row = 0
+        start_col = 0
+        
+        kelas_row = start_row - 1
+        kelas_col = start_col + 2
+        
+        mr = worksheet14.max_row + 1
+        mc = worksheet14.max_column + 1
+        
+        no = 1
+        
+        for i in range (2, mr ):
+            for j in range (1, mc ):
+                # reading cell value from source excel file
+                c = worksheet14.cell(row = i, column = j)
+
+                # writing the read value to destination excel file
+                cell = sheet14_obj.cell(row = i + start_row, column = start_col + j)
+                cell.value = c.value
+                
+                # if c.value != None and j == 1:
+                #     cell = sheet2_obj.cell(row = i + kelas_row + 2, column = 1)
+                #     cell.value = no
+                #     no += 1
     
     wb_obj.active = wb_obj['Data_Siswa']
     virtual_workbook = BytesIO()
