@@ -26,6 +26,7 @@ class SaranaAdmin(ExportMixin, admin.ModelAdmin):
     list_filter = ('STATUS',)
     actions = ('acc_pengembalian',)
     resource_class = SaranaResource
+    autocomplete_fields = ['JENIS']
     
     def acc_pengembalian(self, request, queryset):
         queryset.update(STATUS = 'Sudah Dikembalikan')
@@ -174,6 +175,7 @@ class RiwayatPeminjamanRuanganAdmin(ExportMixin, admin.ModelAdmin):
     actions = ('acc_pengembalian',)
     list_filter = ('STATUS', RuanganFilter,)
     resource_class = RiwayatPeminjamanBarangResource
+    autocomplete_fields = ['RUANGAN']
 
 
     def status_peminjaman(self, obj):
@@ -210,6 +212,7 @@ class RuanganAdmin(ExportMixin, admin.ModelAdmin):
     list_per_page = 10
     autocomplete_fields = ('JENIS',)
     resource_class = RuanganResource
+    autocomplete_fields = ['JENIS']
 
 admin.site.register(Ruangan, RuanganAdmin)
 
