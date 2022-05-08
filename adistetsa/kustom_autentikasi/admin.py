@@ -4,7 +4,8 @@ from django.contrib.auth.hashers import make_password
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.safestring import mark_safe
-
+from kurikulum.models import KelasSiswa
+from bimbingan_konseling.models import DataAlumni
 from import_export.admin import ImportExportModelAdmin
 
 from .models import *
@@ -15,6 +16,7 @@ class DataSiswaUserAdmin(ImportExportModelAdmin):
     autocomplete_fields = ['DATA_SISWA', 'USER',]
     search_fields = ['DATA_SISWA__NIS', 'DATA_SISWA__NAMA', 'USER__username']
     list_display = ('nama_lengkap', 'username', 'role')
+    actions = ('pindah_alumni','pindah_siswa',)
 
     resource_class = DataSiswaUserResource
 
@@ -39,6 +41,32 @@ class DataSiswaUserAdmin(ImportExportModelAdmin):
                 group_display += group.name + ', '
 
         return group_display
+    
+    def pindah_alumni(self, request, queryset):
+        grup_alumni = Group.objects.get(name='Alumni')
+        grup_siswa = Group.objects.get(name='Siswa')
+        for d in queryset.values():
+            siswa = DataSiswaUser.objects.get(USER_id=d['USER_id']).USER
+            grup_alumni.user_set.add(siswa)
+            grup_siswa.user_set.remove(siswa)
+            kelas = KelasSiswa.objects.filter(NIS_id = d['DATA_SISWA_id']).last()
+            DataAlumni.objects.update_or_create(
+                NAMA_SISWA = kelas.NIS.NAMA, 
+                KELAS=kelas.KELAS.KELAS.TINGKATAN + ' ' + str(kelas.KELAS.KELAS.JURUSAN) + ' ' + kelas.KELAS.OFFERING.NAMA,
+                NISN=kelas.NIS.NISN,
+                NIS=kelas.NIS.NIS,
+                TAHUN_AJARAN = str(kelas.KELAS.KELAS.TAHUN_AJARAN),
+                )
+    
+    def pindah_siswa(self, request, queryset):
+        grup_alumni = Group.objects.get(name='Alumni')
+        grup_siswa = Group.objects.get(name='Siswa')
+        for d in queryset.values():
+            print (d)
+            siswa = DataSiswaUser.objects.get(USER_id=d['USER_id']).USER
+            grup_alumni.user_set.remove(siswa)
+            grup_siswa.user_set.add(siswa)
+            DataAlumni.objects.get(NIS=d['DATA_SISWA_id']).delete()
 
 class DataGuruUserAdmin(ImportExportModelAdmin):
     autocomplete_fields = ['DATA_GURU', 'USER',]

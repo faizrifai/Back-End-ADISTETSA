@@ -35,49 +35,6 @@ class DataAlumni(models.Model):
         verbose_name_plural = "Data Alumni"
 
 
-def post_save_data_alumni(sender, instance, created, **kwargs):
-    
-    if instance.STATUS_LULUS == 'Lulus':
-        try:
-            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
-            grup_alumni = Group.objects.get(name='Alumni')
-            grup_alumni.user_set.add(data_siswa_user.USER)
-            
-            grup_siswa = Group.objects.get(name='Siswa')
-            grup_siswa.user_set.remove(data_siswa_user.USER)
-            
-            kelas = KelasSiswa.objects.get(NIS = instance)
-            
-            obj = DataAlumni.objects.update_or_create(
-                NAMA_SISWA = instance.NAMA, 
-                KELAS=kelas.KELAS.KELAS.TINGKATAN + ' ' + str(kelas.KELAS.KELAS.JURUSAN) + ' ' + kelas.KELAS.OFFERING.NAMA,
-                NISN=instance.NISN,
-                NIS=instance.NIS,
-                TAHUN_AJARAN = str(kelas.KELAS.KELAS.TAHUN_AJARAN),
-                )
-            obj.save()
-        except Exception as e:
-            print(str(e))
-            
-    if instance.STATUS_LULUS == 'Belum Lulus':
-        try:
-            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
-        except:
-            data_siswa_user = None
-        
-        if data_siswa_user:
-            data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=instance)
-            grup_alumni = Group.objects.get(name='Siswa')
-            grup_alumni.user_set.add(data_siswa_user.USER)
-            
-            grup_siswa = Group.objects.get(name='Alumni')
-            grup_siswa.user_set.remove(data_siswa_user.USER)
-            
-            DataAlumni.objects.get(NIS=instance.NIS).delete()
-
-post_save.connect(post_save_data_alumni, sender=DataSiswa)
-
-
 class PeminatanLintasMinat(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KELAS_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)

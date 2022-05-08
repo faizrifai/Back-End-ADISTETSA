@@ -199,8 +199,12 @@ class KatalogEkskul (models.Model):
     DESKRIPSI = models.CharField(max_length=255)
     DOKUMENTASI = models.ImageField(upload_to='KatalogEkskul', max_length=255, blank=True)
     
+    class Meta:
+        verbose_name_plural = "Katalog Ekskul"
+
     def __str__(self):
         return self.NAMA
+    
 
 class JadwalEkskul (models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -219,6 +223,7 @@ class JadwalEkskul (models.Model):
         constraints = [
             models.UniqueConstraint(fields=['PELATIH','HARI','TAHUN_AJARAN','WAKTU_MULAI','WAKTU_BERAKHIR'], name='%(app_label)s_%(class)s_unique')
         ]
+        verbose_name_plural = "Jadwal Ekskul"
     
     def clean(self):
         if self.WAKTU_MULAI > self.WAKTU_BERAKHIR:
@@ -250,6 +255,9 @@ class DaftarJurnalEkskul(models.Model):
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
     JADWAL_EKSKUL = models.ForeignKey(JadwalEkskul, on_delete=models.CASCADE)
     
+    class Meta:
+        verbose_name_plural = "Daftar Jurnal Ekskul"
+
     def __str__(self):
         return self.EKSKUL.NAMA + ' ' + self.SEMESTER.NAMA
 
@@ -263,6 +271,9 @@ class JurnalEkskul(models.Model):
     FILE_DOKUMENTASI = models.FileField(max_length=255, upload_to='JurnalEkskul')
     DAFTAR = models.ForeignKey(DaftarJurnalEkskul, on_delete=models.CASCADE)
     
+    class Meta:
+        verbose_name_plural = "Jurnal Ekskul"
+
     def __str__(self):
         return str(self.DAFTAR.EKSKUL) +  ' - ' + str(self.DAFTAR.SEMESTER) + ' - Pertemuan : ' + self.PERTEMUAN
 
@@ -306,6 +317,9 @@ class AbsensiEkskul(models.Model):
     FILE_KETERANGAN = models.FileField(max_length=255, upload_to='AbsensiEkskul', blank=True)
     JURNAL_EKSKUL = models.ForeignKey(JurnalEkskul, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name_plural = "Absensi Ekskul"
+
     
 class PengajuanEkskul (models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -318,6 +332,9 @@ class PengajuanEkskul (models.Model):
         choices=ENUM_PENGAJUAN,
         default='Pengajuan',
     )
+
+    class Meta:
+        verbose_name_plural = "Pengajuan Ekskul"
     
 def post_save_pengajuan_ekskul(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
@@ -352,14 +369,16 @@ class AnggotaEkskul(models.Model):
         choices=ENUM_STATUS_ANGGOTA_EKSKUL,
         default='',
     )
-    
+
+    class Meta:
+        verbose_name_plural = "Anggota Ekskul"
+
     def __str__(self):
         return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) 
     
     def save(self, *args, **kwargs):
         self.TAHUN_AJARAN = self.KELAS_SISWA.KELAS.KELAS.TAHUN_AJARAN
-        super(AnggotaEkskul, self).save(*args, **kwargs)
-      
+        super(AnggotaEkskul, self).save(*args, **kwargs)      
 
 class ProgramKerjaEkskul(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -367,8 +386,9 @@ class ProgramKerjaEkskul(models.Model):
     EKSKUL = models.ForeignKey(KatalogEkskul, on_delete=models.CASCADE)
     TAHUN_AJARAN = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
     FILE_PROGRAM_KERJA = models.FileField(max_length=255, upload_to='ProgramKerjaEkskul')
-    
+
     class Meta:
+        verbose_name_plural = "Program Kerja Ekskul"
         constraints = [
             models.UniqueConstraint(fields=['PELATIH','EKSKUL','TAHUN_AJARAN'], name='%(app_label)s_%(class)s_unique')
         ]
@@ -404,6 +424,9 @@ class NilaiEkskul(models.Model):
     )
     DESKRIPSI = models.TextField(max_length= 1020)
     RAPORT= models.ForeignKey(Raport, on_delete=models.CASCADE)
+    
+    class Meta:
+        verbose_name_plural = "Nilai Ekskul"
     
     def __str__(self):
         return str(self.DATA_ANGGOTA)
