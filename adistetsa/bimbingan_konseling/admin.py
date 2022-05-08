@@ -14,7 +14,7 @@ from .models import *
 
 # Register your models here.
 class DataAlumniAdmin(ImportExportModelAdmin):
-    search_fields = []
+    search_fields = ['NAMA_SISWA','NISN','TAHUN_AJARAN','NAMA_PT','PROGRAM_STUDI','MEDIA_SOSIAL','EMAIL','ALAMAT','TEMPAT_BEKERJA']
     list_display = ('NAMA_SISWA','NISN','TAHUN_AJARAN','NAMA_PT','PROGRAM_STUDI','MEDIA_SOSIAL','EMAIL','ALAMAT','TEMPAT_BEKERJA')
     # exclude = ['NAMA']
     resource_class = DataAlumniResource
@@ -22,18 +22,20 @@ class DataAlumniAdmin(ImportExportModelAdmin):
 admin.site.register(DataAlumni, DataAlumniAdmin)
 
 class PeminatanLintasMinatAdmin(ExportMixin, admin.ModelAdmin):
-    search_fields = []
+    search_fields = ['KELAS_SISWA__NIS__NAMA', 'KATEGORI']
     list_display = ('KELAS_SISWA', 'KATEGORI','FILE')
     list_filter = (JurusanFilter, TingkatanFilter)
     resource_class = PeminatanLintasMinatResource
+    autocomplete_fields = ['KELAS_SISWA']
 
 admin.site.register(PeminatanLintasMinat, PeminatanLintasMinatAdmin)
 
 class KatalogKonselorAdmin(ImportExportModelAdmin):
-    search_fields = []
+    search_fields = ['NAMA', 'KOMPETENSI', 'ALUMNUS']
     list_display = ('aksi', 'foto', 'nip','NAMA','KOMPETENSI','ALUMNUS', 'whatsapp', 'conference','FOTO', 'STATUS')
     resource_class = KatalogKonselorResource
     form = KatalogKonselorForm
+    autocomplete_fields = ['USER']
 
     def aksi(self, obj):
         return str('Edit')
@@ -61,11 +63,12 @@ class KatalogKonselorAdmin(ImportExportModelAdmin):
 admin.site.register(KatalogKonselor, KatalogKonselorAdmin)
 
 class KonsultasiAdmin(admin.ModelAdmin):
-    search_fields = []
+    search_fields = ['KONSELOR__NAMA', 'JENIS_MASALAH']
     list_display = ('USER','KONSELOR', 'TANGGAL_KONSULTASI','JAM_AWAL','JAM_AKHIR', 'JENIS_MASALAH','RATING', 'STATUS', 'KRITIK_SARAN',)
     list_per_page = 10
     list_filter = ('STATUS',)
     actions = ('accept_action', 'decline_action','konsultasi_action','feedback_action',)
+    autocomplete_fields = ['USER', 'KONSELOR']
     
     def accept_action(self, request, queryset):
         queryset.update(STATUS = 'Dijadwalkan')
