@@ -306,7 +306,7 @@ class RiwayatPeminjamanSiswaListView(generics.ListAPIView):
         current_user = self.request.user
         if (is_in_group(current_user, 'Siswa')):
             data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            queryset = RiwayatPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA).order_by('-TANGGAL_PENGAJUAN')
+            queryset = RiwayatPeminjamanSiswa.objects.filter(NIS=data_siswa_user.DATA_SISWA).order_by('-TANGGAL_PEMINJAMAN')
             return queryset
 
         return super().get_queryset()
