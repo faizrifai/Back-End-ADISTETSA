@@ -231,7 +231,7 @@ class PengajuanPeminjamanRuangan(models.Model):
         choices=ENUM_JENIS_PEMINJAMAN,
     )
     KETERANGAN = models.TextField(max_length=255)
-    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan', blank=True)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan')
 
 
     def clean(self):
@@ -241,6 +241,8 @@ class PengajuanPeminjamanRuangan(models.Model):
             raise ValidationError('Jam Penggunaan tidak boleh lebih dari Jam Berakhir')
         if self.JAM_PENGGUNAAN == self.JAM_BERAKHIR :
             raise ValidationError('Jam Penggunaan tidak boleh sama dengan Jam Berakhir')
+        if self.TANGGAL_PEMAKAIAN < self.TANGGAL_PENGAJUAN:
+            raise ValidationError('Tanggal Penggunaan Tidak Valid')
 
         if self.JENIS_PEMINJAMAN == 'Jangka Pendek':
             cek_jangka_pendek(self)
@@ -275,9 +277,12 @@ def post_save_pengajuan_peminjaman_ruangan(sender, instance, created, **kwargs):
                 JENIS_PEMINJAMAN = instance.JENIS_PEMINJAMAN,
                 STATUS = 'Sedang Dipinjam',
                 KETERANGAN = instance.KETERANGAN,
-                TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
             )
+            if instance.TANDA_TANGAN:
+                obj.TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name)
+
             obj.save()
+
             instance.delete()
 
         except Exception as e:
@@ -333,7 +338,7 @@ class RiwayatPeminjamanRuangan(models.Model):
         choices=ENUM_JENIS_PEMINJAMAN,
     )
     KETERANGAN = models.TextField(max_length=255)
-    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan', blank=True)
+    TANDA_TANGAN = models.FileField(max_length=255, upload_to='PeminjamanRuangan')
 
 
 class PengajuanPeminjamanBarang(models.Model):
@@ -357,6 +362,8 @@ class PengajuanPeminjamanBarang(models.Model):
     def clean(self):
         if self.TANGGAL_PENGGUNAAN > self.TANGGAL_PENGEMBALIAN:
             raise ValidationError('Tanggal Tidak Valid')
+        elif self.TANGGAL_PENGGUNAAN < self.TANGGAL_PENGAJUAN:
+            raise ValidationError('Tanggal Penggunaan Tidak Valid')
     
 class RiwayatPeminjamanBarang(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -399,9 +406,11 @@ def post_save_pengajuan_peminjaman_barang(sender, instance, created, **kwargs):
                     TANGGAL_PENGGUNAAN = instance.TANGGAL_PENGGUNAAN,
                     TANGGAL_PENGEMBALIAN = instance.TANGGAL_PENGEMBALIAN,
                     KETERANGAN = instance.KETERANGAN,
-                    TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name),
                 )
                 obj.ALAT.set(alat_m2m)
+
+                if instance.TANDA_TANGAN:
+                    obj.TANDA_TANGAN = duplikat_file(instance, instance.TANDA_TANGAN.read(), instance.TANDA_TANGAN.name)
                 
                 obj.save()
                 instance.delete()
