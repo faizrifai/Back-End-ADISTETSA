@@ -11,6 +11,7 @@ from utility.custom_function import gabung_dictionary
 import openpyxl
 from openpyxl import Workbook
 from openpyxl.styles import NamedStyle, Font, Border, Side
+import datetime
 
 import time
 
@@ -182,7 +183,7 @@ def pembagian_jadwal_mengajar(self):
     merge_cell(worksheet, df_, 'GURU', 'TOTAL_JAM')
     writer.save()
     
-    return ContentFile(b.getvalue(), self.KATEGORI + '.xlsx')
+    return ContentFile(b.getvalue(), self.KATEGORI + '_' +str (datetime.date.today()) +'.xlsx')
 
 def rekapitulasi_jam_mengajar(self):
     kelas_tingkatan = Kelas.objects.all().order_by('TINGKATAN',)
@@ -240,7 +241,7 @@ def rekapitulasi_jam_mengajar(self):
     apply_style_to_cell(worksheet,20,'Times New Roman')
     
     writer.save()
-    return ContentFile(b.getvalue(), self.KATEGORI + '.xlsx') 
+    return ContentFile(b.getvalue(), self.KATEGORI + '_' +str (datetime.date.today()) +'.xlsx') 
 
 def pembagian_tugas_guru_bk(self, count):
     pembagian_tugas = count 
@@ -312,7 +313,7 @@ def pembagian_tugas_guru_bk(self, count):
     worksheet = writer.sheets['PEMBAGIAN_BK']    
     apply_style_to_cell(worksheet,20,'Times New Roman')
     writer.save()
-    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_BK' + '.xlsx') 
+    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_BK' + '_' +str (datetime.date.today()) +'.xlsx') 
 
 def pembagian_tugas_guru_tik(self, count):
     pembagian_tugas = count 
@@ -384,7 +385,7 @@ def pembagian_tugas_guru_tik(self, count):
     worksheet = writer.sheets['PEMBAGIAN_TIK'] 
     apply_style_to_cell(worksheet,20,'Times New Roman')
     writer.save()   
-    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_TIK' + '.xlsx') 
+    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_TIK' + '_' +str (datetime.date.today()) +'.xlsx') 
 
 def pembagian_tugas_pokok_tendik(self, count):
     pembagian_tugas = count
@@ -417,7 +418,7 @@ def pembagian_tugas_pokok_tendik(self, count):
     worksheet = writer.sheets['TUGAS_POKOK']
     apply_style_to_cell(worksheet,30,'Times New Roman')
     writer.save()
-    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_TUGAS' + '.xlsx') 
+    self.FILE = ContentFile(b.getvalue(), 'PEMBAGIAN_TUGAS' +'_' +str (datetime.date.today()) + '.xlsx') 
 
 def rincian_tugas_pokok_tendik(self, count):
     pembagian_tugas = count
@@ -448,7 +449,7 @@ def rincian_tugas_pokok_tendik(self, count):
     worksheet = writer.sheets['RINCIAN_TUGAS']
     apply_style_to_cell(worksheet,40,'Times New Roman')
     writer.save()
-    self.FILE = ContentFile(b.getvalue(), 'RINCIAN_TUGAS' + '.xlsx')
+    self.FILE = ContentFile(b.getvalue(), 'RINCIAN_TUGAS' + '_' +str (datetime.date.today()) +'.xlsx')
 
 def tugas_tambahan_kepanitiaan(self, count):
     pembagian_tugas = count
@@ -471,7 +472,7 @@ def tugas_tambahan_kepanitiaan(self, count):
     apply_style_to_cell(worksheet,20,'Times New Roman')
     
     writer.save()
-    self.FILE = ContentFile(b.getvalue(), 'TUGAS_TAMBAHAN_KEPANITIAAN' + '.xlsx')
+    self.FILE = ContentFile(b.getvalue(), 'TUGAS_TAMBAHAN_KEPANITIAAN' +'_' +str (datetime.date.today()) + '.xlsx')
     
 def buat_file_prototype(self):
     if self.KATEGORI == 'Pembagian Jadwal Mengajar':
