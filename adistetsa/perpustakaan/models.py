@@ -119,7 +119,7 @@ class Operator(models.Model):
 
 class Author(models.Model):
     KODE_AUTHOR = models.CharField(primary_key=True, max_length=255)
-    NAMA_AUTHOR = models.CharField(max_length=255,)
+    NAMA_AUTHOR = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     
     def __str__(self):
         return self.KODE_AUTHOR + ' - ' + self.NAMA_AUTHOR
@@ -141,11 +141,11 @@ class TahunTerbit(models.Model):
 
     
 class KatalogBuku(models.Model):
-    REGISTER = models.CharField(primary_key=True, max_length = 255, )
+    REGISTER = models.CharField(primary_key=True, max_length = 255, validators=[validasi_integer])
     ISBN = models.CharField(max_length = 255, blank=True, )
     JUDUL = models.CharField(max_length = 255, )
-    VOLUME = models.CharField(max_length = 255, )
-    EDISI = models.CharField(max_length = 255, )
+    VOLUME = models.CharField(max_length = 255, validators=[validasi_integer])
+    EDISI = models.CharField(max_length = 255, validators=[validasi_integer])
     BAHASA = models.ForeignKey(TipeBahasa, on_delete=models.CASCADE)
     KODE_MEDIA = models.ForeignKey(TipeMedia, on_delete=models.CASCADE)
     KODE_TIPE = models.ForeignKey(TipeBuku, on_delete=models.CASCADE)
@@ -153,7 +153,7 @@ class KatalogBuku(models.Model):
     KODE_AUTHOR = models.ForeignKey(Author, on_delete=models.CASCADE)
     KODE_JUDUL = models.CharField(max_length = 255, blank=True)
     TAHUN_TERBIT = models.ForeignKey(TahunTerbit, on_delete=models.CASCADE)
-    KOTA_PENERBIT = models.CharField(max_length = 255, )
+    KOTA_PENERBIT = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     PENERBIT = models.CharField(max_length = 255, )
     DESKRIPSI_FISIK = models.CharField(max_length = 255)
     INDEX = models.CharField(max_length = 255, blank=True)
@@ -282,7 +282,8 @@ def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
                 obj.BUKU.set(buku_m2m)
                 
                 if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
-                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+                    if instance.FILE_TTD_PENGAJUAN :
+                        duplikat_file(obj, instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
 
                 obj.save()
 
@@ -372,7 +373,7 @@ class RiwayatPeminjamanGuru(models.Model):
         choices=ENUM_JANGKA_PEMINJAMAN,
         blank=True, 
     )
-    FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Guru', blank=True)
+    FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Guru', null=True)
     STATUS_PEMINJAMAN = models.CharField(
         max_length=255,
         choices=ENUM_STATUS_PEMINJAMAN,
@@ -380,7 +381,7 @@ class RiwayatPeminjamanGuru(models.Model):
     )
     
 
-def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
+def post_save_pengajuan_peminjaman_guru(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
     if instance.STATUS_PENGAJUAN == 'Disetujui':
         try:
@@ -409,7 +410,8 @@ def post_save_pengajuan_peminjaman_guru(sender, instance, **kwargs):
                 obj.BUKU.set(buku_m2m)
                 
                 if instance.JANGKA_PEMINJAMAN == 'Jangka Panjang':
-                    obj.FILE_TTD_PENGAJUAN = duplikat_file(instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
+                    if instance.FILE_TTD_PENGAJUAN :
+                        duplikat_file(obj, instance, instance.FILE_TTD_PENGAJUAN.read(), instance.FILE_TTD_PENGAJUAN.name),
                 
                 obj.save()
                 instance.delete()
