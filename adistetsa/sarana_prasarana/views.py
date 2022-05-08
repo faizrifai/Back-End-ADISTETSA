@@ -14,7 +14,7 @@ from utility.permissions import HasGroupPermissionAny, IsSuperAdmin, is_in_group
 # Create your views here. 
 class KatalogSaranaListView(generics.ListAPIView):
     """
-    get: Menampilkan daftar katalog buku.
+    get: Menampilkan daftar katalog barang.
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
@@ -22,12 +22,25 @@ class KatalogSaranaListView(generics.ListAPIView):
     }
 
     def get_queryset(self):
-        current_user = self.request.user
         queryset = Sarana.objects.all()
-        if (is_in_group(current_user, 'Staf Sarpras')):
-            return queryset
-        else:
-            return queryset.filter(STATUS='Sudah Dikembalikan')
+        return queryset.filter(STATUS='Sudah Dikembalikan')
+
+    queryset = Sarana.objects.all()
+    serializer_class = KatalogSaranaSerializer
+    search_fields = ('NAMA', 'JENIS__KATEGORI', 'STATUS')
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+
+class KatalogSaranaAdminListView(generics.ListAPIView):
+    """
+    get: Menampilkan daftar katalog barang untuk Staf.
+    """
+    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    required_groups = {
+        'GET': ['Staf Sarpras'],
+    }
 
     queryset = Sarana.objects.all()
     serializer_class = KatalogSaranaSerializer
@@ -153,11 +166,8 @@ class RiwayatPeminjamanBarangListView(generics.ListAPIView):
 
     def get_queryset(self):
         current_user = self.request.user
-        if (not is_in_group(current_user, 'Staf Sarpras')):
-            queryset = RiwayatPeminjamanBarang.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
-            return queryset
-
-        return super().get_queryset()
+        queryset = RiwayatPeminjamanBarang.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
+        return queryset
 
     def get_serializer_class(self):
         current_user = self.request.user
@@ -246,7 +256,6 @@ class KatalogRuanganListView(generics.ListAPIView):
         queryset = Ruangan.objects.all()
         
         return queryset
-        
 
     queryset = Ruangan.objects.all()
     serializer_class = KatalogRuanganSerializer
@@ -275,9 +284,8 @@ class PengajuanPeminjamanRuanganListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         current_user = self.request.user
-        if (not is_in_group(current_user, 'Staf Sarpras')):
-            queryset = PengajuanPeminjamanRuangan.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
-            return queryset
+        queryset = PengajuanPeminjamanRuangan.objects.filter(USER=current_user).order_by('-TANGGAL_PENGAJUAN')
+        return queryset
 
         return super().get_queryset()
 
