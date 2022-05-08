@@ -6,9 +6,7 @@ from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from kesiswaan.importexportresources import *
-from kesiswaan.filter_admin import TahunAjaranFilter
-
-from kesiswaan.filter_admin import DataSiswaFilter
+from kesiswaan.filter_admin import TahunAjaranFilter, SemesterFilter, DataSiswaFilter, EkskulFilter
 # from .filter_admin import *
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
@@ -175,13 +173,14 @@ admin.site.register(KatalogEkskul, KatalogEkskulAdmin)
 
 
 class JadwalEkskulAdmin(ImportExportModelAdmin):
-    search_fields = ('PELATIH__NAMA','EKSKUL__NAMA',)
+    search_fields = ('PELATIH__NAMA','EKSKUL__NAMA','TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR','SEMESTER__NAMA',)
     list_display = ['PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL','HARI','WAKTU_MULAI','WAKTU_BERAKHIR',]
     list_per_page = 10 
     autocomplete_fields = ('PELATIH', 'TAHUN_AJARAN', 'SEMESTER', 'EKSKUL',)
-    # list_filter = (DataSiswaFilter,)
+    list_filter = (TahunAjaranFilter,SemesterFilter,EkskulFilter,'HARI')
     resource_class = JadwalEkskulResource
     
+
 admin.site.register(JadwalEkskul, JadwalEkskulAdmin)
 
 class AbsensiEkskulAdmin(SubAdmin):

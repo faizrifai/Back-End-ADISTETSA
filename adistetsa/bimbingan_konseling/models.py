@@ -133,7 +133,7 @@ class Konsultasi(models.Model):
     JENIS_MASALAH = models.CharField(max_length=255, choices=ENUM_JENIS_MASALAH)
     RATING = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)], null=True, blank=True)
     STATUS = models.CharField(max_length=255, choices=ENUM_STATUS_KONSULTASI, default='Diajukan')
-    KRITIK_SARAN = models.CharField(max_length=255, blank=True)
+    KRITIK_SARAN = models.TextField(max_length=255, blank=True)
 
     class Meta:
         verbose_name_plural = "Konsultasi"
