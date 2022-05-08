@@ -19,6 +19,9 @@ class TipeBahasa(models.Model):
     KODE_BAHASA = models.CharField(primary_key=True, max_length=255)
     BAHASA = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     
+    class Meta:
+        verbose_name_plural = "Tipe Bahasa"
+
     def __str__(self):
         return self.KODE_BAHASA + ' - ' + self.BAHASA
         
@@ -26,6 +29,9 @@ class TipeBuku(models.Model):
     KODE_TIPE = models.CharField(primary_key=True, max_length = 255,)
     NAMA_TIPE = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
+    class Meta:
+        verbose_name_plural = "Tipe Buku"
+
     def __str__(self):
         return self.KODE_TIPE + ' - '  + self.NAMA_TIPE  
     
@@ -33,12 +39,19 @@ class Pendanaan(models.Model):
     KODE_PENDANAAN = models.CharField(primary_key=True, max_length = 255)
     NAMA_PENDANAAN = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
     
+    class Meta:
+        verbose_name_plural = "Pendanaan"
+
     def __str__(self):
         return self.NAMA_PENDANAAN
     
 class Lokasi(models.Model):
     KODE_LOKASI = models.CharField(primary_key=True, max_length = 255)
     NAMA_LOKASI = models.CharField(max_length = 255, validators=[cek_huruf_besar_awal_kalimat])
+    
+    class Meta:
+        verbose_name_plural = "Lokasi"
+
     def __str__(self):
         return self.KODE_LOKASI + ' - ' + self.NAMA_LOKASI
     
@@ -46,6 +59,9 @@ class LokasiSpesifik(models.Model):
     LOKASI_SPESIFIK = models.CharField(primary_key=True, max_length = 255)
     NAMA = models.CharField(max_length = 255,)
     
+    class Meta:
+        verbose_name_plural = "Lokasi Spesifik"
+
     def __str__(self):
         return self.LOKASI_SPESIFIK + ' ' + self.NAMA
 
@@ -53,14 +69,20 @@ class KunjunganSiswa(models.Model):
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     TANGGAL_KUNJUNGAN = models.DateField(default=datetime.date.today)
     
+    class Meta:
+        verbose_name_plural = "Kunjungan Siswa"
+
 class KunjunganGuru(models.Model):
     NIP = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     TANGGAL_KUNJUNGAN = models.DateField(default=datetime.date.today)
     
+    class Meta:
+        verbose_name_plural = "Kunjungan Guru"
+
 class TipeMedia(models.Model):
     KODE_MEDIA = models.CharField(primary_key=True, max_length = 255)
     NAMA_MEDIA = models.CharField(max_length = 255,)
-    
+
     def __str__(self):
         return str(self.KODE_MEDIA) + ' - ' + self.NAMA_MEDIA
     
@@ -68,7 +90,7 @@ class TipeMedia(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['KODE_MEDIA', 'NAMA_MEDIA'], name='%(app_label)s_%(class)s_unique')
         ]
-        verbose_name_plural = "TIPE MEDIA"
+        verbose_name_plural = "Tipe Media"
     
 class Operator(models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -112,6 +134,10 @@ class Operator(models.Model):
     
     # object_id = models.PositiveIntegerField()
     # content_object = GenericForeignKey('KODE_OPERATOR', 'object_id')
+    
+    class Meta:
+        verbose_name_plural = "Operator"
+
     def __str__(self):
         return str(self.KODE_OPERATOR)
         
@@ -121,12 +147,18 @@ class Author(models.Model):
     KODE_AUTHOR = models.CharField(primary_key=True, max_length=255)
     NAMA_AUTHOR = models.CharField(max_length=255, validators=[cek_huruf_besar_awal_kalimat])
     
+    class Meta:
+        verbose_name_plural = "Author"
+
     def __str__(self):
         return self.KODE_AUTHOR + ' - ' + self.NAMA_AUTHOR
 
 class TahunTerbit(models.Model):
     TAHUN_TERBIT = models.CharField(primary_key=True, max_length=255)
     
+    class Meta:
+        verbose_name_plural = "Tahun Terbit"
+
     def __str__(self):
         return str(self.TAHUN_TERBIT)
     
@@ -167,9 +199,8 @@ class KatalogBuku(models.Model):
     def __str__(self):
         return self.JUDUL
 
-    
     class Meta:
-        verbose_name_plural = "Data Book Main"
+        verbose_name_plural = "Katalog Buku"
 
 class DonasiBuku (models.Model):
     REGISTER_DONASI = models.ForeignKey(KatalogBuku, on_delete=models.CASCADE)
@@ -177,6 +208,9 @@ class DonasiBuku (models.Model):
     KODE_DONASI = models.ForeignKey(Pendanaan, on_delete=models.CASCADE)
     TANGGAL_PENERIMAAN = models.DateField(max_length = 255, default=datetime.date.today)
     CATATAN_DONASI = models.CharField(max_length = 255)
+
+    class Meta:
+        verbose_name_plural = "Donasi Buku"
     
     def __str__(self):
         return str(self.REGISTER_DONASI.JUDUL)
@@ -190,6 +224,10 @@ class KatalogBukuCopy(models.Model):
         choices=ENUM_STATUS_PEMINJAMAN,
         default='Sudah Dikembalikan',
     )
+    
+    class Meta:
+        verbose_name_plural = "Katalog Buku Copy"
+
     def __str__(self):
         return str(self.REGISTER_COPY) + ' - ' + str(self.DATA_DONASI.REGISTER_DONASI.JUDUL)
     
@@ -232,6 +270,9 @@ class PengajuanPeminjamanSiswa(models.Model):
         blank=True,
     )
     FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Siswa', blank=True)
+    
+    class Meta:
+        verbose_name_plural = "Pengajuan Peminjaman Siswa"
 
 
 class RiwayatPeminjamanSiswa(models.Model):
@@ -252,6 +293,9 @@ class RiwayatPeminjamanSiswa(models.Model):
         default= 'Sedang Dipinjam'
     )
     
+    
+    class Meta:
+        verbose_name_plural = "Riwayat Peminjaman Siswa"
 
 def post_save_pengajuan_peminjaman_siswa(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
@@ -359,6 +403,8 @@ class PengajuanPeminjamanGuru(models.Model):
     FILE_TTD_PENGAJUAN = models.FileField(max_length=255, upload_to='Dokumen_Peminjaman_Jangka_Panjang_Guru', blank=True)
     
     
+    class Meta:
+        verbose_name_plural = "Pengajuan Peminjaman Guru"
 
 
 class RiwayatPeminjamanGuru(models.Model):
@@ -379,6 +425,8 @@ class RiwayatPeminjamanGuru(models.Model):
         default= 'Sedang Dipinjam'
     )
     
+    class Meta:
+        verbose_name_plural = "Riwayat Peminjaman Guru"
 
 def post_save_pengajuan_peminjaman_guru(sender, instance, created, **kwargs):
     # ubah status peminjaman setelah disetujui
@@ -472,3 +520,6 @@ m2m_changed.connect(buku_changed_guru, sender=PengajuanPeminjamanGuru.BUKU.throu
 class Abstrak (models.Model):
     REGISTER = models.ForeignKey(KatalogBuku,on_delete=models.CASCADE)
     ABSTRAK = models.CharField(max_length=255, default="")
+
+    class Meta:
+        verbose_name_plural = "Abstrak"

@@ -492,3 +492,6 @@ class NilaiRaport(models.Model):
 # Configuration Model
 class Configuration(ConfigurationModel):
     TAHUN_AJARAN_AKTIF = models.ForeignKey(TahunAjaran, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Configuration"

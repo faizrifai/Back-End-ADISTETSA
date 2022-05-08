@@ -943,5 +943,8 @@ class DataPelatih (models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
     
+    class Meta:
+        verbose_name_plural = "Data Pelatih"
+
     def __str__(self):
         return str(self.NAMA)

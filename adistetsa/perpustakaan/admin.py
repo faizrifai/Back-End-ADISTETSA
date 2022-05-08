@@ -263,6 +263,8 @@ class PengajuanPeminjamanSiswaAdmin(admin.ModelAdmin):
     
     def decline_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Ditolak')
+        print (queryset)
+        print (self)
         for d in queryset.values():
             obj = PengajuanPeminjamanSiswa.objects.get(ID=d['ID'])
             obj.save()

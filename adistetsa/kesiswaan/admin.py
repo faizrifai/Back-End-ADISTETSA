@@ -59,6 +59,7 @@ class PelanggaranSiswaAdmin(ExportMixin, admin.ModelAdmin):
     list_per_page =  10 
     list_filter = (DataSiswaFilter,)
     resource_class = PelanggaranSiswaResource
+    autocomplete_fields = ['DATA_SISWA', ]
 
 admin.site.register(PelanggaranSiswa, PelanggaranSiswaAdmin)
 
@@ -153,6 +154,7 @@ class AnggotaEkskulAdmin(BaseSubAdminExport):
     list_per_page = 10
     list_filter = ('STATUS', TahunAjaranFilter,)
     resource_class = AnggotaEkskulResource
+    autocomplete_fields = ['KELAS_SISWA', 'TAHUN_AJARAN','EKSKUL',]
     # readonly_fields = ('NIS', 'JURNAL_EKSKUL')
 
 
@@ -189,6 +191,7 @@ class AbsensiEkskulAdmin(SubAdmin):
     list_display = ('NIS', 'KETERANGAN', 'FILE_KETERANGAN', 'ekskul', 'pertemuan')
     list_per_page = 10
     readonly_fields = ('NIS', 'JURNAL_EKSKUL')
+    autocomplete_fields = ['NIS', 'JURNAL_EKSKUL',]
     
     def ekskul(self, obj):
         return obj.JURNAL_EKSKUL.DAFTAR.EKSKUL
@@ -201,7 +204,7 @@ class JurnalEkskulAdmin(BaseSubAdminExport):
     list_display = ('aksi', 'PELATIH', 'PERTEMUAN', 'TANGGAL_MELATIH',  'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
     search_fields = ['TANGGAL_MELATIH', 'DESKRIPSI_KEGIATAN', 'FILE_DOKUMENTASI']
-    autocomplete_fields = ['DAFTAR']
+    autocomplete_fields = ['DAFTAR','PELATIH']
     exclude = ('PELATIH',)
     resource_class = JurnalEkskulResource
 
@@ -229,6 +232,7 @@ class DaftarJurnalEkskulAdmin(RootSubAdmin):
     list_per_page = 10
     list_display = ('PELATIH', 'EKSKUL', 'SEMESTER', 'JADWAL_EKSKUL', 'aksi')
     # list_filter = []
+    autocomplete_fields = ['PELATIH', 'EKSKUL','SEMESTER','JADWAL_EKSKUL',]
 
     subadmins = [JurnalEkskulAdmin]
 
@@ -258,7 +262,7 @@ class PengajuanEkskulAdmin(admin.ModelAdmin):
     list_filter = ('STATUS_PENGAJUAN', )
     actions = ('accept_action', 'decline_action',)
     exclude = ('STATUS_PENGAJUAN', )
-    autocomplete_fields = ('KELAS_SISWA', 'EKSKUL',)
+    autocomplete_fields = ('KELAS_SISWA', 'EKSKUL','TAHUN_AJARAN',)
     
     def accept_action(self, request, queryset):
         queryset.update(STATUS_PENGAJUAN = 'Disetujui')
@@ -302,6 +306,7 @@ class NilaiEkskulAdmin(SubAdmin,ImportExportModelAdmin):
     list_display = ('DATA_ANGGOTA', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI','RAPORT')
     list_per_page = 10 
     exclude = ['DATA_ANGGOTA', 'RAPORT']
+    autocomplete_fields = ['DATA_ANGGOTA', 'RAPORT',]
     resource_class = NilaiEkskulResource
     
     def status_predikat(self, obj):
