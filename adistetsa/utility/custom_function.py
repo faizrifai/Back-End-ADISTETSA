@@ -1,13 +1,15 @@
 from django.forms import ValidationError
 from django.core.files.base import ContentFile
 
-def duplikat_file(obj, file, nama_file):
-    file_baru = ContentFile(file)
-    split_name = nama_file.split('/')
-    ekstensi = split_name[1].split('.')
-    file_baru.name = 'riwayat_' + str(obj.ID) + '.' + ekstensi[-1]
-    
-    return file_baru
+def duplikat_file(data, obj, file, nama_file):
+    if file:
+        file_baru = ContentFile(file)
+        split_name = nama_file.split('/')
+        ekstensi = split_name[1].split('.')
+        file_baru.name = 'riwayat_' + str(obj.ID) + '.' + ekstensi[-1]
+        data.FILE_TTD_PENGAJUAN = file_baru
+        
+        
 
 def hapus_kunci_kosong(arr):
     for k, v in list(arr.items()):

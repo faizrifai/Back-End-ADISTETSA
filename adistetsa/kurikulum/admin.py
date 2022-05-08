@@ -211,7 +211,7 @@ admin.site.register(PoinPelanggaran, PoinPelanggaranAdmin)
 
 
 class JadwalMengajarAdmin(ImportExportModelAdmin):
-    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__NAMA', 'MATA_PELAJARAN__NAMA']
+    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__OFFERING__NAMA', 'MATA_PELAJARAN__NAMA']
     list_per_page = 10
     filter_horizontal = ('WAKTU_PELAJARAN',)
     exclude = ('JUMLAH_WAKTU',)
