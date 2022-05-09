@@ -18,14 +18,14 @@ class TugasPokokTendikFactory(DjangoModelFactory):
     class Meta:
         model = TugasPokokTendik
 
-    JENIS_TUGAS = factory.Faker('random_element', elements=random_enum(jenis_bidang_dummy))
+    JENIS_TUGAS = factory.Faker('random_element', elements=(jenis_bidang_dummy))
 
 class JenisBidangFactory(DjangoModelFactory):
     class Meta:
         model = JenisBidang
 
-    KODE_BIDANG = factory.Faker('pyint', min_value=1, max_value=999)
-    NAMA_BIDANG = factory.Faker('random_element', elements=random_enum(jenis_bidang_dummy))
+    KODE_BIDANG = factory.Faker('pyint', min_value=1, max_value=5)
+    NAMA_BIDANG = factory.Faker('random_element', elements=(nama_bidang_dummy))
 
 class PembagianTugasBKFactory(DjangoModelFactory):
     class Meta:
