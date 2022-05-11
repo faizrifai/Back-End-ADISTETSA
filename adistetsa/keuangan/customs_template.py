@@ -108,7 +108,7 @@ def buat_kuitansi(self):
    DESEMBER = ''
    total_pembayaran = 0
 
-   if self.NOMINAL_SPP != '0' :
+   if self.NOMINAL_SPP != '0'or  self.NOMINAL_SPP :
       bulan = self.PEMBAYARAN_SPP.split(',')
       SPP = 'X'
       total_pembayaran += (len(bulan)*int(self.NOMINAL_SPP))
@@ -141,17 +141,17 @@ def buat_kuitansi(self):
          elif cur in 'Desember':
             DESEMBER = 'X'
 
-   if self.PEMBAYARAN_DPSM_RUTIN != '0' :
+   if self.PEMBAYARAN_DPSM_RUTIN != '0' or self.PEMBAYARAN_DPSM_RUTIN != '':
       DPSMR = 'X'
       total_pembayaran += int(float(self.PEMBAYARAN_DPSM_RUTIN))
 
-   if self.PEMBAYARAN_DPSM_INSINDENTAL != '0' :
+   if self.PEMBAYARAN_DPSM_INSINDENTAL != '0' or self.PEMBAYARAN_DPSM_INSINDENTAL != '' :
       DPSMI = 'X'
       value = self.PEMBAYARAN_DPSM_INSINDENTAL
       print (value)
       total_pembayaran += int(value)
 
-   if self.BIMBEL != '0' :
+   if self.BIMBEL != '0' or self.self.BIMBEL != '':
       BIMBEL = 'X'
       total_pembayaran += int(self.BIMBEL)
 

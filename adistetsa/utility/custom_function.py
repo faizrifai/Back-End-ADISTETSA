@@ -28,9 +28,13 @@ def gabung_dictionary(*parameters):
     return temp
 
 def validasi_keuangan(value):
-    test_value = int(value)
-    if test_value < 0 :
-        raise ValidationError(str(value) + ' Tidak boleh kurang dari 0')
+    try:
+        if int(value):
+            test_value = int(value)
+            if test_value < 0 :
+                raise ValidationError(str(value) + ' Tidak boleh kurang dari 0')
+    except:
+        raise ValidationError(str(value) + ' bukan angka')
 
 def validasi_integer(value):
     try:
