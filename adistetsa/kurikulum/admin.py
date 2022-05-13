@@ -11,7 +11,7 @@ from .forms import *
 from .filter_admin import *
 from .models import *
 from .importexportresources import *
-from utility.subadminexport import BaseSubAdminExport
+from utility.subadminexport import BaseSubAdminExport, SubAdminExportDataWithFile
 from subadmin import SubAdmin, RootSubAdmin
 
 # Register your models here.
@@ -128,7 +128,7 @@ class AbsensiSiswaAdmin(BaseSubAdminExport):
 
 # admin.site.register(AbsensiSiswa, AbsensiSiswaAdmin)
 
-class JurnalBelajarAdmin(BaseSubAdminExport):
+class JurnalBelajarAdmin(SubAdminExportDataWithFile):
     model = JurnalBelajar
     list_display = ('aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',  deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi')
     list_per_page = 10
@@ -137,13 +137,23 @@ class JurnalBelajarAdmin(BaseSubAdminExport):
     exclude = ('GURU',)
 
     resource_class = JurnalBelajarResource
+    post_export_redirect_url = 'admin:kurikulum_rekapjurnalbelajar_changelist'
 
     subadmins = [AbsensiSiswaAdmin]
 
+    def pre_export(self, request, file_format):
+        exported_file, queryset = super().pre_export(request, file_format)
+
+        file_to_zip = get_file_to_zip('kurikulum', queryset)
+        zip_buffer = zip_file(file_to_zip)
+
+        obj = RekapJurnalBelajar.load()
+        obj.FILE_REKAP = exported_file
+        obj.FILE_ZIP = ContentFile(zip_buffer.getvalue(), name='Rekap.zip')
+        obj.save()
+
     def aksi(self, obj):
-        # return "Edit"
-        # return self.model._meta.app_label
-        return self.model._meta.model_name
+        return "Edit"
     
     def absensi(self, obj):
         base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
@@ -349,3 +359,8 @@ class RaportAdmin(SubAdmin):
     
 
 admin.site.register(Configuration, ConfigurationModelAdmin)
+
+class RekapJurnalBelajarAdmin(admin.ModelAdmin):
+    list_display = ('FILE_REKAP', 'FILE_ZIP')
+
+admin.site.register(RekapJurnalBelajar, RekapJurnalBelajarAdmin)
