@@ -98,21 +98,31 @@ class JadwalMengajarResource(resources.ModelResource):
     
     
     def before_import_row(self, row, **kwargs):
+        v_kelas = {}
+        v_waktu_pelajaran = {}
+
+        v_guru = cek_error_import(DataGuru, row, 'GURU', 'NAMA_LENGKAP')
+        v_mapel = cek_error_import(MataPelajaran, row, 'MATA_PELAJARAN', 'NAMA')
+        v_semester = cek_error_import(DataSemester, row, 'SEMESTER', 'KE')
+
         kelas = row['KELAS'].split(' ')
         try:
             offering_kelas = OfferingKelas.objects.get(KELAS__KODE_KELAS=kelas[0] + ' ' + kelas[1], OFFERING__NAMA=kelas[2])
             row['KELAS'] = offering_kelas
-        except Exception as e:
-            raise ValidationError({'KELAS' : 'Data kelas masih belum ada'})
+        except OfferingKelas.DoesNotExist:
+            v_kelas = {'KELAS' : 'Data kelas masih belum ada'}
+
+        waktu_pelajaran = row['WAKTU_PELAJARAN'].split(',')
+        jadwal = JadwalMengajar.objects.filter(GURU__NAMA_LENGKAP=row['GURU'], HARI=row['HARI'])
         
-        # try:
-        #     tes = MataPelajaran.objects.get(NAMA=row['MATA_PELAJARAN'])
-        # except Exception as e:
-        #     raise ValidationError('Tes')
+        for waktu in waktu_pelajaran:
+            for data in jadwal:
+                for waktu_lama in data.WAKTU_PELAJARAN.all():
+                    if int(waktu) == waktu_lama.JAM_KE:
+                        v_waktu_pelajaran =  {'WAKTU_PELAJARAN': 'Jadwal mengajar bentrok'}
+                        break
         
-        v_mapel = cek_error_import(MataPelajaran, row, 'MATA_PELAJARAN', 'NAMA')
-        v_semester = cek_error_import(DataSemester, row, 'SEMESTER', 'KE')
-        validator = gabung_dictionary(v_mapel, v_semester)
+        validator = gabung_dictionary(v_guru, v_mapel, v_semester, v_kelas, v_waktu_pelajaran)
         
         if validator:
             raise ValidationError(validator)

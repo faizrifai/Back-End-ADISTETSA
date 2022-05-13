@@ -1,9 +1,13 @@
+from django.apps import apps
 from django.contrib import admin
+from django.core.files.base import ContentFile
 
 from .forms import ReuseReduceRecycleForm, SanitasiDrainaseForm
 
 from.models import *
 from kurikulum.enums import ENUM_BULAN
+from utility.subadminexport import ImportExportWithFile
+from utility.custom_function import get_file_to_zip, zip_file
 
 # Register your models here.
 class SanitasiDraineseAdmin (admin.ModelAdmin):
@@ -77,10 +81,22 @@ class PembibitanPohonAdmin(admin.ModelAdmin):
 
 admin.site.register(PembibitanPohon, PembibitanPohonAdmin)
 
-class PemeliharaanPohonAdmin(admin.ModelAdmin):
+class PemeliharaanPohonAdmin(ImportExportWithFile):
     search_fields = ('TANGGAL', 'NAMA_KEGIATAN', 'KETERANGAN', 'FILE')
     list_display = ('TANGGAL', 'NAMA_KEGIATAN', 'KETERANGAN', 'FILE')
     list_per_page = 10
+    post_export_redirect_url = 'admin:kurikulum_rekapjurnalbelajar_changelist'
+
+    def pre_export(self, request, file_format):
+        exported_file, queryset = super().pre_export(request, file_format)
+
+        file_to_zip = get_file_to_zip('adiwiyata', queryset)
+        zip_buffer = zip_file(file_to_zip)
+
+        obj = apps.get_model('kurikulum', 'RekapJurnalBelajar').load()
+        obj.FILE_REKAP = exported_file
+        obj.FILE_ZIP = ContentFile(zip_buffer.getvalue(), name='Rekap.zip')
+        obj.save()
 
 admin.site.register(PemeliharaanPohon, PemeliharaanPohonAdmin)
 

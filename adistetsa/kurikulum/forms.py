@@ -1,4 +1,3 @@
-from xml.dom import ValidationErr
 from django import forms
 from tata_usaha.models import BukuInduk
 from .models import JadwalMengajar, KelasSiswa, NilaiRaport
@@ -8,8 +7,6 @@ class JadwalMengajarForm(forms.ModelForm):
     def clean(self):
         waktu_pelajaran = self.cleaned_data.get('WAKTU_PELAJARAN')
         jadwal = JadwalMengajar.objects.filter(GURU=self.cleaned_data.get('GURU'), HARI=self.cleaned_data.get('HARI'))
-        
-        print(waktu_pelajaran)
         
         for waktu in waktu_pelajaran.all():
             for data in jadwal:

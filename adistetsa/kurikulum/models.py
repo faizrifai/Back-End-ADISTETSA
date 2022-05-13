@@ -307,20 +307,6 @@ class JadwalMengajar(models.Model):
         self.TAHUN_AJARAN = self.KELAS.KELAS.TAHUN_AJARAN
         
         super(JadwalMengajar, self).save(*args, **kwargs)
-        
-# def waktu_pelajaran_changed(sender, instance, action, pk_set=None, **kwargs):
-#     if action == 'pre_add':
-#         for pk in pk_set:
-#             waktu = WaktuPelajaran.objects.get(pk=pk)
-#             jadwal = JadwalMengajar.objects.filter(GURU=instance.GURU, HARI=instance.HARI)
-            
-#             for obj in jadwal:
-#                 for data in obj.WAKTU_PELAJARAN.all():
-#                     if waktu == data:
-#                         error({'WAKTU_PELAJARAN': 'Jadwal bentrok'})
-    
-# m2m_changed.connect(waktu_pelajaran_changed, sender=JadwalMengajar.WAKTU_PELAJARAN.through)
-
 
 
 class DaftarJurnalBelajar(models.Model):
@@ -487,7 +473,28 @@ class NilaiRaport(models.Model):
             models.UniqueConstraint(fields=['MATA_PELAJARAN'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Nilai Raport"
+
+
+class RekapJurnalBelajar(models.Model):
+    FILE_REKAP = models.FileField(max_length=255, upload_to='Rekap_Jurnal_Belajar')
+    FILE_ZIP = models.FileField(max_length=255, upload_to='Rekap_Jurnal_Belajar', blank=True)
+
+    class Meta:
+        verbose_name_plural = "Rekap Jurnal Belajar"
+
+    def __str__(self):
+        return 'Rekap Jurnal Belajar'
+    
+    def save(self, *args, **kwargs):
+        self.pk = 1
         
+        super(RekapJurnalBelajar, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(self):
+        obj, created = self.objects.get_or_create(pk=1)
+
+        return obj
     
 # Configuration Model
 class Configuration(ConfigurationModel):

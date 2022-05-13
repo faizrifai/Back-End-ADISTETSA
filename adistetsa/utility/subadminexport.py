@@ -3,16 +3,17 @@ from import_export.formats.base_formats import DEFAULT_FORMATS
 from import_export.signals import post_export
 
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
+from django.core.files.base import ContentFile
 from django.utils import timezone
 from django.urls.conf import path
-from django.http import HttpResponse
+from django.urls import reverse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.response import TemplateResponse
+from django.utils.translation import gettext_lazy as _
 
+from import_export.admin import ImportExportModelAdmin
 from subadmin import SubAdmin, SubAdminHelper
-
-class PermissionDenied(Exception):
-        """The user did not have permission to do that"""
-        pass
 
 class BaseSubAdminExport(SubAdmin):
     change_list_template = 'export/change_list.html'
@@ -149,11 +150,121 @@ class BaseSubAdminExport(SubAdmin):
 
         context.update(self.admin_site.each_context(request))
 
-        context['title'] = "Export"
+        context['title'] = _("Export")
         context['form'] = form
         context['opts'] = self.model._meta
         request.current_app = self.admin_site.name
-        print(request.get_full_path())
 
         return TemplateResponse(request, 'export/export.html',
+                                context)
+
+
+class SubAdminExportDataWithFile(BaseSubAdminExport):
+    formats = DEFAULT_FORMATS
+    export_template_name = 'export/export.html'
+    post_export_redirect_url = None
+
+    def get_export_context_data(self, **kwargs):
+        return self.get_context_data(**kwargs)
+
+    def get_context_data(self, **kwargs):
+        return {}
+
+    def get_export_formats(self):
+        """
+        Returns available export formats.
+        """
+        return [f for f in self.formats if f().can_export()]
+
+    def get_export_file(self, request, file_format):
+        queryset = self.get_export_queryset(request)
+        export_data = self.get_export_data(file_format, queryset, request=request, encoding=None)
+
+        file = ContentFile(export_data, name=self.get_export_filename(file_format))
+
+        return file, queryset
+
+    def pre_export(self, request, file_format):
+        return self.get_export_file(request, file_format)
+
+    def export_action(self, request, *args, **kwargs):
+        if not self.has_export_permission(request):
+            raise PermissionDenied
+
+        request.subadmin = SubAdminHelper(self, args)
+
+        formats = DEFAULT_FORMATS
+        form = ExportForm(formats, request.POST or None)
+        if form.is_valid():
+            file_format = formats[
+                int(form.cleaned_data['file_format'])
+            ]()
+
+            response = HttpResponseRedirect(reverse(self.post_export_redirect_url))
+
+            self.pre_export(request, file_format)
+
+            post_export.send(sender=None, model=self.model)
+            return response
+
+        context = {}
+
+        context.update(self.admin_site.each_context(request))
+
+        context['title'] = _("Export")
+        context['form'] = form
+        context['opts'] = self.model._meta
+        request.current_app = self.admin_site.name
+
+        return TemplateResponse(request, 'export/export.html',
+                                context)
+
+class ImportExportWithFile(ImportExportModelAdmin):
+    post_export_redirect_url = None
+
+    def get_export_filename(self, file_format):
+        date_str = timezone.now().strftime('%Y-%m-%d')
+        filename = "%s-%s.%s" % (self.model.__name__,
+                                 date_str,
+                                 file_format.get_extension())
+        return filename
+
+    def get_export_file(self, request, file_format):
+        queryset = self.get_export_queryset(request)
+        export_data = self.get_export_data(file_format, queryset, request=request, encoding=None)
+
+        file = ContentFile(export_data, name=self.get_export_filename(file_format))
+
+        return file, queryset
+
+    def pre_export(self, request, file_format):
+        return self.get_export_file(request, file_format)
+
+    def export_action(self, request, *args, **kwargs):
+        if not self.has_export_permission(request):
+            raise PermissionDenied
+
+        formats = self.get_export_formats()
+        form = ExportForm(formats, request.POST or None)
+        if form.is_valid():
+            file_format = formats[
+                int(form.cleaned_data['file_format'])
+            ]()
+
+            response = HttpResponseRedirect(reverse(self.post_export_redirect_url))
+
+            self.pre_export(request, file_format)
+
+            post_export.send(sender=None, model=self.model)
+            return response
+
+        context = self.get_export_context_data()
+
+        context.update(self.admin_site.each_context(request))
+
+        context['title'] = _("Export")
+        context['form'] = form
+        context['opts'] = self.model._meta
+        request.current_app = self.admin_site.name
+        return TemplateResponse(request, [self.export_template_name],
                                 context)
