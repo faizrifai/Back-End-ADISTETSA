@@ -7,11 +7,12 @@ from django.utils.html import format_html
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from kesiswaan.importexportresources import *
 from kesiswaan.filter_admin import TahunAjaranFilter, SemesterFilter, DataSiswaFilter, EkskulFilter
-# from .filter_admin import *
+from kustom_autentikasi.models import DataPelatihUser
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
 from .importexportresources import *
 from utility.subadminexport import BaseSubAdminExport
+from utility.permissions import is_in_group
 
 class PengajuanLaporanPelanggaranAdmin(admin.ModelAdmin):
     search_fields = ('DATA_SISWA__NAMA',)
@@ -300,13 +301,12 @@ class AnggotaEkskulRegisterAdmin(admin.ModelAdmin):
 
 admin.site.register(AnggotaEkskul, AnggotaEkskulRegisterAdmin)
 
-class NilaiEkskulAdmin(SubAdmin,ImportExportModelAdmin):
+class NilaiEkskulAdmin(BaseSubAdminExport):
     model = NilaiEkskul
     search_fields = ('DATA_ANGGOTA__KELAS_SISWA__NIS__NAMA', 'DATA_ANGGOTA__EKSKUL__NAMA', )
-    list_display = ('DATA_ANGGOTA', 'ekskul', 'PREDIKAT','status_predikat', 'DESKRIPSI','RAPORT')
+    list_display = ['DATA_ANGGOTA', 'ekskul', 'PREDIKAT', 'status_predikat', 'SEMESTER', 'DESKRIPSI']
     list_per_page = 10 
     exclude = ['DATA_ANGGOTA', 'RAPORT']
-    autocomplete_fields = ['DATA_ANGGOTA', 'RAPORT',]
     resource_class = NilaiEkskulResource
     
     def status_predikat(self, obj):
@@ -324,5 +324,40 @@ class NilaiEkskulAdmin(SubAdmin,ImportExportModelAdmin):
     def ekskul(self, obj):
         return obj.DATA_ANGGOTA.EKSKUL.NAMA
         
-# admin.site.register(NilaiEkskul, NilaiEkskulAdmin)
-    
+
+class NilaiEkskulPelatihAdmin(admin.ModelAdmin):
+    search_fields = ['DATA_ANGGOTA__KELAS_SISWA__NIS__NAMA', 'DATA_ANGGOTA__EKSKUL__NAMA']
+    list_display = ['DATA_ANGGOTA', 'ekskul', 'PREDIKAT', 'status_predikat', 'SEMESTER', 'DESKRIPSI']
+    list_per_page = 10
+    exclude = ['DATA_ANGGOTA', 'RAPORT']
+    resource_class = NilaiEkskulResource
+
+    def get_queryset(self, request):
+        if is_in_group(request.user, 'Pelatih'):
+            pelatih = DataPelatihUser.objects.get(USER=request.user).DATA_PELATIH
+            jadwal_ekskul = JadwalEkskul.objects.filter(PELATIH=pelatih)
+            tahun_ajaran = jadwal_ekskul.values('TAHUN_AJARAN')
+            ekskul = jadwal_ekskul.values('EKSKUL')
+            anggota = AnggotaEkskul.objects.filter(TAHUN_AJARAN__ID__in=tahun_ajaran, EKSKUL__ID__in=ekskul).values('ID')
+            queryset = NilaiEkskul.objects.filter(DATA_ANGGOTA__ID__in=anggota)
+
+            return queryset
+        
+        return NilaiEkskul.objects.all()
+
+    def status_predikat(self, obj):
+        if obj.PREDIKAT == 'A':
+            return 'SANGAT BAIK' 
+        elif obj.PREDIKAT == 'B':
+            return 'BAIK'
+        elif obj.PREDIKAT == 'C':
+            return 'CUKUP' 
+        elif obj.PREDIKAT == 'D':
+            return 'KURANG'
+        elif obj.PREDIKAT == 'E':
+            return 'SANGAT KURANG'
+        
+    def ekskul(self, obj):
+        return obj.DATA_ANGGOTA.EKSKUL.NAMA
+
+admin.site.register(NilaiEkskulPelatih, NilaiEkskulPelatihAdmin)

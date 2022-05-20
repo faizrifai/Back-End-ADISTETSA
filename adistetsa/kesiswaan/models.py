@@ -374,7 +374,7 @@ class AnggotaEkskul(models.Model):
         verbose_name_plural = "Anggota Ekskul"
 
     def __str__(self):
-        return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) 
+        return str(self.KELAS_SISWA.NIS.NAMA) + ' - ' + str(self.EKSKUL.NAMA) + ' - ' + str(self.TAHUN_AJARAN)
     
     def save(self, *args, **kwargs):
         self.TAHUN_AJARAN = self.KELAS_SISWA.KELAS.KELAS.TAHUN_AJARAN
@@ -422,8 +422,9 @@ class NilaiEkskul(models.Model):
         max_length= 255,
         choices=ENUM_PREDIKAT_EKSKUL,
     )
+    SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
     DESKRIPSI = models.TextField(max_length= 1020)
-    RAPORT= models.ForeignKey(Raport, on_delete=models.CASCADE)
+    RAPORT = models.ForeignKey(Raport, on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Nilai Ekskul"
@@ -431,13 +432,22 @@ class NilaiEkskul(models.Model):
     def __str__(self):
         return str(self.DATA_ANGGOTA)
 
+class NilaiEkskulPelatih(NilaiEkskul):
+    class Meta:
+        proxy = True
+        verbose_name_plural = 'Nilai Ekskul'
+
+    def __str__(self):
+        return str(self.DATA_ANGGOTA)
+
 def post_save_raport(sender, instance, created, **kwargs):
     try:
         anggota_ekskul = AnggotaEkskul.objects.filter(KELAS_SISWA = instance.KELAS_SISWA, STATUS='Aktif')
         for siswa in anggota_ekskul:
-            NilaiEkskul.objects.update_or_create(
-                DATA_ANGGOTA=siswa,
-                RAPORT = instance
+            NilaiEkskul.objects.get_or_create(
+                DATA_ANGGOTA = siswa,
+                RAPORT = instance,
+                SEMESTER = instance.SEMESTER
             )
     except Exception as e:
         print(str(e))
