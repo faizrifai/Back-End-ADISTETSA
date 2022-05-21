@@ -40,7 +40,7 @@ Lakukan hal ini ketika melakukan run server pertama kali
 cd adistetsa
 python manage.py makemigrations
 python manage.py migrate
-python manage.py setup_dummy_dataprofi
+python run_setup_dummy.py
 ```
 Run server
 ```
