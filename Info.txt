@@ -1,55 +1,48 @@
-Install package pertama kali
+--Install package pertama kali
 1. aktivasi env
 2. Jalankan perintah "pip install -r requirements.txt"
 
-Aktifasi tiap env
+--Aktifasi tiap env
 activate.bat 
 
-Run server
+--Run server
 python manage.py runserver
 
-Make Super Admin 
+--Membuat Super Admin 
 python manage.py createsuperuser
 
-Migrate
+--Migrate
 python manage.py makemigrations
 python manage.py migrate
 
-Akun admin
-username: arzelf
-password: merdeka123 
+--Menjalankan Dummy Data
+python run_setup_dummy.py
 
-Tambah Dummy Data
-python manage.py setup_dummy_dataprofil
-
-Membuat app 
+--Membuat app 
 python manage.py startapp nameapp
 
+--Hapus Migrasi
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc"  -delete
 
+--Mengatasi konflik github
+Catatan: Lakukan selalu sebelum melakukan 'git push'
 
+1. Lakukan perubahan pada kode di penyimpanan lokal seperti biasa.
+2. Jalankan perintah "git add ." atau klik tombol "Changes > Stage All Changes" pada VS Code untuk menambahkan perubahan kode ke git.
+3. Jalankan perintah "git commit -m 'Isi pesan' " atau klik tombol "Commit > Commit Staged" pada VS code untuk menambahkan pesan commit ke git.
+4. Sebelum melakukan push, kita harus menjalankan perintah "git pull" terlebih dulu untuk mendapatkan perubahan yang terjadi pada remote server yaitu github.
+5. Jika saat menjalankan perintah nomor 4 terdapat pesan error/ warning "Need to specify how to reconcile divergent branches.", maka ketikkan "git config pull.rebase false" pada cmd/ terminal di VS Code terlebih dulu.
+6. Jika saat menjalankan perintah nomor 4 terdapat pesan error/ warning "Automatic merge failed; fix conflicts and then commit the result.", maka buka file yang terdapat conflict di VS Code, pesan tempat konflik pada baris kode akan ditampilkan, dan akan terdapat pilihan seperti "Accept incoming changes" (untuk menimpa perubahan remote server dengan perubahan lokal yang baru), "Accept current changes" (untuk menimpa perubahan lokal dengan perubahan dari remote server), dan "Accept both changes" untuk menggabungkan kode dari lokal dan kode dari remote.
+7. Setelah memilih opsi untuk mengatasi conflict pada nomor 6, jalankan perintah "git commit" atau klik tombol "Commit > Commit" pada VS Code.
+8. Konflik berhasil di fix, jalankan perintah "git push", maka perintah akan dijalankan tanpa pesan warning/ error lagi.
 
-class CreateDataRiwayatGajiBerkalaTestCase(SetupData):
-    def test_create_data_riwayat_gaji_berkala(self):
-        response = self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
+--Referensi
+Referensi Faker yang bisa digunakan untuk Dummy Data
+https://faker.readthedocs.io/en/master/providers.html
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+Referensi Django Model
+https://docs.djangoproject.com/en/4.0/topics/db/models/
 
-    def test_edit_data_riwayat_gaji_berkala(self):
-        # add data riwayat_gaji_berkala
-        self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
-
-        # test edit data
-        patch_response = self.client.patch(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}), self.data_riwayat_gaji_berkala)
-        put_response = self.client.put(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}), self.data_riwayat_gaji_berkala)
-
-        self.assertEqual(patch_response.status_code, status.HTTP_200_OK)
-        self.assertEqual(put_response.status_code, status.HTTP_200_OK)
-
-    def test_delete_data_riwayat_gaji_berkala(self):
-        # add data riwayat_gaji_berkala
-        self.client.post(reverse('data_guru_riwayat_gaji_berkala'), self.data_riwayat_gaji_berkala)
-
-        # test delete data
-        response = self.client.delete(reverse('data_guru_riwayat_gaji_berkala', kwargs={'pk': 1}))
-
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+Django Rest Framework
+https://www.django-rest-framework.org/tutorial/quickstart/

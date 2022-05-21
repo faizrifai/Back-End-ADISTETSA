@@ -1,8 +1,0 @@
-Referensi Faker yang bisa digunakan untuk Dummy Data
-https://faker.readthedocs.io/en/master/providers.html
-
-Referensi Django Model
-https://docs.djangoproject.com/en/4.0/topics/db/models/
-
-Django Rest Framework
-https://www.django-rest-framework.org/tutorial/quickstart/
