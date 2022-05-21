@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     # 'debug_toolbar',
     'config_models',
+    'FileUploadCompress.apps.FileuploadcompressConfig'
 ]
 
 MIDDLEWARE = [

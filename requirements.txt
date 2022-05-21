@@ -38,6 +38,7 @@ factory-boy==3.2.1
 factory-djoy==2.2.0
 Faker==10.0.0
 filelock==3.4.2
+filetype==1.0.13
 fpdf==1.7.2
 html-json-forms==1.1.1
 idna==3.3
