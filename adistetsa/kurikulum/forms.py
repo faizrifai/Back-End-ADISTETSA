@@ -1,33 +1,27 @@
 from django import forms
-from tata_usaha.models import BukuInduk
-from .models import JadwalMengajar, KelasSiswa, NilaiRaport
+from django.apps import apps
 from django.forms import ValidationError
+
 
 class JadwalMengajarForm(forms.ModelForm):
     def clean(self):
+        instance_id = self.instance.pk
+        hari = self.cleaned_data.get('HARI')
+        tahun_ajaran = self.cleaned_data.get('TAHUN_AJARAN')
+        semester = self.cleaned_data.get('SEMESTER')
+        kelas = self.cleaned_data.get('KELAS')
         waktu_pelajaran = self.cleaned_data.get('WAKTU_PELAJARAN')
-        jadwal = JadwalMengajar.objects.filter(GURU=self.cleaned_data.get('GURU'), HARI=self.cleaned_data.get('HARI'))
-        
+        jadwal_mengajar_model = apps.get_model('kurikulum', 'JadwalMengajar')
+        jadwal = jadwal_mengajar_model.objects.filter(
+            HARI=hari, TAHUN_AJARAN=tahun_ajaran, SEMESTER=semester, KELAS=kelas)
+
         for waktu in waktu_pelajaran.all():
             for data in jadwal:
                 for waktu_lama in data.WAKTU_PELAJARAN.all():
                     if waktu == waktu_lama:
-                        raise ValidationError({'WAKTU_PELAJARAN': 'Jadwal mengajar bentrok'})
-        
-        # for data in jadwal:
-        #     waktu_pelajaran = data.WAKTU_PELAJARAN.all()
-        #     for data in waktu_pelajaran:
-        #         for waktu in waktu_pelajaran.all():
-        #             if data == waktu:
-        #                 raise ValidationError({'WAKTU_PELAJARAN': 'Luwe'})
-        
-# class NilaiRaportForm(forms.ModelForm):
-    
-#     class Meta:
-#         model = NilaiRaport
-#         fields = "__all__"
-        
-#     def __init__(self, *args, **kwargs):
-#         super(NilaiRaportForm, self).__init__(*args, **kwargs)
-#         siswa = BukuInduk.objects.get(ID=self.BUKU_INDUK.ID)
-#         self.fields['KELAS_SISWA'].queryset = KelasSiswa.objects.filter(NIS=siswa.NIS)
+                        if instance_id:
+                            if data.pk == int(instance_id):
+                                continue
+                        
+                        raise ValidationError(
+                            {'WAKTU_PELAJARAN': 'Jadwal mengajar bentrok'})
