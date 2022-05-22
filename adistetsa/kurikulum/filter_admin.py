@@ -36,7 +36,7 @@ class NamaOfferingKelasFilter(AutocompleteFilter):
     field_name = 'OFFERING'
 
 
-class WaktuPelajaranFIlter(AutocompleteFilter):
+class WaktuPelajaranFilter(AutocompleteFilter):
     title = 'WAKTU PELAJARAN'
     field_name = 'WAKTU_PELAJARAN'
 

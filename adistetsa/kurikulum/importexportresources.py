@@ -166,3 +166,11 @@ class JadwalMengajarResource(resources.ModelResource):
         fields = ('HARI',)
         exclude = ('ID',)
         import_id_fields = ('kelas', 'mata_pelajaran', 'HARI')
+
+
+class WaktuPelajaranResource(resources.ModelResource):
+
+    class Meta:
+        model = WaktuPelajaran
+        exclude = ('ID',)
+        import_id_fields = ('JAM_KE',)
