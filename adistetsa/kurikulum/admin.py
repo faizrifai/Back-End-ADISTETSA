@@ -72,9 +72,10 @@ class MataPelajaranAdmin(ImportExportModelAdmin):
 admin.site.register(MataPelajaran, MataPelajaranAdmin)
 
 
-class WaktuPelajaranAdmin(admin.ModelAdmin):
+class WaktuPelajaranAdmin(ImportExportModelAdmin):
     search_fields = ['WAKTU_MULAI', 'WAKTU_BERAKHIR', 'JAM_KE']
 
+    resource_class = WaktuPelajaranResource
 
 admin.site.register(WaktuPelajaran, WaktuPelajaranAdmin)
 
@@ -196,7 +197,7 @@ class JadwalMengajarAdmin(ImportExportModelAdmin):
     list_display = ['GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS',
                     'MATA_PELAJARAN', 'HARI', 'jam_pelajaran', 'jumlah_waktu']
     list_filter = [TahunFilter, SemesterFilter, 'HARI', KelasFilter,
-                   MataPelajaranFilter, WaktuPelajaranFIlter, GuruFilter]
+                   MataPelajaranFilter, WaktuPelajaranFilter, GuruFilter]
     form = JadwalMengajarForm
     autocomplete_fields = ['GURU', 'TAHUN_AJARAN',
                            'SEMESTER', 'KELAS', 'MATA_PELAJARAN']
