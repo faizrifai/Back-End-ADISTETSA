@@ -1,31 +1,32 @@
 import datetime
+
+import tablib
 from django.http import HttpResponse
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser
-import tablib
-
 from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
+from .doc_schema import *
 from .importexportresources import *
 from .models import *
-from .doc_schema import *
 
 
 class ImportDataTataTertibView(APIView):
     """
     post: Melakukan import data tata tertib (Super Admin/ Staf Kurikulum).
     """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
         'POST': ['Staf Kurikulum'],
     }
-    parser_classes= (MultiPartParser,)
+    parser_classes = (MultiPartParser,)
 
     @swagger_auto_schema(
-        manual_parameters=[param_importexportfile,],
-        responses={'200': 'Berhasil mengupdate data tata tertib', '400': 'Gagal mengupdate data, ada kesalahan',}
+        manual_parameters=[param_importexportfile, ],
+        responses={'200': 'Berhasil mengupdate data tata tertib',
+                   '400': 'Gagal mengupdate data, ada kesalahan', }
     )
     def post(self, request, format=None):
         file = request.FILES['file']
@@ -37,9 +38,10 @@ class ImportDataTataTertibView(APIView):
         data_tata_tertib_resource = TataTertibResource()
         csv_data = tablib.import_set(str_text, format='csv')
         print(csv_data)
-        
+
         try:
-            result = data_tata_tertib_resource.import_data(csv_data, dry_run=True, raise_errors=True)
+            result = data_tata_tertib_resource.import_data(
+                csv_data, dry_run=True, raise_errors=True)
 
             if not result.has_errors():
                 data_tata_tertib_resource.import_data(csv_data, dry_run=False)
@@ -55,7 +57,7 @@ class ExportDataTataTertibView(APIView):
     """
     get: Melakukan export data tata tertib (Super Admin/ Staf PPDB).
     """
-    permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
+    permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
         'GET': ['Staf Kurikulum'],
     }
@@ -67,7 +69,8 @@ class ExportDataTataTertibView(APIView):
             today = datetime.date.today()
             filename = 'data_tata_tertib-' + str(today) + '.csv'
             response = HttpResponse(dataset.csv, content_type='text/csv')
-            response['Content-Disposition'] = u'attachment; filename="%s"' %  (filename)
+            response['Content-Disposition'] = u'attachment; filename="%s"' % (
+                filename)
 
             return response
         except Exception as e:

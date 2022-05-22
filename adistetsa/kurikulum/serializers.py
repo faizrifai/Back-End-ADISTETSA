@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from django.db import IntegrityError
-from .models import *
 from rest_framework import serializers
+
+from .models import *
+
 
 class KTSPSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +13,7 @@ class KTSPSerializer(serializers.ModelSerializer):
 
 class KTSPListSerializer(serializers.ModelSerializer):
     TAHUN_AJARAN = serializers.SerializerMethodField('get_tahun_ajaran')
+
     class Meta:
         model = KTSP
         fields = '__all__'
@@ -46,7 +48,7 @@ class SilabusRPBListSerializer(serializers.ModelSerializer):
         return str(obj.KELAS)
 
     def get_semester(self, obj):
-        return str(obj.SEMESTER)    
+        return str(obj.SEMESTER)
 
 
 class TataTertibSerializer(serializers.ModelSerializer):
@@ -59,6 +61,7 @@ class PoinPelanggaranSerializer(serializers.ModelSerializer):
     class Meta:
         model = PoinPelanggaran
         fields = '__all__'
+
 
 class JadwalPekanAktifListSerializer(serializers.ModelSerializer):
     MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
@@ -84,7 +87,8 @@ class JadwalPekanAktifDetailSerializer(serializers.ModelSerializer):
     KELAS = serializers.SerializerMethodField('get_kelas')
     SEMESTER = serializers.SerializerMethodField('get_semester')
     MINGGU_EFEKTIF = serializers.SerializerMethodField('get_minggu_efektif')
-    MINGGU_TIDAK_EFEKTIF = serializers.SerializerMethodField('get_minggu_tidak_efektif')
+    MINGGU_TIDAK_EFEKTIF = serializers.SerializerMethodField(
+        'get_minggu_tidak_efektif')
 
     class Meta:
         model = JadwalPekanAktif
@@ -123,6 +127,7 @@ class JadwalPekanAktifDetailSerializer(serializers.ModelSerializer):
 
         return minggu_tidak_efektif
 
+
 class JadwalMengajarSerializer(serializers.ModelSerializer):
     GURU = serializers.SerializerMethodField('get_guru')
     TAHUN_AJARAN = serializers.SerializerMethodField('get_tahun_ajaran')
@@ -130,6 +135,7 @@ class JadwalMengajarSerializer(serializers.ModelSerializer):
     MATA_PELAJARAN = serializers.SerializerMethodField('get_mata_pelajaran')
     WAKTU_PELAJARAN = serializers.SerializerMethodField('get_waktu_pelajaran')
     SEMESTER = serializers.SerializerMethodField('get_semester')
+    HARI = serializers.SerializerMethodField('get_hari')
 
     class Meta:
         model = JadwalMengajar
@@ -156,6 +162,9 @@ class JadwalMengajarSerializer(serializers.ModelSerializer):
 
     def get_semester(self, obj):
         return str(obj.SEMESTER)
+
+    def get_hari(self, obj):
+        return str(obj.HARI)
 
 
 class DaftarJurnalBelajarGuruListSerializer(serializers.ModelSerializer):
@@ -200,7 +209,8 @@ class JurnalBelajarGuruSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         request = self.context.get('request')
-        pk = request.parser_context.get('kwargs').get('id_jurnal_belajar_mengajar')
+        pk = request.parser_context.get('kwargs').get(
+            'id_jurnal_belajar_mengajar')
         daftar_jurnal_belajar = DaftarJurnalBelajar.objects.get(pk=pk)
 
         validated_data['DAFTAR'] = daftar_jurnal_belajar
@@ -211,10 +221,10 @@ class JurnalBelajarGuruSerializer(serializers.ModelSerializer):
             return super().create(validated_data)
         except Exception as e:
             if 'UNIQUE constraint failed' in str(e):
-                raise serializers.ValidationError('Pertemuan ' + str(validated_data['PERTEMUAN']) + ' sudah ada')
+                raise serializers.ValidationError(
+                    'Pertemuan ' + str(validated_data['PERTEMUAN']) + ' sudah ada')
             else:
                 raise serializers.ValidationError(str(e))
-
 
 
 class JurnalBelajarGuruListSerializer(serializers.ModelSerializer):

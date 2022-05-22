@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class KurikulumConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'kurikulum'
+
+    def ready(self):
+        import kurikulum.signals

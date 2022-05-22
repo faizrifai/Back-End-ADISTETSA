@@ -1,5 +1,7 @@
-from .models import *
 from rest_framework import serializers
+
+from .models import *
+
 
 class MataPelajaranSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,7 +17,8 @@ class TahunAjaranSerializer(serializers.ModelSerializer):
         fields = ('ID', 'tahun_ajaran')
 
     def get_tahun_ajaran(self, obj):
-        str_tahun = str(obj.TAHUN_AJARAN_AWAL) + '/' + str(obj.TAHUN_AJARAN_AKHIR)
+        str_tahun = str(obj.TAHUN_AJARAN_AWAL) + '/' + \
+            str(obj.TAHUN_AJARAN_AKHIR)
 
         return str_tahun
 
