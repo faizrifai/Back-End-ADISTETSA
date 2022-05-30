@@ -1,12 +1,14 @@
 from django.contrib import admin
 from django.utils.html import format_html
+
+
 from .forms import KatalogKonselorForm
 from kustom_autentikasi.models import DataGuruUser
 
 from django.utils.safestring import mark_safe
 
 
-from bimbingan_konseling.importexportresources import DataAlumniResource, KatalogKonselorResource, PeminatanLintasMinatResource
+from bimbingan_konseling.importexportresources import DataAlumniResource, KatalogKonselorResource, PeminatanLintasMinatResource, KonsultasiResource
 from .custom_filter import JurusanFilter, TingkatanFilter
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
@@ -62,10 +64,11 @@ class KatalogKonselorAdmin(ImportExportModelAdmin):
     
 admin.site.register(KatalogKonselor, KatalogKonselorAdmin)
 
-class KonsultasiAdmin(admin.ModelAdmin):
+class KonsultasiAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ['KONSELOR__NAMA', 'JENIS_MASALAH']
     list_display = ('USER','KONSELOR', 'TANGGAL_KONSULTASI','JAM_AWAL','JAM_AKHIR', 'JENIS_MASALAH','RATING', 'STATUS', 'KRITIK_SARAN',)
     list_per_page = 10
+    resource_class = KonsultasiResource
     list_filter = ('STATUS',)
     actions = ('accept_action', 'decline_action','konsultasi_action','feedback_action',)
     autocomplete_fields = ['USER', 'KONSELOR']
