@@ -1,3 +1,4 @@
+from xml.parsers.expat import model
 from django.contrib.auth.models import User, Group
 
 from import_export.fields import Field
@@ -101,3 +102,23 @@ class KatalogKonselorResource(resources.ModelResource):
         fields = ('KOMPETENSI', 'ALUMNUS','CONFERENCE', 'WHATSAPP') 
         exclude = ('ID','STATUS')
         import_id_fields = ('KOMPETENSI',)
+        
+class KonsultasiResource(resources.ModelResource):
+    user = Field(
+        column_name='USER',
+        attribute='USER',
+        widget= ForeignKeyWidget(User, 'username')
+    )
+    
+    konselor = Field(
+        column_name='KONSELOR',
+        attribute='KONSELOR',
+        widget= ForeignKeyWidget(KatalogKonselor, 'NAMA')
+    )
+    
+    class Meta:
+        model = Konsultasi
+        fields = ('TANGGAL_KONSULTASI', 'JAM_AWAL', 'JAM_AKHIR', 'JENIS_MASALAH', 'RATING', 'STATUS', 'KRITIK_SARAN') 
+        exclude = ('ID',)
+    
+    
