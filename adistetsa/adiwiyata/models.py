@@ -141,7 +141,7 @@ class PemeliharaanSampah(models.Model):
     FILE = models.FileField(upload_to='PemeliharaanSampah', max_length=255)
     
     class Meta:
-        verbose_name_plural ='Pemeliharaan Sampah'
+        verbose_name_plural ='Pengelolahan Sampah'
         
 class TabunganSampah(models.Model):
     ID = models.BigAutoField(primary_key=True)

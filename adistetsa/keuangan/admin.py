@@ -22,7 +22,7 @@ class PembayaranAdmin( ExportMixin, admin.ModelAdmin):
     autocomplete_fields = ('NAMA_SISWA',)
     # list_filter = ('TANGGAL_PEMBAYARAN','BULAN', 'TAHUN')
     form = PembayaranForm
-    exclude = ('KUITANSI',)
+    exclude = ('KUITANSI','GENERATE')
     resource_class = PembayaranResource
     date_hierarchy = 'TANGGAL_PEMBAYARAN'
 
