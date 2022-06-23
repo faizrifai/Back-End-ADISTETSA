@@ -33,7 +33,6 @@ def post_save_jadwal_mengajar(sender, instance, **kwargs):
             MATA_PELAJARAN=instance.MATA_PELAJARAN,
             KELAS=instance.KELAS,
             SEMESTER=instance.SEMESTER,
-            JADWAL_MENGAJAR=instance,
         )
 
     except Exception as e:

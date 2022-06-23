@@ -2,8 +2,8 @@ import factory
 from factory.django import DjangoModelFactory
 
 from .enums import *
+from dataprofil.models import DataSiswa, DataGuru
 from .models import *
-from .models import DataSemester, DataSiswa, MataPelajaran
 
 # random function section
 

@@ -173,11 +173,10 @@ class DaftarJurnalBelajarGuruListSerializer(serializers.ModelSerializer):
     KELAS = serializers.SerializerMethodField('get_kelas')
     SEMESTER = serializers.SerializerMethodField('get_semester')
     WAKTU_PELAJARAN = serializers.SerializerMethodField('get_waktu_pelajaran')
-    HARI = serializers.SerializerMethodField('get_hari')
 
     class Meta:
         model = DaftarJurnalBelajar
-        exclude = ('JADWAL_MENGAJAR',)
+        fields = '__all__'
 
     def get_guru(self, obj):
         return str(obj.GURU.NAMA_LENGKAP)
@@ -193,13 +192,16 @@ class DaftarJurnalBelajarGuruListSerializer(serializers.ModelSerializer):
 
     def get_waktu_pelajaran(self, obj):
         waktu_pelajaran = []
-        for data in obj.JADWAL_MENGAJAR.WAKTU_PELAJARAN.all():
+        data_jadwal = JadwalMengajar.objects.filter(
+            GURU=obj.GURU,
+            MATA_PELAJARAN=obj.MATA_PELAJARAN,
+            KELAS=obj.KELAS,
+            SEMESTER=obj.SEMESTER,
+        )
+        for data in data_jadwal:
             waktu_pelajaran.append(str(data))
 
         return waktu_pelajaran
-
-    def get_hari(self, obj):
-        return str(obj.JADWAL_MENGAJAR.HARI)
 
 
 class JurnalBelajarGuruSerializer(serializers.ModelSerializer):

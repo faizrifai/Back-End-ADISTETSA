@@ -40,4 +40,3 @@ class Command(BaseCommand):
             sampel = random.choices(waktu_pelajaran, k=n)
 
             JadwalMengajarFactory(waktu_pelajaran=sampel)
-            # NilaiRaportFactory()

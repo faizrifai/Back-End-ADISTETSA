@@ -224,18 +224,39 @@ class DaftarJurnalBelajarAdmin(RootSubAdmin):
     search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP',
                      'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
     list_per_page = 10
-    list_display = ['GURU', 'SEMESTER', 'KELAS', 'MATA_PELAJARAN', 'aksi']
+    list_display = ['aksi', 'GURU', 'SEMESTER', 'hari', 'KELAS', 'MATA_PELAJARAN', 'jurnal_belajar']
     list_filter = [SemesterFilter, KelasFilter,
                    MataPelajaranFilter, GuruFilter]
     autocomplete_fields = ['GURU', 'MATA_PELAJARAN',
-                           'KELAS', 'SEMESTER', 'JADWAL_MENGAJAR']
+                           'KELAS', 'SEMESTER']
 
     subadmins = [JurnalBelajarAdmin]
 
     def aksi(self, obj):
+        return 'Edit'
+
+    def jurnal_belajar(self, obj):
         base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
 
         return mark_safe(u'<a href="%s%d/jurnalbelajar">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+
+    def hari(self, obj):
+        data = JadwalMengajar.objects.filter(
+            GURU=obj.GURU, MATA_PELAJARAN=obj.MATA_PELAJARAN, KELAS=obj.KELAS, SEMESTER=obj.SEMESTER
+        ).order_by('-HARI')
+
+        hari = []
+        for d in data:
+            temp = []
+            output_waktu = 'Jam ke-'
+            for waktu in d.WAKTU_PELAJARAN.all():
+                temp.append(str(waktu.JAM_KE))
+            waktu = ', '.join(temp)
+            hari.append(d.HARI + ' ' + f'({output_waktu}{waktu})')
+
+        output_hari = '<br>'.join(hari)
+
+        return format_html(output_hari)
 
 
 admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
