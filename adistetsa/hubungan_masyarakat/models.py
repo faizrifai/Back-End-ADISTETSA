@@ -1,5 +1,9 @@
+import imp
 from django.db import models
 from kurikulum.enums import ENUM_HARI
+from kurikulum.models import KelasSiswa 
+from dataprofil.models import DataGuru, DataKaryawan
+from django.apps import apps
 
 from .enums import *
 
@@ -32,9 +36,7 @@ class BukuTamu(models.Model):
 class LogUKSSiswa (models.Model):
     ID = models.BigAutoField(primary_key=True)
     JENIS_PTK = models.CharField(max_length=255, default='Siswa')
-    NAMA = models.CharField(max_length=255)
-    KELAS = models.CharField(max_length=255)
-    NISN = models.CharField(max_length=255)
+    NAMA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     TANGGAL = models.DateField()
     JENIS_PEMERIKSAAN = models.CharField(max_length=255)
     OBAT_DIBERIKAN = models.CharField(max_length=255)
@@ -47,7 +49,7 @@ class LogUKSSiswa (models.Model):
 class LogUKSTendik (models.Model):
     ID = models.BigAutoField(primary_key=True)
     JENIS_PTK = models.CharField(max_length=255, choices=ENUM_JENIS_PTK_UKS)
-    NAMA = models.CharField(max_length=255)
+    NAMA = models.ForeignKey(DataGuru, on_delete=models.CASCADE)
     TANGGAL = models.DateField()
     JENIS_PEMERIKSAAN = models.CharField(max_length=255)
     OBAT_DIBERIKAN = models.CharField(max_length=255)
@@ -55,3 +57,15 @@ class LogUKSTendik (models.Model):
     
     class Meta:
         verbose_name_plural = "Log UKS Tendik"
+        
+class LogUKSKaryawan (models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    JENIS_PTK = models.CharField(max_length=255, choices=ENUM_JENIS_PTK_UKS)
+    NAMA = models.ForeignKey(DataKaryawan, on_delete=models.CASCADE)
+    TANGGAL = models.DateField()
+    JENIS_PEMERIKSAAN = models.CharField(max_length=255)
+    OBAT_DIBERIKAN = models.CharField(max_length=255)
+    TINDAK_LANJUT = models.CharField(max_length=255)
+    
+    class Meta:
+        verbose_name_plural = "Log UKS Karyawan"

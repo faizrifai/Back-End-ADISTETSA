@@ -1,9 +1,11 @@
 from django.apps import apps
 from django.contrib import admin
 from django.core.files.base import ContentFile
+from import_export.admin import ImportExportModelAdmin, ExportMixin
 
 from .forms import ReuseReduceRecycleForm, SanitasiDrainaseForm
 
+from .importexportresources import DaftarKaderResource
 from.models import *
 from kurikulum.enums import ENUM_BULAN
 from utility.subadminexport import ImportExportWithFile
@@ -32,10 +34,11 @@ class PublikasiAdmin(admin.ModelAdmin):
 
 admin.site.register(Publikasi, PublikasiAdmin)
 
-class DaftarKaderAdmin(admin.ModelAdmin):
+class DaftarKaderAdmin(ImportExportModelAdmin):
     search_fields = ('NIS__NIS','NIS__NAMA', 'NIS__HP', 'NIS__ALAMAT')
     list_display = ('nis','nama','handphone','alamat')
     autocomplete_fields=('NIS',)
+    resource_class = DaftarKaderResource
     def nis (self, obj):
         return obj.NIS.NIS
     

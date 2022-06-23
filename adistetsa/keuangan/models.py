@@ -6,6 +6,7 @@ from django.conf import settings
 from .enums import ENUM_JENIS_PEMBAYARAN
 from .customs_template import buat_kuitansi
 from utility.custom_function import validasi_integer, validasi_keuangan
+from django.core.exceptions import ValidationError
 # from .enums import *
 
 
@@ -33,14 +34,18 @@ class Pembayaran(models.Model):
     #     choices=ENUM_BULAN,
     #     default='')
     # TAHUN = models.CharField(max_length=1024,blank=True, default='')
-    GENERATE = models.BooleanField(default= False)
+    GENERATE = models.BooleanField(default= True)
     # TEMPLATE = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     KUITANSI = models.FileField(upload_to='DataKeuangan', max_length=255, blank=True)
     
     class Meta:
         verbose_name_plural = "Pembayaran"
     
-    
+            
+    def clean(self):
+        if self.PEMBAYARAN_DPSM_INSINDENTAL == '0' and self.PEMBAYARAN_DPSM_RUTIN == '0' and self.BIMBEL == '0' and self.NOMINAL_SPP =='0':
+            raise ValidationError('Harus ada minimal satu jenis pembayaran dipilih antara lain DPSM RUTIN, DPSM INSINDENTAL, BIMBEL, atau NOMINAL SPP + PEMBAYARAN SPP')
+        
     def save(self, *args, **kwargs):
         # self.KUITANSI = buat_kuitansi(self)
         if self.GENERATE :
