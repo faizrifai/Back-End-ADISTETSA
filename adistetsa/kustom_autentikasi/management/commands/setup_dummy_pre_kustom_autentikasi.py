@@ -2,11 +2,6 @@ from django.db import transaction
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import Group
 
-from kurikulum.models import *
-from kurikulum.factories import *
-
-import random
-
 class Command(BaseCommand):
     help = "Melakukan generate data dummy pre kustom autentikasi"
 

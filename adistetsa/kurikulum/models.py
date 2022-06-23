@@ -325,13 +325,13 @@ class DaftarJurnalBelajar(models.Model):
     MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
     KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
-    JADWAL_MENGAJAR = models.ForeignKey(
-        JadwalMengajar, on_delete=models.CASCADE)
+    # JADWAL_MENGAJAR = models.ForeignKey(
+    #     JadwalMengajar, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['JADWAL_MENGAJAR'], name='%(app_label)s_%(class)s_unique')
+                fields=['GURU', 'MATA_PELAJARAN', 'KELAS', 'SEMESTER'], name='%(app_label)s_%(class)s_unique')
         ]
         verbose_name_plural = "Daftar Jurnal Belajar"
         ordering = ['KELAS']
