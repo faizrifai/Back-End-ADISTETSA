@@ -1,14 +1,23 @@
-# POST https://adistetsa.pythonanywhere.com/login/
+# POST http://localhost:8000/login/
 # Content-Type: application/json
 
 # {
-#     "username": "kevin_adkins_2001",
+#     "username": "admin",
 #     "password": "merdeka123"
 # }
 
-GET https://adistetsa.pythonanywhere.com/hubungan_masyarakat/buku_tamu?NAMA=2&TANGGAL=2
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUzMjAxNjg4LCJpYXQiOjE2NTE5MDU2ODgsImp0aSI6IjY0MzVlMzExMzAyNzRlMmI4MjI4NmU2ZWExNzgyNDdhIiwidXNlcl9pZCI6OTQ5fQ.ZzFO44VXVD57fLWXT4fUQ1rhXpwPuzEAG4UDDOle8D8
+POST http://localhost:8000/hubungan_masyarakat/tambah_log_uks_karyawan
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MzU1MTI5LCJpYXQiOjE2NTYwNTkxMjksImp0aSI6IjEwMTc5OGZjZmUwNTQ0MDk4MmJkNTAyODc2ZTc0ZWM5IiwidXNlcl9pZCI6MzUyfQ.THzGJu3HqFAwX8sbFw2clyDfAOIXAqpRC9vo-Ddf5gw
 Content-Type: application/json
+
+{
+    "TANGGAL": "2022-12-12",
+    "JENIS_PEMERIKSAAN": "Batuk",
+    "JENIS_PTK": "Aparatur Sipil Negara",
+    "OBAT_DIBERIKAN": "Paracetamol",
+    "TINDAK_LANJUT": "Tidak ada",
+    "NAMA": "51"
+}
 
 # {
 #     "ALUMNUS": "UM",
