@@ -51,12 +51,6 @@ class SilabusRPBListSerializer(serializers.ModelSerializer):
         return str(obj.SEMESTER)
 
 
-class TataTertibSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TataTertib
-        fields = '__all__'
-
-
 class PoinPelanggaranSerializer(serializers.ModelSerializer):
     class Meta:
         model = PoinPelanggaran

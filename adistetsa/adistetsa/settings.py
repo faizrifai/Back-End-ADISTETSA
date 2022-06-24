@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'filebrowser',
     'admin_interface',
     'colorfield',
-    'adminactions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -64,7 +63,6 @@ INSTALLED_APPS = [
     'django_extensions',
     'subadmin',
     'django_cleanup.apps.CleanupConfig',
-    # 'debug_toolbar',
     'config_models',
     'FileUploadCompress.apps.FileuploadcompressConfig'
 ]

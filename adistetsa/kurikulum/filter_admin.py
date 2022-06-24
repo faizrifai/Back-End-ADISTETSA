@@ -46,11 +46,6 @@ class GuruFilter(AutocompleteFilter):
     field_name = 'GURU'
 
 
-class KategoriTataTertibFilter(AutocompleteFilter):
-    title = 'KATEGORI'
-    field_name = 'KATEGORI'
-
-
 class JadwalMengajarFilter(AutocompleteFilter):
     title = 'SEARCH JADWAL MENGAJAR'
     field_name = 'JADWAL_MENGAJAR'

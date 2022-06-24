@@ -145,23 +145,6 @@ class OfferingKelas(models.Model):
     def __str__(self):
         return self.KELAS.KODE_KELAS + ' ' + self.OFFERING.NAMA
 
-
-class KategoriTataTertib(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255, validators=[
-                            cek_huruf_besar_awal_kalimat])
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['NAMA'], name='%(app_label)s_%(class)s_unique')
-        ]
-        verbose_name_plural = "Kategori Tata Tertib"
-        ordering = ['NAMA']
-
-    def __str__(self):
-        return Truncator(self.NAMA).chars(50)
-
 # Model Turunan
 
 
@@ -202,23 +185,6 @@ class SilabusRPB(models.Model):
         return self.NAMA_FILE.name + ' - ' + str(self.TAHUN_AJARAN.TAHUN_AJARAN_AWAL) + '/' + str(self.TAHUN_AJARAN.TAHUN_AJARAN_AKHIR)
 
 
-class TataTertib(models.Model):
-    ID = models.BigAutoField(primary_key=True)
-    KETERANGAN = models.CharField(max_length=255)
-    KATEGORI = models.ForeignKey(KategoriTataTertib, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['KETERANGAN'], name='%(app_label)s_%(class)s_unique')
-        ]
-        verbose_name_plural = "Tata Tertib"
-        ordering = ['KETERANGAN']
-
-    def __str__(self):
-        return Truncator(self.KETERANGAN).chars(50)
-
-
 class PoinPelanggaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
     KETERANGAN = models.CharField(max_length=255)
@@ -231,6 +197,7 @@ class PoinPelanggaran(models.Model):
         ]
         verbose_name_plural = "Poin Pelanggaran"
         ordering = ['KETERANGAN']
+        app_label = 'kesiswaan'
 
     def __str__(self):
         return Truncator(self.KETERANGAN).chars(50)

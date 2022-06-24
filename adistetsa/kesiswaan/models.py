@@ -453,3 +453,35 @@ def post_save_raport(sender, instance, created, **kwargs):
         print(str(e))
         
 post_save.connect(post_save_raport, sender=Raport)
+
+class KategoriTataTertib(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    NAMA = models.CharField(max_length=255)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['NAMA'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Kategori Tata Tertib"
+        ordering = ['NAMA']
+
+    def __str__(self):
+        return Truncator(self.NAMA).chars(50)
+
+class TataTertib(models.Model):
+    ID = models.BigAutoField(primary_key=True)
+    KETERANGAN = models.CharField(max_length=255)
+    KATEGORI = models.ForeignKey(KategoriTataTertib, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['KETERANGAN'], name='%(app_label)s_%(class)s_unique')
+        ]
+        verbose_name_plural = "Tata Tertib"
+        ordering = ['KETERANGAN']
+        app_label = 'kesiswaan'
+
+    def __str__(self):
+        return Truncator(self.KETERANGAN).chars(50)
