@@ -121,7 +121,7 @@ class Kelas(models.Model):
 
 class NamaOfferingKelas(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    NAMA = models.CharField(max_length=255, validators=[paksa_huruf_besar])
+    NAMA = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = 'Nama Offering Kelas'
@@ -205,8 +205,6 @@ class PoinPelanggaran(models.Model):
 
 class WaktuPelajaran(models.Model):
     ID = models.BigAutoField(primary_key=True)
-    WAKTU_MULAI = models.TimeField()
-    WAKTU_BERAKHIR = models.TimeField()
     JAM_KE = models.IntegerField()
 
     class Meta:
@@ -214,7 +212,7 @@ class WaktuPelajaran(models.Model):
         verbose_name_plural = 'Waktu Pelajaran'
 
     def __str__(self):
-        return str(self.WAKTU_MULAI) + '-' + str(self.WAKTU_BERAKHIR) + ' (Jam Ke-' + str(self.JAM_KE) + ')'
+        return 'Jam Ke-' + str(self.JAM_KE)
 
     def clean(self):
         if self.WAKTU_MULAI > self.WAKTU_BERAKHIR:
@@ -250,9 +248,6 @@ class KelasSiswa(models.Model):
             NIS=self.NIS, KELAS__KELAS__TINGKATAN=self.KELAS.KELAS.TINGKATAN).exclude(ID=self.ID)
 
         if kelas:
-            # tingkatan_sama = kelas.KELAS.KELAS.TINGKATAN == self.KELAS.KELAS.TINGKATAN
-            # tahun_sama = kelas.KELAS.KELAS.TAHUN_AJARAN == self.KELAS.KELAS.TAHUN_AJARAN
-
             for data in kelas:
                 if data.KELAS.KELAS.TINGKATAN == self.KELAS.KELAS.TINGKATAN and data.KELAS.KELAS.TAHUN_AJARAN == self.KELAS.KELAS.TAHUN_AJARAN:
                     raise ValidationError(
@@ -292,8 +287,6 @@ class DaftarJurnalBelajar(models.Model):
     MATA_PELAJARAN = models.ForeignKey(MataPelajaran, on_delete=models.CASCADE)
     KELAS = models.ForeignKey(OfferingKelas, on_delete=models.CASCADE)
     SEMESTER = models.ForeignKey(DataSemester, on_delete=models.CASCADE)
-    # JADWAL_MENGAJAR = models.ForeignKey(
-    #     JadwalMengajar, on_delete=models.CASCADE)
 
     class Meta:
         constraints = [

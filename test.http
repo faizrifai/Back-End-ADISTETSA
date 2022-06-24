@@ -2,22 +2,22 @@
 # Content-Type: application/json
 
 # {
-#     "username": "admin",
+#     "username": "deborah_baker_1970",
 #     "password": "merdeka123"
 # }
 
-POST http://localhost:8000/hubungan_masyarakat/tambah_log_uks_karyawan
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MzU1MTI5LCJpYXQiOjE2NTYwNTkxMjksImp0aSI6IjEwMTc5OGZjZmUwNTQ0MDk4MmJkNTAyODc2ZTc0ZWM5IiwidXNlcl9pZCI6MzUyfQ.THzGJu3HqFAwX8sbFw2clyDfAOIXAqpRC9vo-Ddf5gw
+GET http://localhost:8000/kurikulum/jadwal_mengajar_guru?HARI=Selasa&TAHUN_AJARAN=4
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MzU3NjMxLCJpYXQiOjE2NTYwNjE2MzEsImp0aSI6ImMyNWJkNDM4ZWQwZTQ3M2Q4YzMxYWMzNzRiODgzNTJmIiwidXNlcl9pZCI6MTkyfQ.Wz4z1mqm1aK7FmNMvZpv4xpOFGZpC-bc9bi235xltm8
 Content-Type: application/json
 
-{
-    "TANGGAL": "2022-12-12",
-    "JENIS_PEMERIKSAAN": "Batuk",
-    "JENIS_PTK": "Aparatur Sipil Negara",
-    "OBAT_DIBERIKAN": "Paracetamol",
-    "TINDAK_LANJUT": "Tidak ada",
-    "NAMA": "51"
-}
+# {
+#     "TANGGAL": "2022-12-12",
+#     "JENIS_PEMERIKSAAN": "Batuk",
+#     "JENIS_PTK": "Aparatur Sipil Negara",
+#     "OBAT_DIBERIKAN": "Paracetamol",
+#     "TINDAK_LANJUT": "Tidak ada",
+#     "NAMA": "51"
+# }
 
 # {
 #     "ALUMNUS": "UM",

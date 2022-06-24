@@ -213,7 +213,7 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
     def get_queryset(self):
         current_user = self.request.user
         data_guru_user = apps.get_model('kustom_autentikasi', 'DataGuruUser').objects.get(USER=current_user)
-        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU).order_by('-HARI')
         return queryset
 
     def list(self, request, *args, **kwargs):
