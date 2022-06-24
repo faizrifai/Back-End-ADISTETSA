@@ -8,20 +8,6 @@ from .models import *
 # Register your import_export resource model here
 
 
-class TataTertibResource(resources.ModelResource):
-    kategori = Field(
-        column_name='KATEGORI',
-        attribute='KATEGORI',
-        widget=ForeignKeyWidget(KategoriTataTertib, 'NAMA')
-    )
-
-    class Meta:
-        model = TataTertib
-        fields = ('KETERANGAN', 'kategori')
-        exclude = ('ID',)
-        import_id_fields = ('KETERANGAN',)
-
-
 class PoinPelanggaranResource(resources.ModelResource):
 
     class Meta:
@@ -38,15 +24,6 @@ class MataPelajaranResource(resources.ModelResource):
         fields = ('KODE', 'NAMA')
         exclude = ('ID',)
         import_id_fields = ('KODE',)
-
-
-class KategoriTataTertibResource(resources.ModelResource):
-
-    class Meta:
-        model = KategoriTataTertib
-        fields = ('NAMA',)
-        exclude = ('ID',)
-        import_id_fields = ('NAMA',)
 
 
 class JurnalBelajarResource(resources.ModelResource):

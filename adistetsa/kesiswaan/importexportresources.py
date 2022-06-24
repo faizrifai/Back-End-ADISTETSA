@@ -19,7 +19,30 @@ class TahunAjaranForeignKeyWidget(ForeignKeyWidget):
             first_name__iexact=row["TAHUN_AJARAN_AWAL"],
             last_name__iexact=row["TAHUN_AJARAN_AKHIR"]
         )
-        
+
+class TataTertibResource(resources.ModelResource):
+    kategori = Field(
+        column_name='KATEGORI',
+        attribute='KATEGORI',
+        widget=ForeignKeyWidget(KategoriTataTertib, 'NAMA')
+    )
+
+    class Meta:
+        model = TataTertib
+        fields = ('KETERANGAN', 'kategori')
+        exclude = ('ID',)
+        import_id_fields = ('KETERANGAN',)
+
+
+class KategoriTataTertibResource(resources.ModelResource):
+
+    class Meta:
+        model = KategoriTataTertib
+        fields = ('NAMA',)
+        exclude = ('ID',)
+        import_id_fields = ('NAMA',)
+
+
 # # class AnggotaEkskulResource(resources.ModelResource):
     
     
