@@ -25,3 +25,4 @@ class Command(BaseCommand):
             BukuTamuFactory()
             LogUKSSiswaFactory()
             LogUKSTendikFactory()
+            LogUKSKaryawanFactory()

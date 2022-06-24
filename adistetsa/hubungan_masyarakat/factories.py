@@ -6,7 +6,8 @@ from .enums import *
 import factory
 
 from django.db.models import Model
-from kurikulum.models import OfferingKelas
+from kurikulum.models import KelasSiswa
+from dataprofil.models import DataGuru, DataKaryawan
 
 # random function section
 def random_enum(nama_enum):
@@ -40,9 +41,7 @@ class LogUKSSiswaFactory(DjangoModelFactory):
         model = LogUKSSiswa
 
     JENIS_PTK = 'Siswa'
-    NAMA = factory.Faker('name')
-    KELAS = factory.Faker('random_element', elements=random_id_from_model(OfferingKelas))
-    NISN = factory.Faker('credit_card_number')
+    NAMA = factory.Iterator(KelasSiswa.objects.all())
     TANGGAL = factory.Faker('date')
     JENIS_PEMERIKSAAN = factory.Faker('catch_phrase')
     OBAT_DIBERIKAN = factory.Faker('catch_phrase')
@@ -53,7 +52,18 @@ class LogUKSTendikFactory(DjangoModelFactory):
         model = LogUKSTendik
 
     JENIS_PTK = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_PTK_UKS))
-    NAMA = factory.Faker('name')
+    NAMA = factory.Iterator(DataGuru.objects.all())
+    TANGGAL = factory.Faker('date')
+    JENIS_PEMERIKSAAN = factory.Faker('catch_phrase')
+    OBAT_DIBERIKAN = factory.Faker('catch_phrase')
+    TINDAK_LANJUT = factory.Faker('catch_phrase')
+
+class LogUKSKaryawanFactory(DjangoModelFactory):
+    class Meta:
+        model = LogUKSKaryawan
+
+    JENIS_PTK = factory.Faker('random_element', elements=random_enum(ENUM_JENIS_PTK_UKS))
+    NAMA = factory.Iterator(DataKaryawan.objects.all())
     TANGGAL = factory.Faker('date')
     JENIS_PEMERIKSAAN = factory.Faker('catch_phrase')
     OBAT_DIBERIKAN = factory.Faker('catch_phrase')

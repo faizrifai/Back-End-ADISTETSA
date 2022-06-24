@@ -1,4 +1,3 @@
-import imp
 from django.db import models
 from kurikulum.enums import ENUM_HARI
 from kurikulum.models import KelasSiswa 
