@@ -84,7 +84,7 @@ class DataSiswaSerializer(serializers.ModelSerializer):
     def get_kelas(self, obj):
         return str(obj.KELAS)
 
-class DataGuruSerializer(serializers.ModelSerializer):
+class DataGuruTendikSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataGuru
         fields = '__all__'

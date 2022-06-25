@@ -333,7 +333,7 @@ class DataGuruListView(generics.ListAPIView):
         'GET': ['Staf Humas'],
     }
 
-    serializer_class = DataGuruSerializer
+    serializer_class = DataGuruTendikSerializer
     queryset = DataGuru.objects.all()
     
     def get(self, request, *args, **kwargs):

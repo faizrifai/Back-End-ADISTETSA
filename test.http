@@ -1,13 +1,13 @@
-# POST http://localhost:8000/login/
+# POST https://adistetsa.pythonanywhere.com/login/
 # Content-Type: application/json
 
 # {
-#     "username": "deborah_baker_1970",
+#     "username": "david_savage_2011",
 #     "password": "merdeka123"
 # }
 
-GET http://localhost:8000/kurikulum/jadwal_mengajar_guru?HARI=Selasa&TAHUN_AJARAN=4
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3MzU3NjMxLCJpYXQiOjE2NTYwNjE2MzEsImp0aSI6ImMyNWJkNDM4ZWQwZTQ3M2Q4YzMxYWMzNzRiODgzNTJmIiwidXNlcl9pZCI6MTkyfQ.Wz4z1mqm1aK7FmNMvZpv4xpOFGZpC-bc9bi235xltm8
+GET https://adistetsa.pythonanywhere.com/hubungan_masyarakat/log_uks
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3NDMyNjYxLCJpYXQiOjE2NTYxMzY2NjEsImp0aSI6IjZhZDhlMmZiYzllYzQ1M2ZiNjI2MjAwYThlNGFhMDVlIiwidXNlcl9pZCI6ODU3fQ.9q9oHqQtplL-Z6CD7jW4IKYFNHwQ-2CV-LD_zqwGVAQ
 Content-Type: application/json
 
 # {
