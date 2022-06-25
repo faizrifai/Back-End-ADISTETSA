@@ -70,7 +70,7 @@ class BukuTamuPostSerializer(serializers.ModelSerializer):
         model = BukuTamu
         exclude = ('HARI',)
 
-class DataSiswaSerializer(serializers.ModelSerializer):
+class DataSiswaHumasSerializer(serializers.ModelSerializer):
     NAMA = serializers.SerializerMethodField('get_nama')
     KELAS = serializers.SerializerMethodField('get_kelas')
 
@@ -89,7 +89,7 @@ class DataGuruTendikSerializer(serializers.ModelSerializer):
         model = DataGuru
         fields = '__all__'
 
-class DataKaryawanSerializer(serializers.ModelSerializer):
+class DataKaryawanTendikSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataKaryawan
         fields = '__all__'

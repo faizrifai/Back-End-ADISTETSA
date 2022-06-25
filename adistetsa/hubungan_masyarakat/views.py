@@ -318,7 +318,7 @@ class DataSiswaListView(generics.ListAPIView):
         'GET': ['Staf Humas'],
     }
 
-    serializer_class = DataSiswaSerializer
+    serializer_class = DataSiswaHumasSerializer
     queryset = KelasSiswa.objects.all()
     
     def get(self, request, *args, **kwargs):
@@ -348,7 +348,7 @@ class DataKaryawanListView(generics.ListAPIView):
         'GET': ['Staf Humas'],
     }
 
-    serializer_class = DataKaryawanSerializer
+    serializer_class = DataKaryawanTendikSerializer
     queryset = DataKaryawan.objects.all()
     
     def get(self, request, *args, **kwargs):
