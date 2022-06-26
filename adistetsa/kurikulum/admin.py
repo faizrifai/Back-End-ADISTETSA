@@ -1,3 +1,4 @@
+from admin_auto_filters.filters import AutocompleteFilterFactory
 from config_models.admin import ConfigurationModelAdmin
 from django.contrib import admin
 from django.urls import reverse
@@ -295,6 +296,31 @@ class RaportAdmin(SubAdmin):
 
         return mark_safe(u'<a href="%s%d/raport/%d/nilaiekskul">%s</a>' % (base_url, obj.BUKU_INDUK.ID, obj.ID, 'Buka Nilai Ekskul'))
 
+
+class RaportKurikulumAdmin(RootSubAdmin):
+    search_fields = ['KELAS_SISWA']
+    list_display = ['KELAS_SISWA', 'SEMESTER', 'tahun_ajaran',
+                    'aksi_nilai_raport']
+    list_filter = [SemesterFilter,
+                    AutocompleteFilterFactory('TAHUN AJARAN', 'KELAS_SISWA__KELAS__KELAS__TAHUN_AJARAN'),
+                    AutocompleteFilterFactory('KELAS', 'KELAS_SISWA__KELAS'),
+                    AutocompleteFilterFactory('SISWA', 'KELAS_SISWA__NIS')]
+    list_per_page = 10
+    subadmins = [NilaiRaportAdmin]
+    exclude = ['KELAS_SISWA']
+    ordering = ['KELAS_SISWA', 'SEMESTER']
+    autocomplete_fields = ['KELAS_SISWA', 'SEMESTER']
+
+    def tahun_ajaran(self, obj):
+        return str(obj.KELAS_SISWA.KELAS.KELAS.TAHUN_AJARAN)
+
+    def aksi_nilai_raport(self, obj):
+        base_url = reverse('admin:kurikulum_raport_changelist')
+
+        return mark_safe(u'<a href="%s%d/nilairaport">%s</a>' % (base_url, obj.ID, 'Buka Raport'))
+
+
+admin.site.register(Raport, RaportKurikulumAdmin)
 
 admin.site.register(Configuration, ConfigurationModelAdmin)
 
