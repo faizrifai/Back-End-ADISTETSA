@@ -320,6 +320,7 @@ class DataSiswaListView(generics.ListAPIView):
 
     serializer_class = DataSiswaHumasSerializer
     queryset = KelasSiswa.objects.all()
+    search_fields = ('NIS__NIS', 'NIS__NAMA')
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -335,6 +336,7 @@ class DataGuruListView(generics.ListAPIView):
 
     serializer_class = DataGuruTendikSerializer
     queryset = DataGuru.objects.all()
+    search_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -350,6 +352,7 @@ class DataKaryawanListView(generics.ListAPIView):
 
     serializer_class = DataKaryawanTendikSerializer
     queryset = DataKaryawan.objects.all()
+    search_fields = ('NIP', 'NIK', 'NAMA_LENGKAP')
     
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
