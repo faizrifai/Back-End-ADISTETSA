@@ -23,11 +23,11 @@ class Pembayaran(models.Model):
     NAMA_SISWA = models.ForeignKey(KelasSiswa, on_delete=models.CASCADE)
     # JENIS_PEMBAYARAN = models.CharField(max_length=255, blank=True)
     TANGGAL_PEMBAYARAN = models.DateField()
-    PEMBAYARAN_DPSM_RUTIN = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_keuangan])
     PEMBAYARAN_DPSM_INSINDENTAL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_keuangan])
+    PEMBAYARAN_DPSM_RUTIN = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_keuangan])
+    BULAN_PEMBAYARAN_DPSM_RUTIN = models.CharField(max_length=1024,blank=True, default='')
     BIMBEL = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_keuangan])
-    NOMINAL_SPP = models.CharField(blank=True, default=0, max_length=1024, validators=[validasi_keuangan])
-    PEMBAYARAN_SPP = models.CharField(max_length=1024,blank=True, default='')
+    BULAN_PEMBAYARAN_BIMBEL = models.CharField(max_length=1024,blank=True, default='')
     # BULAN = models.CharField(
     #     max_length=1024,
     #     blank=True, 
@@ -43,9 +43,11 @@ class Pembayaran(models.Model):
     
             
     def clean(self):
-        if self.PEMBAYARAN_DPSM_INSINDENTAL == '0' and self.PEMBAYARAN_DPSM_RUTIN == '0' and self.BIMBEL == '0' and self.NOMINAL_SPP =='0':
+        if self.PEMBAYARAN_DPSM_INSINDENTAL == '0' and self.PEMBAYARAN_DPSM_RUTIN == '0' and self.BIMBEL == '0' :
             raise ValidationError('Harus ada minimal satu jenis pembayaran dipilih antara lain DPSM RUTIN, DPSM INSINDENTAL, BIMBEL, atau NOMINAL SPP + PEMBAYARAN SPP')
         
+        if self.PEMBAYARAN_DPSM_INSINDENTAL != '0' and self.PEMBAYARAN_DPSM_RUTIN != '0' or self.PEMBAYARAN_DPSM_INSINDENTAL != '0' and self.BIMBEL != '0':
+            raise ValidationError('Pembayaran Insindental Tidak Bisa Dilakukan Bersamaan Dengan Pembayaran Lainnya ')
     def save(self, *args, **kwargs):
         # self.KUITANSI = buat_kuitansi(self)
         if self.GENERATE :
