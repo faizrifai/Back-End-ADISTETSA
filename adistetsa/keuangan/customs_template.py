@@ -122,7 +122,7 @@ def buat_kuitansi(self):
    
    total_pembayaran = 0
 
-   if self.PEMBAYARAN_DPSM_RUTIN != '0' or  self.NOMINAL_SPP != '' :
+   if int(self.PEMBAYARAN_DPSM_RUTIN) > 0 :
       bulan = self.BULAN_PEMBAYARAN_DPSM_RUTIN.split(',')
       DPSMR = 'X'
       total_pembayaran += (len(bulan)*int(self.PEMBAYARAN_DPSM_RUTIN))
@@ -155,19 +155,19 @@ def buat_kuitansi(self):
          elif cur in 'Desember':
             DESEMBER = 'X'
             
-   if self.PEMBAYARAN_DPSM_INSINDENTAL != '0' or self.PEMBAYARAN_DPSM_INSINDENTAL != '' :
+   if int(self.PEMBAYARAN_DPSM_INSINDENTAL) > 0  :
       DPSMI = 'X'
       value = self.PEMBAYARAN_DPSM_INSINDENTAL
       print (value)
       total_pembayaran += int(value)
 
-   if self.BIMBEL != '0' or  self.BIMBEL != '' :
-      bulan = self.BULAN_PEMBAYARAN_BIMBEL.split(',')
+   if int(self.BIMBEL) > 0  :
+      bulan1 = self.BULAN_PEMBAYARAN_BIMBEL.split(',')
       BIMBEL = 'X'
-      total_pembayaran += (len(bulan)*int(self.BIMBEL))
-      print (len(bulan))
-      for i in range(len(bulan)):
-         cur = bulan[i-1].strip()
+      total_pembayaran += (len(bulan1)*int(self.BIMBEL))
+      print (len(bulan1))
+      for i in range(len(bulan1)):
+         cur = bulan1[i-1].strip()
          print(cur)
          if cur in 'Januari':
             JANUARI1 = 'X'
@@ -224,7 +224,7 @@ def buat_kuitansi(self):
    pdf.set_xy(10, 0)
    # pdf.ln(1)
    pdf.set_xy(10, 95)
-   pdf.multi_cell(20, 10, txt= 'DPSMI', border = 1,
+   pdf.multi_cell(20, 10, txt= DPSMI, border = 1,
                 align= 'C', fill=bool)
    pdf.set_xy(30, 95)
    # pdf.ln(1)
@@ -232,7 +232,7 @@ def buat_kuitansi(self):
                 align= 'L', fill=bool)
    
    pdf.set_xy(10, 105)
-   pdf.multi_cell(20, 10, txt= 'DPSMR', border = 1,
+   pdf.multi_cell(20, 10, txt= DPSMR, border = 1,
                 align= 'C', fill=bool)
    pdf.set_xy(30, 105)
    # pdf.ln(1)
@@ -317,7 +317,7 @@ def buat_kuitansi(self):
                 align= 'L', fill=bool)
    
    pdf.set_xy(10, 145)
-   pdf.multi_cell(20, 10, txt= 'BIMBEL', border = 1,
+   pdf.multi_cell(20, 10, txt= BIMBEL, border = 1,
                 align= 'C', fill=bool)
    pdf.set_xy(30, 145)
    # pdf.ln(1)
