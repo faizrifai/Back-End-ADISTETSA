@@ -58,12 +58,12 @@ class Command(BaseCommand):
 
         # Waktu Pelajaran
         waktu_pelajaran = [
-            {'WAKTU_MULAI': '07:00', 'WAKTU_BERAKHIR': '08:00', 'JAM_KE': 1},
-            {'WAKTU_MULAI': '08:15', 'WAKTU_BERAKHIR': '09:15', 'JAM_KE': 2},
-            {'WAKTU_MULAI': '09:30', 'WAKTU_BERAKHIR': '10:30', 'JAM_KE': 3},
-            {'WAKTU_MULAI': '11:00', 'WAKTU_BERAKHIR': '12:00', 'JAM_KE': 4},
-            {'WAKTU_MULAI': '12:15', 'WAKTU_BERAKHIR': '13:15', 'JAM_KE': 5},
-            {'WAKTU_MULAI': '13:45', 'WAKTU_BERAKHIR': '14:45', 'JAM_KE': 6}
+            {'JAM_KE': 1},
+            {'JAM_KE': 2},
+            {'JAM_KE': 3},
+            {'JAM_KE': 4},
+            {'JAM_KE': 5},
+            {'JAM_KE': 6}
         ]
 
         for data in waktu_pelajaran:

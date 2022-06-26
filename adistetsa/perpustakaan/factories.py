@@ -1,5 +1,3 @@
-from pyexpat import model
-import django
 from factory.django import DjangoModelFactory
 
 from .models import *
@@ -21,6 +19,7 @@ class PengajuanSiswaFactory(DjangoModelFactory):
     NIS = factory.Iterator(DataSiswa.objects.all())
     TANGGAL_PENGAJUAN = factory.Faker('date')
     JANGKA_PEMINJAMAN = factory.Faker('random_element', elements=random_enum(ENUM_JANGKA_PEMINJAMAN))
+    STATUS_PENGAJUAN = 'Pengajuan'
     
     @factory.post_generation
     def buku(self, create, extracted, **kwargs):
@@ -41,6 +40,7 @@ class PengajuanGuruFactory(DjangoModelFactory):
     DATA_GURU = factory.Iterator(DataGuru.objects.all())
     TANGGAL_PENGAJUAN = factory.Faker('date')
     JANGKA_PEMINJAMAN = factory.Faker('random_element', elements=random_enum(ENUM_JANGKA_PEMINJAMAN))
+    STATUS_PENGAJUAN = 'Diajukan'
     
     @factory.post_generation
     def buku(self, create, extracted, **kwargs):

@@ -214,14 +214,6 @@ class WaktuPelajaran(models.Model):
     def __str__(self):
         return 'Jam Ke-' + str(self.JAM_KE)
 
-    def clean(self):
-        if self.WAKTU_MULAI > self.WAKTU_BERAKHIR:
-            raise ValidationError(
-                'Waktu Mulai tidak boleh lebih dari Waktu Berakhir')
-        if self.WAKTU_MULAI == self.WAKTU_BERAKHIR:
-            raise ValidationError(
-                'Waktu Mulai tidak boleh sama dengan Waktu Berakhir')
-
     def save(self, *args, **kwargs):
         self.full_clean()
 

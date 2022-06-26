@@ -20,12 +20,19 @@ def random_enum(nama_enum):
     return pilihan
 
 def datasiswa():
-    data=list(KelasSiswa.objects.filter(KELAS__KELAS__TINGKATAN='X'))
-    siswa = random.choices(data)
+    kelas_siswa = KelasSiswa.objects.filter(KELAS__KELAS__TINGKATAN='X')
+    kelas_siswa_ids = []
+
+    for data in kelas_siswa:
+        orang_tua = DataOrangTua.objects.filter(DATA_ANAK__in=[data.NIS.pk])
+
+        if orang_tua:
+            kelas_siswa_ids.append(data.NIS.pk)
+
+    data = kelas_siswa.filter(NIS__pk__in=kelas_siswa_ids)
+
+    siswa = random.choices(list(data))
     return DataSiswa.objects.get(NIS=siswa[0].NIS.NIS)
-    
-    
-    
 
 
 # factory class section

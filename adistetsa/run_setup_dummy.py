@@ -1,9 +1,9 @@
 from subprocess import call
 
-call(["python", "manage.py", "setup_dummy_pre_kustom_autentikasi"])
+# print('Data Profil\n')
+# call(["python", "manage.py", "setup_dummy_dataprofil"])
 
-print('Data Profil\n')
-call(["python", "manage.py", "setup_dummy_dataprofil"])
+call(["python", "manage.py", "setup_dummy_pre_kustom_autentikasi"])
 
 print('\nKustom Autentikasi\n')
 call(["python", "manage.py", "setup_dummy_kustom_autentikasi"])
@@ -35,8 +35,8 @@ call(["python", "manage.py", "setup_dummy_sarana_prasarana"])
 print('\nUnit Penjamin Mutu\n')
 call(["python", "manage.py", "setup_dummy_upm"])
 
-# print('\nPerpustakaan\n')
-# call(["python", "manage.py", "setup_dummy_perpustakaan"])
+print('\nPerpustakaan\n')
+call(["python", "manage.py", "setup_dummy_perpustakaan"])
 
 print('\nTata Usaha\n')
 call(["python", "manage.py", "setup_dummy_tata_usaha"])
