@@ -46,3 +46,6 @@ https://docs.djangoproject.com/en/4.0/topics/db/models/
 
 Django Rest Framework
 https://www.django-rest-framework.org/tutorial/quickstart/
+
+Dump Database
+python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 > dump.json

@@ -35,12 +35,6 @@ class KelasSerializer(serializers.ModelSerializer):
         fields = ('ID', 'KODE_KELAS')
 
 
-class KategoriTataTertibSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = KategoriTataTertib
-        fields = '__all__'
-
-
 class JadwalPekanEfektifSemesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = JadwalPekanEfektifSemester

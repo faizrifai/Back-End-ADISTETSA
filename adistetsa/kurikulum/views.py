@@ -123,48 +123,6 @@ class SilabusRPBDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = SilabusRPBSerializer
 
 
-class TataTertibListView(generics.ListCreateAPIView):
-    """
-    get: Menampilkan Tata Tertib.
-    post: Menambahkan Tata Tertib (Super Admin/ Staf Kurikulum).
-    """
-    permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'POST': ['Staf Kurikulum'],
-    }
-
-    queryset = TataTertib.objects.all()
-    serializer_class = TataTertibSerializer
-    filterset_fields = ('KETERANGAN', 'KATEGORI')
-    search_fields = ('KETERANGAN', 'KATEGORI')
-
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-
-class TataTertibDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    get: Menampilkan data Tata Tertib.
-    put: Mengubah atribut keseluruhan data Tata Tertib.
-    patch: Mengubah beberapa atribut data Tata Tertib.
-    delete: Menghapus data Tata Tertib.
-    """
-    permission_classes = [HasGroupPermissionAny]
-    required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'PUT': ['Staf Kurikulum'],
-        'PATCH': ['Staf Kurikulum'],
-        'DELETE': ['Staf Kurikulum'],
-    }
-
-    queryset = TataTertib.objects.all()
-    serializer_class = TataTertibSerializer
-
-
 class PoinPelanggaranListView(generics.ListCreateAPIView):
     """
     get: Menampilkan Poin Pelanggaran
@@ -255,7 +213,7 @@ class JadwalMengajarGuruListView(generics.ListAPIView):
     def get_queryset(self):
         current_user = self.request.user
         data_guru_user = apps.get_model('kustom_autentikasi', 'DataGuruUser').objects.get(USER=current_user)
-        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU)
+        queryset = JadwalMengajar.objects.filter(GURU=data_guru_user.DATA_GURU).order_by('-HARI')
         return queryset
 
     def list(self, request, *args, **kwargs):

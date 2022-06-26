@@ -17,7 +17,7 @@ class ProfilKonselorView(APIView):
     """
     permission_classes = [IsSuperAdmin|HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf BK'],
+        'GET': ['Staf BK', 'Siswa', 'Guru', 'Karyawan'],
         'PATCH': ['Staf BK'],
     }
 

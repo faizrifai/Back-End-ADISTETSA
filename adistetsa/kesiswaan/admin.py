@@ -1,12 +1,11 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from django.utils.text import Truncator
 from django.utils.html import format_html
 
 from import_export.admin import ImportExportModelAdmin, ExportMixin
 from kesiswaan.importexportresources import *
-from kesiswaan.filter_admin import TahunAjaranFilter, SemesterFilter, DataSiswaFilter, EkskulFilter
+from kesiswaan.filter_admin import *
 from kustom_autentikasi.models import DataPelatihUser
 from .models import *
 from subadmin import SubAdmin, RootSubAdmin
@@ -361,3 +360,24 @@ class NilaiEkskulPelatihAdmin(admin.ModelAdmin):
         return obj.DATA_ANGGOTA.EKSKUL.NAMA
 
 admin.site.register(NilaiEkskulPelatih, NilaiEkskulPelatihAdmin)
+
+class TataTertibAdmin(ImportExportModelAdmin):
+    search_fields = ['KETERANGAN', 'KATEGORI']
+    list_display = ['KETERANGAN', 'KATEGORI',]
+    list_per_page = 10
+    list_filter = [KategoriTataTertibFilter]
+    autocomplete_fields = ['KATEGORI']
+
+    resource_class = TataTertibResource
+
+
+admin.site.register(TataTertib, TataTertibAdmin)
+
+
+class KategoriTataTertibAdmin(ImportExportModelAdmin):
+    search_fields = ['NAMA']
+    list_per_page = 10
+    resource_class = KategoriTataTertibResource
+
+
+admin.site.register(KategoriTataTertib, KategoriTataTertibAdmin)

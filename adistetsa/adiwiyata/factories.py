@@ -6,7 +6,7 @@ from .enums import *
 import factory
 
 from django.db.models import Model
-from kurikulum.models import DataSiswa
+from dataprofil.models import DataSiswa
 
 # random function section
 def random_enum(nama_enum):

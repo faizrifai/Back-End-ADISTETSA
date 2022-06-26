@@ -126,10 +126,10 @@ def buat_kuitansi(self):
       bulan = self.BULAN_PEMBAYARAN_DPSM_RUTIN.split(',')
       DPSMR = 'X'
       total_pembayaran += (len(bulan)*int(self.PEMBAYARAN_DPSM_RUTIN))
-      print (len(bulan))
+
       for i in range(len(bulan)):
          cur = bulan[i-1].strip()
-         print(cur)
+      
          if cur in 'Januari':
             JANUARI = 'X'
          elif cur in 'Februari' :
@@ -158,7 +158,7 @@ def buat_kuitansi(self):
    if int(self.PEMBAYARAN_DPSM_INSINDENTAL) > 0  :
       DPSMI = 'X'
       value = self.PEMBAYARAN_DPSM_INSINDENTAL
-      print (value)
+      
       total_pembayaran += int(value)
 
    if int(self.BIMBEL) > 0  :

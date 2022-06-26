@@ -381,27 +381,6 @@ admin.site.register(RekapJurnalBelajar, RekapJurnalBelajarAdmin)
 
 # admin.site.register(JadwalPekanTidakEfektif, JadwalPekanTidakEfektifAdmin)
 
-# class TataTertibAdmin(ImportExportModelAdmin):
-#     search_fields = ['KETERANGAN', 'KATEGORI']
-#     list_display = [deskripsi_tata_tertib, 'KATEGORI',]
-#     list_per_page = 10
-#     list_filter = [KategoriTataTertibFilter]
-#     autocomplete_fields = ['KATEGORI']
-
-#     resource_class = TataTertibResource
-
-
-# admin.site.register(TataTertib, TataTertibAdmin)
-
-
-# class KategoriTataTertibAdmin(ImportExportModelAdmin):
-#     search_fields = ['NAMA']
-#     list_per_page = 10
-#     resource_class = KategoriTataTertibResource
-
-
-# admin.site.register(KategoriTataTertib, KategoriTataTertibAdmin)
-
 
 # class SilabusRPBAdmin(admin.ModelAdmin):
 #     list_display = ['MATA_PELAJARAN', 'TAHUN_AJARAN', 'NAMA_FILE', 'KELAS']

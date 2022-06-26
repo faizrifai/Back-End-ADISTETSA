@@ -15,3 +15,7 @@ class SemesterFilter(AutocompleteFilter):
 class EkskulFilter(AutocompleteFilter):
     title = 'EKSKUL'
     field_name = 'EKSKUL'
+
+class KategoriTataTertibFilter(AutocompleteFilter):
+    title = 'KATEGORI'
+    field_name = 'KATEGORI'

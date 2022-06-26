@@ -51,12 +51,6 @@ class SilabusRPBListSerializer(serializers.ModelSerializer):
         return str(obj.SEMESTER)
 
 
-class TataTertibSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TataTertib
-        fields = '__all__'
-
-
 class PoinPelanggaranSerializer(serializers.ModelSerializer):
     class Meta:
         model = PoinPelanggaran
@@ -197,9 +191,16 @@ class DaftarJurnalBelajarGuruListSerializer(serializers.ModelSerializer):
             MATA_PELAJARAN=obj.MATA_PELAJARAN,
             KELAS=obj.KELAS,
             SEMESTER=obj.SEMESTER,
-        )
+        ).order_by('-HARI')
+
         for data in data_jadwal:
-            waktu_pelajaran.append(str(data))
+            waktu = []
+
+            for w in data.WAKTU_PELAJARAN.all():
+                waktu.append(str(w.JAM_KE))
+
+            s = 'Jam ' + ', '.join(waktu)
+            waktu_pelajaran.append(f'{str(data.HARI)} {s}')
 
         return waktu_pelajaran
 

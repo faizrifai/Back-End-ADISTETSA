@@ -4,8 +4,6 @@ from django.core.management.base import BaseCommand
 from keuangan.models import *
 from keuangan.factories import *
 
-import random
-
 class Command(BaseCommand):
     help = "Melakukan generate data dummy Keuangan, pastikan def save di komen sementara lur wkwkwk"
     
@@ -20,5 +18,5 @@ class Command(BaseCommand):
             
         self.stdout.write("Membuat data baru...")
         
-        for _ in range(100):
+        for _ in range(10):
             PembayaranFactory()
