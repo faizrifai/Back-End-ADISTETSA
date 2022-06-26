@@ -119,14 +119,16 @@ def buat_kuitansi(self):
    OKTOBER1 = ''
    NOVEMBER1 = ''
    DESEMBER1 = ''
-   
+   NOMINAL_DPSMI = ''
+   NOMINAL_DPSMR = ''
+   NOMINAL_BIMBEL = ''
    total_pembayaran = 0
 
    if int(self.PEMBAYARAN_DPSM_RUTIN) > 0 :
       bulan = self.BULAN_PEMBAYARAN_DPSM_RUTIN.split(',')
       DPSMR = 'X'
       total_pembayaran += (len(bulan)*int(self.PEMBAYARAN_DPSM_RUTIN))
-
+      NOMINAL_DPSMR =  'Rp. ' + str((len(bulan)*int(self.PEMBAYARAN_DPSM_RUTIN)))
       for i in range(len(bulan)):
          cur = bulan[i-1].strip()
 
@@ -158,14 +160,14 @@ def buat_kuitansi(self):
    if int(self.PEMBAYARAN_DPSM_INSINDENTAL) > 0  :
       DPSMI = 'X'
       value = self.PEMBAYARAN_DPSM_INSINDENTAL
-
+      NOMINAL_DPSMI = 'Rp. ' + str(value)
       total_pembayaran += int(value)
 
    if int(self.BIMBEL) > 0  :
       bulan1 = self.BULAN_PEMBAYARAN_BIMBEL.split(',')
       BIMBEL = 'X'
       total_pembayaran += (len(bulan1)*int(self.BIMBEL))
-      print (len(bulan1))
+      NOMINAL_BIMBEL = (len(bulan1)*int(self.BIMBEL))
       for i in range(len(bulan1)):
          cur = bulan1[i-1].strip()
          print(cur)
@@ -223,188 +225,211 @@ def buat_kuitansi(self):
    pdf.set_font("Times", size = 12)
    pdf.set_xy(10, 0)
    # pdf.ln(1)
-   pdf.set_xy(10, 95)
+   pdf.set_xy(10, 85)
    pdf.multi_cell(20, 10, txt= DPSMI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(30, 95)
+   pdf.set_xy(30, 85)
    # pdf.ln(1)
    pdf.multi_cell(170, 10, txt= 'Dana Peran Serta Masyarakat Insindental', border = 1,
                 align= 'L', fill=bool)
+   # pdf.set_xy(10, 95)
+   # pdf.multi_cell(20, 10, txt= 'Nominal', border = 1,
+   #              align= 'C', fill=bool)
+   pdf.set_xy(30, 95)
+   # pdf.ln(1)
+   pdf.multi_cell(170, 10, txt= NOMINAL_DPSMI , border = 1,
+                align= 'L', fill=bool)
    
-   pdf.set_xy(10, 105)
+   
+   pdf.set_xy(10, 107)
    pdf.multi_cell(20, 10, txt= DPSMR, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(30, 105)
+   pdf.set_xy(30, 107)
    # pdf.ln(1)
    pdf.multi_cell(170, 10, txt= 'Dana Peran Serta Masyarakat Rutin', border = 1,
                 align= 'L', fill=bool)
    
+   # pdf.set_xy(10, 115)
+   # pdf.multi_cell(20, 10, txt= 'Nominal', border = 1,
+   #              align= 'C', fill=bool)
    
-   pdf.set_xy(30, 115)
+   pdf.set_xy(30, 117)
    pdf.multi_cell(10, 10, txt= JANUARI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 115)
+   pdf.set_xy(40, 117)
    pdf.multi_cell(30, 10, txt= 'JANUARI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 115)
+   pdf.set_xy(70, 117)
    pdf.multi_cell(10, 10, txt= FEBRUARI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 115)
+   pdf.set_xy(80, 117)
    pdf.multi_cell(30, 10, txt= 'FEBRUARI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 115)
+   pdf.set_xy(110, 117)
    pdf.multi_cell(10, 10, txt= MARET, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 115)
+   pdf.set_xy(120, 117)
    pdf.multi_cell(30, 10, txt= 'MARET', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 115)
+   pdf.set_xy(150, 117)
    pdf.multi_cell(10, 10, txt= APRIL, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 115)
+   pdf.set_xy(160, 117)
    pdf.multi_cell(40, 10, txt= 'APRIL', border = 1,
                 align= 'L', fill=bool)
 
    
-   pdf.set_xy(30, 125)
+   pdf.set_xy(30, 127)
    pdf.multi_cell(10, 10, txt= MEI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 125)
+   pdf.set_xy(40, 127)
    pdf.multi_cell(30, 10, txt= 'MEI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 125)
+   pdf.set_xy(70, 127)
    pdf.multi_cell(10, 10, txt= JUNI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 125)
+   pdf.set_xy(80, 127)
    pdf.multi_cell(30, 10, txt= 'JUNI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 125)
+   pdf.set_xy(110, 127)
    pdf.multi_cell(10, 10, txt= JULI, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 125)
+   pdf.set_xy(120, 127)
    pdf.multi_cell(30, 10, txt= 'JULI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 125)
+   pdf.set_xy(150, 127)
    pdf.multi_cell(10, 10, txt= AGUSTUS, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 125)
+   pdf.set_xy(160, 127)
    pdf.multi_cell(40, 10, txt= 'AGUSTUS', border = 1,
                 align= 'L', fill=bool)
    
-   pdf.set_xy(30, 135)
+   pdf.set_xy(30, 137)
    pdf.multi_cell(10, 10, txt= SEPTEMBER, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 135)
+   pdf.set_xy(40, 137)
    pdf.multi_cell(30, 10, txt= 'SEPTEMBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 135)
+   pdf.set_xy(70, 137)
    pdf.multi_cell(10, 10, txt= OKTOBER, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 135)
+   pdf.set_xy(80, 137)
    pdf.multi_cell(30, 10, txt= 'OKTOBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 135)
+   pdf.set_xy(110, 137)
    pdf.multi_cell(10, 10, txt= NOVEMBER, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 135)
+   pdf.set_xy(120, 137)
    pdf.multi_cell(30, 10, txt= 'NOVEMBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 135)
+   pdf.set_xy(150, 137)
    pdf.multi_cell(10, 10, txt= DESEMBER, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 135)
+   pdf.set_xy(160, 137)
    pdf.multi_cell(40, 10, txt= 'DESEMBER', border = 1,
                 align= 'L', fill=bool)
    
-   pdf.set_xy(10, 145)
+   
+   pdf.set_xy(30, 147)
+   # pdf.ln(1)
+   pdf.multi_cell(170, 10, txt= NOMINAL_DPSMR , border = 1,
+                align= 'L', fill=bool)
+   
+   pdf.set_xy(10, 159)
    pdf.multi_cell(20, 10, txt= BIMBEL, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(30, 145)
+   pdf.set_xy(30, 159)
    # pdf.ln(1)
    pdf.multi_cell(170, 10, txt= 'BIMBEL', border = 1,
                 align= 'L', fill=bool)
    
-   pdf.set_xy(30, 155)
+   
+   pdf.set_xy(30, 169)
    pdf.multi_cell(10, 10, txt= JANUARI1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 155)
+   pdf.set_xy(40, 169)
    pdf.multi_cell(30, 10, txt= 'JANUARI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 155)
+   pdf.set_xy(70, 169)
    pdf.multi_cell(10, 10, txt= FEBRUARI1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 155)
+   pdf.set_xy(80, 169)
    pdf.multi_cell(30, 10, txt= 'FEBRUARI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 155)
+   pdf.set_xy(110, 169)
    pdf.multi_cell(10, 10, txt= MARET1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 155)
+   pdf.set_xy(120, 169)
    pdf.multi_cell(30, 10, txt= 'MARET', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 155)
+   pdf.set_xy(150, 169)
    pdf.multi_cell(10, 10, txt= APRIL1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 155)
+   pdf.set_xy(160, 169)
    pdf.multi_cell(40, 10, txt= 'APRIL', border = 1,
                 align= 'L', fill=bool)
 
    
-   pdf.set_xy(30, 165)
+   pdf.set_xy(30, 179)
    pdf.multi_cell(10, 10, txt= MEI1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 165)
+   pdf.set_xy(40, 179)
    pdf.multi_cell(30, 10, txt= 'MEI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 165)
+   pdf.set_xy(70, 179)
    pdf.multi_cell(10, 10, txt= JUNI1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 165)
+   pdf.set_xy(80, 179)
    pdf.multi_cell(30, 10, txt= 'JUNI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 165)
+   pdf.set_xy(110, 179)
    pdf.multi_cell(10, 10, txt= JULI1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 165)
+   pdf.set_xy(120, 179)
    pdf.multi_cell(30, 10, txt= 'JULI', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 165)
+   pdf.set_xy(150, 179)
    pdf.multi_cell(10, 10, txt= AGUSTUS1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 165)
+   pdf.set_xy(160, 179)
    pdf.multi_cell(40, 10, txt= 'AGUSTUS', border = 1,
                 align= 'L', fill=bool)
    
-   pdf.set_xy(30, 175)
+   pdf.set_xy(30, 189)
    pdf.multi_cell(10, 10, txt= SEPTEMBER1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(40, 175)
+   pdf.set_xy(40, 189)
    pdf.multi_cell(30, 10, txt= 'SEPTEMBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(70, 175)
+   pdf.set_xy(70, 189)
    pdf.multi_cell(10, 10, txt= OKTOBER1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(80, 175)
+   pdf.set_xy(80, 189)
    pdf.multi_cell(30, 10, txt= 'OKTOBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(110, 175)
+   pdf.set_xy(110, 189)
    pdf.multi_cell(10, 10, txt= NOVEMBER1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(120, 175)
+   pdf.set_xy(120, 189)
    pdf.multi_cell(30, 10, txt= 'NOVEMBER', border = 1,
                 align= 'L', fill=bool)
-   pdf.set_xy(150, 175)
+   pdf.set_xy(150, 189)
    pdf.multi_cell(10, 10, txt= DESEMBER1, border = 1,
                 align= 'C', fill=bool)
-   pdf.set_xy(160, 175)
+   pdf.set_xy(160, 189)
    pdf.multi_cell(40, 10, txt= 'DESEMBER', border = 1,
                 align= 'L', fill=bool)
    
    
-   pdf.line(10, 207, 200, 207)
-   pdf.line(10, 208, 200, 208)
+   pdf.set_xy(30, 199)
+   # pdf.ln(1)
+   pdf.multi_cell(170, 10, txt= NOMINAL_BIMBEL , border = 1,
+                align= 'L', fill=bool)
+   
+   pdf.line(10, 210, 200, 210)
+   pdf.line(10, 211, 200, 211)
    pdf.set_font("Times", size = 15)
-   pdf.set_xy(10, 210)
+   pdf.set_xy(10, 212)
    pdf.multi_cell(170, 5, txt= str('TOTAL PEMBAYARAN =  Rp.' + str(total_pembayaran)), border = 0,
                 align= 'L', fill=bool)
    pdf.set_xy(100, 215)
