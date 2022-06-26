@@ -10,7 +10,6 @@ class KelasFilter(AutocompleteFilter):
     title = 'KELAS'
     field_name = 'KELAS'
 
-
 class JurnalBelajarFilter(AutocompleteFilter):
     title = 'JURNAL BELAJAR'
     field_name = 'JURNAL_BELAJAR'

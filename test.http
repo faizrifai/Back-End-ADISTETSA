@@ -1,13 +1,13 @@
-# POST https://adistetsa.pythonanywhere.com/login/
+# POST http://localhost:8000/login/
 # Content-Type: application/json
 
 # {
-#     "username": "david_savage_2011",
+#     "username": "charles_garza_2019",
 #     "password": "merdeka123"
 # }
 
-GET https://adistetsa.pythonanywhere.com/hubungan_masyarakat/log_uks
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3NDMyNjYxLCJpYXQiOjE2NTYxMzY2NjEsImp0aSI6IjZhZDhlMmZiYzllYzQ1M2ZiNjI2MjAwYThlNGFhMDVlIiwidXNlcl9pZCI6ODU3fQ.9q9oHqQtplL-Z6CD7jW4IKYFNHwQ-2CV-LD_zqwGVAQ
+GET http://localhost:8000/hubungan_masyarakat/data_karyawan?search=a
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU3NTE2MjY4LCJpYXQiOjE2NTYyMjAyNjgsImp0aSI6IjlkMTY2OTZhMThhNTQ3OWQ5ODJhMDlkZWE1MmU4NGZkIiwidXNlcl9pZCI6NDc3fQ.ey2OR1YlESokFX_YsITVQcZaMilMGgjKz55Rc75ymYY
 Content-Type: application/json
 
 # {
