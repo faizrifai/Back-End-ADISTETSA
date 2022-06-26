@@ -55,7 +55,7 @@ class LogUKSTendik (models.Model):
     TINDAK_LANJUT = models.CharField(max_length=255)
     
     class Meta:
-        verbose_name_plural = "Log UKS Tendik"
+        verbose_name_plural = "Log UKS Guru"
         
 class LogUKSKaryawan (models.Model):
     ID = models.BigAutoField(primary_key=True)
@@ -67,4 +67,4 @@ class LogUKSKaryawan (models.Model):
     TINDAK_LANJUT = models.CharField(max_length=255)
     
     class Meta:
-        verbose_name_plural = "Log UKS Karyawan"
+        verbose_name_plural = "Log UKS Tendik"
