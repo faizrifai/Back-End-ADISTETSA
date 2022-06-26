@@ -1,4 +1,5 @@
 from django import forms
+from pyparsing import replaceWith
 from .enums import ENUM_JENIS_PEMBAYARAN
 from kurikulum.enums import ENUM_BULAN
 
@@ -11,20 +12,28 @@ class PembayaranForm(forms.ModelForm):
     #     label='JENIS PEMBAYARAN', 
     # )
     
-    PEMBAYARAN_SPP = forms.MultipleChoiceField(
+    BULAN_PEMBAYARAN_DPSM_RUTIN = forms.MultipleChoiceField(
         widget=forms.CheckboxSelectMultiple,
         choices=ENUM_BULAN, 
-        label = 'PEMBAYARAN SPP', 
+        label = 'BULAN PEMBAYARAN DPSM RUTIN', 
+        required=False,
+    )
+    
+    BULAN_PEMBAYARAN_BIMBEL =  forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple, 
+        choices= ENUM_BULAN, 
+        label = 'BULAN PEMBAYARAN BIMBEL', 
         required=False,
     )
     
     class Meta:
         model = Pembayaran
-        exclude = ('PEMBAYARAN_SPP',)
+        exclude = ('BULAN_PEMBAYARAN_DPSM_RUTIN', 'BULAN_PEMBAYARAN_BIMBEL')
     
     def save(self, commit=True):
         instance = super(PembayaranForm, self).save(commit=False)
-        instance.PEMBAYARAN_SPP = ", ".join(self.cleaned_data['PEMBAYARAN_SPP'])
+        instance.BULAN_PEMBAYARAN_DPSM_RUTIN = ", ".join(self.cleaned_data['BULAN_PEMBAYARAN_DPSM_RUTIN'])
+        instance.BULAN_PEMBAYARAN_BIMBEL = ", ".join(self.cleaned_data['BULAN_PEMBAYARAN_BIMBEL'])
         # instance.JENIS_PEMBAYARAN = ", ".join(self.cleaned_data['JENIS_PEMBAYARAN'])
         
         if commit: 
