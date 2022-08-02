@@ -131,9 +131,19 @@ class RiwayatProgramKebaikanListSerializer(serializers.ModelSerializer):
         return str(obj.JENIS_PROGRAM_KEBAIKAN)
 
 class DaftarSiswaListSerializer(serializers.ModelSerializer):
+    KELAS = serializers.SerializerMethodField('get_kelas')
+
     class Meta:
         model = DataSiswa
-        fields = '__all__'
+        fields = ('NIS', 'NISN', 'NAMA', 'KELAS')
+
+    def get_kelas(self, obj):
+        data_siswa = KelasSiswa.objects.filter(NIS=obj.NIS).order_by('-ID')[0]
+
+        if data_siswa:
+            return str(data_siswa.KELAS)
+        else:
+            return 'Tidak ada kelas'
 
 class KatalogEkskulSerializer(serializers.ModelSerializer):
     JADWAL = serializers.SerializerMethodField('get_jadwal')
