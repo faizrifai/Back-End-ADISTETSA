@@ -45,7 +45,6 @@ class TahunAjaranAdmin(admin.ModelAdmin):
 
 admin.site.register(TahunAjaran, TahunAjaranAdmin)
 
-
 class KelasAdmin(ImportExportModelAdmin):
     search_fields = ['KODE_KELAS', ]
     list_per_page = 10

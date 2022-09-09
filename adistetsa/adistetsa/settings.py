@@ -64,7 +64,9 @@ INSTALLED_APPS = [
     'subadmin',
     'django_cleanup.apps.CleanupConfig',
     'config_models',
-    'FileUploadCompress.apps.FileuploadcompressConfig'
+    'FileUploadCompress.apps.FileuploadcompressConfig',
+    'fcm_django',
+    'kurikulum_v2',
 ]
 
 MIDDLEWARE = [
@@ -218,3 +220,22 @@ site.directory = 'saved_files/'
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
+
+# Firebase
+from firebase_admin import initialize_app, credentials
+
+PROJECT_APP = os.path.basename(BASE_DIR)
+cred = credentials.Certificate(os.path.join(PROJECT_APP, '../essentials/credentials.json'))
+FIREBASE_APP = initialize_app(cred)
+
+FCM_DJANGO_SETTINGS = {
+    "ONE_DEVICE_PER_USER": True,
+     # devices to which notifications cannot be sent,
+     # are deleted upon receiving error response from FCM
+     # default: False
+    "DELETE_INACTIVE_DEVICES": True,
+    # Transform create of an existing Device (based on registration id) into
+                # an update. See the section
+    # "Update of device with duplicate registration ID" for more details.
+    "UPDATE_ON_DUPLICATE_REG_ID": True,
+}

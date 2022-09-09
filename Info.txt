@@ -49,3 +49,16 @@ https://www.django-rest-framework.org/tutorial/quickstart/
 
 Dump Database
 python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 > dump.json
+
+Firebase
+from firebase_admin.messaging import Message, Notification
+from fcm_django.models import FCMDevice
+
+message = Message(
+    notification=Notification(title="title", body="text", image="url"),
+    topic="Optional topic parameter: Whatever you want",
+)
+device = FCMDevice.objects.get(user__username='admin')
+
+status = device.send_message(message)
+print(status)

@@ -9,6 +9,8 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from filebrowser.sites import site
 
+from fcm_django.api.rest_framework import FCMDeviceAuthorizedViewSet
+
 # Swagger documentation setup
 schema_view = get_schema_view(
     openapi.Info(
@@ -49,5 +51,6 @@ swagger_urls = [
 urlpatterns = [
     # path('__debug__/', include('debug_toolbar.urls')),
     path('login/', TokenObtainPairView.as_view(), name='login'),
-    path('login/refresh', TokenRefreshView.as_view(), name='refresh_token')
+    path('login/refresh', TokenRefreshView.as_view(), name='refresh_token'),
+    path('devices', FCMDeviceAuthorizedViewSet.as_view({'post': 'create'}), name='create_fcm_device')
 ] + admin_urls + app_urls + swagger_urls + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
