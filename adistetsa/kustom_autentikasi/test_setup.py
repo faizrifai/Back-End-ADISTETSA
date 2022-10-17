@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.urls import reverse
 from rest_framework.test import APITestCase
 
+
 # Create your tests here.
 class SetupData(APITestCase):
     def setUp(self):
@@ -38,7 +39,7 @@ class SetupData(APITestCase):
             "KEBUTUHAN_KHUSUS": "",
             "ANAK_KE": "",
             "LINTANG": "",
-            "BUJUR": ""
+            "BUJUR": "",
         }
 
         self.data_guru = {
@@ -154,7 +155,7 @@ class SetupData(APITestCase):
             "SPESIALIS_MENANGANI": "['quality', 'clear', 'red']",
             "STATUS_AKTIF": "Aktif",
             "NO_TELP": "(159)782-8296",
-            "EMAIL": "russelljennifer@example.org"
+            "EMAIL": "russelljennifer@example.org",
         }
 
         self.data_orang_tua = {
@@ -179,30 +180,26 @@ class SetupData(APITestCase):
             "DATA_ANAK": [],
         }
 
-        self.data_kompetensi = {
-            "BIDANG_STUDI": "Bahasa Indonesia",
-            "URUTAN": "Pertama"
-        }
+        self.data_kompetensi = {"BIDANG_STUDI": "Bahasa Indonesia", "URUTAN": "Pertama"}
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         super().setUp()
 

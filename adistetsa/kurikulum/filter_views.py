@@ -2,8 +2,13 @@ from rest_framework import generics
 from utility.permissions import HasGroupPermissionAny, IsSuperAdmin
 
 from .filter_serializers import *
-from .models import (DataSemester, JadwalPekanEfektifSemester, Kelas,
-                     MataPelajaran, TahunAjaran)
+from .models import (
+    DataSemester,
+    JadwalPekanEfektifSemester,
+    Kelas,
+    MataPelajaran,
+    TahunAjaran,
+)
 
 # Create your views here.
 
@@ -12,9 +17,10 @@ class SemesterListView(generics.ListAPIView):
     """
     get: Menampilkan daftar semester (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
     }
 
     queryset = DataSemester.objects.all()
@@ -25,9 +31,10 @@ class TahunAjaranListView(generics.ListAPIView):
     """
     get: Menampilkan daftar tahun ajaran (Guru, Pelatih).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Guru', 'Pelatih'],
+        "GET": ["Guru", "Pelatih"],
     }
 
     queryset = TahunAjaran.objects.all()
@@ -38,9 +45,10 @@ class KelasListView(generics.ListAPIView):
     """
     get: Menampilkan daftar kelas (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
     }
 
     queryset = Kelas.objects.all()
@@ -51,9 +59,10 @@ class MataPelajaranListView(generics.ListAPIView):
     """
     get: Menampilkan daftar mata pelajaran (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
     }
 
     queryset = MataPelajaran.objects.all()
@@ -65,10 +74,11 @@ class JadwalPekanEfektifSemesterListView(generics.ListCreateAPIView):
     get: Menampilkan daftar pekan efektif per semester (Super Admin/ Staf Kurikulum).
     post: Menambah data pekan efektif per semester (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'POST': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
+        "POST": ["Staf Kurikulum"],
     }
 
     queryset = JadwalPekanEfektifSemester.objects.all()
@@ -82,12 +92,13 @@ class JadwalPekanEfektifSemesterDetailView(generics.RetrieveUpdateDestroyAPIView
     patch: Mengubah beberapa atribut pekan efektif per semester (Super Admin/ Staf Kurikulum).
     delete: Menghapus pekan efektif per semester (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'PUT': ['Staf Kurikulum'],
-        'PATCH': ['Staf Kurikulum'],
-        'DELETE': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
+        "PUT": ["Staf Kurikulum"],
+        "PATCH": ["Staf Kurikulum"],
+        "DELETE": ["Staf Kurikulum"],
     }
 
     queryset = JadwalPekanEfektifSemester.objects.all()
@@ -99,10 +110,11 @@ class JadwalPekanTidakEfektifListView(generics.ListCreateAPIView):
     get: Menampilkan daftar pekan tidak efektif (Super Admin/ Staf Kurikulum).
     post: Menambah data pekan tidak efektif (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'POST': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
+        "POST": ["Staf Kurikulum"],
     }
 
     queryset = JadwalPekanTidakEfektif.objects.all()
@@ -116,12 +128,13 @@ class JadwalPekanTidakEfektifDetailView(generics.RetrieveUpdateDestroyAPIView):
     patch: Mengubah beberapa atribut pekan tidak efektif (Super Admin/ Staf Kurikulum).
     delete: Menghapus pekan tidak efektif (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
-        'PUT': ['Staf Kurikulum'],
-        'PATCH': ['Staf Kurikulum'],
-        'DELETE': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
+        "PUT": ["Staf Kurikulum"],
+        "PATCH": ["Staf Kurikulum"],
+        "DELETE": ["Staf Kurikulum"],
     }
 
     queryset = JadwalPekanTidakEfektif.objects.all()
@@ -132,12 +145,13 @@ class KelasSiswaListView(generics.ListAPIView):
     """
     get: Menampilkan daftar kelas siswa (Super Admin/ Staf Kurikulum).
     """
+
     permission_classes = [IsSuperAdmin | HasGroupPermissionAny]
     required_groups = {
-        'GET': ['Staf Kurikulum'],
+        "GET": ["Staf Kurikulum"],
     }
 
     queryset = KelasSiswa.objects.all()
     serializer_class = KelasSiswaSerializer
-    filterset_fields = ('NIS', 'KELAS')
-    search_fields = ('NIS__NIS', 'NIS__NAMA', 'KELAS__KELAS__KODE_KELAS')
+    filterset_fields = ("NIS", "KELAS")
+    search_fields = ("NIS__NIS", "NIS__NAMA", "KELAS__KELAS__KODE_KELAS")

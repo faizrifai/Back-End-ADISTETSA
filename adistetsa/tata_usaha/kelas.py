@@ -1,4 +1,3 @@
-
 #     kelas = KelasSiswa.objects.get(NIS__NIS=obj)
 #     return kelas
 

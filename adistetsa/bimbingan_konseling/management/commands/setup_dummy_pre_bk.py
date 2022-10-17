@@ -6,15 +6,14 @@ from bimbingan_konseling.factories import *
 
 NUM_DATA = 10
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy pre bimbingan konseling"
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
-        models = [
-            KatalogKonselor
-        ]
+        models = [KatalogKonselor]
         for m in models:
             m.objects.all().delete()
 

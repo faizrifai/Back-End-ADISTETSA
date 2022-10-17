@@ -61,209 +61,203 @@ class SetupData(APITestCase):
             "SPESIALIS_MENANGANI": "['quality', 'clear', 'red']",
             "STATUS_AKTIF": "Aktif",
             "NO_TELP": "(159)782-8296",
-            "EMAIL": "russelljennifer@example.org"
+            "EMAIL": "russelljennifer@example.org",
         }
 
-        self.data_kompetensi = {
-            "BIDANG_STUDI": "Bahasa Indonesia",
-            "URUTAN": "Pertama"
-        }
+        self.data_kompetensi = {"BIDANG_STUDI": "Bahasa Indonesia", "URUTAN": "Pertama"}
 
         self.data_anak = {
-        'STATUS': "Aktif",
-        'JENJANG': "SMA",
-        'NIS': "2123165464",
-        'NAMA': "Afdhal",
-        'JENIS_KELAMIN': "Perempuan",
-        'TEMPAT_LAHIR': "Malang",
-        'TANGGAL_LAHIR': "2000-11-30",
-        'TAHUN_MASUK': "2020", 
+            "STATUS": "Aktif",
+            "JENJANG": "SMA",
+            "NIS": "2123165464",
+            "NAMA": "Afdhal",
+            "JENIS_KELAMIN": "Perempuan",
+            "TEMPAT_LAHIR": "Malang",
+            "TANGGAL_LAHIR": "2000-11-30",
+            "TAHUN_MASUK": "2020",
         }
 
         self.data_beasiswa = {
-        'JENIS': "Aktif",
-        'PENYELANGGARA': "SMA",
-        'DARI_TAHUN': "2123165464",
-        'SAMPAI_TAHUN': "Afdhal",
-        'MASIH_MENERIMA': "Perempuan",
+            "JENIS": "Aktif",
+            "PENYELANGGARA": "SMA",
+            "DARI_TAHUN": "2123165464",
+            "SAMPAI_TAHUN": "Afdhal",
+            "MASIH_MENERIMA": "Perempuan",
         }
 
         self.data_buku = {
-        'JUDUL_BUKU': "Aktif",
-        'TAHUN_BUKU': "2021",
-        'PENERBIT_BUKU': "Afdhal",
+            "JUDUL_BUKU": "Aktif",
+            "TAHUN_BUKU": "2021",
+            "PENERBIT_BUKU": "Afdhal",
         }
 
         self.data_diklat = {
-        'JENIS_DIKLAT': "gatau",
-        'NAMA': "Afdhal",
-        'PENYELENGGARA': "Tau",
-        'TAHUN': "2022",
-        'PERAN': "Aktor",
+            "JENIS_DIKLAT": "gatau",
+            "NAMA": "Afdhal",
+            "PENYELENGGARA": "Tau",
+            "TAHUN": "2022",
+            "PERAN": "Aktor",
         }
 
         self.data_karya_tulis = {
-        'JUDUL': "Aktif",
-        'TAHUN': "Afdhal",
-        'PUBLIKASI': "Tau",
-        'KETERANGAN': "2021",
+            "JUDUL": "Aktif",
+            "TAHUN": "Afdhal",
+            "PUBLIKASI": "Tau",
+            "KETERANGAN": "2021",
         }
 
         self.data_kesejahteraan = {
-        'JENIS': "Aktif",
-        'NAMA': "Afdhal",
-        'PENYELENGGARA': "Tau",
-        'DARI_TAHUN': "2021",
-        'SAMPAI_TAHUN': "2022",
-        'STATUS': "Aktif",
+            "JENIS": "Aktif",
+            "NAMA": "Afdhal",
+            "PENYELENGGARA": "Tau",
+            "DARI_TAHUN": "2021",
+            "SAMPAI_TAHUN": "2022",
+            "STATUS": "Aktif",
         }
 
         self.data_tunjangan = {
-        'JENIS': "Aktif",
-        'NAMA': "Afdhal",
-        'INSTANSI': "UM",
-        'SUMBER_DANA': "UM",
-        'DARI_TAHUN': "2022",
-        'SAMPAI_TAHUN': "20223",
-        'NOMINAL': "2022",
-        'STATUS': "Aktif",
+            "JENIS": "Aktif",
+            "NAMA": "Afdhal",
+            "INSTANSI": "UM",
+            "SUMBER_DANA": "UM",
+            "DARI_TAHUN": "2022",
+            "SAMPAI_TAHUN": "20223",
+            "NOMINAL": "2022",
+            "STATUS": "Aktif",
         }
 
         self.data_tugas_tambahan = {
-        'JABATAN_PTK': "Dosen",
-        'JPM': "Afdhal",
-        'NO_SK': "132",
-        'TMT_TAMBAHAN': "1233",
-        'TST_TAMBAHAN': "2022",
+            "JABATAN_PTK": "Dosen",
+            "JPM": "Afdhal",
+            "NO_SK": "132",
+            "TMT_TAMBAHAN": "1233",
+            "TST_TAMBAHAN": "2022",
         }
 
         self.data_penghargaan = {
-        'TINGKAT_PENGHARGAAN': "Dosen",
-        'JENIS_PENGHARGAAN': "Gatau",
-        'NAMA': "Afdhal",
-        'TAHUN': "1233",
-        'INSTANSI': "um",
+            "TINGKAT_PENGHARGAAN": "Dosen",
+            "JENIS_PENGHARGAAN": "Gatau",
+            "NAMA": "Afdhal",
+            "TAHUN": "1233",
+            "INSTANSI": "um",
         }
 
         self.data_nilai_tes = {
-        'JENIS': "Dosen",
-        'NAMA': "Gatau",
-        'PENYELENGGARA': "Afdhal",
-        'TAHUN': "1233",
-        'SKOR': "99",
+            "JENIS": "Dosen",
+            "NAMA": "Gatau",
+            "PENYELENGGARA": "Afdhal",
+            "TAHUN": "1233",
+            "SKOR": "99",
         }
 
         self.data_riwayat_gaji_berkala = {
-        'PANGKAT_GOLONGAN': "Dosen",
-        'NO_SK': "Gatau",
-        'TANGGAL_SK': "2020-07-18",
-        'TMT_KGB': "1233",
-        'TAHUN_MK': "2020",
-        'BULAN_MK': "Juli",
-        'GAJI_POKOK': "99",
+            "PANGKAT_GOLONGAN": "Dosen",
+            "NO_SK": "Gatau",
+            "TANGGAL_SK": "2020-07-18",
+            "TMT_KGB": "1233",
+            "TAHUN_MK": "2020",
+            "BULAN_MK": "Juli",
+            "GAJI_POKOK": "99",
         }
 
         self.data_riwayat_jabatan_struktural = {
-        'JABATAN_PTK': "Dosen",
-        'SK_STRUKTURAL': "Gatau",
-        'TMT_JABATAN': "gg",
+            "JABATAN_PTK": "Dosen",
+            "SK_STRUKTURAL": "Gatau",
+            "TMT_JABATAN": "gg",
         }
 
         self.data_riwayat_kepangkatan = {
-        'PANGKAT_GOLONGAN': "Mhs",
-        'NO_SK': "231654651",
-        'TANGGAL_SK': "2020-10-10",
-        'PANGKAT_GOLONGAN': "Dosen",
-        'MK_TAHUN': "2022",
-        'MK_BULAN': "Juli",
+            "PANGKAT_GOLONGAN": "Mhs",
+            "NO_SK": "231654651",
+            "TANGGAL_SK": "2020-10-10",
+            "MK_TAHUN": "2022",
+            "MK_BULAN": "Juli",
         }
 
         self.data_karyawan_riwayat_pendidikan_formal = {
-        'BIDANG_STUDI': "MTK",
-        'JENJANG': "231654651",
-        'GELAR': "S10",
-        'SATUAN': "Dosen",
-        'FAKULTAS': "ft",
-        'KEPENDIDIKAN': "ya",
-        'KEPENDUDUKAN': "mlg",
-        'TAHUN_MASUK': "2020",
-        'TAHUN_LULUS': "2021",
-        'NIM': "123561651",
-        'MASIH': "ya",
-        'SMT': "15",        
-        'IP': "4",
+            "BIDANG_STUDI": "MTK",
+            "JENJANG": "231654651",
+            "GELAR": "S10",
+            "SATUAN": "Dosen",
+            "FAKULTAS": "ft",
+            "KEPENDIDIKAN": "ya",
+            "KEPENDUDUKAN": "mlg",
+            "TAHUN_MASUK": "2020",
+            "TAHUN_LULUS": "2021",
+            "NIM": "123561651",
+            "MASIH": "ya",
+            "SMT": "15",
+            "IP": "4",
         }
 
         self.data_riwayat_sertifikasi = {
-        'JENIS_SERTIFIKASI': "Mhs",
-        'NO_SERTIFIKASI': "231654651",
-        'TAHUN_SERTIFIKASI': "2020-10-10",
-        'BIDANG_STUDI': "Dosen",
-        'NO_REGISTRASI': "2022",
-        'NO_PESERTA': "12132123",
+            "JENIS_SERTIFIKASI": "Mhs",
+            "NO_SERTIFIKASI": "231654651",
+            "TAHUN_SERTIFIKASI": "2020-10-10",
+            "BIDANG_STUDI": "Dosen",
+            "NO_REGISTRASI": "2022",
+            "NO_PESERTA": "12132123",
         }
 
         self.data_riwayat_jabatan_fungsional = {
-        'JABATAN_FUNGSIONAL': "Mhs",
-        'SK_JABATAN_FUNGSIONAL': "231654651",
-        'TMT_JABATAN': "sadsadsadsad",
+            "JABATAN_FUNGSIONAL": "Mhs",
+            "SK_JABATAN_FUNGSIONAL": "231654651",
+            "TMT_JABATAN": "sadsadsadsad",
         }
 
         self.data_riwayat_karir = {
-        'JENJANG': "asdadsaddsa",
-        'JENIS_LEMBAGA': "asdadsaddsa",
-        'STS_KEPEGAWAIAN': "asdadsaddsa",
-        'JENIS_PTK': "asdadsaddsa",
-        'LEMBAGA': "asdadsaddsa",
-        'NO_SK_KERJA': "12312313",
-        'TGL_SK_KERJA': "2020-12-12",
-        'TMT_KERJA': "sadsadsa",
-        'TST_KERJA': "asdadsaddsa",
-        'TEMPAT_KERJA': "asdadsaddsa",
-        'TTD_SK_KERJA': "asdadsaddsa",
-        'MAPEL_DIAJARKAN': "ya",
+            "JENJANG": "asdadsaddsa",
+            "JENIS_LEMBAGA": "asdadsaddsa",
+            "STS_KEPEGAWAIAN": "asdadsaddsa",
+            "JENIS_PTK": "asdadsaddsa",
+            "LEMBAGA": "asdadsaddsa",
+            "NO_SK_KERJA": "12312313",
+            "TGL_SK_KERJA": "2020-12-12",
+            "TMT_KERJA": "sadsadsa",
+            "TST_KERJA": "asdadsaddsa",
+            "TEMPAT_KERJA": "asdadsaddsa",
+            "TTD_SK_KERJA": "asdadsaddsa",
+            "MAPEL_DIAJARKAN": "ya",
         }
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
-
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # create data karyawan
-        self.client.post(reverse('data_karyawan'), self.data_karyawan)
+        self.client.post(reverse("data_karyawan"), self.data_karyawan)
 
         # import data karyawan user to create user
-        open_file = open('kustom_autentikasi/data/data_karyawan_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_karyawan_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_karyawan_user'), data, format='multipart')
+        open_file = open("kustom_autentikasi/data/data_karyawan_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_karyawan_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_karyawan_user"), data, format="multipart")
 
         # login as karyawan
         self.data_karyawan_user = {
-            'username': 'stephen_daugherty_2011',
-            'password': 'merdeka123'
+            "username": "stephen_daugherty_2011",
+            "password": "merdeka123",
         }
 
-        login_response = self.client.post(reverse('login'), self.data_karyawan_user)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_karyawan_user)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         super().setUp()
 

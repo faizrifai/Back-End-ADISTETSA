@@ -1,1 +1,1 @@
-apps_to_compress = ['adiwiyata', 'bimbingan_konseling']
+apps_to_compress = ["adiwiyata", "bimbingan_konseling"]

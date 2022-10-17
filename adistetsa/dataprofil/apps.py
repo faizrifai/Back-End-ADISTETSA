@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class DataprofilConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'dataprofil'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "dataprofil"

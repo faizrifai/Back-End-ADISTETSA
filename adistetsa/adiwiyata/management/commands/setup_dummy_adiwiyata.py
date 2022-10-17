@@ -6,6 +6,7 @@ from adiwiyata.factories import *
 
 NUM_DATA = 10
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy adiwiyata"
 
@@ -13,10 +14,20 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            SanitasiDrainase, JaringanKerja, Publikasi, DaftarKader,
-            KegiatanKader, Konservasi, PenanamanPohon, PembibitanPohon,
-            PemeliharaanPohon, KaryaInovatif, PenerapanPRLH, ReuseReduceRecycle,
-            PemeliharaanSampah, TabunganSampah
+            SanitasiDrainase,
+            JaringanKerja,
+            Publikasi,
+            DaftarKader,
+            KegiatanKader,
+            Konservasi,
+            PenanamanPohon,
+            PembibitanPohon,
+            PemeliharaanPohon,
+            KaryaInovatif,
+            PenerapanPRLH,
+            ReuseReduceRecycle,
+            PemeliharaanSampah,
+            TabunganSampah,
         ]
         for m in models:
             m.objects.all().delete()

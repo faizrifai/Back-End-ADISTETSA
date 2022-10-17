@@ -8,6 +8,7 @@ from . import getter
 
 logger = logging.getLogger(__name__)
 
+
 def compress_post_save(sender, instance, raw, **kwargs):
     if raw:
         return
@@ -19,6 +20,7 @@ def compress_post_save(sender, instance, raw, **kwargs):
             if extension:
                 compress_image(new_file.path)
 
+
 def compress_image(filename: str):
     print("compressing image...")
     try:
@@ -26,8 +28,9 @@ def compress_image(filename: str):
     except UnidentifiedImageError:
         return
 
-    img = img.convert('RGB')
-    img.save(filename, 'JPEG', optimize=True, quality=30)
+    img = img.convert("RGB")
+    img.save(filename, "JPEG", optimize=True, quality=30)
+
 
 def get_image_file_extension(filename: str):
     kind = filetype.guess(filename)
@@ -40,7 +43,10 @@ def get_image_file_extension(filename: str):
 
     return kind.extension
 
+
 def register():
     for model in getter.get_all_models():
-        key = '{{}}_compress_signal_{}'.format(getter.get_model_name(model))
-        post_save.connect(compress_post_save, sender=model, dispatch_uid=key.format('post_save'))
+        key = "{{}}_compress_signal_{}".format(getter.get_model_name(model))
+        post_save.connect(
+            compress_post_save, sender=model, dispatch_uid=key.format("post_save")
+        )

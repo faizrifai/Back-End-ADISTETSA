@@ -6,13 +6,13 @@ param_importexportfile = openapi.Parameter(
     in_=openapi.IN_FORM,
     type=openapi.TYPE_FILE,
     required=True,
-    description="Document"
+    description="Document",
 )
 
 schema_profile = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    properties= {
-        'EMAIL': openapi.Schema(type=openapi.TYPE_STRING),
-        'HP': openapi.Schema(type=openapi.TYPE_STRING),
-    }
+    properties={
+        "EMAIL": openapi.Schema(type=openapi.TYPE_STRING),
+        "HP": openapi.Schema(type=openapi.TYPE_STRING),
+    },
 )

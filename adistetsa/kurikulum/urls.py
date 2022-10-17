@@ -26,13 +26,37 @@ from .import_views import *
 # ]
 
 urlpatterns = [
-    path('kurikulum/kelas', KelasListView.as_view(), name='kelas'),
-    path('kurikulum/mata_pelajaran', MataPelajaranListView.as_view(), name='mata_pelajaran'),
-    path('kurikulum/semester', SemesterListView.as_view(), name='semester'),
-    path('kurikulum/tahun_ajaran', TahunAjaranListView.as_view(), name='tahun_ajaran'),
-    path('kurikulum/jadwal_mengajar_guru', JadwalMengajarGuruListView.as_view(), name='jadwal_mengajar_guru'),
-    path('kurikulum/jurnal_belajar_mengajar', DaftarJurnalBelajarGuruListView.as_view(), name='jurnal_belajar_mengajar_guru'),
-    path('kurikulum/jurnal_belajar_pertemuan/<int:id_jurnal_belajar_mengajar>', JurnalBelajarGuruListView.as_view(), name='jurnal_belajar_pertemuan_guru'),
-    path('kurikulum/presensi_siswa/<int:id_jurnal_belajar_pertemuan>', AbsensiSiswaListView.as_view(), name='presensi_siswa'),
-    path('kurikulum/detail_presensi_siswa/<int:pk>', AbsensiSiswaDetailView.as_view(), name='detail_presensi_siswa'),
+    path("kurikulum/kelas", KelasListView.as_view(), name="kelas"),
+    path(
+        "kurikulum/mata_pelajaran",
+        MataPelajaranListView.as_view(),
+        name="mata_pelajaran",
+    ),
+    path("kurikulum/semester", SemesterListView.as_view(), name="semester"),
+    path("kurikulum/tahun_ajaran", TahunAjaranListView.as_view(), name="tahun_ajaran"),
+    path(
+        "kurikulum/jadwal_mengajar_guru",
+        JadwalMengajarGuruListView.as_view(),
+        name="jadwal_mengajar_guru",
+    ),
+    path(
+        "kurikulum/jurnal_belajar_mengajar",
+        DaftarJurnalBelajarGuruListView.as_view(),
+        name="jurnal_belajar_mengajar_guru",
+    ),
+    path(
+        "kurikulum/jurnal_belajar_pertemuan/<int:id_jurnal_belajar_mengajar>",
+        JurnalBelajarGuruListView.as_view(),
+        name="jurnal_belajar_pertemuan_guru",
+    ),
+    path(
+        "kurikulum/presensi_siswa/<int:id_jurnal_belajar_pertemuan>",
+        AbsensiSiswaListView.as_view(),
+        name="presensi_siswa",
+    ),
+    path(
+        "kurikulum/detail_presensi_siswa/<int:pk>",
+        AbsensiSiswaDetailView.as_view(),
+        name="detail_presensi_siswa",
+    ),
 ]

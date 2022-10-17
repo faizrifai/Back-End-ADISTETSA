@@ -1,5 +1,14 @@
-from django.http import QueryDict
-from .models import *
+from .models import (
+    KatalogBuku,
+    KatalogBukuCopy,
+    PengajuanPeminjamanSiswa,
+    PengajuanPeminjamanGuru,
+    DataSiswa,
+    DataGuru,
+    DonasiBuku,
+    RiwayatPeminjamanSiswa,
+    RiwayatPeminjamanGuru,
+)
 from rest_framework import serializers
 
 from utility.permissions import is_in_group
@@ -7,16 +16,24 @@ from kustom_autentikasi.models import DataSiswaUser, DataGuruUser
 
 
 class KatalogBukuCopySerializer(serializers.ModelSerializer):
-    REGISTER = serializers.SerializerMethodField('get_register')
-    JUDUL = serializers.SerializerMethodField('get_judul')
-    PENULIS = serializers.SerializerMethodField('get_kode_author')   
-    BAHASA = serializers.SerializerMethodField('get_bahasa')
-    TAHUN_TERBIT = serializers.SerializerMethodField('get_tahun_terbit')
-    MEDIA = serializers.SerializerMethodField('get_kode_media')
+    REGISTER = serializers.SerializerMethodField("get_register")
+    JUDUL = serializers.SerializerMethodField("get_judul")
+    PENULIS = serializers.SerializerMethodField("get_kode_author")
+    BAHASA = serializers.SerializerMethodField("get_bahasa")
+    TAHUN_TERBIT = serializers.SerializerMethodField("get_tahun_terbit")
+    MEDIA = serializers.SerializerMethodField("get_kode_media")
 
     class Meta:
         model = KatalogBukuCopy
-        fields = ('id', 'REGISTER', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA')
+        fields = (
+            "id",
+            "REGISTER",
+            "JUDUL",
+            "PENULIS",
+            "BAHASA",
+            "TAHUN_TERBIT",
+            "MEDIA",
+        )
 
     def get_register(self, obj):
         return str(obj.REGISTER_COPY)
@@ -38,16 +55,25 @@ class KatalogBukuCopySerializer(serializers.ModelSerializer):
 
 
 class KatalogBukuListSerializer(serializers.ModelSerializer):
-    PENULIS = serializers.SerializerMethodField('get_kode_author')   
-    BAHASA = serializers.SerializerMethodField('get_bahasa')
-    TAHUN_TERBIT = serializers.SerializerMethodField('get_tahun_terbit')
-    MEDIA = serializers.SerializerMethodField('get_kode_media')
-    TERSEDIA = serializers.SerializerMethodField('get_tersedia')
-    JENIS_BUKU = serializers.SerializerMethodField('get_jenis_buku')
-    
+    PENULIS = serializers.SerializerMethodField("get_kode_author")
+    BAHASA = serializers.SerializerMethodField("get_bahasa")
+    TAHUN_TERBIT = serializers.SerializerMethodField("get_tahun_terbit")
+    MEDIA = serializers.SerializerMethodField("get_kode_media")
+    TERSEDIA = serializers.SerializerMethodField("get_tersedia")
+    JENIS_BUKU = serializers.SerializerMethodField("get_jenis_buku")
+
     class Meta:
         model = KatalogBuku
-        fields = ('REGISTER', 'JUDUL', 'PENULIS', 'BAHASA', 'TAHUN_TERBIT', 'MEDIA', 'TERSEDIA', 'JENIS_BUKU')
+        fields = (
+            "REGISTER",
+            "JUDUL",
+            "PENULIS",
+            "BAHASA",
+            "TAHUN_TERBIT",
+            "MEDIA",
+            "TERSEDIA",
+            "JENIS_BUKU",
+        )
 
     def get_bahasa(self, obj):
         return obj.BAHASA.BAHASA
@@ -67,17 +93,17 @@ class KatalogBukuListSerializer(serializers.ModelSerializer):
     def get_tersedia(self, obj):
         total_tersedia = 0
         total = 0
-        
+
         donasi_buku = DonasiBuku.objects.filter(REGISTER_DONASI=obj.REGISTER)
         for data_donasi in donasi_buku:
             buku_copy = KatalogBukuCopy.objects.filter(DATA_DONASI=data_donasi)
             for data in buku_copy:
-                if data.STATUS == 'Sudah Dikembalikan':
+                if data.STATUS == "Sudah Dikembalikan":
                     total_tersedia += 1
-                
+
                 total += 1
-                
-        return str(total_tersedia) + '/' + str(total)
+
+        return str(total_tersedia) + "/" + str(total)
 
 
 class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
@@ -85,16 +111,16 @@ class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PengajuanPeminjamanSiswa
-        exclude = ('NIS',)
+        exclude = ("NIS",)
 
     def create(self, validated_data):
-        request = self.context.get('request', None)
+        request = self.context.get("request", None)
         current_user = request.user
-        if (is_in_group(current_user, 'Siswa')):
+        if is_in_group(current_user, "Siswa"):
             data_siswa_user = DataSiswaUser.objects.get(USER=current_user)
-            validated_data['NIS'] = data_siswa_user.DATA_SISWA
+            validated_data["NIS"] = data_siswa_user.DATA_SISWA
 
-        buku = validated_data.pop('BUKU')
+        buku = validated_data.pop("BUKU")
         data_pengajuan = PengajuanPeminjamanSiswa.objects.create(**validated_data)
 
         for data in buku:
@@ -103,7 +129,7 @@ class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
         return data_pengajuan
 
     def validate(self, attrs):
-        attrs['BUKU'] = attrs['BUKU'].split(',')
+        attrs["BUKU"] = attrs["BUKU"].split(",")
 
         return super().validate(attrs)
 
@@ -113,17 +139,17 @@ class PengajuanPeminjamanSiswaSerializer(serializers.ModelSerializer):
             daftar_buku.append(str(buku))
 
         data = super().to_representation(instance)
-        data['BUKU'] = str(daftar_buku)
+        data["BUKU"] = str(daftar_buku)
 
         return data
 
 
 class PengajuanPeminjamanSiswaListSerializer(serializers.ModelSerializer):
-    BUKU = serializers.SerializerMethodField('get_buku')
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = PengajuanPeminjamanSiswa
-        exclude = ('NIS',)
+        exclude = ("NIS",)
 
     def get_buku(self, obj):
         buku = obj.BUKU
@@ -135,16 +161,16 @@ class PengajuanPeminjamanSiswaListSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
-    NAMA = serializers.SerializerMethodField('get_nama')
-    BUKU = serializers.SerializerMethodField('get_buku')
+    NAMA = serializers.SerializerMethodField("get_nama")
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = PengajuanPeminjamanSiswa
-        fields = '__all__'
+        fields = "__all__"
 
     def get_nama(self, obj):
         data_siswa = DataSiswa.objects.get(pk=obj.NIS.NIS)
-        
+
         return data_siswa.NAMA
 
     def get_buku(self, obj):
@@ -161,16 +187,16 @@ class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PengajuanPeminjamanGuru
-        exclude = ('DATA_GURU',)
+        exclude = ("DATA_GURU",)
 
     def create(self, validated_data):
-        request = self.context.get('request', None)
+        request = self.context.get("request", None)
         current_user = request.user
-        if (is_in_group(current_user, 'Guru')):
+        if is_in_group(current_user, "Guru"):
             data_guru_user = DataGuruUser.objects.get(USER=current_user)
-            validated_data['DATA_GURU'] = data_guru_user.DATA_GURU
+            validated_data["DATA_GURU"] = data_guru_user.DATA_GURU
 
-        buku = validated_data.pop('BUKU')
+        buku = validated_data.pop("BUKU")
         data_pengajuan = PengajuanPeminjamanGuru.objects.create(**validated_data)
 
         for data in buku:
@@ -179,7 +205,7 @@ class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
         return data_pengajuan
 
     def validate(self, attrs):
-        attrs['BUKU'] = attrs['BUKU'].split(',')
+        attrs["BUKU"] = attrs["BUKU"].split(",")
 
         return super().validate(attrs)
 
@@ -189,17 +215,17 @@ class PengajuanPeminjamanGuruSerializer(serializers.ModelSerializer):
             daftar_buku.append(str(buku))
 
         data = super().to_representation(instance)
-        data['BUKU'] = str(daftar_buku)
+        data["BUKU"] = str(daftar_buku)
 
         return data
 
 
 class PengajuanPeminjamanGuruListSerializer(serializers.ModelSerializer):
-    BUKU = serializers.SerializerMethodField('get_buku')
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = PengajuanPeminjamanGuru
-        exclude = ('DATA_GURU',)
+        exclude = ("DATA_GURU",)
 
     def get_buku(self, obj):
         buku = obj.BUKU
@@ -211,16 +237,16 @@ class PengajuanPeminjamanGuruListSerializer(serializers.ModelSerializer):
 
 
 class PengajuanPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
-    NAMA = serializers.SerializerMethodField('get_nama')
-    BUKU = serializers.SerializerMethodField('get_buku')
+    NAMA = serializers.SerializerMethodField("get_nama")
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = PengajuanPeminjamanGuru
-        fields = '__all__'
+        fields = "__all__"
 
     def get_nama(self, obj):
         data_guru = DataGuru.objects.get(pk=obj.DATA_GURU.ID)
-        
+
         return data_guru.NAMA_LENGKAP
 
     def get_buku(self, obj):
@@ -233,11 +259,11 @@ class PengajuanPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
 
 
 class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
-    BUKU = serializers.SerializerMethodField('get_buku')
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = RiwayatPeminjamanSiswa
-        exclude = ('NIS',)
+        exclude = ("NIS",)
 
     def get_buku(self, obj):
         buku = obj.BUKU
@@ -249,16 +275,16 @@ class RiwayatPeminjamanSiswaSerializer(serializers.ModelSerializer):
 
 
 class RiwayatPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
-    NAMA = serializers.SerializerMethodField('get_nama')
-    BUKU = serializers.SerializerMethodField('get_buku')
+    NAMA = serializers.SerializerMethodField("get_nama")
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = RiwayatPeminjamanSiswa
-        fields = '__all__'
+        fields = "__all__"
 
     def get_nama(self, obj):
         data_siswa = DataSiswa.objects.get(pk=obj.NIS.NIS)
-        
+
         return data_siswa.NAMA
 
     def get_buku(self, obj):
@@ -271,11 +297,11 @@ class RiwayatPeminjamanSiswaAdminSerializer(serializers.ModelSerializer):
 
 
 class RiwayatPeminjamanGuruSerializer(serializers.ModelSerializer):
-    BUKU = serializers.SerializerMethodField('get_buku')
+    BUKU = serializers.SerializerMethodField("get_buku")
 
     class Meta:
         model = RiwayatPeminjamanGuru
-        exclude = ('DATA_GURU',)
+        exclude = ("DATA_GURU",)
 
     def get_buku(self, obj):
         buku = obj.BUKU
@@ -287,17 +313,17 @@ class RiwayatPeminjamanGuruSerializer(serializers.ModelSerializer):
 
 
 class RiwayatPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
-    NAMA = serializers.SerializerMethodField('get_nama')
-    BUKU = serializers.SerializerMethodField('get_buku')
-    DATA_GURU = serializers.SerializerMethodField('get_nik')
+    NAMA = serializers.SerializerMethodField("get_nama")
+    BUKU = serializers.SerializerMethodField("get_buku")
+    DATA_GURU = serializers.SerializerMethodField("get_nik")
 
     class Meta:
         model = RiwayatPeminjamanGuru
-        fields = '__all__'
+        fields = "__all__"
 
     def get_nama(self, obj):
         data_guru = DataGuru.objects.get(pk=obj.DATA_GURU.ID)
-        
+
         return data_guru.NAMA_LENGKAP
 
     def get_buku(self, obj):
@@ -310,5 +336,5 @@ class RiwayatPeminjamanGuruAdminSerializer(serializers.ModelSerializer):
 
     def get_nik(self, obj):
         data_guru = DataGuru.objects.get(pk=obj.DATA_GURU.ID)
-        
+
         return data_guru.NIK

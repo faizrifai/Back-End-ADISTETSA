@@ -1,7 +1,14 @@
 from django.db.models.signals import post_save, pre_save
 
-from .models import (AbsensiSiswa, DaftarJurnalBelajar, DataSemester,
-                     JadwalMengajar, JurnalBelajar, KelasSiswa, Raport)
+from .models import (
+    AbsensiSiswa,
+    DaftarJurnalBelajar,
+    DataSemester,
+    JadwalMengajar,
+    JurnalBelajar,
+    KelasSiswa,
+    Raport,
+)
 
 
 def post_save_buku_induk(sender, instance, created, **kwargs):
@@ -16,14 +23,17 @@ def post_save_buku_induk(sender, instance, created, **kwargs):
                 Raport.objects.update_or_create(
                     KELAS_SISWA=siswa,
                     SEMESTER=DataSemester.objects.get(KE=semester),
-                    BUKU_INDUK=instance
+                    BUKU_INDUK=instance,
                 )
     except Exception as e:
         print(str(e))
 
 
-post_save.connect(post_save_buku_induk, sender='tata_usaha.BukuInduk',
-                  dispatch_uid='create_raport_data')
+post_save.connect(
+    post_save_buku_induk,
+    sender="tata_usaha.BukuInduk",
+    dispatch_uid="create_raport_data",
+)
 
 
 def post_save_jadwal_mengajar(sender, instance, **kwargs):
@@ -39,8 +49,11 @@ def post_save_jadwal_mengajar(sender, instance, **kwargs):
         print(str(e))
 
 
-post_save.connect(post_save_jadwal_mengajar, sender=JadwalMengajar,
-                  dispatch_uid='create_daftar_jurnal_belajar')
+post_save.connect(
+    post_save_jadwal_mengajar,
+    sender=JadwalMengajar,
+    dispatch_uid="create_daftar_jurnal_belajar",
+)
 
 
 def post_save_jurnal_belajar(sender, instance, created, **kwargs):
@@ -48,13 +61,15 @@ def post_save_jurnal_belajar(sender, instance, created, **kwargs):
         kelas_siswa = KelasSiswa.objects.filter(KELAS=instance.DAFTAR.KELAS)
         for siswa in kelas_siswa:
             AbsensiSiswa.objects.update_or_create(
-                NIS=siswa.NIS, JURNAL_BELAJAR=instance)
+                NIS=siswa.NIS, JURNAL_BELAJAR=instance
+            )
     except Exception as e:
         print(str(e))
 
 
-post_save.connect(post_save_jurnal_belajar, sender=JurnalBelajar,
-                  dispatch_uid='create_absensi_siswa')
+post_save.connect(
+    post_save_jurnal_belajar, sender=JurnalBelajar, dispatch_uid="create_absensi_siswa"
+)
 
 
 def pre_save_jurnal_belajar(sender, instance, **kwargs):
@@ -66,5 +81,8 @@ def pre_save_jurnal_belajar(sender, instance, **kwargs):
         print(str(e))
 
 
-pre_save.connect(pre_save_jurnal_belajar, sender=JurnalBelajar,
-                 dispatch_uid='set_guru_daftar_jurnal_belajar')
+pre_save.connect(
+    pre_save_jurnal_belajar,
+    sender=JurnalBelajar,
+    dispatch_uid="set_guru_daftar_jurnal_belajar",
+)

@@ -42,7 +42,7 @@ class SetupData(APITestCase):
             "KEBUTUHAN_KHUSUS": "",
             "ANAK_KE": "",
             "LINTANG": "",
-            "BUJUR": ""
+            "BUJUR": "",
         }
 
         self.data_guru = {
@@ -103,13 +103,10 @@ class SetupData(APITestCase):
             "EMAIL": "qshort@example.com",
         }
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan', 'Staf Kesiswaan']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan", "Staf Kesiswaan"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
@@ -120,95 +117,94 @@ class SetupData(APITestCase):
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # create data guru
-        self.client.post(reverse('data_guru'), self.data_guru)
+        self.client.post(reverse("data_guru"), self.data_guru)
 
         # import data guru user to create user
-        open_file = open('kurikulum/data/data_guru_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_guru_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_guru_user'), data, format='multipart')
+        open_file = open("kurikulum/data/data_guru_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_guru_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_guru_user"), data, format="multipart")
 
         # data login staf kesiswaan
         self.data_staf_kesiswaan = {
-            'username': '4341623682038467',
-            'password': 'merdeka123'
+            "username": "4341623682038467",
+            "password": "merdeka123",
         }
 
         # jadikan sebagai staf kesiswaan
-        data_guru_user = DataGuruUser.objects.get(DATA_GURU__NIP = self.data_staf_kesiswaan['username'])
-        my_group = Group.objects.get(name='Staf Kesiswaan')
+        data_guru_user = DataGuruUser.objects.get(
+            DATA_GURU__NIP=self.data_staf_kesiswaan["username"]
+        )
+        my_group = Group.objects.get(name="Staf Kesiswaan")
         my_group.user_set.add(data_guru_user.USER)
 
         # create data siswa
         self.siswa = DataSiswa.objects.create(**self.data_siswa)
 
         # import data siswa user to create user
-        open_file = open('kustom_autentikasi/data/data_siswa_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_siswa_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_siswa_user'), data, format='multipart')
+        open_file = open("kustom_autentikasi/data/data_siswa_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_siswa_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_siswa_user"), data, format="multipart")
 
         # data login siswa
-        self.data_login_siswa = {
-            'username': '30117680196686',
-            'password': 'merdeka123'
-        }
+        self.data_login_siswa = {"username": "30117680196686", "password": "merdeka123"}
 
         # jadikan sebagai siswa
-        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA = self.data_siswa['NIS'])
-        my_group = Group.objects.get(name='Siswa')
+        data_siswa_user = DataSiswaUser.objects.get(DATA_SISWA=self.data_siswa["NIS"])
+        my_group = Group.objects.get(name="Siswa")
         my_group.user_set.add(data_siswa_user.USER)
 
-        login_response = self.client.post(reverse('login'), self.data_staf_kesiswaan)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_staf_kesiswaan)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # upload file
-        open_file = open('kustom_autentikasi/data/data_karyawan_user.csv', 'rb')
-        self.uploaded_file = SimpleUploadedFile('data_karyawan_user.csv', open_file.read())
+        open_file = open("kustom_autentikasi/data/data_karyawan_user.csv", "rb")
+        self.uploaded_file = SimpleUploadedFile(
+            "data_karyawan_user.csv", open_file.read()
+        )
 
         # tambah jenis pelanggaran
-        self.jenis_pelanggaran = {
-            'KETERANGAN': 'Nakal',
-            'POIN': 20
-        }
+        self.jenis_pelanggaran = {"KETERANGAN": "Nakal", "POIN": 20}
 
         self.poin_pelanggaran = PoinPelanggaran.objects.create(**self.jenis_pelanggaran)
 
         # tambah jenis program kebaikan
-        self.jenis_kebaikan = {
-            'KETERANGAN': 'Menyapu',
-            'POIN': 10
-        }
+        self.jenis_kebaikan = {"KETERANGAN": "Menyapu", "POIN": 10}
 
-        self.jenis_program_kebaikan = PoinProgramKebaikan.objects.create(**self.jenis_kebaikan)
+        self.jenis_program_kebaikan = PoinProgramKebaikan.objects.create(
+            **self.jenis_kebaikan
+        )
 
         self.pengajuan = {
-            'DATA_SISWA': self.siswa.NIS,
-            'BUKTI_PELANGGARAN': self.uploaded_file,
-            'JENIS_PELANGGARAN': self.poin_pelanggaran.ID,
+            "DATA_SISWA": self.siswa.NIS,
+            "BUKTI_PELANGGARAN": self.uploaded_file,
+            "JENIS_PELANGGARAN": self.poin_pelanggaran.ID,
         }
 
         self.pengajuan_kebaikan = {
-            'BUKTI_PROGRAM_KEBAIKAN': self.uploaded_file,
-            'JENIS_PROGRAM_KEBAIKAN': self.jenis_program_kebaikan.ID,
+            "BUKTI_PROGRAM_KEBAIKAN": self.uploaded_file,
+            "JENIS_PROGRAM_KEBAIKAN": self.jenis_program_kebaikan.ID,
         }
 
         # login sebagai guru
-        login_response = self.client.post(reverse('login'), self.data_staf_kesiswaan)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
-        self.guru_token = login_response.data['access']
+        login_response = self.client.post(reverse("login"), self.data_staf_kesiswaan)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
+        self.guru_token = login_response.data["access"]
 
         # token siswa
-        login_response = self.client.post(reverse('login'), self.data_login_siswa)
-        self.siswa_token = login_response.data['access']
+        login_response = self.client.post(reverse("login"), self.data_login_siswa)
+        self.siswa_token = login_response.data["access"]
 
         super().setUp()
 

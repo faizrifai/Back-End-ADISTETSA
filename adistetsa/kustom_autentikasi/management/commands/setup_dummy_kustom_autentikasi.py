@@ -7,6 +7,7 @@ import random
 
 total_user = 20
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy kustom_autentikasi"
 
@@ -14,8 +15,12 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            User, DataSiswaUser, DataGuruUser, DataOrangTuaUser,
-            DataKaryawanUser, DataPelatihUser
+            User,
+            DataSiswaUser,
+            DataGuruUser,
+            DataOrangTuaUser,
+            DataKaryawanUser,
+            DataPelatihUser,
         ]
         for m in models:
             m.objects.all().delete()
@@ -27,11 +32,19 @@ class Command(BaseCommand):
         data_karyawan = DataKaryawan.objects.all()
         data_orang_tua = DataOrangTua.objects.all()
         data_pelatih = DataPelatih.objects.all()
-        
+
         staf = [
-            'Staf Adiwiyata', 'Staf BK', 'Staf PPDB', 'Staf Humas',
-            'Staf Kesiswaan', 'Staf Keuangan', 'Staf Kurikulum', 'Staf Perpustakaan',
-            'Staf Sarpras', 'Staf TU', 'Staf UPM'
+            "Staf Adiwiyata",
+            "Staf BK",
+            "Staf PPDB",
+            "Staf Humas",
+            "Staf Kesiswaan",
+            "Staf Keuangan",
+            "Staf Kurikulum",
+            "Staf Perpustakaan",
+            "Staf Sarpras",
+            "Staf TU",
+            "Staf UPM",
         ]
 
         for i in range(len(data_siswa)):
@@ -39,17 +52,17 @@ class Command(BaseCommand):
             siswa = data_siswa[i]
 
             username = str(siswa.NIS)
-            password = 'merdeka123'
+            password = "merdeka123"
 
             try:
                 user = User.objects.get(username=username)
                 user.delete()
             except:
                 pass
-        
+
             new_user = User.objects.create_user(username, siswa.EMAIL, password)
 
-            grup_siswa = Group.objects.get(name='Siswa')
+            grup_siswa = Group.objects.get(name="Siswa")
             grup_siswa.user_set.add(new_user)
 
             DataSiswaUser.objects.create(USER=new_user, DATA_SISWA=siswa)
@@ -58,12 +71,16 @@ class Command(BaseCommand):
             # Data Guru User
             guru = data_guru[i]
 
-            username = (guru.NAMA_LENGKAP + '_' + str(guru.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
-            password = 'merdeka123'
+            username = (
+                (guru.NAMA_LENGKAP + "_" + str(guru.TANGGAL_LAHIR.year))
+                .lower()
+                .replace(" ", "_")
+            )
+            password = "merdeka123"
 
             new_user = User.objects.create_user(username, guru.EMAIL, password)
 
-            grup_guru = Group.objects.get(name='Guru')
+            grup_guru = Group.objects.get(name="Guru")
             grup_guru.user_set.add(new_user)
 
             pilih_staf = random.choices(staf, k=2)
@@ -77,12 +94,16 @@ class Command(BaseCommand):
             # Data Karyawan User
             karyawan = data_karyawan[i]
 
-            username = (karyawan.NAMA_LENGKAP + '_' + str(karyawan.TANGGAL_LAHIR.year)).lower().replace(' ', '_')
-            password = 'merdeka123'
+            username = (
+                (karyawan.NAMA_LENGKAP + "_" + str(karyawan.TANGGAL_LAHIR.year))
+                .lower()
+                .replace(" ", "_")
+            )
+            password = "merdeka123"
 
             new_user = User.objects.create_user(username, karyawan.EMAIL, password)
 
-            grup_karyawan = Group.objects.get(name='Karyawan')
+            grup_karyawan = Group.objects.get(name="Karyawan")
             grup_karyawan.user_set.add(new_user)
 
             pilih_staf = random.choices(staf, k=2)
@@ -96,12 +117,16 @@ class Command(BaseCommand):
             # Data Orang Tua User
             orang_tua = data_orang_tua[i]
 
-            username = (orang_tua.NAMA_AYAH + '_' + str(orang_tua.TAHUN_LAHIR_AYAH.year)).lower().replace(' ', '_')
-            password = 'merdeka123'
+            username = (
+                (orang_tua.NAMA_AYAH + "_" + str(orang_tua.TAHUN_LAHIR_AYAH.year))
+                .lower()
+                .replace(" ", "_")
+            )
+            password = "merdeka123"
 
             new_user = User.objects.create_user(username=username, password=password)
 
-            grup_orang_tua = Group.objects.get(name='Orang Tua')
+            grup_orang_tua = Group.objects.get(name="Orang Tua")
             grup_orang_tua.user_set.add(new_user)
 
             DataOrangTuaUser.objects.create(USER=new_user, DATA_ORANG_TUA=orang_tua)
@@ -110,12 +135,12 @@ class Command(BaseCommand):
             # Data Pelatih User
             pelatih = data_pelatih[i]
 
-            username = (pelatih.NAMA).lower().replace(' ', '_')
-            password = 'merdeka123'
+            username = (pelatih.NAMA).lower().replace(" ", "_")
+            password = "merdeka123"
 
             new_user = User.objects.create_user(username=username, password=password)
 
-            grup_pelatih = Group.objects.get(name='Pelatih')
+            grup_pelatih = Group.objects.get(name="Pelatih")
             grup_pelatih.user_set.add(new_user)
 
             DataPelatihUser.objects.create(USER=new_user, DATA_PELATIH=pelatih)

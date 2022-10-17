@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class KurikulumV2Config(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'kurikulum_v2'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "kurikulum_v2"

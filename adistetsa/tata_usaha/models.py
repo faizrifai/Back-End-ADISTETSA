@@ -1,32 +1,33 @@
-from email.policy import default
 from django.db import models
-from pytz import timezone
-from django.db.models.signals import post_save
 from dataprofil.models import DataOrangTua
 from .enums import ENUM_ANAK_YATIM_PIATU, ENUM_BULAN, ENUM_GOLONGAN_DARAH
 from dataprofil.models import DataSiswa
 from utility.custom_function import *
 from .customs_template import data_buku_induk
+
 # Create your models here.
 from django.apps import apps
+
 
 class BukuInduk(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NIS = models.ForeignKey(DataSiswa, on_delete=models.CASCADE)
     NAMA_PANGGILAN = models.CharField(max_length=255)
-    KEWARGANEGARAAN = models.CharField(max_length=255, default='WNI')
+    KEWARGANEGARAAN = models.CharField(max_length=255, default="WNI")
     JUMLAH_SAUDARA_TIRI = models.CharField(max_length=255, blank=True)
     JUMLAH_SAUDARA_ANGKAT = models.CharField(max_length=255, blank=True)
-    ANAK_YATIM_PIATU = models.CharField(max_length=255, blank=True, choices=ENUM_ANAK_YATIM_PIATU)
-    BAHASA =  models.CharField(max_length=255, default='BAHASA INDONESIA')
-    
+    ANAK_YATIM_PIATU = models.CharField(
+        max_length=255, blank=True, choices=ENUM_ANAK_YATIM_PIATU
+    )
+    BAHASA = models.CharField(max_length=255, default="BAHASA INDONESIA")
+
     # TEMPAT TINGGAL
-    
+
     # KETERANGAN KESEHATAN
     GOLONGAN_DARAH = models.CharField(max_length=2, choices=ENUM_GOLONGAN_DARAH)
     PENYAKIT_PERNAH_DIDERITA = models.CharField(max_length=255, blank=True)
     KELAINAN_JASMANI = models.CharField(max_length=255, blank=True)
-    
+
     # KETERANGAN PENDIDIKAN
     # pendidikan sebelumnya
     TAMATAN_DARI = models.CharField(max_length=255, blank=True)
@@ -40,16 +41,16 @@ class BukuInduk(models.Model):
     DITERIMA_DI_KELAS = models.CharField(max_length=255, blank=True)
     KELOMPOK = models.CharField(max_length=255)
     TANGGAL_DITERIMA = models.DateField(blank=True, null=True)
-    
+
     # KETERANGAN AYAH KANDUNG
     ORANG_TUA = models.ForeignKey(DataOrangTua, on_delete=models.CASCADE, null=True)
-    
+
     # KEGEMARAN PESERTA DIDIK
     KESENIAN = models.CharField(max_length=255, blank=True)
     OLAHRAGA = models.CharField(max_length=255, blank=True)
     KEMASYARAKATAN = models.CharField(max_length=255, blank=True)
     LAIN_LAIN = models.CharField(max_length=255, blank=True)
-    
+
     # KETERANGAN PERKEMBANGAN PESERTA DIDIK
     TANGGAL_MENINGGALKAN_SEKOLAH = models.DateField(blank=True, null=True)
     ALASAN_MENINGGALKAN_SEKOLAH = models.CharField(max_length=255, blank=True)
@@ -59,99 +60,171 @@ class BukuInduk(models.Model):
     TANGGAL_NO_SKHUN = models.DateField(blank=True, null=True)
     NO_SKHUN = models.CharField(max_length=255, blank=True)
     RATA_RATA_NUN = models.CharField(max_length=255, blank=True)
-    
+
     # KETERANGAN SETELAH SELESAI PENDIDIKAN
     MELANJUTKAN_KE = models.CharField(max_length=255, blank=True)
     BEKERJA_DI = models.CharField(max_length=255, blank=True)
-    GENERATE = models.BooleanField(default= False)
-    HASIL_EXPORT = models.FileField(upload_to='DataTataUsaha', max_length=255, blank=True)
-    
+    GENERATE = models.BooleanField(default=False)
+    HASIL_EXPORT = models.FileField(
+        upload_to="DataTataUsaha", max_length=255, blank=True
+    )
+
     class Meta:
         verbose_name_plural = "Buku Induk"
-        
+
     def save(self, *args, **kwargs):
-        kelas = apps.get_model('kurikulum', 'KelasSiswa').objects.filter(NIS__NIS=self.NIS.NIS, KELAS__KELAS__TINGKATAN="X").order_by('ID')[0]
-        self.DITERIMA_DI_KELAS = kelas.KELAS.KELAS.TINGKATAN +' '+ str(kelas.KELAS.KELAS.JURUSAN)
+        kelas = (
+            apps.get_model("kurikulum", "KelasSiswa")
+            .objects.filter(NIS__NIS=self.NIS.NIS, KELAS__KELAS__TINGKATAN="X")
+            .order_by("ID")[0]
+        )
+        self.DITERIMA_DI_KELAS = (
+            kelas.KELAS.KELAS.TINGKATAN + " " + str(kelas.KELAS.KELAS.JURUSAN)
+        )
         self.KELOMPOK = kelas.KELAS.OFFERING.NAMA
         self.ORANG_TUA = DataOrangTua.objects.get(DATA_ANAK__NIS=self.NIS.NIS)
-        if self.GENERATE :
-            obj1 = DataBeasiswaSiswa.objects.all().filter(BUKU_INDUK = self)
-        
-            #Rapor kelas x semester 1
+        if self.GENERATE:
+            obj1 = DataBeasiswaSiswa.objects.all().filter(BUKU_INDUK=self)
+
+            # Rapor kelas x semester 1
             try:
-                rptx1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'I')
-                nrptx1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx1)
-                exsx1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx1)
-            except:
+                rptx1 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="X",
+                    SEMESTER__KE="I",
+                )
+                nrptx1 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptx1
+                )
+                exsx1 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptx1
+                )
+            except LookupError:
                 rptx1 = None
                 nrptx1 = None
                 exsx1 = None
-            
-            #Rapor kelas x semester 2
+
+            # Rapor kelas x semester 2
             try:
-                rptx2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'X', SEMESTER__KE = 'II')
-                nrptx2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptx2)
-                exsx2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptx2)
-            except:
+                rptx2 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="X",
+                    SEMESTER__KE="II",
+                )
+                nrptx2 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptx2
+                )
+                exsx2 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptx2
+                )
+            except LookupError:
                 rptx2 = None
                 nrptx2 = None
                 exsx2 = None
-            
-            #Rapor kelas xi semester 1
+
+            # Rapor kelas xi semester 1
             try:
-                rptxi1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'I')
-                nrptxi1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi1)
-                exsxi1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi1)
-            except:
+                rptxi1 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="XI",
+                    SEMESTER__KE="I",
+                )
+                nrptxi1 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptxi1
+                )
+                exsxi1 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptxi1
+                )
+            except LookupError:
                 rptxi1 = None
                 nrptxi1 = None
                 exsxi1 = None
-            
-            #Rapor kelas xi semester 2
+
+            # Rapor kelas xi semester 2
             try:
-                rptxi2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XI', SEMESTER__KE = 'II')
-                nrptxi2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxi2)
-                exsxi2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxi2)
-            except:
+                rptxi2 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="XI",
+                    SEMESTER__KE="II",
+                )
+                nrptxi2 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptxi2
+                )
+                exsxi2 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptxi2
+                )
+            except LookupError:
                 rptxi2 = None
                 nrptxi2 = None
                 exsxi2 = None
-            
-            #Rapor kelas xii semester 1
+
+            # Rapor kelas xii semester 1
             try:
-                rptxii1 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'I')
-                nrptxii1 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii1)
-                exsxii1 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii1)
-            except:
+                rptxii1 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="XII",
+                    SEMESTER__KE="I",
+                )
+                nrptxii1 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptxii1
+                )
+                exsxii1 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptxii1
+                )
+            except LookupError:
                 rptxii1 = None
                 nrptxii1 = None
                 exsxii1 = None
-            
-            #Rapor kelas xii semester 2
+
+            # Rapor kelas xii semester 2
             try:
-                rptxii2 = apps.get_model('kurikulum', 'Raport').objects.get(KELAS_SISWA__NIS = self.NIS, KELAS_SISWA__KELAS__KELAS__TINGKATAN = 'XII', SEMESTER__KE = 'II')
-                nrptxii2 = apps.get_model('kurikulum', 'NilaiRaport').objects.filter(RAPORT = rptxii2)
-                exsxii2 = apps.get_model('kesiswaan', 'NilaiEkskul').objects.filter(RAPORT = rptxii2)
-            except:
+                rptxii2 = apps.get_model("kurikulum", "Raport").objects.get(
+                    KELAS_SISWA__NIS=self.NIS,
+                    KELAS_SISWA__KELAS__KELAS__TINGKATAN="XII",
+                    SEMESTER__KE="II",
+                )
+                nrptxii2 = apps.get_model("kurikulum", "NilaiRaport").objects.filter(
+                    RAPORT=rptxii2
+                )
+                exsxii2 = apps.get_model("kesiswaan", "NilaiEkskul").objects.filter(
+                    RAPORT=rptxii2
+                )
+            except LookupError:
                 rptxii2 = None
                 nrptxii2 = None
                 exsxii2 = None
-            
-            data_buku_induk(self, obj1, nrptx1, exsx1, nrptx2, exsx2, nrptxi1, exsxi1, nrptxi2, exsxi2, nrptxii1, exsxii1, nrptxii2, exsxii2)
+
+            data_buku_induk(
+                self,
+                obj1,
+                nrptx1,
+                exsx1,
+                nrptx2,
+                exsx2,
+                nrptxi1,
+                exsxi1,
+                nrptxi2,
+                exsxi2,
+                nrptxii1,
+                exsxii1,
+                nrptxii2,
+                exsxii2,
+            )
         super(BukuInduk, self).save(*args, **kwargs)
-        
-    
+
     def get_some_field_value(self):
         return self.NIS.some_field
-    
+
+
 class DataBeasiswaSiswa(models.Model):
     ID = models.BigAutoField(primary_key=True)
     TAHUN = models.CharField(max_length=255)
     KELAS = models.CharField(max_length=255)
     DARI = models.CharField(max_length=255)
     BUKU_INDUK = models.ForeignKey(BukuInduk, on_delete=models.CASCADE)
-    # TEST = models.CharField(max_length=255)    
-    
+    # TEST = models.CharField(max_length=255)
+
+
 class MutasiMasuk(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SISWA = models.CharField(max_length=255)
@@ -164,14 +237,15 @@ class MutasiMasuk(models.Model):
     NO_SURAT = models.CharField(max_length=255)
     BULAN = models.CharField(max_length=255, choices=ENUM_BULAN)
     TAHUN = models.CharField(max_length=255)
-    
+
     class Meta:
         verbose_name_plural = "Mutasi Masuk"
-    
+
     def __str__(self):
         return self.NAMA_SISWA
 
-class MutasiKeluar (models.Model):
+
+class MutasiKeluar(models.Model):
     ID = models.BigAutoField(primary_key=True)
     NAMA_SISWA = models.CharField(max_length=255)
     KELAS = models.CharField(max_length=255)
@@ -184,6 +258,6 @@ class MutasiKeluar (models.Model):
 
     class Meta:
         verbose_name_plural = "Mutasi Keluar"
-    
+
     def __str__(self):
         return self.NAMA_SISWA

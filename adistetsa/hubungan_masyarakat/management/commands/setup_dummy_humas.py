@@ -6,6 +6,7 @@ from hubungan_masyarakat.factories import *
 
 NUM_DATA = 10
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy adiwiyata"
 
@@ -13,7 +14,9 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
         models = [
-            BukuTamu, LogUKSSiswa, LogUKSTendik,
+            BukuTamu,
+            LogUKSSiswa,
+            LogUKSTendik,
         ]
         for m in models:
             m.objects.all().delete()

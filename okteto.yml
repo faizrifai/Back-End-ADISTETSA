@@ -1,0 +1,50 @@
+services:
+  web:
+    build:
+      context: ./adistetsa
+      dockerfile: Dockerfile.prod
+    command: gunicorn adistetsa.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - static_volume:/home/adistetsa/web/staticfiles
+      - media_volume:/home/adistetsa/web/savedfiles
+      - ./adistetsa:/home/adistetsa/web
+    expose:
+      - 8000
+    environment:
+      - DEBUG=1
+      - SECRET_KEY='django-insecure-+2iff=b3rt9++c*ihw%0dgiyx^u-psocfb)+spatdy9cm&@a6e'
+      - DJANGO_ALLOWED_HOSTS=nginx-afdhalarrazy.cloud.okteto.net
+      - POSTGRESQL_ENGINE=django.db.backends.postgresql
+      - POSTGRESQL_DATABASE=adistetsa_db
+      - POSTGRESQL_USER=adistetsa
+      - POSTGRESQL_PASSWORD=merdeka123
+      - POSTGRESQL_HOST=db
+      - POSTGRESQL_PORT=5432
+      - DATABASE=postgres
+      - CSRF_TRUSTED_ORIGINS=https://nginx-afdhalarrazy.cloud.okteto.net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=adistetsa
+      - POSTGRES_PASSWORD=merdeka123
+      - POSTGRES_DB=adistetsa_db
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/home/adistetsa/web/staticfiles
+      - media_volume:/home/adistetsa/web/savedfiles
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:

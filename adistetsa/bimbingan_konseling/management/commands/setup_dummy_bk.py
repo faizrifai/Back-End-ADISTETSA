@@ -7,15 +7,14 @@ from bimbingan_konseling.factories import *
 
 NUM_DATA = 10
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy bimbingan konseling"
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
-        models = [
-            DataAlumni, PeminatanLintasMinat, Konsultasi
-        ]
+        models = [DataAlumni, PeminatanLintasMinat, Konsultasi]
         for m in models:
             m.objects.all().delete()
 
@@ -27,22 +26,22 @@ class Command(BaseCommand):
         if total_data > 10:
             total_data = 10
 
-        file = ContentFile(b'Hello world!', name='angket.txt')
+        file = ContentFile(b"Hello world!", name="angket.txt")
 
         for i in range(total_data):
             PeminatanLintasMinat.objects.create(
-                KELAS_SISWA = kelas_siswa[i],
-                KATEGORI='Angket Peminatan',
+                KELAS_SISWA=kelas_siswa[i],
+                KATEGORI="Angket Peminatan",
                 FILE=file,
             )
             PeminatanLintasMinat.objects.create(
-                KELAS_SISWA = kelas_siswa[i],
-                KATEGORI='Angket Lintas Minat',
+                KELAS_SISWA=kelas_siswa[i],
+                KATEGORI="Angket Lintas Minat",
                 FILE=file,
             )
             PeminatanLintasMinat.objects.create(
-                KELAS_SISWA = kelas_siswa[i],
-                KATEGORI='Angket Data Diri',
+                KELAS_SISWA=kelas_siswa[i],
+                KATEGORI="Angket Data Diri",
                 FILE=file,
             )
 

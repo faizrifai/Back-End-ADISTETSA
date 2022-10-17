@@ -3,7 +3,13 @@ import random
 from django.db import transaction
 from django.core.management.base import BaseCommand
 
-from dataprofil.models import *
+from dataprofil.models import (
+    DataGuru,
+    DataKaryawan,
+    DataOrangTua,
+    DataSiswa,
+    DataPelatih,
+)
 from dataprofil.factories import (
     DataSiswaFactory,
     DataOrangTuaFactory,
@@ -17,6 +23,7 @@ NUM_ORANG_TUA = 50
 NUM_GURU = 50
 NUM_KARYAWAN = 50
 NUM_PELATIH = 50
+
 
 class Command(BaseCommand):
     help = "Melakukan generate data dummy profil"
@@ -33,14 +40,14 @@ class Command(BaseCommand):
         # Membuat data siswa
         for _ in range(NUM_SISWA):
             data_siswa = DataSiswaFactory()
-            
+
         # Membuat data orang tua
         for data in DataSiswa.objects.all():
-            data_orang_tua = DataOrangTuaFactory(anak = [data])
-            
+            data_orang_tua = DataOrangTuaFactory(anak=[data])
+
         for _ in range(NUM_GURU):
             data_guru = DataGuruFactory()
-            
+
         for _ in range(NUM_KARYAWAN):
             data_karyawan = DataKaryawanFactory()
 

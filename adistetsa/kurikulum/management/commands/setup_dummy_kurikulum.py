@@ -6,15 +6,14 @@ from kurikulum.factories import *
 
 import random
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy kurikulum"
 
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
-        models = [
-            Kelas, OfferingKelas, KelasSiswa, JadwalMengajar, NilaiRaport
-        ]
+        models = [Kelas, OfferingKelas, KelasSiswa, JadwalMengajar, NilaiRaport]
         for m in models:
             m.objects.all().delete()
 
@@ -23,7 +22,7 @@ class Command(BaseCommand):
         # Kelas
         for _ in range(20):
             KelasFactory()
-        
+
         # Offering Kelas
         for _ in range(20):
             OfferingKelasFactory()

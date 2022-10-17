@@ -8,38 +8,39 @@ from .models import KatalogKonselor
 
 import shutil
 
-TEST_DIR = 'test_data'
+TEST_DIR = "test_data"
+
 
 class TestKurikulum(APITestCase):
     @classmethod
-    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    @override_settings(MEDIA_ROOT=(TEST_DIR + "/media"))
     def setUpClass(self):
         super().setUpClass()
 
         buatRole()
-        self.data_login_guru = generateUserGuru(['Staf BK'])
+        self.data_login_guru = generateUserGuru(["Staf BK"])
         KatalogKonselor.objects.create(
-            USER = DataGuruUser.objects.last().USER,
-            NAMA = DataGuruUser.objects.last().DATA_GURU.NAMA_LENGKAP,
-            KOMPETENSI = 'Bahasa Indonesia',
-            ALUMNUS = 'SMAN 4 Malang',
-            WHATSAPP = 'https://wa.me/081134503493',
-            CONFERENCE = 'https://meet.google.com'
+            USER=DataGuruUser.objects.last().USER,
+            NAMA=DataGuruUser.objects.last().DATA_GURU.NAMA_LENGKAP,
+            KOMPETENSI="Bahasa Indonesia",
+            ALUMNUS="SMAN 4 Malang",
+            WHATSAPP="https://wa.me/081134503493",
+            CONFERENCE="https://meet.google.com",
         )
 
         # Buat dummy guru BK
         for _ in range(10):
-            generateUserGuru(['Staf BK'])
+            generateUserGuru(["Staf BK"])
 
         # Mata Pelajaran
         mata_pelajaran = [
-            {'KODE': 'BI', 'NAMA': 'Bahasa Indonesia'},
-            {'KODE': 'BING', 'NAMA': 'Bahasa Inggris'},
-            {'KODE': 'MTK', 'NAMA': 'Matematika'},
-            {'KODE': 'BIO', 'NAMA': 'Biologi'},
-            {'KODE': 'KIM', 'NAMA': 'Kimia'},
-            {'KODE': 'FIS', 'NAMA': 'Fisika'},
-            {'KODE': 'GEO', 'NAMA': 'Geografi'}
+            {"KODE": "BI", "NAMA": "Bahasa Indonesia"},
+            {"KODE": "BING", "NAMA": "Bahasa Inggris"},
+            {"KODE": "MTK", "NAMA": "Matematika"},
+            {"KODE": "BIO", "NAMA": "Biologi"},
+            {"KODE": "KIM", "NAMA": "Kimia"},
+            {"KODE": "FIS", "NAMA": "Fisika"},
+            {"KODE": "GEO", "NAMA": "Geografi"},
         ]
 
         for data in mata_pelajaran:
@@ -52,11 +53,11 @@ class TestKurikulum(APITestCase):
         except OSError:
             pass
 
-    @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
+    @override_settings(MEDIA_ROOT=(TEST_DIR + "/media"))
     def test_get_profil_konselor(self):
         loginWithUserData(self, self.data_login_guru)
-        response = self.client.get(reverse('profil_konselor'))
-        
+        response = self.client.get(reverse("profil_konselor"))
+
         print(response.data)
 
     # @override_settings(MEDIA_ROOT=(TEST_DIR + '/media'))
@@ -65,7 +66,7 @@ class TestKurikulum(APITestCase):
     #     update_data = {
     #         'TAHUN_AJARAN': 2,
     #     }
-        
+
     #     loginWithUserData(self, self.data_login_guru)
     #     testUpdateWithFileView(self, 'ktsp', KTSPFactory, update_data, 'NAMA_FILE')
 

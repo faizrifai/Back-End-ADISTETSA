@@ -64,206 +64,197 @@ class SetupData(APITestCase):
             "EMAIL": "qshort@example.com",
         }
 
-        self.data_kompetensi = {
-            "BIDANG_STUDI": "Bahasa Indonesia",
-            "URUTAN": "Pertama"
-        }
+        self.data_kompetensi = {"BIDANG_STUDI": "Bahasa Indonesia", "URUTAN": "Pertama"}
 
         self.data_anak = {
-        'STATUS': "Hidup",
-        'JENJANG': "SMA",
-        'NIS': 12349876,
-        'NAMA': "Leo",
-        'JENIS_KELAMIN': "Laki-laki",
-        'TEMPAT_LAHIR': "Bumi",
-        'TANGGAL_LAHIR': "2000-01-11",
-        'TAHUN_MASUK': "2000",     
+            "STATUS": "Hidup",
+            "JENJANG": "SMA",
+            "NIS": 12349876,
+            "NAMA": "Leo",
+            "JENIS_KELAMIN": "Laki-laki",
+            "TEMPAT_LAHIR": "Bumi",
+            "TANGGAL_LAHIR": "2000-01-11",
+            "TAHUN_MASUK": "2000",
         }
 
         self.data_beasiswa = {
-        'JENIS': "sada",
-        'PENYELANGGARA': "gdfg",
-        'DARI_TAHUN': "gdgfd",
-        'SAMPAI_TAHUN': "fdgfd",
-        'MASIH_MENERIMA': "dfgfd",
+            "JENIS": "sada",
+            "PENYELANGGARA": "gdfg",
+            "DARI_TAHUN": "gdgfd",
+            "SAMPAI_TAHUN": "fdgfd",
+            "MASIH_MENERIMA": "dfgfd",
         }
 
         self.data_buku = {
-        'JUDUL_BUKU': "eqweq",
-        'TAHUN_BUKU': "qweq",
-        'PENERBIT_BUKU': "eqweqw",
+            "JUDUL_BUKU": "eqweq",
+            "TAHUN_BUKU": "qweq",
+            "PENERBIT_BUKU": "eqweqw",
         }
 
         self.data_diklat = {
-        'JENIS_DIKLAT': "qweqw",
-        'NAMA': "qweqw",
-        'PENYELENGGARA': "qweqw",
-        'TAHUN': "wqeqw",
-        'PERAN': "wqeqwe",
+            "JENIS_DIKLAT": "qweqw",
+            "NAMA": "qweqw",
+            "PENYELENGGARA": "qweqw",
+            "TAHUN": "wqeqw",
+            "PERAN": "wqeqwe",
         }
 
         self.data_karya_tulis = {
-        'JUDUL': "wqeqwe",
-        'TAHUN': "qweqwe",
-        'PUBLIKASI': "qweqwe",
-        'KETERANGAN': "dfvfd",
+            "JUDUL": "wqeqwe",
+            "TAHUN": "qweqwe",
+            "PUBLIKASI": "qweqwe",
+            "KETERANGAN": "dfvfd",
         }
 
         self.data_kesejahteraan = {
-        'JENIS': "sdfdsf",
-        'NAMA': "dsfdsf",
-        'PENYELENGGARA': "sdfdsf",
-        'DARI_TAHUN': "dsfdsf",
-        'SAMPAI_TAHUN': "ghfhgf",
-        'STATUS': "jhgjhg",
+            "JENIS": "sdfdsf",
+            "NAMA": "dsfdsf",
+            "PENYELENGGARA": "sdfdsf",
+            "DARI_TAHUN": "dsfdsf",
+            "SAMPAI_TAHUN": "ghfhgf",
+            "STATUS": "jhgjhg",
         }
 
         self.data_tunjangan = {
-        'JENIS': "dfbdfb",
-        'NAMA': "dfbfdb",
-        'INSTANSI': "dfbfd",
-        'SUMBER_DANA': "bdfbfdb",
-        'DARI_TAHUN': "dfbfdbfd",
-        'SAMPAI_TAHUN': "dfbfdbf",
-        'NOMINAL': "dfbfdb",
-        'STATUS': "ghgh",
+            "JENIS": "dfbdfb",
+            "NAMA": "dfbfdb",
+            "INSTANSI": "dfbfd",
+            "SUMBER_DANA": "bdfbfdb",
+            "DARI_TAHUN": "dfbfdbfd",
+            "SAMPAI_TAHUN": "dfbfdbf",
+            "NOMINAL": "dfbfdb",
+            "STATUS": "ghgh",
         }
 
         self.data_tugas_tambahan = {
-        'JABATAN_PTK': "dsfdsf",
-        'JPM': "dsfds",
-        'NO_SK': "sdfsdf",
-        'TMT_TAMBAHAN': "ghfg",
-        'TST_TAMBAHAN': "fghgfh",
+            "JABATAN_PTK": "dsfdsf",
+            "JPM": "dsfds",
+            "NO_SK": "sdfsdf",
+            "TMT_TAMBAHAN": "ghfg",
+            "TST_TAMBAHAN": "fghgfh",
         }
 
         self.data_penghargaan = {
-        'TINGKAT_PENGHARGAAN': "hfghgf",
-        'JENIS_PENGHARGAAN': "fdgfdg",
-        'NAMA': "dfgfdg",
-        'TAHUN': "dfgfdg",
-        'INSTANSI': "dfgfdg",
+            "TINGKAT_PENGHARGAAN": "hfghgf",
+            "JENIS_PENGHARGAAN": "fdgfdg",
+            "NAMA": "dfgfdg",
+            "TAHUN": "dfgfdg",
+            "INSTANSI": "dfgfdg",
         }
 
         self.data_nilai_tes = {
-        'JENIS': "dfsdf",
-        'NAMA': "dsfdsf",
-        'PENYELENGGARA': "dsfdsfs",
-        'TAHUN': "sdfsdfds",
-        'SKOR': "sdfsdfsd",
+            "JENIS": "dfsdf",
+            "NAMA": "dsfdsf",
+            "PENYELENGGARA": "dsfdsfs",
+            "TAHUN": "sdfsdfds",
+            "SKOR": "sdfsdfsd",
         }
 
         self.data_riwayat_gaji_berkala = {
-        'PANGKAT_GOLONGAN': "fdgfdg",
-        'NO_SK': "fdgfdg",
-        'TANGGAL_SK': "2000-02-20",
-        'TMT_KGB': "dfgfdg",
-        'TAHUN_MK': "fdsfs",
-        'BULAN_MK': "dsfdsf",
-        'GAJI_POKOK': "dsfsdf",
+            "PANGKAT_GOLONGAN": "fdgfdg",
+            "NO_SK": "fdgfdg",
+            "TANGGAL_SK": "2000-02-20",
+            "TMT_KGB": "dfgfdg",
+            "TAHUN_MK": "fdsfs",
+            "BULAN_MK": "dsfdsf",
+            "GAJI_POKOK": "dsfsdf",
         }
 
         self.data_riwayat_jabatan_struktural = {
-        'JABATAN_PTK': "fsdfds",
-        'SK_STRUKTURAL': "sdfdsf",
-        'TMT_JABATAN': "sdfdsf",
+            "JABATAN_PTK": "fsdfds",
+            "SK_STRUKTURAL": "sdfdsf",
+            "TMT_JABATAN": "sdfdsf",
         }
 
         self.data_riwayat_kepangkatan = {
-        'PANGKAT_GOLONGAN': "dsfsdf",
-        'NO_SK': "dsfdsf",
-        'TANGGAL_SK': "2000-02-20",
-        'PANGKAT_GOLONGAN': "dvdf",
-        'MK_TAHUN': "nbv",
-        'MK_BULAN': "rdfvc",
+            "PANGKAT_GOLONGAN": "dsfsdf",
+            "NO_SK": "dsfdsf",
+            "TANGGAL_SK": "2000-02-20",
+            "MK_TAHUN": "nbv",
+            "MK_BULAN": "rdfvc",
         }
 
         self.data_riwayat_pendidikan_formal = {
-        'BIDANG_STUDI': "fsdfs",
-        'JENJANG': "dsfsdfs",
-        'GELAR': "dsfsdf",
-        'SATUAN': "sdfdsfds",
-        'FAKULTAS': "dsfds",
-        'KEPENDIDIKAN': "dsfds",
-        'KEPENDUDUKAN': "dsfds",
-        'TAHUN_MASUK': "sdfsdf",
-        'TAHUN_LULUS': "dsfsd",
-        'NIM': "dsfds",
-        'MASIH': "dsfsd",
-        'SMT': "sdfs",
-        'IPK': "sdfds",
+            "BIDANG_STUDI": "fsdfs",
+            "JENJANG": "dsfsdfs",
+            "GELAR": "dsfsdf",
+            "SATUAN": "sdfdsfds",
+            "FAKULTAS": "dsfds",
+            "KEPENDIDIKAN": "dsfds",
+            "KEPENDUDUKAN": "dsfds",
+            "TAHUN_MASUK": "sdfsdf",
+            "TAHUN_LULUS": "dsfsd",
+            "NIM": "dsfds",
+            "MASIH": "dsfsd",
+            "SMT": "sdfs",
+            "IPK": "sdfds",
         }
 
         self.data_riwayat_sertifikasi = {
-        'JENIS_SERTIFIKASI': "fsdfds",
-        'NO_SERTIFIKASI': "sdfdsfs",
-        'TAHUN_SERTIFIKASI': "sdfdsf",
-        'BIDANG_STUDI': "dsfdsf",
-        'NO_REGISTRASI': "sdfdsf",
-        'NO_PESERTA': "sdfdsf",
+            "JENIS_SERTIFIKASI": "fsdfds",
+            "NO_SERTIFIKASI": "sdfdsfs",
+            "TAHUN_SERTIFIKASI": "sdfdsf",
+            "BIDANG_STUDI": "dsfdsf",
+            "NO_REGISTRASI": "sdfdsf",
+            "NO_PESERTA": "sdfdsf",
         }
 
         self.data_riwayat_jabatan_fungsional = {
-        'JABATAN_FUNGSIONAL': "sdfdsf",
-        'SK_JABATAN_FUNGSIONAL': "sdfds",
-        'TMT_JABATAN': "dsfdsf",
+            "JABATAN_FUNGSIONAL": "sdfdsf",
+            "SK_JABATAN_FUNGSIONAL": "sdfds",
+            "TMT_JABATAN": "dsfdsf",
         }
 
         self.data_riwayat_karir = {
-        'JENJANG': "sdfdsf",
-        'JENIS_LEMBAGA': "sdfds",
-        'STS_KEPEGAWAIAN': "dsfdsf",
-        'JENIS_PTK': "fsdfsd",
-        'LEMBAGA': "dsfdsf",
-        'NO_SK_KERJA': "fsdfds",
-        'TGL_SK_KERJA': "2000-02-20",
-        'TMT_KERJA': "dfsdsf",
-        'TST_KERJA': "dsfdsf",
-        'TEMPAT_KERJA': "sdfdsf",
-        'TTD_SK_KERJA': "dsfdsf",
-        'MAPEL_DIAJARKAN': "dsfsdf",
+            "JENJANG": "sdfdsf",
+            "JENIS_LEMBAGA": "sdfds",
+            "STS_KEPEGAWAIAN": "dsfdsf",
+            "JENIS_PTK": "fsdfsd",
+            "LEMBAGA": "dsfdsf",
+            "NO_SK_KERJA": "fsdfds",
+            "TGL_SK_KERJA": "2000-02-20",
+            "TMT_KERJA": "dfsdsf",
+            "TST_KERJA": "dsfdsf",
+            "TEMPAT_KERJA": "sdfdsf",
+            "TTD_SK_KERJA": "dsfdsf",
+            "MAPEL_DIAJARKAN": "dsfsdf",
         }
 
-
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # create data guru
-        self.client.post(reverse('data_guru'), self.data_guru)
+        self.client.post(reverse("data_guru"), self.data_guru)
 
         # import data guru user to create user
-        open_file = open('kustom_autentikasi/data/data_guru_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_guru_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_guru_user'), data, format='multipart')
+        open_file = open("kustom_autentikasi/data/data_guru_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_guru_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_guru_user"), data, format="multipart")
 
         # login as guru
-        self.data_guru_user = {
-            'username': '4341623682038467',
-            'password': 'merdeka123'
-        }
+        self.data_guru_user = {"username": "4341623682038467", "password": "merdeka123"}
 
-        login_response = self.client.post(reverse('login'), self.data_guru_user)
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+        login_response = self.client.post(reverse("login"), self.data_guru_user)
+        self.client.credentials(
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         super().setUp()
 

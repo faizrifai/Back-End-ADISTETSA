@@ -12,23 +12,40 @@ from kurikulum.filter_admin import KelasFilter
 from .forms import PembayaranForm
 
 from kesiswaan.filter_admin import DataSiswaFilter
+
 # from .filter_admin import *
 from .models import *
 
-class PembayaranAdmin( ExportMixin, admin.ModelAdmin):
-    search_fields = ('NAMA_SISWA__NIS__NAMA', 'NAMA_SISWA__NIS__NIS', 'NAMA_SISWA__KELAS__KELAS__KODE_KELAS','NAMA_SISWA__KELAS__OFFERING__NAMA',)
-    list_display = ('NAMA_SISWA','nis','TANGGAL_PEMBAYARAN','PEMBAYARAN_DPSM_INSINDENTAL', 'PEMBAYARAN_DPSM_RUTIN','BULAN_PEMBAYARAN_DPSM_RUTIN', 'BIMBEL','BULAN_PEMBAYARAN_BIMBEL', 'KUITANSI')
+
+class PembayaranAdmin(ExportMixin, admin.ModelAdmin):
+    search_fields = (
+        "NAMA_SISWA__NIS__NAMA",
+        "NAMA_SISWA__NIS__NIS",
+        "NAMA_SISWA__KELAS__KELAS__KODE_KELAS",
+        "NAMA_SISWA__KELAS__OFFERING__NAMA",
+    )
+    list_display = (
+        "NAMA_SISWA",
+        "nis",
+        "TANGGAL_PEMBAYARAN",
+        "PEMBAYARAN_DPSM_INSINDENTAL",
+        "PEMBAYARAN_DPSM_RUTIN",
+        "BULAN_PEMBAYARAN_DPSM_RUTIN",
+        "BIMBEL",
+        "BULAN_PEMBAYARAN_BIMBEL",
+        "KUITANSI",
+    )
     list_per_page = 10
-    autocomplete_fields = ('NAMA_SISWA',)
+    autocomplete_fields = ("NAMA_SISWA",)
     # list_filter = ('TANGGAL_PEMBAYARAN','BULAN', 'TAHUN')
     form = PembayaranForm
-    exclude = ('KUITANSI','GENERATE')
+    exclude = ("KUITANSI", "GENERATE")
     resource_class = PembayaranResource
-    date_hierarchy = 'TANGGAL_PEMBAYARAN'
+    date_hierarchy = "TANGGAL_PEMBAYARAN"
 
     def nis(self, obj):
         return obj.NAMA_SISWA.NIS.NIS
-    
+
 
 admin.site.register(Pembayaran, PembayaranAdmin)
 
@@ -37,6 +54,3 @@ admin.site.register(Pembayaran, PembayaranAdmin)
 #     date_hierarchy = 'TANGGAL_PEMBAYARAN'
 
 # admin.site.register(KuitansiPembayaranProxy, KwitansiKeuanganProxyAdmin)
-    
-
-    

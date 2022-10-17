@@ -10,9 +10,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
-        models = [
-            JenisSarana, JenisRuangan
-        ]
+        models = [JenisSarana, JenisRuangan]
         for m in models:
             m.objects.all().delete()
 
@@ -20,18 +18,16 @@ class Command(BaseCommand):
 
         # Kategori Sarana
         kategori_sarana = [
-            'Alat Tulis Kerja', 'Informasi Teknologi', 'Inventaris Rumah Tangga'
+            "Alat Tulis Kerja",
+            "Informasi Teknologi",
+            "Inventaris Rumah Tangga",
         ]
-                
+
         for jenis_sarana in kategori_sarana:
             JenisSarana.objects.create(KATEGORI=jenis_sarana)
-        
-        # Kategori Ruangan    
-        kategori_ruangan = [
-            'Serbaguna', 'Kelas', 'Penunjang'
-        ]
-        
+
+        # Kategori Ruangan
+        kategori_ruangan = ["Serbaguna", "Kelas", "Penunjang"]
+
         for jenis_ruangan in kategori_ruangan:
             JenisRuangan.objects.create(KATEGORI=jenis_ruangan)
-        
-        

@@ -69,82 +69,72 @@ class SetupData(APITestCase):
             "EMAIL": "qshort@example.com",
         }
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan', 'Staf Kurikulum']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan", "Staf Kurikulum"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(
-            username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
+        login_response = self.client.post(reverse("login"), self.data_admin)
         self.client.credentials(
-            HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # create data guru
-        self.client.post(reverse('data_guru'), self.data_guru)
+        self.client.post(reverse("data_guru"), self.data_guru)
 
         # import data guru user to create user
-        open_file = open('kurikulum/data/data_guru_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile(
-            'data_guru_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_guru_user'),
-                         data, format='multipart')
+        open_file = open("kurikulum/data/data_guru_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_guru_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_guru_user"), data, format="multipart")
 
         # data login staf kurikulum
         self.data_staf_kurikulum = {
-            'username': '4341623682038467',
-            'password': 'merdeka123'
+            "username": "4341623682038467",
+            "password": "merdeka123",
         }
 
         # jadikan sebagai staf kurikulum
         data_guru_user = DataGuruUser.objects.get(
-            DATA_GURU__NIP=self.data_staf_kurikulum['username'])
-        my_group = Group.objects.get(name='Staf Kurikulum')
+            DATA_GURU__NIP=self.data_staf_kurikulum["username"]
+        )
+        my_group = Group.objects.get(name="Staf Kurikulum")
         my_group.user_set.add(data_guru_user.USER)
 
         # setup filter
-        TahunAjaran.objects.create(
-            TAHUN_AJARAN_AWAL='2020', TAHUN_AJARAN_AKHIR='2021')
-        DataSemester.objects.create(KE='I', NAMA='Semester 1')
-        MataPelajaran.objects.create(KODE='BI', NAMA='Bahasa Indonesia')
-        Jurusan.objects.create(NAMA='IPA')
-        Kelas.objects.create(TAHUN_AJARAN_id=1, TINGKATAN='X', JURUSAN_id=1)
-        NamaOfferingKelas.objects.create(NAMA='A')
+        TahunAjaran.objects.create(TAHUN_AJARAN_AWAL="2020", TAHUN_AJARAN_AKHIR="2021")
+        DataSemester.objects.create(KE="I", NAMA="Semester 1")
+        MataPelajaran.objects.create(KODE="BI", NAMA="Bahasa Indonesia")
+        Jurusan.objects.create(NAMA="IPA")
+        Kelas.objects.create(TAHUN_AJARAN_id=1, TINGKATAN="X", JURUSAN_id=1)
+        NamaOfferingKelas.objects.create(NAMA="A")
         OfferingKelas.objects.create(KELAS_id=1, OFFERING_id=1)
-        KategoriTataTertib.objects.create(NAMA='Pakaian')
+        KategoriTataTertib.objects.create(NAMA="Pakaian")
 
-        login_response = self.client.post(
-            reverse('login'), self.data_staf_kurikulum)
+        login_response = self.client.post(reverse("login"), self.data_staf_kurikulum)
         self.client.credentials(
-            HTTP_AUTHORIZATION='Bearer ' + login_response.data['access'])
+            HTTP_AUTHORIZATION="Bearer " + login_response.data["access"]
+        )
 
         # create ktsp
-        open_file = open(
-            'kustom_autentikasi/data/data_karyawan_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile(
-            'data_karyawan_user.csv', open_file.read())
+        open_file = open("kustom_autentikasi/data/data_karyawan_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_karyawan_user.csv", open_file.read())
 
         self.data_ktsp = {
-            'TAHUN_AJARAN': 1,
-            'NAMA_FILE': uploaded_file,
+            "TAHUN_AJARAN": 1,
+            "NAMA_FILE": uploaded_file,
         }
 
-        response = self.client.post(
-            reverse('ktsp'), self.data_ktsp, format='multipart')
+        response = self.client.post(reverse("ktsp"), self.data_ktsp, format="multipart")
 
         def tearDown(self):
             super().tearDown()

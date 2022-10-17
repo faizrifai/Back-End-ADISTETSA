@@ -30,7 +30,7 @@ django-flat-responsive==2.0
 django-flat-theme==1.1.4
 django-grappelli==3.0.2
 django-import-export==2.7.1
-django-subadmin==2.0.1
+django-subadmin==3.2.1
 django-waffle==2.3.0
 djangorestframework==3.13.1
 djangorestframework-simplejwt==5.0.0
@@ -89,6 +89,7 @@ pluggy==1.0.0
 proto-plus==1.22.1
 protobuf==4.21.6
 psutil==5.9.0
+psycopg2-binary==2.9.4
 py==1.11.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -118,7 +119,6 @@ tomli==2.0.1
 typing_extensions==4.0.1
 uritemplate==4.1.1
 urllib3==1.26.7
-uWSGI==2.0.20
 virtualenv==20.10.0
 Werkzeug==2.1.2
 wrapt==1.13.3

@@ -5,6 +5,7 @@ from rest_framework.test import APITestCase
 
 from .models import *
 
+
 # Create your tests here.
 class SetupData(APITestCase):
     def setUp(self):
@@ -41,7 +42,7 @@ class SetupData(APITestCase):
             "KEBUTUHAN_KHUSUS": "",
             "ANAK_KE": "",
             "LINTANG": "",
-            "BUJUR": ""
+            "BUJUR": "",
         }
 
         self.data_guru = {
@@ -102,82 +103,69 @@ class SetupData(APITestCase):
             "EMAIL": "qshort@example.com",
         }
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan', 'Staf Sarpras']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan", "Staf Sarpras"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.admin_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.admin_token)
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.admin_token = login_response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.admin_token)
 
         # menambah siswa
-        self.client.post(reverse('data_siswa'), self.data_siswa)
-        open_file = open('kustom_autentikasi/data/data_siswa_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_siswa_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_siswa_user'), data, format='multipart')
+        self.client.post(reverse("data_siswa"), self.data_siswa)
+        open_file = open("kustom_autentikasi/data/data_siswa_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_siswa_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_siswa_user"), data, format="multipart")
 
         # token siswa
-        self.login_siswa = {
-            'username': '30117680196686',
-            'password': 'merdeka123'
-        }
-        login_response = self.client.post(reverse('login'), self.login_siswa)
-        self.siswa_token = login_response.data['access']
+        self.login_siswa = {"username": "30117680196686", "password": "merdeka123"}
+        login_response = self.client.post(reverse("login"), self.login_siswa)
+        self.siswa_token = login_response.data["access"]
 
         # menambah guru
-        self.client.post(reverse('data_guru'), self.data_guru)
-        open_file = open('kustom_autentikasi/data/data_guru_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_guru_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_guru_user'), data, format='multipart')
+        self.client.post(reverse("data_guru"), self.data_guru)
+        open_file = open("kustom_autentikasi/data/data_guru_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_guru_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_guru_user"), data, format="multipart")
 
         # token guru
-        self.login_guru = {
-            'username': '4341623682038467',
-            'password': 'merdeka123'
-        }
-        login_response = self.client.post(reverse('login'), self.login_guru)
-        self.guru_token = login_response.data['access']
+        self.login_guru = {"username": "4341623682038467", "password": "merdeka123"}
+        login_response = self.client.post(reverse("login"), self.login_guru)
+        self.guru_token = login_response.data["access"]
 
-        self.jenis_ruangan = JenisRuangan.objects.create(KATEGORI='Aula')
+        self.jenis_ruangan = JenisRuangan.objects.create(KATEGORI="Aula")
 
         # menambah ruangan
         self.data_ruangan = {
-            'NAMA': 'Gedung Serbaguna',
-            'JENIS': self.jenis_ruangan,
+            "NAMA": "Gedung Serbaguna",
+            "JENIS": self.jenis_ruangan,
         }
         self.ruangan = Ruangan.objects.create(**self.data_ruangan)
 
-        self.jenis_sarana = JenisSarana.objects.create(KATEGORI='ATK')
+        self.jenis_sarana = JenisSarana.objects.create(KATEGORI="ATK")
 
         # menambah sarana
         self.data_sarana = {
-            'NAMA': 'Pulpen',
-            'JENIS': self.jenis_sarana,
+            "NAMA": "Pulpen",
+            "JENIS": self.jenis_sarana,
         }
         self.sarana = Sarana.objects.create(**self.data_sarana)
 
         self.data_sarana2 = {
-            'NAMA': 'Pensil',
-            'JENIS': self.jenis_sarana,
+            "NAMA": "Pensil",
+            "JENIS": self.jenis_sarana,
         }
         self.sarana = Sarana.objects.create(**self.data_sarana2)
 

@@ -4,9 +4,10 @@ from django.core.management.base import BaseCommand
 from keuangan.models import *
 from keuangan.factories import *
 
+
 class Command(BaseCommand):
     help = "Melakukan generate data dummy Keuangan, pastikan def save di komen sementara lur wkwkwk"
-    
+
     @transaction.atomic
     def handle(self, *args, **kwargs):
         self.stdout.write("Menghapus data lama...")
@@ -15,8 +16,8 @@ class Command(BaseCommand):
         ]
         for m in models:
             m.objects.all().delete()
-            
+
         self.stdout.write("Membuat data baru...")
-        
+
         for _ in range(10):
             PembayaranFactory()

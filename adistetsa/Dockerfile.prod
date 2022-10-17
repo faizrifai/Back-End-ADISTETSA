@@ -1,0 +1,48 @@
+# BUILDER
+FROM python:3.10-slim-bullseye as builder
+
+WORKDIR /usr/src/adistetsa
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN pip install --upgrade pip
+RUN pip install flake8==3.9.2
+COPY . .
+RUN flake8 --ignore=E302,E501,E722,F401,F403,F405,F841,W503 .
+
+COPY ./requirements.txt .
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/adistetsa/wheels -r requirements.txt
+
+# FINAL
+FROM python:3.10-slim-bullseye
+
+RUN mkdir -p /home/adistetsa
+
+RUN addgroup adistetsa && adduser adistetsa_user && usermod -a -G adistetsa adistetsa_user
+
+ENV HOME=/home/adistetsa
+ENV APP_HOME=/home/adistetsa/web
+RUN mkdir $APP_HOME
+RUN mkdir $APP_HOME/staticfiles
+RUN mkdir $APP_HOME/savedfiles
+WORKDIR $APP_HOME
+
+RUN apt-get update
+RUN apt-get install -y netcat
+
+COPY --from=builder /usr/src/adistetsa/wheels /wheels
+COPY --from=builder /usr/src/adistetsa/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+COPY ./entrypoint.prod.sh .
+RUN sed -i 's/\r$//g' $APP_HOME/entrypoint.prod.sh
+RUN chmod +x $APP_HOME/entrypoint.prod.sh
+
+COPY . $APP_HOME
+
+RUN chown -R adistetsa_user:adistetsa $APP_HOME
+
+USER adistetsa_user
+
+ENTRYPOINT [ "/home/adistetsa/web/entrypoint.prod.sh" ]

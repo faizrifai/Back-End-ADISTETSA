@@ -41,7 +41,7 @@ class SetupData(APITestCase):
             "KEBUTUHAN_KHUSUS": "",
             "ANAK_KE": "",
             "LINTANG": "",
-            "BUJUR": ""
+            "BUJUR": "",
         }
 
         self.data_guru = {
@@ -102,150 +102,122 @@ class SetupData(APITestCase):
             "EMAIL": "qshort@example.com",
         }
 
-        self.data_admin = {
-            'username': 'admin',
-            'password': 'merdeka123'
-        }
+        self.data_admin = {"username": "admin", "password": "merdeka123"}
 
         # create groups
-        groups = ['Siswa', 'Guru', 'Orang Tua', 'Karyawan', 'Staf Perpustakaan']
+        groups = ["Siswa", "Guru", "Orang Tua", "Karyawan", "Staf Perpustakaan"]
         for group in groups:
             object = Group.objects.create(name=group)
             object.save()
 
         # create superuser
-        user = User.objects.create_user(username='admin', password='merdeka123')
+        user = User.objects.create_user(username="admin", password="merdeka123")
         user.is_superuser = True
         user.save()
 
         # login as superuser
-        login_response = self.client.post(reverse('login'), self.data_admin)
-        self.admin_token = login_response.data['access']
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.admin_token)
+        login_response = self.client.post(reverse("login"), self.data_admin)
+        self.admin_token = login_response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.admin_token)
 
         # menambah siswa
-        self.client.post(reverse('data_siswa'), self.data_siswa)
-        open_file = open('kustom_autentikasi/data/data_siswa_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_siswa_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_siswa_user'), data, format='multipart')
+        self.client.post(reverse("data_siswa"), self.data_siswa)
+        open_file = open("kustom_autentikasi/data/data_siswa_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_siswa_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_siswa_user"), data, format="multipart")
 
         # token siswa
-        self.login_siswa = {
-            'username': '30117680196686',
-            'password': 'merdeka123'
-        }
-        login_response = self.client.post(reverse('login'), self.login_siswa)
-        self.siswa_token = login_response.data['access']
+        self.login_siswa = {"username": "30117680196686", "password": "merdeka123"}
+        login_response = self.client.post(reverse("login"), self.login_siswa)
+        self.siswa_token = login_response.data["access"]
 
         # menambah guru
-        self.client.post(reverse('data_guru'), self.data_guru)
-        open_file = open('kustom_autentikasi/data/data_guru_user.csv', 'rb')
-        uploaded_file = SimpleUploadedFile('data_guru_user.csv', open_file.read())
-        data = {
-            'file': uploaded_file
-        }
-        self.client.post(reverse('import_data_guru_user'), data, format='multipart')
+        self.client.post(reverse("data_guru"), self.data_guru)
+        open_file = open("kustom_autentikasi/data/data_guru_user.csv", "rb")
+        uploaded_file = SimpleUploadedFile("data_guru_user.csv", open_file.read())
+        data = {"file": uploaded_file}
+        self.client.post(reverse("import_data_guru_user"), data, format="multipart")
 
         # token guru
-        self.login_guru = {
-            'username': '4341623682038467',
-            'password': 'merdeka123'
-        }
-        login_response = self.client.post(reverse('login'), self.login_guru)
-        self.guru_token = login_response.data['access']
+        self.login_guru = {"username": "4341623682038467", "password": "merdeka123"}
+        login_response = self.client.post(reverse("login"), self.login_guru)
+        self.guru_token = login_response.data["access"]
 
         # menambah katalog buku
-        self.bahasa = {
-            'KODE_BAHASA': 'ID',
-            'BAHASA': 'Indonesia'
-        }
+        self.bahasa = {"KODE_BAHASA": "ID", "BAHASA": "Indonesia"}
         bahasa = TipeBahasa.objects.create(**self.bahasa)
 
-        self.kode_media = {
-            'KODE_MEDIA': 'PR',
-            'NAMA_MEDIA': 'Printed'
-        }
+        self.kode_media = {"KODE_MEDIA": "PR", "NAMA_MEDIA": "Printed"}
         tipe_media = TipeMedia.objects.create(**self.kode_media)
 
         self.kode_tipe = {
-            'KODE_TIPE': 'Ct',
-            'NAMA_TIPE': 'Cetakan',
-            'LAMA_PINJAM': '3 hari',
-            'DENDA': '10000'
+            "KODE_TIPE": "Ct",
+            "NAMA_TIPE": "Cetakan",
+            "LAMA_PINJAM": "3 hari",
+            "DENDA": "10000",
         }
         tipe_buku = TipeBuku.objects.create(**self.kode_tipe)
 
-        self.kode_author = {
-            'KODE_AUTHOR': 'A',
-            'NAMA_AUTHOR': 'Afdhal'
-        }
+        self.kode_author = {"KODE_AUTHOR": "A", "NAMA_AUTHOR": "Afdhal"}
         author = Author.objects.create(**self.kode_author)
 
         self.tahun_terbit = {
-            'TAHUN_TERBIT': 2022,
+            "TAHUN_TERBIT": 2022,
         }
         tahun_terbit = TahunTerbit.objects.create(**self.tahun_terbit)
 
-        self.kode_lokasi = {
-            'KODE_LOKASI': 'SMU4',
-            'NAMA_LOKASI': 'SMA Negeri 4 Malang'
-        }
+        self.kode_lokasi = {"KODE_LOKASI": "SMU4", "NAMA_LOKASI": "SMA Negeri 4 Malang"}
         lokasi = Lokasi.objects.create(**self.kode_lokasi)
 
         self.lokasi_spesifik = {
-            'LOKASI_SPESIFIK': 'SMU4',
-            'NAMA': 'SMA Negeri 4 Malang'
+            "LOKASI_SPESIFIK": "SMU4",
+            "NAMA": "SMA Negeri 4 Malang",
         }
         lokasi_spesifik = LokasiSpesifik.objects.create(**self.lokasi_spesifik)
 
         self.operator_code = {
-            'KODE_OPERATOR': User.objects.get(pk=1),
-            'UNIT': 'Perpustakaan'
+            "KODE_OPERATOR": User.objects.get(pk=1),
+            "UNIT": "Perpustakaan",
         }
         operator = Operator.objects.create(**self.operator_code)
 
         self.katalog_buku = {
-            'REGISTER': '12345',
-            'ISBN': '9050-3030-2020',
-            'JUDUL': 'Ini adalah buku',
-            'VOLUME': '1',
-            'EDISI': '1',
-            'BAHASA': bahasa,
-            'KODE_MEDIA': tipe_media,
-            'KODE_TIPE': tipe_buku,
-            'NOMER_DEWEY': '1111',
-            'KODE_AUTHOR': author,
-            'KODE_JUDUL': 'IAB',
-            'TAHUN_TERBIT': tahun_terbit,
-            'KOTA_PENERBIT': 'Malang',
-            'PENERBIT': 'Erlangga',
-            'DESKRIPSI_FISIK': 'Bagus',
-            'INDEX': '1',
-            'BIBLIOGRAPHY': '1',
-            'KODE_LOKASI': lokasi,
-            'LOKASI_SPESIFIK': lokasi_spesifik,
-            'HARGA': '15000',
-            'DATA_ENTRY': '2022-02-02',
-            'OPERATOR_CODE': operator,
+            "REGISTER": "12345",
+            "ISBN": "9050-3030-2020",
+            "JUDUL": "Ini adalah buku",
+            "VOLUME": "1",
+            "EDISI": "1",
+            "BAHASA": bahasa,
+            "KODE_MEDIA": tipe_media,
+            "KODE_TIPE": tipe_buku,
+            "NOMER_DEWEY": "1111",
+            "KODE_AUTHOR": author,
+            "KODE_JUDUL": "IAB",
+            "TAHUN_TERBIT": tahun_terbit,
+            "KOTA_PENERBIT": "Malang",
+            "PENERBIT": "Erlangga",
+            "DESKRIPSI_FISIK": "Bagus",
+            "INDEX": "1",
+            "BIBLIOGRAPHY": "1",
+            "KODE_LOKASI": lokasi,
+            "LOKASI_SPESIFIK": lokasi_spesifik,
+            "HARGA": "15000",
+            "DATA_ENTRY": "2022-02-02",
+            "OPERATOR_CODE": operator,
         }
         katalog_buku = KatalogBuku.objects.create(**self.katalog_buku)
 
         # menambah data donasi dan katalog buku copy
-        self.pendanaan = {
-            'KODE_PENDANAAN': 'AB',
-            'NAMA_PENDANAAN': 'Amal Jariyah'
-        }
+        self.pendanaan = {"KODE_PENDANAAN": "AB", "NAMA_PENDANAAN": "Amal Jariyah"}
         pendanaan = Pendanaan.objects.create(**self.pendanaan)
 
         self.donasi_buku = {
-            'REGISTER_DONASI': katalog_buku,
-            'DUPLIKAT': 5,
-            'KODE_DONASI': pendanaan,
-            'TANGGAL_PENERIMAAN': '2022-02-02',
-            'CATATAN_DONASI': 'Semoga membawa berkah'
+            "REGISTER_DONASI": katalog_buku,
+            "DUPLIKAT": 5,
+            "KODE_DONASI": pendanaan,
+            "TANGGAL_PENERIMAAN": "2022-02-02",
+            "CATATAN_DONASI": "Semoga membawa berkah",
         }
         DonasiBuku.objects.create(**self.donasi_buku)
 

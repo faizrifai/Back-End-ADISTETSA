@@ -8,8 +8,7 @@ from django.utils.text import Truncator
 from import_export.admin import ImportExportModelAdmin
 from kesiswaan.admin import NilaiEkskulAdmin
 from subadmin import RootSubAdmin, SubAdmin
-from utility.subadminexport import (
-    BaseSubAdminExport, SubAdminExportDataWithFile)
+from utility.subadminexport import BaseSubAdminExport, SubAdminExportDataWithFile
 
 from .filter_admin import *
 from .forms import *
@@ -30,41 +29,46 @@ def deskripsi_tata_tertib(obj):
 
 
 class JurusanAdmin(admin.ModelAdmin):
-    search_fields = ['NAMA', ]
+    search_fields = [
+        "NAMA",
+    ]
 
 
 admin.site.register(Jurusan, JurusanAdmin)
 
 
 class TahunAjaranAdmin(admin.ModelAdmin):
-    search_fields = ['TAHUN_AJARAN_AWAL', 'TAHUN_AJARAN_AKHIR']
+    search_fields = ["TAHUN_AJARAN_AWAL", "TAHUN_AJARAN_AKHIR"]
 
     def get_ordering(self, request):
-        return ['TAHUN_AJARAN_AWAL']
+        return ["TAHUN_AJARAN_AWAL"]
 
 
 admin.site.register(TahunAjaran, TahunAjaranAdmin)
 
+
 class KelasAdmin(ImportExportModelAdmin):
-    search_fields = ['KODE_KELAS', ]
+    search_fields = [
+        "KODE_KELAS",
+    ]
     list_per_page = 10
-    exclude = ['KODE_KELAS']
-    autocomplete_fields = ['TAHUN_AJARAN', 'JURUSAN']
+    exclude = ["KODE_KELAS"]
+    autocomplete_fields = ["TAHUN_AJARAN", "JURUSAN"]
 
 
 admin.site.register(Kelas, KelasAdmin)
 
 
 class DataSemesterAdmin(admin.ModelAdmin):
-    search_fields = ['KE', 'NAMA']
-    exclude = ['NAMA']
+    search_fields = ["KE", "NAMA"]
+    exclude = ["NAMA"]
 
 
 admin.site.register(DataSemester, DataSemesterAdmin)
 
 
 class MataPelajaranAdmin(ImportExportModelAdmin):
-    search_fields = ['KODE', 'NAMA']
+    search_fields = ["KODE", "NAMA"]
 
     resource_class = MataPelajaranResource
 
@@ -73,15 +77,16 @@ admin.site.register(MataPelajaran, MataPelajaranAdmin)
 
 
 class WaktuPelajaranAdmin(ImportExportModelAdmin):
-    search_fields = ['WAKTU_MULAI', 'WAKTU_BERAKHIR', 'JAM_KE']
+    search_fields = ["WAKTU_MULAI", "WAKTU_BERAKHIR", "JAM_KE"]
 
     resource_class = WaktuPelajaranResource
+
 
 admin.site.register(WaktuPelajaran, WaktuPelajaranAdmin)
 
 
 class NamaOfferingKelasAdmin(admin.ModelAdmin):
-    search_fields = ['NAMA']
+    search_fields = ["NAMA"]
     list_per_page = 10
 
 
@@ -89,12 +94,15 @@ admin.site.register(NamaOfferingKelas, NamaOfferingKelasAdmin)
 
 
 class OfferingKelasAdmin(admin.ModelAdmin):
-    search_fields = ['KELAS__KODE_KELAS']
+    search_fields = ["KELAS__KODE_KELAS"]
     list_per_page = 10
-    list_filter = [KelasFilter, NamaOfferingKelasFilter,]
-    list_display = ['KELAS', 'OFFERING']
-    ordering = ['KELAS__TINGKATAN', '-KELAS__JURUSAN__NAMA', 'OFFERING']
-    autocomplete_fields = ['KELAS', 'OFFERING']
+    list_filter = [
+        KelasFilter,
+        NamaOfferingKelasFilter,
+    ]
+    list_display = ["KELAS", "OFFERING"]
+    ordering = ["KELAS__TINGKATAN", "-KELAS__JURUSAN__NAMA", "OFFERING"]
+    autocomplete_fields = ["KELAS", "OFFERING"]
 
 
 admin.site.register(OfferingKelas, OfferingKelasAdmin)
@@ -102,12 +110,18 @@ admin.site.register(OfferingKelas, OfferingKelasAdmin)
 
 class AbsensiSiswaAdmin(BaseSubAdminExport):
     model = AbsensiSiswa
-    list_display = ['NIS', 'KETERANGAN', 'FILE_KETERANGAN',
-                    'mata_pelajaran', 'kelas', 'pertemuan']
+    list_display = [
+        "NIS",
+        "KETERANGAN",
+        "FILE_KETERANGAN",
+        "mata_pelajaran",
+        "kelas",
+        "pertemuan",
+    ]
     list_per_page = 10
-    readonly_fields = ['NIS', 'JURNAL_BELAJAR']
+    readonly_fields = ["NIS", "JURNAL_BELAJAR"]
     resource_class = AbsensiSiswaResource
-    autocomplete_fields = ['NIS', 'JURNAL_BELAJAR']
+    autocomplete_fields = ["NIS", "JURNAL_BELAJAR"]
 
     def mata_pelajaran(self, obj):
         return obj.JURNAL_BELAJAR.DAFTAR.MATA_PELAJARAN
@@ -121,16 +135,22 @@ class AbsensiSiswaAdmin(BaseSubAdminExport):
 
 class JurnalBelajarAdmin(SubAdminExportDataWithFile):
     model = JurnalBelajar
-    list_display = ['aksi', 'GURU', 'PERTEMUAN', 'TANGGAL_MENGAJAR',
-                    deskripsi_materi, 'FILE_DOKUMENTASI', 'absensi']
+    list_display = [
+        "aksi",
+        "GURU",
+        "PERTEMUAN",
+        "TANGGAL_MENGAJAR",
+        deskripsi_materi,
+        "FILE_DOKUMENTASI",
+        "absensi",
+    ]
     list_per_page = 10
-    search_fields = ['TANGGAL_MENGAJAR',
-                     'DESKRIPSI_MATERI', 'FILE_DOKUMENTASI']
-    autocomplete_fields = ['GURU', 'DAFTAR']
-    exclude = ['GURU']
+    search_fields = ["TANGGAL_MENGAJAR", "DESKRIPSI_MATERI", "FILE_DOKUMENTASI"]
+    autocomplete_fields = ["GURU", "DAFTAR"]
+    exclude = ["GURU"]
 
     resource_class = JurnalBelajarResource
-    post_export_redirect_url = 'admin:kurikulum_rekapjurnalbelajar_changelist'
+    post_export_redirect_url = "admin:kurikulum_rekapjurnalbelajar_changelist"
 
     subadmins = [AbsensiSiswaAdmin]
 
@@ -140,29 +160,34 @@ class JurnalBelajarAdmin(SubAdminExportDataWithFile):
     def generate_zip(self, request, file_format):
         exported_file, queryset = super().pre_export(request, file_format)
 
-        file_to_zip = get_file_to_zip('kurikulum', queryset)
+        file_to_zip = get_file_to_zip("kurikulum", queryset)
         zip_buffer = zip_file(file_to_zip)
 
         obj = RekapJurnalBelajar.load()
         obj.FILE_REKAP = exported_file
-        obj.FILE_ZIP = ContentFile(zip_buffer.getvalue(), name='Rekap.zip')
+        obj.FILE_ZIP = ContentFile(zip_buffer.getvalue(), name="Rekap.zip")
         obj.save()
 
     def aksi(self, obj):
         return "Edit"
 
     def absensi(self, obj):
-        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
+        base_url = reverse("admin:kurikulum_daftarjurnalbelajar_changelist")
 
-        return mark_safe(u'<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>' % (base_url, obj.DAFTAR.ID, obj.ID, 'Buka Absensi'))
+        return mark_safe(
+            '<a href="%s%d/jurnalbelajar/%d/absensisiswa">%s</a>'
+            % (base_url, obj.DAFTAR.ID, obj.ID, "Buka Absensi")
+        )
 
 
 class KelasSiswaAdmin(admin.ModelAdmin):
-    search_fields = ['NIS__NIS', 'NIS__NAMA']
-    list_display = ['get_nis', 'get_nama', 'KELAS']
+    search_fields = ["NIS__NIS", "NIS__NAMA"]
+    list_display = ["get_nis", "get_nama", "KELAS"]
     list_per_page = 10
-    list_filter = [KelasFilter,]
-    autocomplete_fields = ['NIS', 'KELAS']
+    list_filter = [
+        KelasFilter,
+    ]
+    autocomplete_fields = ["NIS", "KELAS"]
 
     def get_nis(self, obj):
         return obj.NIS.NIS
@@ -170,16 +195,22 @@ class KelasSiswaAdmin(admin.ModelAdmin):
     def get_nama(self, obj):
         return obj.NIS.NAMA
 
-    get_nis.short_description = 'NIS'
-    get_nama.short_description = 'NAMA'
+    get_nis.short_description = "NIS"
+    get_nama.short_description = "NAMA"
 
 
 admin.site.register(KelasSiswa, KelasSiswaAdmin)
 
 
 class PoinPelanggaranAdmin(ImportExportModelAdmin):
-    search_fields = ['KETERANGAN', 'POIN', ]
-    list_display = [deskripsi_tata_tertib, 'POIN',]
+    search_fields = [
+        "KETERANGAN",
+        "POIN",
+    ]
+    list_display = [
+        deskripsi_tata_tertib,
+        "POIN",
+    ]
     list_per_page = 10
 
     resource_class = PoinPelanggaranResource
@@ -189,18 +220,44 @@ admin.site.register(PoinPelanggaran, PoinPelanggaranAdmin)
 
 
 class JadwalMengajarAdmin(ImportExportModelAdmin):
-    search_fields = ['GURU__NAMA_LENGKAP', 'TAHUN_AJARAN__TAHUN_AJARAN_AWAL',
-                     'TAHUN_AJARAN__TAHUN_AJARAN_AKHIR', 'SEMESTER__KE', 'KELAS__OFFERING__NAMA', 'MATA_PELAJARAN__NAMA']
+    search_fields = [
+        "GURU__NAMA_LENGKAP",
+        "TAHUN_AJARAN__TAHUN_AJARAN_AWAL",
+        "TAHUN_AJARAN__TAHUN_AJARAN_AKHIR",
+        "SEMESTER__KE",
+        "KELAS__OFFERING__NAMA",
+        "MATA_PELAJARAN__NAMA",
+    ]
     list_per_page = 10
-    filter_horizontal = ['WAKTU_PELAJARAN']
-    exclude = ['JUMLAH_WAKTU']
-    list_display = ['GURU', 'TAHUN_AJARAN', 'SEMESTER', 'KELAS',
-                    'MATA_PELAJARAN', 'HARI', 'jam_pelajaran', 'jumlah_waktu']
-    list_filter = [TahunFilter, SemesterFilter, 'HARI', KelasFilter,
-                   MataPelajaranFilter, WaktuPelajaranFilter, GuruFilter]
+    filter_horizontal = ["WAKTU_PELAJARAN"]
+    exclude = ["JUMLAH_WAKTU"]
+    list_display = [
+        "GURU",
+        "TAHUN_AJARAN",
+        "SEMESTER",
+        "KELAS",
+        "MATA_PELAJARAN",
+        "HARI",
+        "jam_pelajaran",
+        "jumlah_waktu",
+    ]
+    list_filter = [
+        TahunFilter,
+        SemesterFilter,
+        "HARI",
+        KelasFilter,
+        MataPelajaranFilter,
+        WaktuPelajaranFilter,
+        GuruFilter,
+    ]
     form = JadwalMengajarForm
-    autocomplete_fields = ['GURU', 'TAHUN_AJARAN',
-                           'SEMESTER', 'KELAS', 'MATA_PELAJARAN']
+    autocomplete_fields = [
+        "GURU",
+        "TAHUN_AJARAN",
+        "SEMESTER",
+        "KELAS",
+        "MATA_PELAJARAN",
+    ]
 
     resource_class = JadwalMengajarResource
 
@@ -221,40 +278,55 @@ admin.site.register(JadwalMengajar, JadwalMengajarAdmin)
 
 
 class DaftarJurnalBelajarAdmin(RootSubAdmin):
-    search_fields = ['MATA_PELAJARAN__NAMA', 'GURU__NAMA_LENGKAP',
-                     'KELAS__KELAS__KODE_KELAS', 'KELAS__OFFERING__NAMA']
+    search_fields = [
+        "MATA_PELAJARAN__NAMA",
+        "GURU__NAMA_LENGKAP",
+        "KELAS__KELAS__KODE_KELAS",
+        "KELAS__OFFERING__NAMA",
+    ]
     list_per_page = 10
-    list_display = ['aksi', 'GURU', 'SEMESTER', 'hari', 'KELAS', 'MATA_PELAJARAN', 'jurnal_belajar']
-    list_filter = [SemesterFilter, KelasFilter,
-                   MataPelajaranFilter, GuruFilter]
-    autocomplete_fields = ['GURU', 'MATA_PELAJARAN',
-                           'KELAS', 'SEMESTER']
+    list_display = [
+        "aksi",
+        "GURU",
+        "SEMESTER",
+        "hari",
+        "KELAS",
+        "MATA_PELAJARAN",
+        "jurnal_belajar",
+    ]
+    list_filter = [SemesterFilter, KelasFilter, MataPelajaranFilter, GuruFilter]
+    autocomplete_fields = ["GURU", "MATA_PELAJARAN", "KELAS", "SEMESTER"]
 
     subadmins = [JurnalBelajarAdmin]
 
     def aksi(self, obj):
-        return 'Edit'
+        return "Edit"
 
     def jurnal_belajar(self, obj):
-        base_url = reverse('admin:kurikulum_daftarjurnalbelajar_changelist')
+        base_url = reverse("admin:kurikulum_daftarjurnalbelajar_changelist")
 
-        return mark_safe(u'<a href="%s%d/jurnalbelajar">%s</a>' % (base_url, obj.ID, 'Buka Jurnal'))
+        return mark_safe(
+            '<a href="%s%d/jurnalbelajar">%s</a>' % (base_url, obj.ID, "Buka Jurnal")
+        )
 
     def hari(self, obj):
         data = JadwalMengajar.objects.filter(
-            GURU=obj.GURU, MATA_PELAJARAN=obj.MATA_PELAJARAN, KELAS=obj.KELAS, SEMESTER=obj.SEMESTER
-        ).order_by('-HARI')
+            GURU=obj.GURU,
+            MATA_PELAJARAN=obj.MATA_PELAJARAN,
+            KELAS=obj.KELAS,
+            SEMESTER=obj.SEMESTER,
+        ).order_by("-HARI")
 
         hari = []
         for d in data:
             temp = []
-            output_waktu = 'Jam ke-'
+            output_waktu = "Jam ke-"
             for waktu in d.WAKTU_PELAJARAN.all():
                 temp.append(str(waktu.JAM_KE))
-            waktu = ', '.join(temp)
-            hari.append(d.HARI + ' ' + f'({output_waktu}{waktu})')
+            waktu = ", ".join(temp)
+            hari.append(d.HARI + " " + f"({output_waktu}{waktu})")
 
-        output_hari = '<br>'.join(hari)
+        output_hari = "<br>".join(hari)
 
         return format_html(output_hari)
 
@@ -264,59 +336,84 @@ admin.site.register(DaftarJurnalBelajar, DaftarJurnalBelajarAdmin)
 
 class NilaiRaportAdmin(SubAdmin):
     model = NilaiRaport
-    search_fields = ['MATA_PELAJARAN', 'BEBAN', 'NILAI_PENGETAHUAN',
-                     'NILAI_KETERAMPILAN', 'DESKRIPSI_PENGETAHUAN', 'DESKRIPSI_KETERAMPILAN']
-    list_display = ['RAPORT', 'MATA_PELAJARAN', 'BEBAN', 'NILAI_PENGETAHUAN',
-                    'NILAI_KETERAMPILAN', 'DESKRIPSI_PENGETAHUAN', 'DESKRIPSI_KETERAMPILAN']
+    search_fields = [
+        "MATA_PELAJARAN",
+        "BEBAN",
+        "NILAI_PENGETAHUAN",
+        "NILAI_KETERAMPILAN",
+        "DESKRIPSI_PENGETAHUAN",
+        "DESKRIPSI_KETERAMPILAN",
+    ]
+    list_display = [
+        "RAPORT",
+        "MATA_PELAJARAN",
+        "BEBAN",
+        "NILAI_PENGETAHUAN",
+        "NILAI_KETERAMPILAN",
+        "DESKRIPSI_PENGETAHUAN",
+        "DESKRIPSI_KETERAMPILAN",
+    ]
     list_per_page = 10
-    exclude = ['RAPORT']
-    ordering = ['-RAPORT', ]
-    autocomplete_fields = ['RAPORT', 'MATA_PELAJARAN']
+    exclude = ["RAPORT"]
+    ordering = [
+        "-RAPORT",
+    ]
+    autocomplete_fields = ["RAPORT", "MATA_PELAJARAN"]
 
 
 class RaportAdmin(SubAdmin):
     model = Raport
-    search_fields = ['KELAS_SISWA']
-    list_display = ['KELAS_SISWA', 'SEMESTER',
-                    'aksi_nilai_raport', 'aksi_nilai_ekskul']
+    search_fields = ["KELAS_SISWA"]
+    list_display = ["KELAS_SISWA", "SEMESTER", "aksi_nilai_raport", "aksi_nilai_ekskul"]
     list_per_page = 10
     subadmins = [NilaiRaportAdmin, NilaiEkskulAdmin]
-    exclude = ['KELAS_SISWA']
-    ordering = ['KELAS_SISWA', 'SEMESTER']
-    autocomplete_fields = ['KELAS_SISWA', 'SEMESTER', 'BUKU_INDUK']
+    exclude = ["KELAS_SISWA"]
+    ordering = ["KELAS_SISWA", "SEMESTER"]
+    autocomplete_fields = ["KELAS_SISWA", "SEMESTER", "BUKU_INDUK"]
 
     def aksi_nilai_raport(self, obj):
-        base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
+        base_url = reverse("admin:tata_usaha_bukuinduk_changelist")
 
-        return mark_safe(u'<a href="%s%d/raport/%d/nilairaport">%s</a>' % (base_url, obj.BUKU_INDUK.ID, obj.ID, 'Buka Raport'))
+        return mark_safe(
+            '<a href="%s%d/raport/%d/nilairaport">%s</a>'
+            % (base_url, obj.BUKU_INDUK.ID, obj.ID, "Buka Raport")
+        )
 
     def aksi_nilai_ekskul(self, obj):
-        base_url = reverse('admin:tata_usaha_bukuinduk_changelist')
+        base_url = reverse("admin:tata_usaha_bukuinduk_changelist")
 
-        return mark_safe(u'<a href="%s%d/raport/%d/nilaiekskul">%s</a>' % (base_url, obj.BUKU_INDUK.ID, obj.ID, 'Buka Nilai Ekskul'))
+        return mark_safe(
+            '<a href="%s%d/raport/%d/nilaiekskul">%s</a>'
+            % (base_url, obj.BUKU_INDUK.ID, obj.ID, "Buka Nilai Ekskul")
+        )
 
 
 class RaportKurikulumAdmin(RootSubAdmin):
-    search_fields = ['KELAS_SISWA']
-    list_display = ['KELAS_SISWA', 'SEMESTER', 'tahun_ajaran',
-                    'aksi_nilai_raport']
-    list_filter = [SemesterFilter,
-                    AutocompleteFilterFactory('TAHUN AJARAN', 'KELAS_SISWA__KELAS__KELAS__TAHUN_AJARAN'),
-                    AutocompleteFilterFactory('KELAS', 'KELAS_SISWA__KELAS'),
-                    AutocompleteFilterFactory('SISWA', 'KELAS_SISWA__NIS')]
+    search_fields = ["KELAS_SISWA"]
+    list_display = ["KELAS_SISWA", "SEMESTER", "tahun_ajaran", "aksi_nilai_raport"]
+    list_filter = [
+        SemesterFilter,
+        AutocompleteFilterFactory(
+            "TAHUN AJARAN", "KELAS_SISWA__KELAS__KELAS__TAHUN_AJARAN"
+        ),
+        AutocompleteFilterFactory("KELAS", "KELAS_SISWA__KELAS"),
+        AutocompleteFilterFactory("SISWA", "KELAS_SISWA__NIS"),
+    ]
     list_per_page = 10
     subadmins = [NilaiRaportAdmin]
-    exclude = ['KELAS_SISWA']
-    ordering = ['KELAS_SISWA', 'SEMESTER']
-    autocomplete_fields = ['KELAS_SISWA', 'SEMESTER']
+    exclude = ["KELAS_SISWA"]
+    ordering = ["KELAS_SISWA", "SEMESTER"]
+    autocomplete_fields = ["KELAS_SISWA", "SEMESTER"]
 
     def tahun_ajaran(self, obj):
         return str(obj.KELAS_SISWA.KELAS.KELAS.TAHUN_AJARAN)
 
     def aksi_nilai_raport(self, obj):
-        base_url = reverse('admin:kurikulum_raport_changelist')
+        base_url = reverse("admin:kurikulum_raport_changelist")
 
-        return mark_safe(u'<a href="%s%d/nilairaport">%s</a>' % (base_url, obj.ID, 'Buka Raport'))
+        return mark_safe(
+            '<a href="%s%d/nilairaport">%s</a>' % (base_url, obj.ID, "Buka Raport")
+        )
 
 
 admin.site.register(Raport, RaportKurikulumAdmin)
@@ -325,7 +422,7 @@ admin.site.register(Configuration, ConfigurationModelAdmin)
 
 
 class RekapJurnalBelajarAdmin(admin.ModelAdmin):
-    list_display = ['FILE_REKAP', 'FILE_ZIP']
+    list_display = ["FILE_REKAP", "FILE_ZIP"]
 
 
 admin.site.register(RekapJurnalBelajar, RekapJurnalBelajarAdmin)
