@@ -1,7 +1,5 @@
-from csv import excel
-from re import search
 from django.contrib import admin
-import pandas
+
 from .models import (
     BahanBukuUPM,
     JenisBidang,
@@ -12,7 +10,6 @@ from .models import (
     RincianTugasPokokTambahanTendik,
     TugasTambahanKepanitiaanTendik,
 )
-
 
 # Register your models here.
 class BahanBukuUPMadmin(admin.ModelAdmin):
