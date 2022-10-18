@@ -10,10 +10,10 @@ adistetsa_env_linux/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-saved_files/
-static_files/
 savedfiles/
 staticfiles/
+saved_files/
+static_files/
 
 # Backup files # 
 *.bak 

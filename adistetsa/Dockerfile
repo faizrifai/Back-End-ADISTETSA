@@ -5,6 +5,9 @@ WORKDIR /usr/src/adistetsa
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN mkdir staticfiles
+RUN mkdir savedfiles
+
 RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
