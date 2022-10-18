@@ -1,7 +1,7 @@
 services:
   web:
     build: ./adistetsa
-    command: gunicorn adistetsa.wsgi:application --bind 0.0.0.0:8000 --workers=3 --threads=3 --reload
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./adistetsa:/usr/src/adistetsa
     ports:
