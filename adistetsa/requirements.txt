@@ -1,7 +1,7 @@
 attr==0.3.2
 Django==4.1.2
 django-admin-autocomplete-filter==0.7.1
-django-admin-interface==0.18.7
+django-admin-interface==0.21.0
 django-adminactions==1.15
 django-cleanup==6.0.0
 django-colorfield==0.6.3
