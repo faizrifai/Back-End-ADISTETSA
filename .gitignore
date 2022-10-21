@@ -15,8 +15,9 @@ staticfiles/
 saved_files/
 static_files/
 
+
 # Backup files # 
-*.bak 
+*.bak
 
 # If you are using PyCharm # 
 # User-specific stuff
