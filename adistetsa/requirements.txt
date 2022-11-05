@@ -18,7 +18,7 @@ django-import-export==2.7.1
 django-subadmin==3.2.1
 django-waffle==2.3.0
 djangorestframework==3.13.1
-djangorestframework-simplejwt==5.0.0
+djangorestframework-simplejwt==5.2.2
 drf_yasg==1.21.4
 factory-boy==3.2.1
 factory_djoy==2.2.0
