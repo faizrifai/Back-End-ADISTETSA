@@ -1,5 +1,7 @@
 from factory.django import DjangoModelFactory
 
+from dataprofil.factories import DataSiswaFactory
+
 from .models import (
     SanitasiDrainase,
     JaringanKerja,
@@ -21,7 +23,6 @@ from .enums import ENUM_KONSERVASI, ENUM_3R, ENUM_JENIS_SAMPAH
 import factory
 
 from django.db.models import Model
-from dataprofil.models import DataSiswa
 
 # random function section
 def random_enum(nama_enum):
@@ -78,7 +79,7 @@ class DaftarKaderFactory(DjangoModelFactory):
     class Meta:
         model = DaftarKader
 
-    NIS = factory.Faker("random_element", elements=random_id_from_model(DataSiswa))
+    NIS = factory.SubFactory(DataSiswaFactory)
 
 
 class KegiatanKaderFactory(DjangoModelFactory):

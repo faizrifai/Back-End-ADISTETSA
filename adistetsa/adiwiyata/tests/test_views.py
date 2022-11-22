@@ -3,11 +3,14 @@ from django.test import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from utility.test_utility import testListView, testListViewWithSearch
+
+from dataprofil.factories import DataSiswaFactory
+from utility.test_utility import testListView, testListViewWithSpecifiedLength, testListViewWithSearch, testListViewWithSearchAndSpecifiedLength
 
 import shutil
 
-from .factories import (
+from ..factories import (
+    DaftarKaderFactory,
     SanitasiDrainaseFactory,
     PublikasiFactory,
     KonservasiFactory,
@@ -20,8 +23,10 @@ from .factories import (
     PenerapanPRLHFactory,
     KaryaInovatifFactory,
     ReuseReduceRecycleFactory,
+    TabunganSampahFactory,
 )
-from .models import (
+from ..models import (
+    DaftarKader,
     SanitasiDrainase,
     JaringanKerja,
     Publikasi,
@@ -57,7 +62,6 @@ class TestAdiwiyata(APITestCase):
         )
 
     def tearDown(self):
-        print("\nDeleting temporary files...\n")
         try:
             shutil.rmtree(TEST_DIR)
         except OSError:
@@ -205,8 +209,25 @@ class TestAdiwiyata(APITestCase):
 
     @override_settings(MEDIA_ROOT=(TEST_DIR + "/media"))
     def testTabunganSampah(self):
-        response = testListView(self, "tabungan_sampah", TabunganSampah, 10, False)
+        # normal list
+        response = testListView(self, "tabungan_sampah", TabunganSampahFactory, 10, False)
         self.assertEqual(len(response.data["results"]), 12)
 
+        # filtered list
+        tahun = str(TabunganSampah.objects.first().TANGGAL.year)
+        response_filter = self.client.get(reverse("tabungan_sampah"), {"tahun": tahun})
+        self.assertGreaterEqual(len(response_filter.data["results"]), 1)
+        
+        # filter tahun for tabungan sampah
         response_tahun = self.client.get(reverse("tabungan_sampah_tahun"))
         self.assertEqual(response_tahun.status_code, status.HTTP_200_OK)
+
+    @override_settings(MEDIA_ROOT=(TEST_DIR + "/media"))
+    def testDaftarKader(self):
+        testListView(
+            self,
+            "daftar_kader",
+            DaftarKaderFactory,
+            10,
+            DaftarKader,
+        )

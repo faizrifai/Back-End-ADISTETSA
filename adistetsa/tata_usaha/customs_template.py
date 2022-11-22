@@ -1,20 +1,8 @@
-from asyncore import write
-from genericpath import exists
-from heapq import merge
-import pandas as pd
 from io import BytesIO
 from django.core.files.base import ContentFile
-from django.db.models import Count
 
-# from utility.custom_function import gabung_dictionary
-# from unit_penjamin_mutu.custom_function import value_in_list_of_dict, multiple_value_exist,get_column, get_columns_from_worksheet,apply_style_to_cell, merge_cell
+import pandas as pd
 import openpyxl
-from openpyxl import Workbook
-from openpyxl.styles import NamedStyle, Font, Border, Side
-import time
-
-# from .kelas import Nilai_raport
-
 import os
 
 current_folder = os.path.dirname(os.path.abspath(__file__))
