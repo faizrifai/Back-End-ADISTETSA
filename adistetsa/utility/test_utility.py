@@ -205,6 +205,27 @@ def testListView(
     return response
 
 
+def testListViewWithSpecifiedLength(
+    self,
+    url: str,
+    factory_class: DjangoModelFactory,
+    factory_length: int,
+    correct_length: int,
+    check_length=True,
+):
+    for _ in range(factory_length):
+        factory_class()
+
+    response = self.client.get(reverse(url))
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    if check_length:
+        self.assertEqual(len(response.data["results"]), correct_length)
+
+    return response
+
+
 def testPostView(self, url: str, post_data: dict):
     response = self.client.post(reverse(url), post_data)
 
@@ -293,6 +314,39 @@ def testListViewWithSearch(
 
     if check_length:
         self.assertEqual(len(response.data["results"]), factory_length)
+
+    # search
+    data = model_class.objects.get(pk=1)
+    search_str = get_attribute(data, model_field)
+    url_search = "{base_url}?{querystring}".format(
+        base_url=reverse(url), querystring=f"search={search_str}"
+    )
+    response_search = self.client.get(url_search)
+
+    self.assertLessEqual(len(response_search.data["results"]), 1)
+
+    return response
+
+
+def testListViewWithSearchAndSpecifiedLength(
+    self,
+    url: str,
+    factory_class: DjangoModelFactory,
+    factory_length: int,
+    correct_length: int,
+    model_class: Model,
+    model_field: str,
+    check_length=True,
+):
+    for _ in range(factory_length):
+        factory_class()
+
+    response = self.client.get(reverse(url))
+
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    if check_length:
+        self.assertEqual(len(response.data["results"]), correct_length)
 
     # search
     data = model_class.objects.get(pk=1)

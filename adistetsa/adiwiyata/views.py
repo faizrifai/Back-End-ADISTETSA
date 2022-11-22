@@ -52,7 +52,7 @@ class SanitasiDrainaseListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = SanitasiDrainase.objects.all()
+    queryset = SanitasiDrainase.objects.all().order_by("ID")
     serializer_class = SanitasiDrainaseListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -70,7 +70,7 @@ class JaringanKerjaListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = JaringanKerja.objects.all()
+    queryset = JaringanKerja.objects.all().order_by("ID")
     serializer_class = JaringanKerjaListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -88,7 +88,7 @@ class PublikasiListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = Publikasi.objects.all()
+    queryset = Publikasi.objects.all().order_by("ID")
     serializer_class = PublikasiListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -106,7 +106,7 @@ class DaftarKaderListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = DaftarKader.objects.all()
+    queryset = DaftarKader.objects.all().order_by("ID")
     serializer_class = KaderListSerializer
     search_fields = ("NIS__NAMA", "NIS__NIS")
 
@@ -124,7 +124,7 @@ class KegiatanKaderListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = KegiatanKader.objects.all()
+    queryset = KegiatanKader.objects.all().order_by("ID")
     serializer_class = KegiatanKaderListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -142,12 +142,12 @@ class KonservasiEnergiListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = Konservasi.objects.all()
+    queryset = Konservasi.objects.all().order_by("ID")
     serializer_class = KonservasiListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
     def get_queryset(self):
-        qs = Konservasi.objects.filter(KATEGORI="Energi")
+        qs = Konservasi.objects.filter(KATEGORI="Energi").order_by("ID")
         return qs
 
     def list(self, request, *args, **kwargs):
@@ -164,12 +164,12 @@ class KonservasiAirListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = Konservasi.objects.all()
+    queryset = Konservasi.objects.all().order_by("ID")
     serializer_class = KonservasiListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
     def get_queryset(self):
-        qs = Konservasi.objects.filter(KATEGORI="Air")
+        qs = Konservasi.objects.filter(KATEGORI="Air").order_by("ID")
         return qs
 
     def list(self, request, *args, **kwargs):
@@ -186,7 +186,7 @@ class PembibitanPohonListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = PembibitanPohon.objects.all()
+    queryset = PembibitanPohon.objects.all().order_by("ID")
     serializer_class = PembibitanPohonListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -204,7 +204,7 @@ class PemeliharaanPohonListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = PemeliharaanPohon.objects.all()
+    queryset = PemeliharaanPohon.objects.all().order_by("ID")
     serializer_class = PemeliharaanPohonListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -222,7 +222,7 @@ class KaryaInovatifListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = KaryaInovatif.objects.all()
+    queryset = KaryaInovatif.objects.all().order_by("ID")
     serializer_class = KaryaInovatifListSerializer
     search_fields = ("NAMA_INOVATOR", "NAMA_KARYA_INOVATIF", "JENIS")
 
@@ -240,7 +240,7 @@ class PenerapanPRLHListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = PenerapanPRLH.objects.all()
+    queryset = PenerapanPRLH.objects.all().order_by("ID")
     serializer_class = PenerapanPRLHListSerializer
     search_fields = ("NAMA_KEGIATAN", "PESERTA")
 
@@ -258,7 +258,7 @@ class ReuseReduceRecycleListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = ReuseReduceRecycle.objects.all()
+    queryset = ReuseReduceRecycle.objects.all().order_by("ID")
     serializer_class = ReuseReduceRecycleListSerializer
     search_fields = ("NAMA_KEGIATAN", "PIHAK_TERLIBAT")
 
@@ -276,7 +276,7 @@ class PemeliharaanSampahListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = PemeliharaanSampah.objects.all()
+    queryset = PemeliharaanSampah.objects.all().order_by("ID")
     serializer_class = PemeliharaanSampahListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -294,7 +294,7 @@ class PenanamanPohonListView(generics.ListAPIView):
         "GET": ["Siswa", "Guru", "Orang Tua", "Karyawan"],
     }
 
-    queryset = PenanamanPohon.objects.all()
+    queryset = PenanamanPohon.objects.all().order_by("ID")
     serializer_class = PenanamanPohonListSerializer
     search_fields = ("NAMA_KEGIATAN",)
 
@@ -341,7 +341,10 @@ class FilterTahunListView(APIView):
 
         years = sorted(years, key=lambda d: d["TAHUN"])
 
-        return Response(years)
+        data = {}
+        data["results"] = years
+
+        return Response(data)
 
 
 class TabunganSampahListView(APIView):
@@ -371,6 +374,7 @@ class TabunganSampahListView(APIView):
         ]
 
         tahun = self.request.query_params.get("TAHUN")
+
         if tahun:
             qs = TabunganSampah.objects.filter(TANGGAL__year=tahun)
         else:
